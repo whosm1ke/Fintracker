@@ -1,4 +1,5 @@
 ﻿using Fintracker.Application.DTO.Common;
+using Fintracker.Application.DTO.Currency;
 using Fintracker.Application.DTO.Transaction;
 
 namespace Fintracker.Application.DTO.Wallet;
@@ -15,5 +16,5 @@ public class WalletDTO : IBaseDto
 
     public decimal StartBalance { get; set; }
 
-    public Guid CurrencyId { get; set; }
+    public CurrencyDTO Currency { get; set; }
 }

@@ -31,8 +31,6 @@ public class User: IEntity<Guid>
 
 public class UserDetails
 {
-    public User User { get; set; }
-    
     public string FName { get; set; }
     
     public string LName { get; set; }

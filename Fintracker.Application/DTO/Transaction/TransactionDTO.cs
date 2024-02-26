@@ -1,4 +1,6 @@
-﻿using Fintracker.Application.DTO.Common;
+﻿using Fintracker.Application.DTO.Category;
+using Fintracker.Application.DTO.Common;
+using Fintracker.Application.DTO.Currency;
 
 namespace Fintracker.Application.DTO.Transaction;
 
@@ -8,10 +10,9 @@ public class TransactionDTO : IBaseDto
     
     public Guid WalletId { get; set; }
 
-    public Guid CategoryId { get; set; }
-
+    public CategoryDTO Category { get; set; }
     
-    public Guid CurrencyId { get; set; }
+    public CurrencyDTO Currency { get; set; }
 
     public decimal Amount { get; set; }
 

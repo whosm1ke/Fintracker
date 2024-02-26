@@ -1,5 +1,6 @@
 ﻿using Fintracker.Application.DTO.Category;
 using Fintracker.Application.DTO.Common;
+using Fintracker.Application.DTO.Currency;
 
 namespace Fintracker.Application.DTO.Budget;
 
@@ -15,7 +16,7 @@ public class BudgetDTO : IBaseDto
 
     public decimal TotalSpent { get; set; }
 
-    public Guid CurrencyId { get; set; }
+    public CurrencyDTO Currency { get; set; }
     
     public Guid WalletId { get; set; }
 

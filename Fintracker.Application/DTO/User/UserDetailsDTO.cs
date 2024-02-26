@@ -2,8 +2,6 @@
 
 public class UserDetailsDTO
 {
-    public UserDTO User { get; set; }
-    
     public string FName { get; set; }
     
     public string LName { get; set; }
