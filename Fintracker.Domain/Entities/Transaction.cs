@@ -4,10 +4,6 @@ namespace Fintracker.Domain.Entities;
 
 public class Transaction : IEntity<Guid>
 {
-    public Transaction()
-    {
-        Budgets = new HashSet<Budget>();
-    }
     
     public Guid Id { get; set; }
     
@@ -26,8 +22,6 @@ public class Transaction : IEntity<Guid>
     public Guid CategoryId { get; set; }
 
     public Category Category { get; set; }
-
-    public ICollection<Budget> Budgets { get; set; }
     
     public Guid CurrencyId { get; set; }
 

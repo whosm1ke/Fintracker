@@ -25,6 +25,8 @@ public class Budget : IEntity<Guid>
     public string Name { get; set; }
 
     public decimal TotalAmount { get; set; }
+    
+    public decimal TotalSpent { get; set; }
 
     public Guid CurrencyId { get; set; }
 
