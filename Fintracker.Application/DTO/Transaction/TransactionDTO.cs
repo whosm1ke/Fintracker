@@ -9,6 +9,8 @@ public class TransactionDTO : IBaseDto
     public Guid Id { get; set; }
     
     public Guid WalletId { get; set; }
+    
+    public Guid UserId { get; set; }
 
     public CategoryDTO Category { get; set; }
     
