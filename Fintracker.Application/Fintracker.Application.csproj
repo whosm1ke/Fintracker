@@ -30,8 +30,6 @@
       <Folder Include="Features\Transaction\Handlers\Queries\" />
       <Folder Include="Features\User\Handlers\Commands\" />
       <Folder Include="Features\User\Handlers\Queries\" />
-      <Folder Include="Features\User\Requests\Commands\" />
-      <Folder Include="Features\User\Requests\Queries\" />
       <Folder Include="Features\Wallet\Handlers\Commands\" />
       <Folder Include="Features\Wallet\Handlers\Queries\" />
       <Folder Include="Features\Wallet\Requests\Commands\" />
