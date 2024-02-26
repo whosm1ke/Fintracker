@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.User.Requests.Queries;
 
-public class GetUserByIdRequest : IRequest<UserDTO>
+public class GetUserByIdRequest : IRequest<UserBaseDTO>
 {
     public Guid Id { get; set; }
 }

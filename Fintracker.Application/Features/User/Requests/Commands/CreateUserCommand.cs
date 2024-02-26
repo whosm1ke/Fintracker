@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.User.Requests.Commands;
 
-public class CreateUserCommand : IRequest<CreateCommandResponse<UserDTO>>
+public class CreateUserCommand : IRequest<CreateCommandResponse<UserBaseDTO>>
 {
     public CreateUserDTO User { get; set; }
 }
