@@ -23,8 +23,6 @@
       <Folder Include="Features\Budget\Handlers\Queries\" />
       <Folder Include="Features\Category\Handlers\Commands\" />
       <Folder Include="Features\Category\Handlers\Queries\" />
-      <Folder Include="Features\Category\Requests\Commands\" />
-      <Folder Include="Features\Category\Requests\Queries\" />
       <Folder Include="Features\Currency\Handlers\Commands\" />
       <Folder Include="Features\Currency\Handlers\Queries\" />
       <Folder Include="Features\Currency\Requests\Commands\" />
