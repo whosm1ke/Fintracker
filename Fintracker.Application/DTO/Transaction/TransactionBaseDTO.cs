@@ -4,7 +4,7 @@ using Fintracker.Application.DTO.Currency;
 
 namespace Fintracker.Application.DTO.Transaction;
 
-public class TransactionDTO : IBaseDto
+public class TransactionBaseDTO : IBaseDto
 {
     public Guid Id { get; set; }
     

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Requests.Commands;
 
-public class UpdateTransactionCommand : IRequest<UpdateCommandResponse<TransactionDTO>>
+public class UpdateTransactionCommand : IRequest<UpdateCommandResponse<TransactionBaseDTO>>
 {
     public UpdateTransactionDTO Transaction { get; set; }
 }

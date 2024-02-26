@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Requests.Commands;
 
-public class DeleteTransactionCommand : IRequest<DeleteCommandResponse<TransactionDTO>>
+public class DeleteTransactionCommand : IRequest<DeleteCommandResponse<TransactionBaseDTO>>
 {
     public Guid Id { get; set; }
 }

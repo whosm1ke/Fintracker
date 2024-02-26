@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Requests.Queries;
 
-public class GetTransactionsByCategoryIdSortedRequest : IRequest<IReadOnlyList<TransactionDTO>>
+public class GetTransactionsByCategoryIdSortedRequest : IRequest<IReadOnlyList<TransactionBaseDTO>>
 {
     public Guid CategoryId { get; set; }
 
