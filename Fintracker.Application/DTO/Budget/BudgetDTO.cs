@@ -18,9 +18,6 @@ public class BudgetDTO : IBaseDto
 
     public CurrencyDTO Currency { get; set; }
     
-    public Guid WalletId { get; set; }
-
-    
     public DateTime StartDate { get; set; }
     
     public DateTime EndDate { get; set; }

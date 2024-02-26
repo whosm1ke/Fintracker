@@ -32,10 +32,6 @@ public class Budget : IEntity<Guid>
 
     public Currency Currency { get; set; }
     
-    public Guid WalletId { get; set; }
-
-    public Wallet Wallet { get; set; }
-    
     public DateTime StartDate { get; set; }
     
     public DateTime EndDate { get; set; }
