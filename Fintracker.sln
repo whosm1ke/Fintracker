@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintracker.Domain", "Fintra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintracker.Application", "Fintracker.Application\Fintracker.Application.csproj", "{0BF7319C-498C-4048-BF66-A9D09B20BAB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintracker.Persistance", "Fintracker.Persistance\Fintracker.Persistance.csproj", "{F0088FFA-50FD-46A7-9AD1-6A4C4AA2D707}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintracker.Persistence", "Fintracker.Persistence\Fintracker.Persistence.csproj", "{F0088FFA-50FD-46A7-9AD1-6A4C4AA2D707}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintracker.Infrastructure", "Fintracker.Infrastructure\Fintracker.Infrastructure.csproj", "{7456DC4F-3A4C-4E7B-8721-F7F12217F175}"
 EndProject
