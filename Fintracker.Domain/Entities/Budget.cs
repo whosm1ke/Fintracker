@@ -28,6 +28,10 @@ public class Budget : IEntity<Guid>
     
     public decimal TotalSpent { get; set; }
 
+    public Wallet Wallet { get; set; }
+    
+    public Guid WalletId { get; set; }
+
     public Guid CurrencyId { get; set; }
 
     public Currency Currency { get; set; }

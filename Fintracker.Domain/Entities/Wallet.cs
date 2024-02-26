@@ -9,6 +9,7 @@ public class Wallet : IEntity<Guid>
     {
         Users = new HashSet<User>();
         Transactions = new HashSet<Transaction>();
+        Budgets = new HashSet<Budget>();
     }
     
     public Guid Id { get; set; }
@@ -25,9 +26,13 @@ public class Wallet : IEntity<Guid>
 
     public ICollection<Transaction> Transactions { get; set; }
 
+    public ICollection<Budget> Budgets { get; set; }
+
     public string Name { get; set; }
 
     public decimal StartBalance { get; set; }
+    
+    public decimal TotalSpent { get; set; }
 
     public Guid CurrencyId { get; set; }
 }

@@ -17,6 +17,8 @@ public class BudgetDTO : IBaseDto
     public decimal TotalSpent { get; set; }
 
     public CurrencyDTO Currency { get; set; }
+
+    public Guid WalletId { get; set; }
     
     public DateTime StartDate { get; set; }
     

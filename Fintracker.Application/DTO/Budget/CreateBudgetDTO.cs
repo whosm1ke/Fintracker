@@ -8,6 +8,8 @@ public class CreateBudgetDTO
     
     public Guid CurrencyId { get; set; }
     
+    public Guid WalletId { get; set; }
+    
     public ICollection<Guid> CategoryIds { get; set; }
     
     public DateTime StartDate { get; set; }
