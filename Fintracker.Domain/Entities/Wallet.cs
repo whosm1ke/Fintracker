@@ -22,6 +22,8 @@ public class Wallet : IEntity<Guid>
     
     public string ModifiedBy { get; set; }
 
+    public User Owner { get; set; }
+
     public ICollection<User> Users { get; set; }
 
     public ICollection<Transaction> Transactions { get; set; }
@@ -30,9 +32,8 @@ public class Wallet : IEntity<Guid>
 
     public string Name { get; set; }
 
-    public decimal StartBalance { get; set; }
+    public decimal Balance { get; set; }
     
-    public decimal TotalSpent { get; set; }
 
     public Guid CurrencyId { get; set; }
 }

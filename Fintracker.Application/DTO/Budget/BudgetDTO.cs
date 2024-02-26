@@ -12,9 +12,7 @@ public class BudgetDTO : IBaseDto
     
     public string Name { get; set; }
 
-    public decimal TotalAmount { get; set; }
-
-    public decimal TotalSpent { get; set; }
+    public decimal Balance { get; set; }
 
     public CurrencyDTO Currency { get; set; }
 

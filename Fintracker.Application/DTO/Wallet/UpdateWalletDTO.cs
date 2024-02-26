@@ -8,7 +8,7 @@ public class UpdateWalletDTO : IBaseDto
     
     public string Name { get; set; }
 
-    public decimal StartBalance { get; set; }
+    public decimal Balance { get; set; }
 
     public Guid CurrencyId { get; set; }
     
