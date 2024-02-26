@@ -1,0 +1,10 @@
+﻿using Fintracker.Application.DTO.Transaction;
+using Fintracker.Application.Responses;
+using MediatR;
+
+namespace Fintracker.Application.Features.Transaction.Requests.Commands;
+
+public class UpdateTransactionCommand : IRequest<UpdateCommandResponse<TransactionDTO>>
+{
+    public UpdateTransactionDTO Transaction { get; set; }
+}

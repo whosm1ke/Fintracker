@@ -21,4 +21,6 @@ public class TransactionDTO : IBaseDto
     public string? Note { get; set; }
     
     public string? Label { get; set; }
+
+    public DateTime CreatedAt { get; set; }
 }

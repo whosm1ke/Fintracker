@@ -28,8 +28,6 @@
       <Folder Include="Features\Currency\Requests\Commands\" />
       <Folder Include="Features\Transaction\Handlers\Commands\" />
       <Folder Include="Features\Transaction\Handlers\Queries\" />
-      <Folder Include="Features\Transaction\Requests\Commands\" />
-      <Folder Include="Features\Transaction\Requests\Queries\" />
       <Folder Include="Features\User\Handlers\Commands\" />
       <Folder Include="Features\User\Handlers\Queries\" />
       <Folder Include="Features\User\Requests\Commands\" />
