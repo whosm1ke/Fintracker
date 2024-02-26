@@ -32,8 +32,6 @@
       <Folder Include="Features\User\Handlers\Queries\" />
       <Folder Include="Features\Wallet\Handlers\Commands\" />
       <Folder Include="Features\Wallet\Handlers\Queries\" />
-      <Folder Include="Features\Wallet\Requests\Commands\" />
-      <Folder Include="Features\Wallet\Requests\Queries\" />
     </ItemGroup>
 
 </Project>
