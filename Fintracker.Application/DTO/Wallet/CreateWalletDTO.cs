@@ -7,4 +7,6 @@ public class CreateWalletDTO
     public decimal Balance { get; set; }
 
     public Guid CurrencyId { get; set; }
+
+    public Guid OwnerId { get; set; }
 }

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Wallet.Requests.Queries;
 
-public class GetWalletsByUserIdRequest : IRequest<IReadOnlyList<WalletBaseDTO>>
+public class GetWalletWithMembersByIdRequest : IRequest<WalletWithMembersDTO>
 {
-    public Guid UserId { get; set; }
+    public Guid Id { get; set; }
 }

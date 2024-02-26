@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Wallet.Requests.Commands;
 
-public class UpdateWalletCommand : IRequest<UpdateCommandResponse<WalletDTO>>
+public class UpdateWalletCommand : IRequest<UpdateCommandResponse<WalletBaseDTO>>
 {
     public UpdateWalletDTO Wallet { get; set; }
 }

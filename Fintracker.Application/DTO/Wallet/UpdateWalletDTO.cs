@@ -12,5 +12,4 @@ public class UpdateWalletDTO : IBaseDto
 
     public Guid CurrencyId { get; set; }
     
-    public ICollection<Guid> UserIds { get; set; }
 }
