@@ -4,7 +4,7 @@ using Fintracker.Application.DTO.Currency;
 
 namespace Fintracker.Application.DTO.Budget;
 
-public class BudgetDTO : IBaseDto
+public class BudgetBaseDTO : IBaseDto
 {
     public Guid Id { get; set; }
 
@@ -15,10 +15,10 @@ public class BudgetDTO : IBaseDto
     public decimal Balance { get; set; }
 
     public CurrencyDTO Currency { get; set; }
-
-    public Guid WalletId { get; set; }
     
     public DateTime StartDate { get; set; }
     
     public DateTime EndDate { get; set; }
+
+    public Guid UserId { get; set; }
 }

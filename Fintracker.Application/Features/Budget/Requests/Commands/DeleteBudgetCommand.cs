@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Budget.Requests.Commands;
 
-public class DeleteBudgetCommand : IRequest<DeleteCommandResponse<BudgetDTO>>
+public class DeleteBudgetCommand : IRequest<DeleteCommandResponse<BudgetBaseDTO>>
 {
     public Guid Id { get; set; }
 }
