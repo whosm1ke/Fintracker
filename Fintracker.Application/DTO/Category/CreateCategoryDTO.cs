@@ -1,6 +1,4 @@
 ﻿
-using Fintracker.Application.DTO.Common;
-
 namespace Fintracker.Application.DTO.Category;
 
 public class CreateCategoryDTO : ICategoryDto
