@@ -25,7 +25,6 @@
       <Folder Include="Features\Currency\Requests\Commands\" />
       <Folder Include="Features\Transaction\Handlers\Commands\" />
       <Folder Include="Features\User\Handlers\Commands\" />
-      <Folder Include="Features\User\Handlers\Queries\" />
       <Folder Include="Features\Wallet\Handlers\Commands\" />
       <Folder Include="Features\Wallet\Handlers\Queries\" />
     </ItemGroup>
