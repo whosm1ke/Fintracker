@@ -2,7 +2,7 @@
 
 namespace Fintracker.Application.DTO.Budget;
 
-public class UpdateBudgetDTO :  IBaseDto
+public class UpdateBudgetDTO :  IBaseDto, IBudgetDto
 {
     public Guid Id { get; set; }
     

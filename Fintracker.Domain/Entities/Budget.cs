@@ -2,7 +2,9 @@
 
 namespace Fintracker.Domain.Entities;
 
-public class Budget : IEntity<Guid>
+public class 
+    
+    Budget : IEntity<Guid>
 {
 
     public Budget()
