@@ -22,7 +22,6 @@
       <Folder Include="Features\Budget\Handlers\Commands\" />
       <Folder Include="Features\Category\Handlers\Commands\" />
       <Folder Include="Features\Currency\Handlers\Commands\" />
-      <Folder Include="Features\Currency\Handlers\Queries\" />
       <Folder Include="Features\Currency\Requests\Commands\" />
       <Folder Include="Features\Transaction\Handlers\Commands\" />
       <Folder Include="Features\Transaction\Handlers\Queries\" />
