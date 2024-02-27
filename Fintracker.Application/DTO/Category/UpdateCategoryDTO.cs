@@ -2,7 +2,7 @@
 
 namespace Fintracker.Application.DTO.Category;
 
-public class UpdateCategoryDTO : IBaseDto
+public class UpdateCategoryDTO : IBaseDto, ICategoryDto
 {
     public Guid Id { get; set; }
     

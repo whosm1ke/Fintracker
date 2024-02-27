@@ -11,15 +11,15 @@ public class BudgetBaseDtoValidator : AbstractValidator<IBudgetDto>
     public BudgetBaseDtoValidator(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        
+
 
         RuleFor(x => x.Balance)
             .GreaterThanOrEqualTo(BudgetConstraints.MinBalance)
             .WithMessage(x =>
-                $"Minimal balance should be greater or equal to {BudgetConstraints.MinBalance}, provided values is {x.Balance}")
+                $"Minimal balance should be greater or equal to {BudgetConstraints.MinBalance}")
             .LessThanOrEqualTo(BudgetConstraints.MaxBalance)
             .WithMessage(x =>
-                $"Maximum balance should be less or equal to {BudgetConstraints.MaxBalance}, provided values is {x.Balance}")
+                $"Maximum balance should be less or equal to {BudgetConstraints.MaxBalance}")
             .NotEmpty()
             .WithMessage($"{nameof(CreateBudgetDTO.Balance)} can not be blank");
 
@@ -30,8 +30,10 @@ public class BudgetBaseDtoValidator : AbstractValidator<IBudgetDto>
             .WithMessage($"{nameof(CreateBudgetDTO.Name)} can not be blank")
             .MaximumLength(BudgetConstraints.MaximumNameLength)
             .WithMessage(x =>
-                $"{nameof(CreateBudgetDTO.Name)} should be less then {BudgetConstraints.MaximumNameLength}" +
-                $", provided value length is {x.Name.Length}");
+                $"{nameof(CreateBudgetDTO.Name)} should be less then {BudgetConstraints.MaximumNameLength}")
+            .MinimumLength(BudgetConstraints.MinimumNameLength)
+            .WithMessage(x =>
+                $"{nameof(CreateBudgetDTO.Name)} should be less then {BudgetConstraints.MinimumNameLength}");
 
         RuleFor(x => x.CurrencyId)
             .NotEmpty()
@@ -48,8 +50,7 @@ public class BudgetBaseDtoValidator : AbstractValidator<IBudgetDto>
             .WithMessage($"{nameof(CreateBudgetDTO.WalletId)} must be included")
             .MustAsync((guid, token) => { return _unitOfWork.WalletRepository.ExistsAsync(guid); })
             .WithMessage(x => $"Wallet with id [{x.WalletId}] does not exists");
-        
-       
+
 
         RuleFor(x => x.StartDate)
             .NotEmpty()
@@ -66,9 +67,9 @@ public class BudgetBaseDtoValidator : AbstractValidator<IBudgetDto>
             .WithMessage($"{nameof(CreateBudgetDTO.EndDate)} must be included")
             .GreaterThanOrEqualTo(x => x.StartDate)
             .WithMessage("End Date should be greater than Start Date");
-        
+
         RuleFor(x => x.CategoryIds)
-            .MustAsync((guids, token) => ExistInDatabase(guids) )
+            .MustAsync((guids, token) => ExistInDatabase(guids))
             .WithMessage("One or more CategoryIds do not exist in the database.");
     }
 
