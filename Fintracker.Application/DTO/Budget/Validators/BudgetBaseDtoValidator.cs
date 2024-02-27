@@ -14,6 +14,10 @@ public class BudgetBaseDtoValidator : AbstractValidator<IBudgetDto>
 
 
         RuleFor(x => x.Balance)
+            .NotNull()
+            .WithMessage($"{nameof(CreateBudgetDTO.Balance)} must be included")
+            .NotEmpty()
+            .WithMessage($"{nameof(CreateBudgetDTO.Balance)} can not be blank")
             .GreaterThanOrEqualTo(BudgetConstraints.MinBalance)
             .WithMessage(x =>
                 $"Minimal balance should be greater or equal to {BudgetConstraints.MinBalance}")
