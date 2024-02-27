@@ -1,6 +1,6 @@
 ﻿namespace Fintracker.Application.DTO.Transaction;
 
-public class CreateTransactionDTO
+public class CreateTransactionDTO : ITransactionDto
 {
     public Guid WalletId { get; set; }
     

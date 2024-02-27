@@ -1,11 +1,7 @@
-﻿using Fintracker.Application.DTO.Common;
+﻿namespace Fintracker.Application.DTO.Transaction;
 
-namespace Fintracker.Application.DTO.Transaction;
-
-public class UpdateTransactionDTO : IBaseDto, ITransactionDto
+public interface ITransactionDto
 {
-    public Guid Id { get; set; }
-    
     public Guid CategoryId { get; set; }
     
     public Guid CurrencyId { get; set; }
