@@ -3,7 +3,8 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Budget.Requests.Queries;
 
-public class GetBudgetsByWalletIdRequest : IRequest<IReadOnlyList<BudgetBaseDTO>>
+public class GetBudgetsByWalletIdSortedRequest : IRequest<IReadOnlyList<BudgetBaseDTO>>
 {
     public Guid WalletId { get; set; }
+    public string SortBy { get; set; }
 }

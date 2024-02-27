@@ -20,7 +20,6 @@
 
     <ItemGroup>
       <Folder Include="Features\Budget\Handlers\Commands\" />
-      <Folder Include="Features\Budget\Handlers\Queries\" />
       <Folder Include="Features\Category\Handlers\Commands\" />
       <Folder Include="Features\Category\Handlers\Queries\" />
       <Folder Include="Features\Currency\Handlers\Commands\" />
