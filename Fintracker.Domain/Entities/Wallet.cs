@@ -34,6 +34,7 @@ public class Wallet : IEntity<Guid>
 
     public decimal Balance { get; set; }
     
-
     public Guid CurrencyId { get; set; }
+    
+    public Currency Currency { get; set; }
 }

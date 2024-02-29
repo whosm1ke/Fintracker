@@ -1,9 +1,6 @@
 ﻿using AutoFixture;
 using AutoMapper;
-using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.DTO.Transaction;
-using Fintracker.Application.Features.Budget.Handlers.Commands;
-using Fintracker.Application.Features.Budget.Requests.Commands;
 using Fintracker.Application.Features.Transaction.Handlers.Commands;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.MapProfiles;
