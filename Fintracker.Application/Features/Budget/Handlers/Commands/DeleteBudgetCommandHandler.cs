@@ -31,12 +31,12 @@ public class DeleteBudgetCommandHandler : IRequestHandler<DeleteBudgetCommand, D
 
         var budgetBaseDto = _mapper.Map<BudgetBaseDTO>(budget);
         await _unitOfWork.BudgetRepository.DeleteAsync(budget);
-        await _unitOfWork.SaveAsync();
-
-
+        
         response.Success = true;
         response.Message = "Deleted successfully";
         response.DeletedObj = budgetBaseDto;
+        
+        await _unitOfWork.SaveAsync();
 
         return response;
     }

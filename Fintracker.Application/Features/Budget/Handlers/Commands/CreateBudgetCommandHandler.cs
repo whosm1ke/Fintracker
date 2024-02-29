@@ -30,12 +30,13 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
         {
             var budgetEntity = _mapper.Map<Domain.Entities.Budget>(request.Budget);
             await _unitOfWork.BudgetRepository.AddAsync(budgetEntity);
-            await _unitOfWork.SaveAsync();
 
             response.Message = "Created successfully";
             response.Success = true;
             response.Id = budgetEntity.Id;
             response.CreatedObject = request.Budget;
+            
+            await _unitOfWork.SaveAsync();
         }
         else
         {

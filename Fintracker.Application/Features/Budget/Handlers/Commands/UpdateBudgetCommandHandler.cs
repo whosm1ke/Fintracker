@@ -35,18 +35,18 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
                 throw new NotFoundException(nameof(Domain.Entities.Budget), request.Budget.Id);
 
             var oldBudget = _mapper.Map<BudgetBaseDTO>(budget);
-
             _mapper.Map(request.Budget, budget);
-            await _unitOfWork.BudgetRepository.UpdateAsync(budget);
-            await _unitOfWork.SaveAsync();
-
             var newBudget = _mapper.Map<BudgetBaseDTO>(budget);
+            
+            await _unitOfWork.BudgetRepository.UpdateAsync(budget);
 
             response.Message = "Updated successfully";
             response.Success = true;
             response.Id = budget.Id;
             response.Old = oldBudget;
             response.New = newBudget;
+            
+            await _unitOfWork.SaveAsync();
         }
         else
         {
