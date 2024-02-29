@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintracker.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintracker.API", "Fintracker.API\Fintracker.API.csproj", "{78CA3C07-D942-48AE-95AB-88B8B70F317B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1Fintracker.TEST", "TestProject1Fintracker.TEST\TestProject1Fintracker.TEST.csproj", "{1477C6D7-1C29-43FA-9425-A1B38ED92683}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,7 @@ Global
 		{F0088FFA-50FD-46A7-9AD1-6A4C4AA2D707} = {7D0848D9-59B5-4E52-9073-8B93D55FF4A1}
 		{7456DC4F-3A4C-4E7B-8721-F7F12217F175} = {7D0848D9-59B5-4E52-9073-8B93D55FF4A1}
 		{78CA3C07-D942-48AE-95AB-88B8B70F317B} = {7D0848D9-59B5-4E52-9073-8B93D55FF4A1}
+		{1477C6D7-1C29-43FA-9425-A1B38ED92683} = {BD8954AE-377B-4271-9D63-BEBBA611D578}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{39A84CF4-EEE5-4F16-A6AD-F7A6DEE02293}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -47,5 +50,9 @@ Global
 		{78CA3C07-D942-48AE-95AB-88B8B70F317B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78CA3C07-D942-48AE-95AB-88B8B70F317B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78CA3C07-D942-48AE-95AB-88B8B70F317B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1477C6D7-1C29-43FA-9425-A1B38ED92683}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1477C6D7-1C29-43FA-9425-A1B38ED92683}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1477C6D7-1C29-43FA-9425-A1B38ED92683}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1477C6D7-1C29-43FA-9425-A1B38ED92683}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

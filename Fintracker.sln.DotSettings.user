@@ -1,0 +1,13 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=20818874_002D8aea_002D4f4f_002D94ce_002D274976ee04c5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddAsync_Should_Return_Added_Object #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.AddAsync_Should_Return_Added_Object&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=760b334d_002D4cde_002D416a_002D85c0_002D18c5eb33a795/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddAsync_Should_Return_Added_Object" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.UpdateAsync_Should_Return_True_And_Old_With_New_Objects&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.AddAsync_Should_Return_True&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.DeleteAsync_Should_Return_True_And_Deleted_Object&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

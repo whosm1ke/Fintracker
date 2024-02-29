@@ -24,6 +24,9 @@ public class MockUnitOfWorkRepository
         mockUoW.Setup(x => x.UserRepository)
             .Returns(MockUserRepository.GetUserRepository().Object);
         
+        mockUoW.Setup(x => x.TransactionRepository)
+            .Returns(MockTransactionRepository.GetTransactionRepository().Object);
+        
         return mockUoW;
     }
 }
