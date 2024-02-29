@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using AutoMapper;
-using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.Features.Budget.Handlers.Commands;
 using Fintracker.Application.Features.Budget.Requests.Commands;
