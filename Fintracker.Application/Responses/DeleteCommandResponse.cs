@@ -2,5 +2,5 @@
 
 public class DeleteCommandResponse<T> : BaseCommandResponse
 {
-    public T? Old { get; set; }
+    public T? DeletedObj { get; set; }
 }

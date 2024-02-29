@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Budget.Requests.Commands;
 
-public class CreateBudgetCommand : IRequest<CreateCommandResponse<BudgetBaseDTO>>
+public class CreateBudgetCommand : IRequest<CreateCommandResponse<CreateBudgetDTO>>
 {
     public CreateBudgetDTO Budget { get; set; }
 }

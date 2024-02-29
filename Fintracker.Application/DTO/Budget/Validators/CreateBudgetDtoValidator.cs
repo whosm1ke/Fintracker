@@ -3,10 +3,10 @@ using FluentValidation;
 
 namespace Fintracker.Application.DTO.Budget.Validators;
 
-public class CreateBudgetWithUserIdDtoValidator : AbstractValidator<CreateBudgetDTO>
+public class CreateBudgetDtoValidator : AbstractValidator<CreateBudgetDTO>
 {
 
-    public CreateBudgetWithUserIdDtoValidator(IUnitOfWork unitOfWork)
+    public CreateBudgetDtoValidator(IUnitOfWork unitOfWork)
     {
         
         Include(new BudgetBaseDtoValidator(unitOfWork));
