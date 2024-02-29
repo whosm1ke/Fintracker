@@ -79,13 +79,14 @@ public class BudgetBaseDtoValidator : AbstractValidator<IBudgetDto>
 
     private async Task<bool> ExistInDatabase(ICollection<Guid> categoryIds)
     {
+        int existCategoriesCounter = 0;
         var categories = await _unitOfWork.CategoryRepository.GetAllAsyncNoTracking();
         foreach (var category in categories)
         {
             bool isExists = categoryIds.Any(id => id.Equals(category?.Id));
-            if (!isExists) return false;
+            if (isExists) existCategoriesCounter++;
         }
 
-        return true;
+        return existCategoriesCounter == categoryIds.Count;
     }
 }
