@@ -6,18 +6,15 @@ using Fintracker.Application.Features.Budget.Requests.Commands;
 using Fintracker.Application.MapProfiles;
 using FluentAssertions;
 using TestProject1Fintracker.TEST.Repositories;
-using Xunit.Abstractions;
 
 namespace TestProject1Fintracker.TEST.BudgetTests;
 
-public class BudgetRequestTests
+public class BudgetCommandTests
 {
     private readonly IMapper _mapper;
     private readonly IFixture _fixture;
-    private readonly ITestOutputHelper _output;
-    public BudgetRequestTests(ITestOutputHelper output)
+    public BudgetCommandTests()
     {
-        _output = output;
         _fixture = new Fixture();
         var mapperCfg = new MapperConfiguration(c =>
         {

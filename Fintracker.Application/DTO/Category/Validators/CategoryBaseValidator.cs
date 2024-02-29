@@ -14,7 +14,7 @@ public class CategoryBaseValidator : AbstractValidator<ICategoryDto>
             .WithMessage($"{nameof(ICategoryDto.Name)} can not be blank")
             .MinimumLength(CategoryConstraints.MinimumNameLength)
             .WithMessage($"Minimum length for {nameof(ICategoryDto.Name)} is {CategoryConstraints.MinimumNameLength}")
-            .MaximumLength(CategoryConstraints.MinimumNameLength)
+            .MaximumLength(CategoryConstraints.MaximumNameLength)
             .WithMessage($"Maximum length for {nameof(ICategoryDto.Name)} is {CategoryConstraints.MaximumNameLength}");
 
         RuleFor(x => x.Image)

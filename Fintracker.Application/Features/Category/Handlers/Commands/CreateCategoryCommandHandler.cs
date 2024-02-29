@@ -28,14 +28,14 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         {
             var categoryEntity = _mapper.Map<Domain.Entities.Category>(request.Category);
             await _unitOfWork.CategoryRepository.AddAsync(categoryEntity);
-            await _unitOfWork.SaveAsync();
-
             var categoryDto = _mapper.Map<CategoryDTO>(categoryEntity);
             
             response.Success = true;
             response.Message = "Created successfully";
             response.Id = categoryEntity.Id;
             response.CreatedObject = categoryDto;
+            
+            await _unitOfWork.SaveAsync();
         }
         else
         {

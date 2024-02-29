@@ -13,8 +13,6 @@ public class CreateCategoryDtoValidator : AbstractValidator<CreateCategoryDTO>
         RuleFor(x => x.Type)
             .NotNull()
             .WithMessage($"{nameof(CreateCategoryDTO.Type)} must be included")
-            .NotEmpty()
-            .WithMessage($"{nameof(CreateCategoryDTO.Type)} can not be blank")
             .IsInEnum()
             .WithMessage($"{nameof(CreateCategoryDTO.Type)} has allowed values: {allowedTypeValues}");
     }
