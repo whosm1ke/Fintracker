@@ -9,5 +9,9 @@
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CategoryTests.CategoryCommandTests.AddCategory_Should_Return_True&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CategoryTests.CategoryCommandTests.UpdateCategory_Should_Return_True_And_Old_And_New_Objects&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CategoryTests.CategoryCommandTests.DeleteAsync_Should_Return_True_And_Deleted_Object&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.TransactionTests.TransactionsCommandTests.AddAsync_No_Optional_Params_Should_Return_True&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.TransactionTests.TransactionsCommandTests.AddAsync_Should_Return_True&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.TransactionTests.TransactionsCommandTests.UpdateAsync_Should_Return_True_And_Old_With_New_Objects&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.TransactionTests.TransactionsCommandTests.DeleteAsync_Should_Return_True_And_Deleted_Object&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
