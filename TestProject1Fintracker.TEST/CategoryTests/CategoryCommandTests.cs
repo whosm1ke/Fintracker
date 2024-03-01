@@ -45,7 +45,7 @@ public class CategoryCommandTests
 
         int categoriesCount = (await mockUnitOfWork.CategoryRepository.GetAllAsync()).Count;
         result.Success.Should().BeTrue();
-        categoriesCount.Should().Be(3);
+        categoriesCount.Should().Be(5);
     }
 
 
@@ -95,7 +95,7 @@ public class CategoryCommandTests
         
         result.Success.Should().BeTrue();
         result.DeletedObj.Should().NotBeNull();
-        categoriesCountAfterDelete.Should().Be(1);
+        categoriesCountAfterDelete.Should().Be(3);
     }
 }
 

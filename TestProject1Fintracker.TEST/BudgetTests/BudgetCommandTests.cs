@@ -50,7 +50,7 @@ public class BudgetCommandTests
         result.Success.Should().BeTrue();
         result.CreatedObject.Should().NotBeNull();
         result.CreatedObject.Should().BeOfType<CreateBudgetDTO>();
-        budgetsCount.Should().Be(4);
+        budgetsCount.Should().Be(6);
     }
     
     [Fact]
@@ -97,6 +97,6 @@ public class BudgetCommandTests
         result.Success.Should().BeTrue();
         result.DeletedObj.Should().NotBeNull();
         result.DeletedObj.Should().BeOfType<BudgetBaseDTO>();
-        budgetCountAfterDelete.Should().Be(2);
+        budgetCountAfterDelete.Should().Be(4);
     }
 }

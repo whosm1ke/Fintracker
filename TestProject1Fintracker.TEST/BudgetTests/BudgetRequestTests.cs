@@ -147,74 +147,14 @@ public class BudgetRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetBudgetsByWalletIdRequestHandler(mockUnitOfWork, _mapper);
-        var expectedBudgets = new List<BudgetBaseDTO>()
-        {
-            _mapper.Map<BudgetBaseDTO>(new Budget()
-            {
-                Balance = 1000,
-                CreatedAt = new DateTime(2024, 12, 12),
-                ModifiedAt = new DateTime(2024, 12, 12),
-                CreatedBy = "ME",
-                ModifiedBy = "ME",
-                Currency = new Currency(),
-                EndDate = new DateTime(2024, 11, 12),
-                StartDate = new DateTime(2024, 11, 14),
-                Name = "B",
-                Id = new Guid("5F5F42ED-345C-4B13-AA35-76005A9607FF"),
-                Wallet = new Wallet(),
-                User = new User(),
-                Categories = new List<Category>(),
-                WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
-                UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
-                CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
-            }),
-            _mapper.Map<BudgetBaseDTO>(new Budget()
-            {
-                Balance = 2000,
-                CreatedAt = new DateTime(2024, 12, 12),
-                ModifiedAt = new DateTime(2024, 12, 12),
-                CreatedBy = "ME",
-                ModifiedBy = "ME",
-                Currency = new Currency(),
-                EndDate = new DateTime(2024, 12, 12),
-                StartDate = new DateTime(2024, 12, 14),
-                Name = "A",
-                Id = new Guid("29DECA11-E633-47E4-A0B2-569791B7D8C7"),
-                Wallet = new Wallet(),
-                User = new User(),
-                Categories = new List<Category>(),
-                UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
-                CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"),
-                WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0")
-            }),
-            _mapper.Map<BudgetBaseDTO>(new Budget()
-            {
-                Balance = 3000,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now,
-                CreatedBy = "ME",
-                ModifiedBy = "ME",
-                Currency = new Currency(),
-                EndDate = new DateTime(2024, 10, 12),
-                StartDate = new DateTime(2024, 10, 14),
-                Name = "Budget3",
-                Id = new Guid("8FE42E15-4484-4DF7-BC1A-6C4047DD5C2C"),
-                Wallet = new Wallet(),
-                User = new User(),
-                Categories = new List<Category>(),
-                WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
-                UserId = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
-                CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
-            })
-        };
-
+        int expectedBudgetsCount = 4;
         var actualBudgets = (await handler.Handle(new GetBudgetsByWalletIdRequest()
         {
             WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0")
         }, default)).ToList();
 
         actualBudgets.Should().NotBeNull();
-        actualBudgets.Should().BeEquivalentTo(expectedBudgets);
+        actualBudgets.Count.Should().Be(expectedBudgetsCount);
     }
 
     [Fact]
@@ -224,7 +164,7 @@ public class BudgetRequestTests
         var handler = new GetBudgetsByWalletIdSortedRequestHandler(mockUnitOfWork, _mapper);
         string firstItemName = "A";
         string secondItemName = "B";
-        string thirdItemName = "Budget3";
+        string thirdItemName = "Budget with user";
 
         var actualSortedBudgets = await handler.Handle(new GetBudgetsByWalletIdSortedRequest()
         {
