@@ -54,5 +54,13 @@
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetsByWalletIdSortedRequest_Sort_By_Name_Test&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetWithUserByIdRequest_Test&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetWithYserByIdRequest_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CategoryTests.CategoryRequestTests.GetByType_Type_Income_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CategoryTests.CategoryRequestTests.GetAllSorted_Sort_By_Name_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CategoryTests.CategoryRequestTests.GetCategoryById_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CategoryTests.CategoryRequestTests.GetAllCategories_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CurrencyTests.CurrencyRequestTests.GetCurrencies_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CurrencyTests.CurrencyRequestTests.GetCurrenciesSorted_Sory_By_Symbol_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CurrencyTests.CurrencyRequestTests.GetCurrencyById_Should_Return_UAH_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.TransactionTests.TransactionRequestTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
