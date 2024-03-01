@@ -34,7 +34,7 @@ public class TransactionsCommandTests
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new CreateTransactionCommandHandler(_mapper, mockUnitOfWork);
         var transactionToAdd = _fixture.Build<CreateTransactionDTO>()
-            .With(x => x.Amount, 1000)
+            .With(x => x.Amount, 500)
             .With(x => x.CategoryId, new Guid("D670263B-92CF-48C8-923A-EB09188F6077"))
             .With(x => x.UserId,new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"))
             .With(x => x.WalletId,new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"))
@@ -48,11 +48,14 @@ public class TransactionsCommandTests
             Transaction = transactionToAdd
         }, default);
         
-        var budgetsCount = (await mockUnitOfWork.TransactionRepository.GetAllAsync()).Count;
+        var transactionsCount = (await mockUnitOfWork.TransactionRepository.GetAllAsync()).Count;
+        var walletBalance = ((await mockUnitOfWork.WalletRepository.GetAsync(transactionToAdd.WalletId))!).Balance;
+
+        walletBalance.Should().Be(500);
         result.Success.Should().BeTrue();
         result.CreatedObject.Should().NotBeNull();
         result.CreatedObject.Should().BeOfType<TransactionBaseDTO>();
-        budgetsCount.Should().Be(4);
+        transactionsCount.Should().Be(4);
     }
     
     [Fact]

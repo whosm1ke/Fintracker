@@ -1,16 +1,15 @@
 ﻿using Fintracker.Domain.Common;
+using Microsoft.AspNetCore.Identity;
 
 namespace Fintracker.Domain.Entities;
 
-public class User: IEntity<Guid>
+public class User: IdentityUser<Guid>, IEntity<Guid>
 {
     public User()
     {
         Wallets = new HashSet<Wallet>();
         Budgets = new HashSet<Budget>();
     }
-    
-    public Guid Id { get; set; }
     
     public DateTime CreatedAt { get; set; }
     
@@ -23,8 +22,6 @@ public class User: IEntity<Guid>
     public ICollection<Wallet> Wallets { get; set; }
     
     public ICollection<Budget> Budgets { get; set; }
-
-    public string Email { get; set; }
 
     public UserDetails UserDetails { get; set; }
 }

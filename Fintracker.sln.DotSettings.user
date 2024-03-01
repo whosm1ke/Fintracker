@@ -1,4 +1,35 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.core\2.0.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.core\2.1.1" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.core\2.2.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.core\5.0.8" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.core\6.0.9" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.core\8.0.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.core\8.0.2" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.identitymodel.logging\1.1.4" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.identitymodel.logging\5.2.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.identitymodel.logging\5.6.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.identitymodel.logging\6.12.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.identitymodel.logging\6.21.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.identitymodel.logging\6.24.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.identitymodel.logging\6.7.1" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.identitymodel.logging\6.8.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.identitymodel.logging\7.0.3" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.stores\2.0.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.stores\2.1.1" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.stores\5.0.8" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.stores\6.0.9" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.stores\8.0.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.extensions.identity.stores\8.0.2" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.aspnetcore.identity.entityframeworkcore\2.0.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.aspnetcore.identity.entityframeworkcore\2.1.1" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.aspnetcore.identity.entityframeworkcore\5.0.8" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.aspnetcore.identity.entityframeworkcore\6.0.9" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.aspnetcore.identity.entityframeworkcore\8.0.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.aspnetcore.identity.entityframeworkcore\8.0.2" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.aspnetcore.identity.ui\2.1.1" Loaded="True" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=20818874_002D8aea_002D4f4f_002D94ce_002D274976ee04c5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddAsync_Should_Return_Added_Object #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.AddAsync_Should_Return_Added_Object&lt;/TestId&gt;&#xD;
