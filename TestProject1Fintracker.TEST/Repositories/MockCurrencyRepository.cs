@@ -1,6 +1,7 @@
 ﻿using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Domain.Entities;
 using Moq;
+using System.Linq.Dynamic.Core;
 
 namespace TestProject1Fintracker.TEST.Repositories;
 
@@ -13,7 +14,7 @@ public class MockCurrencyRepository
             new()
             {
                 Id = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"),
-                Name = "Ukrainian hrivha",
+                Name = "Ukrainian hrivna",
                 Symbol = "UAH"
             },
             new()
@@ -30,6 +31,21 @@ public class MockCurrencyRepository
             {
                 return currencies.Find(c => c.Id == id) != null;
             });
+
+        mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
+            .Returns(async (Guid id) =>
+            {
+                return currencies.FirstOrDefault(x => x.Id == id);
+            });
+
+        mock.Setup(x => x.GetAllAsync())
+            .ReturnsAsync(currencies);
+        
+        mock.Setup(x => x.GetCurrenciesSorted(It.IsAny<string>()))
+            .Returns((string sortBy) => Task.FromResult((IReadOnlyList<Currency>)currencies
+            .AsQueryable()
+            .OrderBy(sortBy)
+            .ToList()));
         
         return mock;
     }
