@@ -44,5 +44,15 @@
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.TransactionTests.TransactionsCommandTests.AddAsync_Should_Return_True&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.TransactionTests.TransactionsCommandTests.UpdateAsync_Should_Return_True_And_Old_With_New_Objects&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.TransactionTests.TransactionsCommandTests.DeleteAsync_Should_Return_True_And_Deleted_Object&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.WalletTests.WalletCommandTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetCommandTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetByIdRequest_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetsByUserIdRequest_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetsByUserIdSortedRequest_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetsByUserIdSortedRequest_Sort_By_Name_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetsByWalletIdRequest_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetsByWalletIdSortedRequest_Sort_By_Name_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetWithUserByIdRequest_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.GetBudgetWithYserByIdRequest_Test&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

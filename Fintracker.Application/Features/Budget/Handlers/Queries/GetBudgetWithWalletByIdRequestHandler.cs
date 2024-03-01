@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Budget;
+using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Budget.Requests.Queries;
 using MediatR;
 
@@ -18,10 +19,12 @@ public class GetBudgetWithWalletByIdRequestHandler : IRequestHandler<GetBudgetWi
     }
     public async Task<BudgetWithWalletDTO> Handle(GetBudgetWithWalletByIdRequest request, CancellationToken cancellationToken)
     {
-        var budgets = await _unitOfWork.BudgetRepository.GetBudgetWithWalletAsync(request.Id);
+        var budget = await _unitOfWork.BudgetRepository.GetBudgetWithWalletAsync(request.Id);
 
-        //TODO: may be there should be some validation logic to ensure that list is not empty
+        if (budget is null)
+            throw new NotFoundException(nameof(Domain.Entities.Budget), request.Id);
 
-        return _mapper.Map<BudgetWithWalletDTO>(budgets);
+        var b = _mapper.Map<BudgetWithWalletDTO>(budget);
+        return b;
     }
 }

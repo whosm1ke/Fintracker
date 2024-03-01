@@ -15,6 +15,7 @@ public class MockWalletRepository
                 Id = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
                 Balance = 1000,
                 Name = "Wallet 1",
+                
             },
             new()
             {
