@@ -4,11 +4,11 @@ using Fintracker.Application.DTO.Category;
 using Fintracker.Application.Features.Category.Handlers.Commands;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.MapProfiles;
+using Fintracker.TEST.Repositories;
 using FluentAssertions;
-using TestProject1Fintracker.TEST.Repositories;
 using Xunit.Abstractions;
 
-namespace TestProject1Fintracker.TEST.CategoryTests;
+namespace Fintracker.TEST.CategoryTests;
 
 public class CategoryCommandTests
 {

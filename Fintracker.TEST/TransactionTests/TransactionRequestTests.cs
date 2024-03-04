@@ -5,11 +5,11 @@ using Fintracker.Application.Features.Transaction.Handlers.Queries;
 using Fintracker.Application.Features.Transaction.Requests.Queries;
 using Fintracker.Application.MapProfiles;
 using FluentAssertions;
-using TestProject1Fintracker.TEST.Repositories;
 using Xunit.Abstractions;
 using System;
+using Fintracker.TEST.Repositories;
 
-namespace TestProject1Fintracker.TEST.TransactionTests;
+namespace Fintracker.TEST.TransactionTests;
 
 public class TransactionRequestTests
 {

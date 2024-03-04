@@ -8,7 +8,7 @@ public interface IWalletRepository : IGenericRepository<Wallet>
     Task<Wallet?> GetWalletWithMembersAsync(Guid id);
     Task<Wallet?> GetWalletWithTransactionsAsync(Guid id);
     Task<Wallet?> GetWalletWithBudgetsAsync(Guid id);
-    Task<IReadOnlyList<Wallet>> GetByUserIdAsync(Guid userId);
+    Task<IReadOnlyList<Wallet>> GetByOwnerIdAsync(Guid userId);
 
-    Task<IReadOnlyList<Wallet>> GetByUserIdSortedAsync(Guid userId, string sortBy);
+    Task<IReadOnlyList<Wallet>> GetByOwnerIdSortedAsync(Guid userId, string sortBy);
 }

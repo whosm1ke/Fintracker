@@ -30,12 +30,17 @@
   &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.aspnetcore.identity.entityframeworkcore\8.0.2" Loaded="True" /&gt;&#xD;
   &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.aspnetcore.identity.ui\2.1.1" Loaded="True" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=20818874_002D8aea_002D4f4f_002D94ce_002D274976ee04c5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddAsync_Should_Return_Added_Object #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=20818874_002D8aea_002D4f4f_002D94ce_002D274976ee04c5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddAsync_Should_Return_Added_Object #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.BudgetTests.BudgetRequestTests.AddAsync_Should_Return_Added_Object&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::Fintracker.TEST.WalletTests.WalletRequestTests.GetWalletsByOwnerId_Should_Return_52A0_BE71_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::Fintracker.TEST.WalletTests.WalletRequestTests.GetWalletsByOwnerIdSorted_SortBy_Balance_Should_Return_52A0_BE71_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::Fintracker.TEST.WalletTests.WalletRequestTests.GetWalletWithBudgetsById_Should_Return_8D6E_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::Fintracker.TEST.WalletTests.WalletRequestTests.GetWalletWithMembersById_Should_Return_D528_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::Fintracker.TEST.WalletTests.WalletRequestTests.GetWalletWithOwnerById_Should_Return_66B5_Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::Fintracker.TEST.WalletTests.WalletRequestTests.GetWalletWithTransactionsById_Should_Return_E6A7_Test&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=760b334d_002D4cde_002D416a_002D85c0_002D18c5eb33a795/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddAsync_Should_Return_Added_Object" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=760b334d_002D4cde_002D416a_002D85c0_002D18c5eb33a795/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddAsync_Should_Return_Added_Object" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CategoryTests.CategoryCommandTests.AddCategory_Should_Return_True&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1477C6D7-1C29-43FA-9425-A1B38ED92683::net8.0::TestProject1Fintracker.TEST.CategoryTests.CategoryCommandTests.UpdateCategory_Should_Return_True_And_Old_And_New_Objects&lt;/TestId&gt;&#xD;

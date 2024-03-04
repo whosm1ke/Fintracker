@@ -4,11 +4,11 @@ using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.Features.Wallet.Handlers.Commands;
 using Fintracker.Application.Features.Wallet.Requests.Commands;
 using Fintracker.Application.MapProfiles;
+using Fintracker.TEST.Repositories;
 using FluentAssertions;
-using TestProject1Fintracker.TEST.Repositories;
 using Xunit.Abstractions;
 
-namespace TestProject1Fintracker.TEST.WalletTests;
+namespace Fintracker.TEST.WalletTests;
 
 public class WalletCommandTests
 {

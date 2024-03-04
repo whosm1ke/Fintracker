@@ -23,6 +23,7 @@ public class Wallet : IEntity<Guid>
     public string ModifiedBy { get; set; }
 
     public User Owner { get; set; }
+    public Guid OwnerId { get; set; }
 
     public ICollection<User> Users { get; set; }
 

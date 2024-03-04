@@ -1,7 +1,7 @@
 ﻿using Fintracker.Application.Contracts.Persistence;
 using Moq;
 
-namespace TestProject1Fintracker.TEST.Repositories;
+namespace Fintracker.TEST.Repositories;
 
 public class MockUnitOfWorkRepository
 {

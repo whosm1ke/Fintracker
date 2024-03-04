@@ -10,6 +10,8 @@ public class WalletBaseDTO : IBaseDto
 
     public UserBaseDTO Owner { get; set; }
     
+    public Guid OwnerId { get; set; }
+    
     public string Name { get; set; }
 
     public decimal Balance { get; set; }

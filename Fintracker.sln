@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintracker.Persistence", "F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintracker.API", "Fintracker.API\Fintracker.API.csproj", "{78CA3C07-D942-48AE-95AB-88B8B70F317B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1Fintracker.TEST", "TestProject1Fintracker.TEST\TestProject1Fintracker.TEST.csproj", "{1477C6D7-1C29-43FA-9425-A1B38ED92683}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fintracker.TEST", "Fintracker.TEST\Fintracker.TEST.csproj", "{1477C6D7-1C29-43FA-9425-A1B38ED92683}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{E6006918-6F2F-4838-9327-A24324754D5E}"
 EndProject

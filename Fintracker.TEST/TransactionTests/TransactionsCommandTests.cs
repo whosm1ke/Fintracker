@@ -4,11 +4,11 @@ using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.Features.Transaction.Handlers.Commands;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.MapProfiles;
+using Fintracker.TEST.Repositories;
 using FluentAssertions;
-using TestProject1Fintracker.TEST.Repositories;
 using Xunit.Abstractions;
 
-namespace TestProject1Fintracker.TEST.TransactionTests;
+namespace Fintracker.TEST.TransactionTests;
 
 public class TransactionsCommandTests
 {

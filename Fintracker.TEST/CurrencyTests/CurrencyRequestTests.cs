@@ -4,10 +4,10 @@ using Fintracker.Application.DTO.Currency;
 using Fintracker.Application.Features.Currency.Handlers.Queries;
 using Fintracker.Application.Features.Currency.Requests.Queries;
 using Fintracker.Application.MapProfiles;
+using Fintracker.TEST.Repositories;
 using FluentAssertions;
-using TestProject1Fintracker.TEST.Repositories;
 
-namespace TestProject1Fintracker.TEST.CurrencyTests;
+namespace Fintracker.TEST.CurrencyTests;
 
 public class CurrencyRequestTests
 {

@@ -6,19 +6,19 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Wallet.Handlers.Queries;
 
-public class GetWalletsByUserIdRequestHandler : IRequestHandler<GetWalletsByUserIdRequest, IReadOnlyList<WalletBaseDTO>>
+public class GetWalletsByOwnerIdSortedRequestHandler : IRequestHandler<GetWalletsByOwnerIdSortedRequest, IReadOnlyList<WalletBaseDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetWalletsByUserIdRequestHandler(IMapper mapper, IUnitOfWork unitOfWork)
+    public GetWalletsByOwnerIdSortedRequestHandler(IMapper mapper, IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
-    public async Task<IReadOnlyList<WalletBaseDTO>> Handle(GetWalletsByUserIdRequest request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<WalletBaseDTO>> Handle(GetWalletsByOwnerIdSortedRequest request, CancellationToken cancellationToken)
     {
-        var wallets = await _unitOfWork.WalletRepository.GetByUserIdAsync(request.UserId);
+        var wallets = await _unitOfWork.WalletRepository.GetByOwnerIdSortedAsync(request.OwnerId, request.SortBy);
         
         //TODO add validation logic
 

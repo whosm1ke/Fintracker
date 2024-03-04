@@ -4,10 +4,10 @@ using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.Features.Budget.Handlers.Commands;
 using Fintracker.Application.Features.Budget.Requests.Commands;
 using Fintracker.Application.MapProfiles;
+using Fintracker.TEST.Repositories;
 using FluentAssertions;
-using TestProject1Fintracker.TEST.Repositories;
 
-namespace TestProject1Fintracker.TEST.BudgetTests;
+namespace Fintracker.TEST.BudgetTests;
 
 public class BudgetCommandTests
 {

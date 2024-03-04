@@ -3,7 +3,7 @@ using Fintracker.Domain.Entities;
 using Moq;
 using System.Linq.Dynamic.Core;
 
-namespace TestProject1Fintracker.TEST.Repositories;
+namespace Fintracker.TEST.Repositories;
 
 public class MockTransactionRepository
 {

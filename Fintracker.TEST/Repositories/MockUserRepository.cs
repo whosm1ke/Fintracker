@@ -2,7 +2,7 @@
 using Fintracker.Domain.Entities;
 using Moq;
 
-namespace TestProject1Fintracker.TEST.Repositories;
+namespace Fintracker.TEST.Repositories;
 
 public class MockUserRepository
 {

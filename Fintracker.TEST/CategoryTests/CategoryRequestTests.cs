@@ -5,11 +5,11 @@ using Fintracker.Application.Features.Category.Handlers.Queries;
 using Fintracker.Application.Features.Category.Requests.Queries;
 using Fintracker.Application.MapProfiles;
 using Fintracker.Domain.Enums;
+using Fintracker.TEST.Repositories;
 using FluentAssertions;
-using TestProject1Fintracker.TEST.Repositories;
 using Xunit.Abstractions;
 
-namespace TestProject1Fintracker.TEST.CategoryTests;
+namespace Fintracker.TEST.CategoryTests;
 
 public class CategoryRequestTests
 {

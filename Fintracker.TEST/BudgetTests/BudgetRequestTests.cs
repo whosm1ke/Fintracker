@@ -5,11 +5,11 @@ using Fintracker.Application.Features.Budget.Handlers.Queries;
 using Fintracker.Application.Features.Budget.Requests.Queries;
 using Fintracker.Application.MapProfiles;
 using Fintracker.Domain.Entities;
+using Fintracker.TEST.Repositories;
 using FluentAssertions;
-using TestProject1Fintracker.TEST.Repositories;
 using Xunit.Abstractions;
 
-namespace TestProject1Fintracker.TEST.BudgetTests;
+namespace Fintracker.TEST.BudgetTests;
 
 public class BudgetRequestTests
 {
