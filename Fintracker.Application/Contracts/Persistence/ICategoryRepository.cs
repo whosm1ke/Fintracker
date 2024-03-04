@@ -7,5 +7,5 @@ public interface ICategoryRepository : IGenericRepository<Category>
 {
     Task<IReadOnlyList<Category>> GetByTypeAsync(CategoryType type);
 
-    Task<IReadOnlyList<Category>> GetAllSortedAsync(string sortBy);
+    Task<IReadOnlyList<Category>> GetAllSortedAsync(string sortBy, bool isDescending);
 }

@@ -4,5 +4,5 @@ namespace Fintracker.Application.Contracts.Persistence;
 
 public interface ICurrencyRepository : IGenericRepository<Currency>
 {
-    Task<IReadOnlyList<Currency>> GetCurrenciesSorted(string sortBy);
+    Task<IReadOnlyList<Currency>> GetCurrenciesSorted(string sortBy, bool isDescending);
 }
