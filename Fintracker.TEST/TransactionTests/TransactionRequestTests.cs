@@ -6,7 +6,6 @@ using Fintracker.Application.Features.Transaction.Requests.Queries;
 using Fintracker.Application.MapProfiles;
 using FluentAssertions;
 using Xunit.Abstractions;
-using System;
 using Fintracker.TEST.Repositories;
 
 namespace Fintracker.TEST.TransactionTests;
