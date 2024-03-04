@@ -8,4 +8,6 @@ public class GetTransactionsByUserIdSortedRequest : IRequest<IReadOnlyList<Trans
     public Guid UserId { get; set; }
 
     public string SortBy { get; set; }
+    
+    public bool IsDescending { get; set; }
 }

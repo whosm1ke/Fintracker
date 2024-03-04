@@ -10,7 +10,6 @@ public class
     GetBudgetsByWalletIdSortedRequestHandler : IRequestHandler<GetBudgetsByWalletIdSortedRequest,
     IReadOnlyList<BudgetBaseDTO>>
 {
-    
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
@@ -19,10 +18,13 @@ public class
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
+
     public async Task<IReadOnlyList<BudgetBaseDTO>> Handle(GetBudgetsByWalletIdSortedRequest request,
         CancellationToken cancellationToken)
     {
-        var budgets = await _unitOfWork.BudgetRepository.GetByWalletIdSortedAsync(request.WalletId, request.SortBy);
+        var budgets =
+            await _unitOfWork.BudgetRepository.GetByWalletIdSortedAsync(request.WalletId, request.SortBy,
+                request.IsDescending);
 
         //TODO: may be there should be some validation logic to ensure that list is not empty
 

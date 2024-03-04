@@ -7,4 +7,6 @@ public class GetBudgetsByWalletIdSortedRequest : IRequest<IReadOnlyList<BudgetBa
 {
     public Guid WalletId { get; set; }
     public string SortBy { get; set; }
+    
+    public bool IsDescending { get; set; }
 }

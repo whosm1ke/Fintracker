@@ -18,7 +18,7 @@ public class GetCurrenciesSortedRequestHandler : IRequestHandler<GetCurrenciesSo
     }
     public async Task<IReadOnlyList<CurrencyDTO>> Handle(GetCurrenciesSortedRequest request, CancellationToken cancellationToken)
     {
-        var currencies = await _unitOfWork.CurrencyRepository.GetCurrenciesSorted(request.SortBy);
+        var currencies = await _unitOfWork.CurrencyRepository.GetCurrenciesSorted(request.SortBy, request.IsDescending);
 
         return _mapper.Map<List<CurrencyDTO>>(currencies);
     }
