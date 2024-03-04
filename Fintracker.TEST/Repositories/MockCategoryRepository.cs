@@ -99,8 +99,8 @@ public class MockCategoryRepository
             return categories.Where(x => x.Type == type).ToList();
         });
 
-    mock.Setup(x => x.GetAllSortedAsync(It.IsAny<string>()))
-        .Returns((string sortBy) => Task.FromResult((IReadOnlyList<Category>)categories
+    mock.Setup(x => x.GetAllSortedAsync(It.IsAny<string>(), It.IsAny<bool>()))
+        .Returns((string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Category>)categories
             .AsQueryable()
             .OrderBy(sortBy)
             .ToList()));

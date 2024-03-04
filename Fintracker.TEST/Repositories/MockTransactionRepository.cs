@@ -145,8 +145,8 @@ public class MockTransactionRepository
             .Returns((Guid id) =>
                 Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.CategoryId == id).ToList()));
 
-        mock.Setup(x => x.GetByCategoryIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>()))
-            .Returns((Guid id, string sortBy) => Task.FromResult(
+        mock.Setup(x => x.GetByCategoryIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
+            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult(
                 (IReadOnlyList<Transaction>)transactions.Where(x => x.CategoryId == id)
                     .AsQueryable()
                     .OrderBy(sortBy)
@@ -157,8 +157,8 @@ public class MockTransactionRepository
             .Returns((Guid id) =>
                 Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.UserId == id).ToList()));
 
-        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>()))
-            .Returns((Guid id, string sortBy) => Task.FromResult(
+        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
+            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult(
                 (IReadOnlyList<Transaction>)transactions.Where(x => x.UserId == id)
                     .AsQueryable()
                     .OrderBy(sortBy)
@@ -169,8 +169,8 @@ public class MockTransactionRepository
             .Returns((Guid id) =>
                 Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.WalletId == id).ToList()));
 
-        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>()))
-            .Returns((Guid id, string sortBy) => Task.FromResult(
+        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
+            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult(
                 (IReadOnlyList<Transaction>)transactions.Where(x => x.WalletId == id)
                     .AsQueryable()
                     .OrderBy(sortBy)

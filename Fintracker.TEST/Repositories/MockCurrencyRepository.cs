@@ -41,8 +41,8 @@ public class MockCurrencyRepository
         mock.Setup(x => x.GetAllAsync())
             .ReturnsAsync(currencies);
         
-        mock.Setup(x => x.GetCurrenciesSorted(It.IsAny<string>()))
-            .Returns((string sortBy) => Task.FromResult((IReadOnlyList<Currency>)currencies
+        mock.Setup(x => x.GetCurrenciesSorted(It.IsAny<string>(), It.IsAny<bool>()))
+            .Returns((string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Currency>)currencies
             .AsQueryable()
             .OrderBy(sortBy)
             .ToList()));

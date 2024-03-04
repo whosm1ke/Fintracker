@@ -181,8 +181,8 @@ public class MockBudgetRepository
         mock.Setup(x => x.GetByUserIdAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.UserId == id).ToList()));
 
-        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>()))
-            .Returns((Guid id, string sortBy) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.UserId == id)
+        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
+            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.UserId == id)
                 .AsQueryable()
                 .OrderBy(sortBy)
                 .ToList()));
@@ -190,8 +190,8 @@ public class MockBudgetRepository
         mock.Setup(x => x.GetByWalletIdAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.WalletId == id).ToList()));
 
-        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>()))
-            .Returns((Guid id, string sortBy) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.WalletId == id)
+        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
+            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.WalletId == id)
                 .AsQueryable()
                 .OrderBy(sortBy)
                 .ToList()));
