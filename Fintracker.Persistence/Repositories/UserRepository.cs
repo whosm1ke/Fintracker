@@ -15,14 +15,14 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     public async Task<IReadOnlyList<User>> GetAllAccessedToWalletAsync(Guid walletId)
     {
         return await _db.Users
-            .Where(x => x.Wallets.Any(x => x.Id == walletId))
+            .Where(x => x.MemberWallets.Any(x => x.Id == walletId))
             .ToListAsync();
     }
 
     public async Task<User?> GetUserWithWalletsByIdAsync(Guid id)
     {
         return await _db.Users
-            .Include(x => x.Wallets)
+            .Include(x => x.OwnedWallets)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }

@@ -6,3 +6,5 @@ riderModule.iml
 Fintracker.API/appsettings.Development.json
 Fintracker.API/appsettings.json
 .idea
+/Fintracker.Persistence/Migrations
+InitialData

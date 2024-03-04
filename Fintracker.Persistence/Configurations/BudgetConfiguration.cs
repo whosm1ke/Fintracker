@@ -7,14 +7,22 @@ namespace Fintracker.Persistence.Configurations;
 
 public class BudgetConfiguration : IEntityTypeConfiguration<Budget>
 {
+    
+   
+
     public void Configure(EntityTypeBuilder<Budget> builder)
     {
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.CreatedAt).HasColumnType("date");
+        builder.Property(x => x.ModifiedAt).HasColumnType("date");
+        builder.Property(x => x.CreatedBy).HasMaxLength(50);
+        builder.Property(x => x.ModifiedBy).HasMaxLength(50);
+
         builder.HasMany(x => x.Categories)
             .WithMany()
             .UsingEntity(j => j.ToTable("BudgetCategory"));
-
-        builder.Property(x => x.Categories)
-            .IsRequired();
+        
 
         builder.Property(x => x.Name)
             .IsRequired()
@@ -50,11 +58,11 @@ public class BudgetConfiguration : IEntityTypeConfiguration<Budget>
             .HasColumnType("date")
             .IsRequired();
 
-        builder.ToTable("Budgets",t =>
+        builder.ToTable("Budgets", t =>
         {
-            t.HasCheckConstraint("CK_Budgets_EndStartDate", "StartDate <= EndDate");
-            t.HasCheckConstraint("CK_Budgets_Balance", $"Balance >= {BudgetConstraints.MinBalance}" +
-                                                       $" and Balance <= {BudgetConstraints.MaxBalance}");
+            t.HasCheckConstraint("CK_Budgets_EndStartDate", "\"StartDate\" <= \"EndDate\"");
+            t.HasCheckConstraint("CK_Budgets_Balance", $"\"Balance\" >= {BudgetConstraints.MinBalance}" +
+                                                       $" and \"Balance\" <= {BudgetConstraints.MaxBalance}");
         });
     }
 }

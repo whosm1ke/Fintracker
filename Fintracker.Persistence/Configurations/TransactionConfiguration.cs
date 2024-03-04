@@ -9,32 +9,28 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
 {
     public void Configure(EntityTypeBuilder<Transaction> builder)
     {
-        builder.Property(x => x.User)
-            .IsRequired();
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.CreatedAt).HasColumnType("date");
+        builder.Property(x => x.ModifiedAt).HasColumnType("date");
+        builder.Property(x => x.CreatedBy).HasMaxLength(50);
+        builder.Property(x => x.ModifiedBy).HasMaxLength(50);
+        
 
         builder.HasOne(x => x.User)
             .WithMany()
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.Property(x => x.Wallet)
-            .IsRequired();
-
         builder.HasOne(x => x.Wallet)
             .WithMany(x => x.Transactions)
             .HasForeignKey(x => x.WalletId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(x => x.Category)
-            .IsRequired();
-
         builder.HasOne(x => x.Category)
             .WithMany()
             .HasForeignKey(x => x.CategoryId)
             .OnDelete(DeleteBehavior.NoAction);
-
-        builder.Property(x => x.Currency)
-            .IsRequired();
 
         builder.HasOne(x => x.Currency)
             .WithMany()
@@ -55,7 +51,7 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.ToTable("Transactions", t =>
         {
             t.HasCheckConstraint("Ck_Transactions_Amount",
-                $"Amount >= {TransactionConstraints.MinimalTransactionAmount}");
+                $"\"Amount\" >= {TransactionConstraints.MinimalTransactionAmount}");
         });
     }
 }
