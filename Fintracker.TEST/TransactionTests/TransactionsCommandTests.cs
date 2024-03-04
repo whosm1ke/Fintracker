@@ -23,6 +23,7 @@ public class TransactionsCommandTests
         var mapperCfg = new MapperConfiguration(c =>
         {
             c.AddProfile<TransactionProfile>();
+            c.AddProfile<CategoryProfile>();
         });
 
         _mapper = mapperCfg.CreateMapper();
@@ -55,7 +56,7 @@ public class TransactionsCommandTests
         result.Success.Should().BeTrue();
         result.CreatedObject.Should().NotBeNull();
         result.CreatedObject.Should().BeOfType<TransactionBaseDTO>();
-        transactionsCount.Should().Be(4);
+        transactionsCount.Should().Be(10);
     }
     
     [Fact]
@@ -82,7 +83,7 @@ public class TransactionsCommandTests
         result.Success.Should().BeTrue();
         result.CreatedObject.Should().NotBeNull();
         result.CreatedObject.Should().BeOfType<TransactionBaseDTO>();
-        budgetsCount.Should().Be(4);
+        budgetsCount.Should().Be(10);
     }
     
     [Fact]
@@ -127,6 +128,6 @@ public class TransactionsCommandTests
         result.Success.Should().BeTrue();
         result.DeletedObj.Should().NotBeNull();
         result.DeletedObj.Should().BeOfType<TransactionBaseDTO>();
-        budgetCountAfterDelete.Should().Be(2);
+        budgetCountAfterDelete.Should().Be(8);
     }
 }

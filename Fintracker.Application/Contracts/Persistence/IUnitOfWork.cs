@@ -2,11 +2,11 @@
 
 public interface IUnitOfWork : IDisposable
 {
-    public IBudgetRepository BudgetRepository { get; set; }
-    public ICategoryRepository CategoryRepository { get; set; }
-    public ICurrencyRepository CurrencyRepository { get; set; }
-    public ITransactionRepository TransactionRepository { get; set; }
-    public IUserRepository UserRepository { get; set; }
-    public IWalletRepository WalletRepository { get; set; }
-    Task<int> SaveAsync();
+    public IBudgetRepository BudgetRepository { get; }
+    public ICategoryRepository CategoryRepository { get; }
+    public ICurrencyRepository CurrencyRepository { get; }
+    public ITransactionRepository TransactionRepository { get; }
+    public IUserRepository UserRepository { get; }
+    public IWalletRepository WalletRepository { get; }
+    Task SaveAsync();
 }

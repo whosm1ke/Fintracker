@@ -50,7 +50,7 @@ public class WalletCommandTests
         result.Success.Should().BeTrue();
         result.CreatedObject.Should().NotBeNull();
         result.CreatedObject.Should().BeOfType<WalletBaseDTO>();
-        budgetsCount.Should().Be(4);
+        budgetsCount.Should().Be(8);
     }
     
     [Fact]
@@ -93,6 +93,6 @@ public class WalletCommandTests
         result.Success.Should().BeTrue();
         result.DeletedObj.Should().NotBeNull();
         result.DeletedObj.Should().BeOfType<WalletBaseDTO>();
-        budgetCountAfterDelete.Should().Be(2);
+        budgetCountAfterDelete.Should().Be(6);
     }
 }

@@ -11,6 +11,6 @@ public interface ITransactionRepository : IGenericRepository<Transaction>
     Task<IReadOnlyList<Transaction>> GetByWalletIdAsync(Guid walletId);
     Task<IReadOnlyList<Transaction>> GetByCategoryIdAsync(Guid categoryId);
     Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId, string sortBy, bool isDescending);
-    Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid userId, string sortBy, bool isDescending);
-    Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid userId, string sortBy, bool isDescending);
+    Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId, string sortBy, bool isDescending);
+    Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, string sortBy, bool isDescending);
 }

@@ -11,5 +11,5 @@ public interface IBudgetRepository : IGenericRepository<Budget>
     Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId);
 
     Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, string sortBy, bool isDescending);
-    Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid userId, string sortBy, bool isDescending);
+    Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, string sortBy, bool isDescending);
 }
