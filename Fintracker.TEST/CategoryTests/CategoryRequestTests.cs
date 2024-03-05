@@ -30,7 +30,7 @@ public class CategoryRequestTests
     public async Task GetByType_Type_Income_Test()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new GetCategoryByTypeRequestHandler(mockUnitOfWork, _mapper);
+        var handler = new GetCategoriesByTypeRequestHandler(mockUnitOfWork, _mapper);
         var expectedResult = new List<CategoryDTO>
         {
             new CategoryDTO()

@@ -120,7 +120,7 @@ public class BudgetController : ControllerBase
             Budget = budget
         });
 
-        return response;
+        return Ok(response);
     }
 
     [HttpPut]
@@ -131,7 +131,7 @@ public class BudgetController : ControllerBase
             Budget = budget
         });
 
-        return response;
+        return Ok(response);
     }
 
     [HttpDelete("{id}")]
@@ -142,6 +142,6 @@ public class BudgetController : ControllerBase
             Id = id
         });
 
-        return response;
+        return Ok(response);
     }
 }

@@ -6,12 +6,12 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Category.Handlers.Queries;
 
-public class GetCategoryByTypeRequestHandler : IRequestHandler<GetCategoriesByTypeRequest, IReadOnlyList<CategoryDTO>>
+public class GetCategoriesByTypeRequestHandler : IRequestHandler<GetCategoriesByTypeRequest, IReadOnlyList<CategoryDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetCategoryByTypeRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public GetCategoriesByTypeRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
