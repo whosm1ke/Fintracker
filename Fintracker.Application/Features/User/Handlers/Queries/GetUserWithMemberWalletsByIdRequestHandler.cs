@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Identity;
-using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.User;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Queries;
@@ -8,23 +7,23 @@ using MediatR;
 
 namespace Fintracker.Application.Features.User.Handlers.Queries;
 
-public class GetUserWithWalletsByIdRequestHandler : IRequestHandler<GetUserWithOwnedWalletsByIdRequest,UserWithOwnedWalletsDTO>
+public class GetUserWithMemberWalletsByIdRequestHandler : IRequestHandler<GetUserWithMemberWalletsByIdRequest,UserWithMemberWalletsDTO>
 {
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
 
-    public GetUserWithWalletsByIdRequestHandler(IMapper mapper, IUserRepository userRepository)
+    public GetUserWithMemberWalletsByIdRequestHandler(IMapper mapper, IUserRepository userRepository)
     {
         _mapper = mapper;
         _userRepository = userRepository;
     }
-    public async Task<UserWithOwnedWalletsDTO> Handle(GetUserWithOwnedWalletsByIdRequest request, CancellationToken cancellationToken)
+    public async Task<UserWithMemberWalletsDTO> Handle(GetUserWithMemberWalletsByIdRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserWithOwnedWalletsByIdAsync(request.Id);
+        var user = await _userRepository.GetUserWithMemberWalletsByIdAsync(request.Id);
 
         if (user is null)
             throw new NotFoundException(nameof(Domain.Entities.User), request.Id);
 
-        return _mapper.Map<UserWithOwnedWalletsDTO>(user);
+        return _mapper.Map<UserWithMemberWalletsDTO>(user);
     }
 }
