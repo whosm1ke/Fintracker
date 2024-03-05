@@ -182,7 +182,10 @@ public class MockTransactionRepository
         
         mock.Setup(x => x.GetTransactionWithUserAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => Task.FromResult(transactions.FirstOrDefault(x => x.Id == id)));
-
+        
+        mock.Setup(x => x.GetTransactionAsync(It.IsAny<Guid>()))
+            .Returns(async (Guid id) => { return transactions.Find(x => x.Id == id); });
+        
         return mock;
     }
 }

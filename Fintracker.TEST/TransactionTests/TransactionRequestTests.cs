@@ -43,7 +43,7 @@ public class TransactionRequestTests
             Amount = 100,
             Label = "Label 1",
             Note = "Note 1",
-            Category = new() { Id = new Guid("2CA5CC74-6D96-4878-8625-BC8E78DD295E") }
+            Category = new() { Id = new Guid("2CA5CC74-6D96-4878-8625-BC8E78DD295E") },
         };
 
         var actualResult = await handler.Handle(new GetTransactionByIdRequest()

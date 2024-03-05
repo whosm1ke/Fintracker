@@ -1,5 +1,4 @@
 ﻿using Fintracker.Application.DTO.Category;
-using Fintracker.Application.Features.Category.Handlers.Commands;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Features.Category.Requests.Queries;
 using Fintracker.Application.Responses;

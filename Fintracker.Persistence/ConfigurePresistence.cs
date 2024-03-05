@@ -1,8 +1,6 @@
 ﻿using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Domain.Entities;
 using Fintracker.Persistence.Repositories;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -13,13 +13,16 @@ public class WalletRepository: GenericRepository<Wallet>, IWalletRepository
         _db = context;
     }
 
-    public async Task<Wallet?> GetWalletWithOwnerAsync(Guid id)
+    public async Task<Wallet?> GetWalletById(Guid id)
     {
         return await _db.Wallets
             .Include(x => x.Owner)
+            .Include(x => x.Currency)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
+
+  
 
     public async Task<Wallet?> GetWalletWithMembersAsync(Guid id)
     {

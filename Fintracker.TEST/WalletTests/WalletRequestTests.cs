@@ -173,7 +173,7 @@ public class WalletRequestTests
     public async Task GetWalletWithOwnerById_Should_Return_66B5_Test()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new GetWalletWithOwnerByIdRequestHandler(_mapper, mockUnitOfWork);
+        var handler = new GetWalletByIdRequestHandler(_mapper, mockUnitOfWork);
         var expectedResult = new WalletBaseDTO()
         {
             Id = new Guid("95E0ECF9-0647-450B-9495-B2A709D166B5"),
@@ -183,7 +183,7 @@ public class WalletRequestTests
                 { Id = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"), Email = "owner@gmail.com" }
         };
 
-        var actualResult = await handler.Handle(new GetWalletWithOwnerByIdRequest
+        var actualResult = await handler.Handle(new GetWalletByIdRequest
         {
             Id = new Guid("95E0ECF9-0647-450B-9495-B2A709D166B5")
         }, default);
