@@ -20,4 +20,8 @@
       <ProjectReference Include="..\Fintracker.Persistence\Fintracker.Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
+    </ItemGroup>
+
 </Project>
