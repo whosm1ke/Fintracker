@@ -19,7 +19,6 @@
     <ItemGroup>
       <Folder Include="Features\Currency\Handlers\Commands\" />
       <Folder Include="Features\Currency\Requests\Commands\" />
-      <Folder Include="Features\User\Handlers\Commands\" />
     </ItemGroup>
 
 </Project>

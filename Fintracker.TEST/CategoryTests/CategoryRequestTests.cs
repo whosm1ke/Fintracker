@@ -33,7 +33,7 @@ public class CategoryRequestTests
         var handler = new GetCategoriesByTypeRequestHandler(mockUnitOfWork, _mapper);
         var expectedResult = new List<CategoryDTO>
         {
-            new CategoryDTO()
+            new()
             {
                 Id = new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6"),
                 Type = CategoryTypeEnum.INCOME,

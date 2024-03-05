@@ -11,7 +11,7 @@ public class MockBudgetRepository
     {
         var budgets = new List<Budget>
         {
-            new Budget()
+            new()
             {
                 Balance = 2000,
                 CreatedAt = new DateTime(2024, 12, 12),
@@ -30,7 +30,7 @@ public class MockBudgetRepository
                 CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"),
                 WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0")
             },
-            new Budget()
+            new()
             {
                 Balance = 1000,
                 CreatedAt = new DateTime(2024, 12, 12),
@@ -49,7 +49,7 @@ public class MockBudgetRepository
                 UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
                 CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
             },
-            new Budget()
+            new()
             {
                 Balance = 3000,
                 CreatedAt = DateTime.Now,
@@ -65,7 +65,7 @@ public class MockBudgetRepository
                 User = new User(),
                 Categories = new List<Category>()
             },
-            new Budget()
+            new()
             {
                 Balance = 3000,
                 CreatedAt = DateTime.Now,
@@ -92,7 +92,7 @@ public class MockBudgetRepository
                 UserId = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
                 CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
             },
-            new Budget()
+            new()
             {
                 Balance = 3000,
                 CreatedAt = DateTime.Now,

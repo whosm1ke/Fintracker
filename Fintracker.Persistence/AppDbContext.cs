@@ -36,7 +36,7 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
         builder.Entity<IdentityRole<Guid>>().HasData(roles);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         foreach (var entry in base.ChangeTracker.Entries<IEntity<Guid>>()
                      .Where(q => q.State == EntityState.Added || q.State == EntityState.Modified))
