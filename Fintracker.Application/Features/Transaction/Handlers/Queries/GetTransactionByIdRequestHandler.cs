@@ -19,7 +19,7 @@ public class GetTransactionByIdRequestHandler : IRequestHandler<GetTransactionBy
     }
     public async Task<TransactionBaseDTO> Handle(GetTransactionByIdRequest request, CancellationToken cancellationToken)
     {
-        var transaction = await _unitOfWork.TransactionRepository.GetAsync(request.Id);
+        var transaction = await _unitOfWork.TransactionRepository.GetTransactionAsync(request.Id);
 
         if (transaction is null)
             throw new NotFoundException(nameof(Domain.Entities.Transaction), request.Id);
