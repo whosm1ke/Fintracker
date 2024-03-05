@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.DTO.Budget.Validators;
@@ -12,18 +13,19 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-
-    public CreateBudgetCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    private readonly IUserRepository _userRepository;
+    public CreateBudgetCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IUserRepository userRepository)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _userRepository = userRepository;
     }
 
     public async Task<CreateCommandResponse<CreateBudgetDTO>> Handle(CreateBudgetCommand request,
         CancellationToken cancellationToken)
     {
         var response = new CreateCommandResponse<CreateBudgetDTO>();
-        var validator = new CreateBudgetDtoValidator(_unitOfWork);
+        var validator = new CreateBudgetDtoValidator(_unitOfWork,_userRepository);
         var validationResult = await validator.ValidateAsync(request.Budget);
 
         if (validationResult.IsValid)

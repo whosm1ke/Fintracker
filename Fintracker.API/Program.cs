@@ -1,5 +1,6 @@
 using Fintracker.API.Middleware;
 using Fintracker.Application;
+using Fintracker.Application.Contracts.Identity;
 using Fintracker.Identity;
 using Fintracker.Persistence;
 using Microsoft.OpenApi.Models;
@@ -60,5 +61,10 @@ app.UseAuthorization();
 app.UseUnauthorizedMiddleware();
 app.MapControllers();
 
-
+app.MapGet("hi", async (HttpContext context, IUserRepository user) =>
+{
+    var u = await user.GetUserWithBudgetsByIdAsync(new Guid("0963f77d-98ff-4ddf-9016-f989db6e04aa"));
+    var count = u.Budgets.Count;
+     await context.Response.WriteAsync(count.ToString());
+} );
 app.Run();

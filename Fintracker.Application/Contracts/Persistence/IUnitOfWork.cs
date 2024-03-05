@@ -1,4 +1,6 @@
-﻿namespace Fintracker.Application.Contracts.Persistence;
+﻿using Fintracker.Application.Contracts.Identity;
+
+namespace Fintracker.Application.Contracts.Persistence;
 
 public interface IUnitOfWork : IDisposable
 {
@@ -6,7 +8,6 @@ public interface IUnitOfWork : IDisposable
     public ICategoryRepository CategoryRepository { get; }
     public ICurrencyRepository CurrencyRepository { get; }
     public ITransactionRepository TransactionRepository { get; }
-    public IUserRepository UserRepository { get; }
     public IWalletRepository WalletRepository { get; }
     Task SaveAsync();
 }

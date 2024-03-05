@@ -1,4 +1,5 @@
-﻿using Fintracker.Application.Contracts.Persistence;
+﻿using Fintracker.Application.Contracts.Identity;
+using Fintracker.Application.Contracts.Persistence;
 
 namespace Fintracker.Persistence.Repositories;
 
@@ -23,10 +24,9 @@ public class UnitOfWork : IUnitOfWork
     
     private ITransactionRepository _transactionRepository;
     public ITransactionRepository TransactionRepository => _transactionRepository ??= new TransactionRepository(_context);
-    
-    private IUserRepository _userRepository;
-    public IUserRepository UserRepository => _userRepository ??= new UserRepository(_context);
-    
+    public IUserRepository UserRepository { get; }
+
+
     private IWalletRepository _walletRepository;
     public IWalletRepository WalletRepository => _walletRepository ??= new WalletRepository(_context);
     public async Task SaveAsync()

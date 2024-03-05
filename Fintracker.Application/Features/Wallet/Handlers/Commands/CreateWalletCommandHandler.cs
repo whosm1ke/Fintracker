@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.DTO.Wallet.Validators;
@@ -12,17 +13,18 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-
-    public CreateWalletCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    private readonly IUserRepository _userRepository;
+    public CreateWalletCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IUserRepository userRepository)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _userRepository = userRepository;
     }
 
     public async Task<CreateCommandResponse<WalletBaseDTO>> Handle(CreateWalletCommand request, CancellationToken cancellationToken)
     {
         var response = new CreateCommandResponse<WalletBaseDTO>();
-        var validator = new CreateWalletDtoValidator(_unitOfWork);
+        var validator = new CreateWalletDtoValidator(_unitOfWork,_userRepository);
         var validationResult = await validator.ValidateAsync(request.Wallet);
 
         if (validationResult.IsValid)

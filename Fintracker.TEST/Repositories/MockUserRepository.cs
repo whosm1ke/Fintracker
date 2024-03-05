@@ -1,4 +1,4 @@
-﻿using Fintracker.Application.Contracts.Persistence;
+﻿using Fintracker.Application.Contracts.Identity;
 using Fintracker.Domain.Entities;
 using Moq;
 

@@ -1,11 +1,12 @@
-﻿using Fintracker.Application.Contracts.Persistence;
+﻿using Fintracker.Application.Contracts.Identity;
+using Fintracker.Application.Contracts.Persistence;
 using FluentValidation;
 
 namespace Fintracker.Application.DTO.Transaction.Validators;
 
 public class CreateTransactionDtoValidator : AbstractValidator<CreateTransactionDTO>
 {
-    public CreateTransactionDtoValidator(IUnitOfWork unitOfWork)
+    public CreateTransactionDtoValidator(IUnitOfWork unitOfWork, IUserRepository userRepository)
     {
         Include(new TransactionBaseDtoValidator(unitOfWork));
 
@@ -14,7 +15,7 @@ public class CreateTransactionDtoValidator : AbstractValidator<CreateTransaction
             .WithMessage($"{nameof(CreateTransactionDTO.UserId)} must be included")
             .NotEmpty()
             .WithMessage($"{nameof(CreateTransactionDTO.UserId)} can not be blank")
-            .MustAsync((id, _) => unitOfWork.UserRepository.ExistsAsync(id))
+            .MustAsync((id, _) => userRepository.ExistsAsync(id))
             .WithMessage(x => $"{nameof(Domain.Entities.User)} with id [{x.UserId}] does not exists");
 
         RuleFor(x => x.WalletId)

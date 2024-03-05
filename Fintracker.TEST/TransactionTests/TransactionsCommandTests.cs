@@ -33,7 +33,8 @@ public class TransactionsCommandTests
     public async Task AddAsync_No_Optional_Params_Should_Return_True()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new CreateTransactionCommandHandler(_mapper, mockUnitOfWork);
+        var mockUserRepository = MockUserRepository.GetUserRepository().Object;
+        var handler = new CreateTransactionCommandHandler(_mapper, mockUnitOfWork, mockUserRepository);
         var transactionToAdd = _fixture.Build<CreateTransactionDTO>()
             .With(x => x.Amount, 500)
             .With(x => x.CategoryId, new Guid("D670263B-92CF-48C8-923A-EB09188F6077"))
@@ -63,7 +64,8 @@ public class TransactionsCommandTests
     public async Task AddAsync_Should_Return_True()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new CreateTransactionCommandHandler(_mapper, mockUnitOfWork);
+        var mockUserRepository = MockUserRepository.GetUserRepository().Object;
+        var handler = new CreateTransactionCommandHandler(_mapper, mockUnitOfWork, mockUserRepository);
         var transactionToAdd = _fixture.Build<CreateTransactionDTO>()
             .With(x => x.Amount, 1000)
             .With(x => x.CategoryId, new Guid("D670263B-92CF-48C8-923A-EB09188F6077"))

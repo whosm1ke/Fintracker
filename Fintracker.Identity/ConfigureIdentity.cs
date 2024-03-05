@@ -37,6 +37,7 @@ public static class ConfigureIdentity
 
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
 }

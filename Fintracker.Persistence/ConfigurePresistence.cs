@@ -1,4 +1,5 @@
-﻿using Fintracker.Application.Contracts.Persistence;
+﻿using Fintracker.Application.Contracts.Identity;
+using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Domain.Entities;
 using Fintracker.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -38,7 +39,6 @@ public static class ConfigurePresistence
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
         services.AddScoped<IWalletRepository, WalletRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }

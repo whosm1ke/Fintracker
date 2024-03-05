@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.DTO.Transaction.Validators;
@@ -13,17 +14,18 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-
-    public CreateTransactionCommandHandler(IMapper mapper, IUnitOfWork unitOfWork)
+    private readonly IUserRepository _userRepository;
+    public CreateTransactionCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IUserRepository userRepository)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _userRepository = userRepository;
     }
 
     public async Task<CreateCommandResponse<TransactionBaseDTO>> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
     {
         var response = new CreateCommandResponse<TransactionBaseDTO>();
-        var validator = new CreateTransactionDtoValidator(_unitOfWork);
+        var validator = new CreateTransactionDtoValidator(_unitOfWork,_userRepository);
         var validationResult = await validator.ValidateAsync(request.Transaction);
 
         if (validationResult.IsValid)

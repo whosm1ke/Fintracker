@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.User;
 using Fintracker.Application.Exceptions;
@@ -10,16 +11,16 @@ namespace Fintracker.Application.Features.User.Handlers.Queries;
 public class GetUserWithWalletsByIdRequestHandler : IRequestHandler<GetUserWithWalletsByIdRequest,UserWithWalletsDTO>
 {
     private readonly IMapper _mapper;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserRepository _userRepository;
 
-    public GetUserWithWalletsByIdRequestHandler(IMapper mapper, IUnitOfWork unitOfWork)
+    public GetUserWithWalletsByIdRequestHandler(IMapper mapper, IUserRepository userRepository)
     {
         _mapper = mapper;
-        _unitOfWork = unitOfWork;
+        _userRepository = userRepository;
     }
     public async Task<UserWithWalletsDTO> Handle(GetUserWithWalletsByIdRequest request, CancellationToken cancellationToken)
     {
-        var user = await _unitOfWork.UserRepository.GetUserWithWalletsByIdAsync(request.Id);
+        var user = await _userRepository.GetUserWithWalletsByIdAsync(request.Id);
 
         if (user is null)
             throw new NotFoundException(nameof(Domain.Entities.User), request.Id);
