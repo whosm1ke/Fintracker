@@ -20,10 +20,18 @@ public class UserRepository : IUserRepository
             .ToListAsync();
     }
 
-    public async Task<User?> GetUserWithWalletsByIdAsync(Guid id)
+    public async Task<User?> GetUserWithOwnedWalletsByIdAsync(Guid id)
     {
         return await _userManager.Users
             .Include(x => x.OwnedWallets)
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+    }
+    
+    public async Task<User?> GetUserWithMemberWalletsByIdAsync(Guid id)
+    {
+        return await _userManager.Users
+            .Include(x => x.MemberWallets)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
@@ -40,6 +48,11 @@ public class UserRepository : IUserRepository
     {
         return await _userManager.FindByIdAsync(id.ToString()) != null;
     }
+    
+    public async Task<bool> ExistsAsync(string email)
+    {
+        return await _userManager.FindByEmailAsync(email) != null;
+    }
 
     public async Task UpdateAsync(User item)
     {
@@ -54,6 +67,14 @@ public class UserRepository : IUserRepository
     public async Task<User?> GetAsync(Guid id)
     {
         return await _userManager.FindByIdAsync(id.ToString());
+    }
+
+    public async Task<User?> GetAsNoTrackingAsync(string email)
+    {
+        return await _userManager.Users
+            .AsNoTracking()
+            .Where(x => x.Email == email)
+            .FirstOrDefaultAsync();
     }
 
     public async Task<IReadOnlyList<User?>> GetAllAsync()

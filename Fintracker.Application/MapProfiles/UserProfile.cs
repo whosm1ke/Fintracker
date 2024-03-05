@@ -12,6 +12,7 @@ public class UserProfile : Profile
         CreateMap<User, UpdateUserDTO>().ReverseMap();
         CreateMap<UserDetails, UserDetailsDTO>().ReverseMap();
         CreateMap<User, UserWithBudgetsDTO>().ReverseMap();
-        CreateMap<User, UserWithWalletsDTO>().ReverseMap();
+        CreateMap<User, UserWithOwnedWalletsDTO>().ReverseMap();
+        CreateMap<User, UserWithMemberWalletsDTO>().ReverseMap();
     }
 }
