@@ -40,13 +40,15 @@ public class ExceptionMiddleware
             case BadRequestException badRequestException:
                 statusCode = HttpStatusCode.BadRequest;
                 break;
-            case ValidationException validationException:
-                statusCode = HttpStatusCode.BadRequest;
-                result = JsonConvert.SerializeObject(validationException.Errors);
+            case RegisterAccountException registerAccountException:
+                statusCode = HttpStatusCode.Unauthorized;
+                result = JsonConvert.SerializeObject(registerAccountException.Errors);
                 break;
             case NotFoundException notFoundException:
                 statusCode = HttpStatusCode.NotFound;
                 break;
+            
+                
         }
 
         context.Response.StatusCode = (int)statusCode;
