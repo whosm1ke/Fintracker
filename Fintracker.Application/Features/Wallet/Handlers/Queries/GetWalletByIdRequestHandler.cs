@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Wallet;
+using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Wallet.Requests.Queries;
 using MediatR;
 
@@ -18,10 +19,11 @@ public class GetWalletByIdRequestHandler : IRequestHandler<GetWalletByIdRequest,
     }
     public async Task<WalletBaseDTO> Handle(GetWalletByIdRequest request, CancellationToken cancellationToken)
     {
-        var wallets = await _unitOfWork.WalletRepository.GetWalletById(request.Id);
-        
-        //TODO add validation logic
+        var wallet = await _unitOfWork.WalletRepository.GetWalletById(request.Id);
 
-        return _mapper.Map<WalletBaseDTO>(wallets);
+        if (wallet is null)
+            throw new NotFoundException(nameof(Domain.Entities.Wallet), request.Id);
+
+        return _mapper.Map<WalletBaseDTO>(wallet);
     }
 }

@@ -1,3 +1,4 @@
+using Fintracker.API.Middleware;
 using Fintracker.Application;
 using Fintracker.Persistence;
 
@@ -19,6 +20,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionMiddleware();
 
 app.UseHttpsRedirection();
 app.MapControllers();
