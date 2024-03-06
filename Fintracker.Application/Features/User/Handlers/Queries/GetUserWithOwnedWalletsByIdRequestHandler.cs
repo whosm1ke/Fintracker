@@ -8,12 +8,12 @@ using MediatR;
 
 namespace Fintracker.Application.Features.User.Handlers.Queries;
 
-public class GetUserWithWalletsByIdRequestHandler : IRequestHandler<GetUserWithOwnedWalletsByIdRequest,UserWithOwnedWalletsDTO>
+public class GetUserWithOwnedWalletsByIdRequestHandler : IRequestHandler<GetUserWithOwnedWalletsByIdRequest,UserWithOwnedWalletsDTO>
 {
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
 
-    public GetUserWithWalletsByIdRequestHandler(IMapper mapper, IUserRepository userRepository)
+    public GetUserWithOwnedWalletsByIdRequestHandler(IMapper mapper, IUserRepository userRepository)
     {
         _mapper = mapper;
         _userRepository = userRepository;

@@ -43,4 +43,5 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=20818874_002D8aea_002D4f4f_002D94ce_002D274976ee04c5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddAsync_Should_Return_Added_Object #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\cherm\OneDrive\Рабочий стол\Fintracker_Project\Fintracker\Fintracker.TEST" Presentation="&amp;lt;test&amp;gt;\&amp;lt;Fintracker.TEST&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	
 	</wpf:ResourceDictionary>

@@ -22,15 +22,13 @@ public class UpdateUserDtoValidator : AbstractValidator<UpdateUserDTO>
             .WithMessage($"{nameof(UpdateUserDTO.Email)} can not be blank")
             .MustAsync(async (dto, email,_) =>
             {
-                var isEmailExistsInSystem = await userRepository.ExistsAsync(email);
                 var existingUser = await userRepository.GetAsNoTrackingAsync(email);
 
                 if (existingUser is null)
                     return true;
-                if (isEmailExistsInSystem && existingUser.Email != email)
-                    return false;
-                return false;
-            })
+                if (existingUser.Email == dto.Email && existingUser.Id == dto.Id)
+                    return true;
+                return false;            })
             .WithMessage(x => $"{nameof(Domain.Entities.User)} with email [{x.Email}] already exists");
         
         //TODO: add rules for user details
