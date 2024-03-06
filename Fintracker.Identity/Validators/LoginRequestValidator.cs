@@ -34,3 +34,4 @@ public class LoginRequestValidator : AbstractValidator<LoginRequest>
             .WithMessage("Invalid credentials");
     }
 }
+
