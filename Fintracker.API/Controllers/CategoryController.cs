@@ -4,12 +4,14 @@ using Fintracker.Application.Features.Category.Requests.Queries;
 using Fintracker.Application.Responses;
 using Fintracker.Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fintracker.API.Controllers;
 
 [ApiController]
 [Route("api/category")]
+[Authorize(Roles = "Admin,User")]
 public class CategoryController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -20,6 +22,8 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(List<CategoryDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<CategoryDTO>>> Get([FromQuery] string sortBy, [FromQuery] bool isDescending = false)
     {
         var sortRequest = new GetCategoriesSortedRequest()
@@ -41,6 +45,9 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(CategoryDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CategoryDTO>> Get(Guid id)
     {
         var response = await _mediator.Send(new GetCategoryByIdRequest()
@@ -52,6 +59,8 @@ public class CategoryController : ControllerBase
     }
     
     [HttpGet("{type}")]
+    [ProducesResponseType(typeof(List<CategoryDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<CategoryDTO>>> Get(CategoryType type)
     {
         var response = await _mediator.Send(new GetCategoriesByTypeRequest()
@@ -63,6 +72,8 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(CreateCommandResponse<CategoryDTO>),StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<CreateCommandResponse<CategoryDTO>>> Post([FromBody] CreateCategoryDTO category)
     {
         var response = await _mediator.Send(new CreateCategoryCommand()
@@ -74,6 +85,9 @@ public class CategoryController : ControllerBase
     }
     
     [HttpPut]
+    [ProducesResponseType(typeof(UpdateCommandResponse<CategoryDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UpdateCommandResponse<CategoryDTO>>> Put([FromBody] UpdateCategoryDTO category)
     {
         var response = await _mediator.Send(new UpdateCategoryCommand()
@@ -85,6 +99,9 @@ public class CategoryController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ProducesResponseType(typeof(DeleteCommandResponse<CategoryDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<CategoryDTO>>> Delete(Guid id)
     {
         var response = await _mediator.Send(new DeleteCategoryCommand()

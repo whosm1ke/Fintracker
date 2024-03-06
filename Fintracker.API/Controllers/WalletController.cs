@@ -3,12 +3,14 @@ using Fintracker.Application.Features.Wallet.Requests.Commands;
 using Fintracker.Application.Features.Wallet.Requests.Queries;
 using Fintracker.Application.Responses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fintracker.API.Controllers;
 
 [ApiController]
 [Route("api/wallet")]
+[Authorize(Roles = "Admin,User")]
 public class WalletController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -19,6 +21,9 @@ public class WalletController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(WalletBaseDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WalletBaseDTO>> Get(Guid id)
     {
         var response = await _mediator.Send(new GetWalletByIdRequest()
@@ -30,13 +35,15 @@ public class WalletController : ControllerBase
     }
 
     [HttpGet("owner/{ownerId:guid}")]
+    [ProducesResponseType(typeof(List<WalletBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<WalletBaseDTO>>> Get(Guid ownerId, [FromQuery] string sortBy,
-        [FromQuery] bool isDescnending)
+        [FromQuery] bool isDescending)
     {
         var sortRequest = new GetWalletsByOwnerIdSortedRequest()
         {
             OwnerId = ownerId,
-            IsDescending = isDescnending,
+            IsDescending = isDescending,
             SortBy = sortBy
         };
 
@@ -56,6 +63,9 @@ public class WalletController : ControllerBase
     }
 
     [HttpGet("{id:guid}/with-budget")]
+    [ProducesResponseType(typeof(WalletWithBudgetsDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WalletWithBudgetsDTO>> GetWithBudget(Guid id)
     {
         var response = await _mediator.Send(new GetWalletWithBudgetsByIdRequest()
@@ -67,6 +77,9 @@ public class WalletController : ControllerBase
     }
     
     [HttpGet("{id:guid}/with-members")]
+    [ProducesResponseType(typeof(WalletWithMembersDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WalletWithMembersDTO>> GetWithMembers(Guid id)
     {
         var response = await _mediator.Send(new GetWalletWithMembersByIdRequest()
@@ -78,6 +91,9 @@ public class WalletController : ControllerBase
     }
     
     [HttpGet("{id:guid}/with-transactions")]
+    [ProducesResponseType(typeof(WalletWithTransactionsDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WalletWithTransactionsDTO>> GetWithTransactions(Guid id)
     {
         var response = await _mediator.Send(new GetWalletWithTransactionsByIdRequest()
@@ -89,6 +105,8 @@ public class WalletController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(DeleteCommandResponse<WalletBaseDTO>),StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<CreateCommandResponse<WalletBaseDTO>>> Post([FromBody] CreateWalletDTO wallet)
     {
         var response = await _mediator.Send(new CreateWalletCommand()
@@ -100,6 +118,9 @@ public class WalletController : ControllerBase
     }
     
     [HttpPut]
+    [ProducesResponseType(typeof(DeleteCommandResponse<WalletBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UpdateCommandResponse<WalletBaseDTO>>> Put([FromBody] UpdateWalletDTO wallet)
     {
         var response = await _mediator.Send(new UpdateWalletCommand()
@@ -111,6 +132,9 @@ public class WalletController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ProducesResponseType(typeof(DeleteCommandResponse<WalletBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<WalletBaseDTO>>> Delete(Guid id)
     {
         var response = await _mediator.Send(new DeleteWalletCommand()
@@ -121,3 +145,4 @@ public class WalletController : ControllerBase
         return Ok(response);
     }
 }
+

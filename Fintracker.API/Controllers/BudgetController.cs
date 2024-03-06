@@ -4,12 +4,14 @@ using Fintracker.Application.Features.Budget.Requests.Queries;
 using Fintracker.Application.Responses;
 using Fintracker.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fintracker.API.Controllers;
 
 [ApiController]
 [Route("api/budget")]
+[Authorize(Roles = "Admin,User")]
 public class BudgetController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -20,6 +22,9 @@ public class BudgetController : ControllerBase
     }
 
     [HttpGet("{id:guid}/with-wallet")]
+    [ProducesResponseType(typeof(BudgetWithWalletDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BudgetWithWalletDTO>> GetBudgetWithWallet(Guid id)
     {
         var response = await _mediator.Send(new GetBudgetWithWalletByIdRequest()
@@ -31,6 +36,9 @@ public class BudgetController : ControllerBase
     }
 
     [HttpGet("{id:guid}/with-user")]
+    [ProducesResponseType(typeof(BudgetWithUserDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BudgetWithUserDTO>> GetBudgetWithUser(Guid id)
     {
         var response = await _mediator.Send(new GetBudgetWithUserByIdRequest()
@@ -42,6 +50,9 @@ public class BudgetController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(BudgetBaseDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BudgetBaseDTO>> GetById(Guid id)
     {
         var budget = await _mediator.Send(new GetBudgetByIdRequest()
@@ -53,6 +64,8 @@ public class BudgetController : ControllerBase
     }
 
     [HttpGet("{id:guid}/list")]
+    [ProducesResponseType(typeof(List<BudgetBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsById(Guid id,
         [FromQuery] string type)
     {
@@ -80,6 +93,8 @@ public class BudgetController : ControllerBase
     }
 
     [HttpGet("sorted")]
+    [ProducesResponseType(typeof(List<BudgetBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsByIdSorted([FromQuery] Guid id,
         [FromQuery] string type,
         [FromQuery] string sortBy,
@@ -113,8 +128,11 @@ public class BudgetController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(CreateCommandResponse<CreateBudgetDTO>),StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<CreateCommandResponse<CreateBudgetDTO>>> Post([FromBody] CreateBudgetDTO budget)
     {
+        
         var response = await _mediator.Send(new CreateBudgetCommand()
         {
             Budget = budget
@@ -124,6 +142,9 @@ public class BudgetController : ControllerBase
     }
 
     [HttpPut]
+    [ProducesResponseType(typeof(UpdateCommandResponse<BudgetBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UpdateCommandResponse<BudgetBaseDTO>>> Put([FromBody] UpdateBudgetDTO budget)
     {
         var response = await _mediator.Send(new UpdateBudgetCommand()
@@ -135,6 +156,9 @@ public class BudgetController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(DeleteCommandResponse<BudgetBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<BudgetBaseDTO>>> Delete(Guid id)
     {
         var response = await _mediator.Send(new DeleteBudgetCommand()

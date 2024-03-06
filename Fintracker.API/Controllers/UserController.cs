@@ -3,12 +3,14 @@ using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Features.User.Requests.Queries;
 using Fintracker.Application.Responses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fintracker.API.Controllers;
 
 [ApiController]
 [Route("api/user")]
+[Authorize(Roles = "Admin,User")]
 public class UserController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -19,6 +21,9 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(UserBaseDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserBaseDTO>> Get(Guid id)
     {
         var response = await _mediator.Send(new GetUserByIdRequest()
@@ -30,6 +35,8 @@ public class UserController : ControllerBase
     }
     
     [HttpGet("accessed-wallets/{walletId:guid}")]
+    [ProducesResponseType(typeof(List<UserBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<UserBaseDTO>>> GetWithAccessedWallets(Guid walletId)
     {
         var response = await _mediator.Send(new GetUsersAccessedToWalletRequest()
@@ -41,6 +48,9 @@ public class UserController : ControllerBase
     }
     
     [HttpGet("{id:guid}/with-budgets")]
+    [ProducesResponseType(typeof(UserWithBudgetsDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserWithBudgetsDTO>> GetWithBudgets(Guid id)
     {
         var response = await _mediator.Send(new GetUserWithBudgetsByIdRequest()
@@ -52,6 +62,9 @@ public class UserController : ControllerBase
     }
     
     [HttpGet("{id:guid}/with-own-wallets")]
+    [ProducesResponseType(typeof(UserWithOwnedWalletsDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserWithOwnedWalletsDTO>> GetWithOwnWallets(Guid id)
     {
         var response = await _mediator.Send(new GetUserWithOwnedWalletsByIdRequest()
@@ -63,6 +76,9 @@ public class UserController : ControllerBase
     }
     
     [HttpGet("{id:guid}/with-member-wallets")]
+    [ProducesResponseType(typeof(UserWithMemberWalletsDTO),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserWithMemberWalletsDTO>> GetWithMemberWallets(Guid id)
     {
         var response = await _mediator.Send(new GetUserWithMemberWalletsByIdRequest()
@@ -74,6 +90,9 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ProducesResponseType(typeof(DeleteCommandResponse<UserBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<UserBaseDTO>>> Delete(Guid id)
     {
         var response = await _mediator.Send(new DeleteUserCommand()
@@ -85,6 +104,9 @@ public class UserController : ControllerBase
     }
 
     [HttpPut]
+    [ProducesResponseType(typeof(UpdateCommandResponse<UserBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UpdateCommandResponse<UserBaseDTO>>> Put([FromBody] UpdateUserDTO user)
     {
         var response = await _mediator.Send(new UpdateUserCommand()

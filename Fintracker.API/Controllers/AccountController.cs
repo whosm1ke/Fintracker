@@ -1,11 +1,13 @@
 ﻿using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.DTO.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fintracker.API.Controllers;
 
 [Route("api/account")]
 [ApiController]
+
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
@@ -16,6 +18,8 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(RegisterResponse),StatusCodes.Status200OK)]
     public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest register)
     {
         var response = await _accountService.Register(register);
@@ -24,6 +28,9 @@ public class AccountController : ControllerBase
     }
     
     [HttpPost("login")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(LoginResponse),StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest login)
     {
         var response = await _accountService.Login(login);
@@ -32,6 +39,9 @@ public class AccountController : ControllerBase
     }
     
     [HttpPost("logout")]
+    [Authorize]
+    [ProducesResponseType(typeof(void),StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> Logout()
     {
         await _accountService.Logout();
