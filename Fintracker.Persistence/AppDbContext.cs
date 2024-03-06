@@ -1,57 +1,12 @@
-﻿using Fintracker.Domain.Common;
-using Fintracker.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Fintracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fintracker.Persistence;
 
-public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+public class AppDbContext : AuditableDbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-    }
-
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        base.OnModelCreating(builder);
-        builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-
-        List<IdentityRole<Guid>> roles = new()
-        {
-            new IdentityRole<Guid>()
-            {
-                Name = "Admin",
-                NormalizedName = "ADMIN",
-                Id = new Guid("DEEBA8F0-E75F-46F4-A447-68F5341FDBEC")
-            },
-            new IdentityRole<Guid>()
-            {
-                Name = "User",
-                NormalizedName = "USER",
-                Id = new Guid("33A23BC4-BD7E-4C8B-887B-8787F3E13614")
-            }
-        };
-
-        builder.Entity<IdentityRole<Guid>>().HasData(roles);
-    }
-
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
-    {
-        foreach (var entry in base.ChangeTracker.Entries<IEntity<Guid>>()
-                     .Where(q => q.State == EntityState.Added || q.State == EntityState.Modified))
-        {
-            entry.Entity.ModifiedAt = DateTime.Now;
-            entry.Entity.ModifiedBy = "SYSTEM";
-
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.CreatedAt = DateTime.Now;
-                entry.Entity.CreatedBy = "SYSTEM";
-            }
-        }
-
-        return base.SaveChangesAsync(cancellationToken);
     }
 
     public DbSet<Budget> Budgets { get; set; }

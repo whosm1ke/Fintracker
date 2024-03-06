@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Identity;
-using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.User;
 using Fintracker.Application.Features.User.Requests.Queries;
 using MediatR;

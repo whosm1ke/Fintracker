@@ -1,6 +1,4 @@
-﻿using Fintracker.Application.Contracts.Identity;
-
-namespace Fintracker.Application.Contracts.Persistence;
+﻿namespace Fintracker.Application.Contracts.Persistence;
 
 public interface IUnitOfWork : IDisposable
 {

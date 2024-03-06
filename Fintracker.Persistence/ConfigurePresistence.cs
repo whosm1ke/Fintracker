@@ -1,5 +1,4 @@
-﻿using Fintracker.Application.Contracts.Identity;
-using Fintracker.Application.Contracts.Persistence;
+﻿using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Domain.Entities;
 using Fintracker.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
