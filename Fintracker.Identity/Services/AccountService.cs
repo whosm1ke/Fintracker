@@ -1,6 +1,6 @@
 ﻿using Fintracker.Application.Contracts.Identity;
-using Fintracker.Application.DTO.Account;
 using Fintracker.Application.Exceptions;
+using Fintracker.Application.Models.Identity;
 using Fintracker.Domain.Entities;
 using Fintracker.Identity.Validators;
 using Microsoft.AspNetCore.Identity;

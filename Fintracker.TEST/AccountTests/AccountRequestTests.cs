@@ -1,4 +1,4 @@
-﻿using Fintracker.Application.DTO.Account;
+﻿using Fintracker.Application.Models.Identity;
 using Fintracker.TEST.Repositories;
 using FluentAssertions;
 

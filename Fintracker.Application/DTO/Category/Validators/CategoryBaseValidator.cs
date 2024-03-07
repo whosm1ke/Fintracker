@@ -1,4 +1,4 @@
-﻿using Fintracker.Application.BusinessRuleConstants;
+﻿using Fintracker.Application.BusinessRuleConstraints;
 using FluentValidation;
 
 namespace Fintracker.Application.DTO.Category.Validators;

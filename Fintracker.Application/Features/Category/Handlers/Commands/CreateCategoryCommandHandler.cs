@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Category;
 using Fintracker.Application.DTO.Category.Validators;
+using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Responses;
 using MediatR;
@@ -18,7 +20,9 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public async Task<CreateCommandResponse<CategoryDTO>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+
+    public async Task<CreateCommandResponse<CategoryDTO>> Handle(CreateCategoryCommand request,
+        CancellationToken cancellationToken)
     {
         var response = new CreateCommandResponse<CategoryDTO>();
         var validator = new CreateCategoryDtoValidator();
@@ -29,17 +33,17 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
             var categoryEntity = _mapper.Map<Domain.Entities.Category>(request.Category);
             await _unitOfWork.CategoryRepository.AddAsync(categoryEntity);
             var categoryDto = _mapper.Map<CategoryDTO>(categoryEntity);
-            
+
             response.Success = true;
             response.Message = "Created successfully";
             response.Id = categoryEntity.Id;
             response.CreatedObject = categoryDto;
-            
+
             await _unitOfWork.SaveAsync();
         }
         else
         {
-           throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
         return response;

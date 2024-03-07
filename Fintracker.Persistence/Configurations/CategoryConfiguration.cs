@@ -1,4 +1,4 @@
-﻿using Fintracker.Application.BusinessRuleConstants;
+﻿using Fintracker.Application.BusinessRuleConstraints;
 using Fintracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

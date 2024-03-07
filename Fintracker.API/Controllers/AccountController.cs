@@ -1,5 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Identity;
-using Fintracker.Application.DTO.Account;
+using Fintracker.Application.Models.Identity;
 using Fintracker.Application.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿namespace Fintracker.Application.DTO.Account;
+﻿namespace Fintracker.Application.Models.Identity;
 
 public class RegisterRequest
 {

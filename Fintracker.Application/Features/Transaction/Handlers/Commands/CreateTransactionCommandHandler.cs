@@ -3,6 +3,7 @@ using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.DTO.Transaction.Validators;
+using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.Responses;
 using MediatR;

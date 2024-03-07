@@ -1,4 +1,4 @@
-﻿using Fintracker.Application.DTO.Account;
+﻿using Fintracker.Application.Models.Identity;
 using Fintracker.Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;

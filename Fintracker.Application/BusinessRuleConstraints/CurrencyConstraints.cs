@@ -1,4 +1,4 @@
-﻿namespace Fintracker.Application.BusinessRuleConstants;
+﻿namespace Fintracker.Application.BusinessRuleConstraints;
 
 public static class CurrencyConstraints
 {

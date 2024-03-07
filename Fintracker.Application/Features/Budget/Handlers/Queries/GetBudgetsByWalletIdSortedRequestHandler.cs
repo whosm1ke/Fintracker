@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Budget;
+using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Budget.Requests.Queries;
 using MediatR;
 

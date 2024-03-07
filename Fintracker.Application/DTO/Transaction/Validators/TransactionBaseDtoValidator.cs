@@ -1,4 +1,4 @@
-﻿using Fintracker.Application.BusinessRuleConstants;
+﻿using Fintracker.Application.BusinessRuleConstraints;
 using Fintracker.Application.Contracts.Persistence;
 using FluentValidation;
 

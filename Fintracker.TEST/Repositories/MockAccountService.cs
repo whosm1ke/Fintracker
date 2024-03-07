@@ -1,5 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Identity;
-using Fintracker.Application.DTO.Account;
+using Fintracker.Application.Models.Identity;
 using Moq;
 
 namespace Fintracker.TEST.Repositories;
