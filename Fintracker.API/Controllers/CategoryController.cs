@@ -11,7 +11,7 @@ namespace Fintracker.API.Controllers;
 
 [ApiController]
 [Route("api/category")]
-[Authorize(Roles = "Admin,User")]
+[Authorize(Roles = "Admin, User")]
 public class CategoryController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -74,8 +74,10 @@ public class CategoryController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(CreateCommandResponse<CategoryDTO>),StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CreateCommandResponse<CategoryDTO>>> Post([FromBody] CreateCategoryDTO category)
     {
+        
         var response = await _mediator.Send(new CreateCategoryCommand()
         {
             Category = category
@@ -88,6 +90,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(UpdateCommandResponse<CategoryDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<CategoryDTO>>> Put([FromBody] UpdateCategoryDTO category)
     {
         var response = await _mediator.Send(new UpdateCategoryCommand()

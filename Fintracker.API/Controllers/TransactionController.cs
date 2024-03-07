@@ -160,6 +160,7 @@ public class TransactionController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(CreateCommandResponse<TransactionBaseDTO>),StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CreateCommandResponse<TransactionBaseDTO>>> Post(
         [FromBody] CreateTransactionDTO transaction)
     {
@@ -175,6 +176,7 @@ public class TransactionController : ControllerBase
     [ProducesResponseType(typeof(UpdateCommandResponse<TransactionBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<TransactionBaseDTO>>> Put(
         [FromBody] UpdateTransactionDTO transaction)
     {

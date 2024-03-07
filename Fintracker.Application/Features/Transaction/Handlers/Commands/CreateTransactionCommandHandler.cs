@@ -3,7 +3,6 @@ using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.DTO.Transaction.Validators;
-using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.Responses;
 using MediatR;
@@ -46,9 +45,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         }
         else
         {
-            response.Success = false;
-            response.Message = "Creation failed";
-            response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
         
         return response;

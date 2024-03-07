@@ -107,6 +107,7 @@ public class WalletController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(DeleteCommandResponse<WalletBaseDTO>),StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CreateCommandResponse<WalletBaseDTO>>> Post([FromBody] CreateWalletDTO wallet)
     {
         var response = await _mediator.Send(new CreateWalletCommand()
@@ -121,6 +122,7 @@ public class WalletController : ControllerBase
     [ProducesResponseType(typeof(DeleteCommandResponse<WalletBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<WalletBaseDTO>>> Put([FromBody] UpdateWalletDTO wallet)
     {
         var response = await _mediator.Send(new UpdateWalletCommand()

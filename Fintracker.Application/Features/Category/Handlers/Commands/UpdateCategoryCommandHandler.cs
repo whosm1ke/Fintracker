@@ -19,19 +19,21 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public async Task<UpdateCommandResponse<CategoryDTO>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+
+    public async Task<UpdateCommandResponse<CategoryDTO>> Handle(UpdateCategoryCommand request,
+        CancellationToken cancellationToken)
     {
         var response = new UpdateCommandResponse<CategoryDTO>();
         var validator = new UpdateCategoryDtoValidator(_unitOfWork);
-        var validationResult =await validator.ValidateAsync(request.Category);
+        var validationResult = await validator.ValidateAsync(request.Category);
 
+        var category = await _unitOfWork.CategoryRepository.GetAsync(request.Category.Id);
+        
+        if (category is null)
+            throw new NotFoundException(nameof(Domain.Entities.Category), request.Category.Id);
+        
         if (validationResult.IsValid)
         {
-            var category = await _unitOfWork.CategoryRepository.GetAsync(request.Category.Id);
-
-            if (category is null)
-                throw new NotFoundException(nameof(Domain.Entities.Category), request.Category.Id);
-
             var oldCategory = _mapper.Map<CategoryDTO>(category);
             _mapper.Map(request.Category, category);
             var newCategory = _mapper.Map<CategoryDTO>(category);
@@ -46,9 +48,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         }
         else
         {
-            response.Success = false;
-            response.Message = "Update failed";
-            response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
         return response;

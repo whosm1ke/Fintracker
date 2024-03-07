@@ -42,9 +42,7 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
         }
         else
         {
-            response.Message = "Creation failed";
-            response.Success = false;
-            response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
         return response;

@@ -39,9 +39,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         }
         else
         {
-            response.Success = false;
-            response.Message = "Creation failed";
-            response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+           throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
         return response;

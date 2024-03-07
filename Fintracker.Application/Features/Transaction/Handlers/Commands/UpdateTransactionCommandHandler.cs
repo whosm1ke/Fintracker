@@ -9,7 +9,9 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Handlers.Commands;
 
-public class UpdateTransactionCommandHandler : IRequestHandler<UpdateTransactionCommand, UpdateCommandResponse<TransactionBaseDTO>>
+public class
+    UpdateTransactionCommandHandler : IRequestHandler<UpdateTransactionCommand,
+    UpdateCommandResponse<TransactionBaseDTO>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -19,19 +21,21 @@ public class UpdateTransactionCommandHandler : IRequestHandler<UpdateTransaction
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
-    public async Task<UpdateCommandResponse<TransactionBaseDTO>> Handle(UpdateTransactionCommand request, CancellationToken cancellationToken)
+
+    public async Task<UpdateCommandResponse<TransactionBaseDTO>> Handle(UpdateTransactionCommand request,
+        CancellationToken cancellationToken)
     {
         var response = new UpdateCommandResponse<TransactionBaseDTO>();
         var validator = new UpdateTransactionDtoValidator(_unitOfWork);
         var validationResult = await validator.ValidateAsync(request.Transaction);
 
+        var transaction = await _unitOfWork.TransactionRepository.GetAsync(request.Transaction.Id);
+
+        if (transaction is null)
+            throw new NotFoundException(nameof(Domain.Entities.Transaction), request.Transaction.Id);
+        
         if (validationResult.IsValid)
         {
-            var transaction = await _unitOfWork.TransactionRepository.GetAsync(request.Transaction.Id);
-
-            if (transaction is null)
-                throw new NotFoundException(nameof(Domain.Entities.Transaction), request.Transaction.Id);
-
             var oldTransaction = _mapper.Map<TransactionBaseDTO>(transaction);
             _mapper.Map(request.Transaction, transaction);
             var newTransaction = _mapper.Map<TransactionBaseDTO>(transaction);
@@ -42,14 +46,12 @@ public class UpdateTransactionCommandHandler : IRequestHandler<UpdateTransaction
             response.Old = oldTransaction;
             response.New = newTransaction;
             response.Id = request.Transaction.Id;
-            
+
             await _unitOfWork.SaveAsync();
         }
         else
         {
-            response.Success = false;
-            response.Message = "Update failed";
-            response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
         return response;

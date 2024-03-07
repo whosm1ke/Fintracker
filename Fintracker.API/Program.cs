@@ -1,6 +1,5 @@
 using Fintracker.API.Middleware;
 using Fintracker.Application;
-using Fintracker.Application.Contracts.Identity;
 using Fintracker.Identity;
 using Fintracker.Persistence;
 using Microsoft.OpenApi.Models;
@@ -58,7 +57,6 @@ app.UseExceptionMiddleware();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseUnauthorizedMiddleware();
 app.MapControllers();
 
 

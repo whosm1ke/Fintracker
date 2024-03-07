@@ -20,39 +20,38 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
         _mapper = mapper;
     }
 
-    public async Task<UpdateCommandResponse<WalletBaseDTO>> Handle(UpdateWalletCommand request, CancellationToken cancellationToken)
+    public async Task<UpdateCommandResponse<WalletBaseDTO>> Handle(UpdateWalletCommand request,
+        CancellationToken cancellationToken)
     {
         var response = new UpdateCommandResponse<WalletBaseDTO>();
         var validator = new UpdateWalletDtoValidator(_unitOfWork);
         var validationResult = await validator.ValidateAsync(request.Wallet);
 
+        var wallet = await _unitOfWork.WalletRepository.GetAsync(request.Wallet.Id);
+
+        if (wallet is null)
+            throw new NotFoundException(nameof(Domain.Entities.Wallet), request.Wallet.Id);
+        
         if (validationResult.IsValid)
         {
-            var wallet = await _unitOfWork.WalletRepository.GetAsync(request.Wallet.Id);
-
-            if (wallet is null)
-                throw new NotFoundException(nameof(Domain.Entities.Wallet), request.Wallet.Id);
-
             var oldObject = _mapper.Map<WalletBaseDTO>(wallet);
             _mapper.Map(request.Wallet, wallet);
             await _unitOfWork.WalletRepository.UpdateAsync(wallet);
             var newObject = _mapper.Map<WalletBaseDTO>(wallet);
-            
+
             response.Success = true;
             response.Message = "Updated successfully";
             response.Old = oldObject;
             response.New = newObject;
             response.Id = request.Wallet.Id;
-            
+
             await _unitOfWork.SaveAsync();
         }
         else
         {
-            response.Success = false;
-            response.Message = "Update failed";
-            response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
-        }        
-        
+            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+        }
+
         return response;
     }
 }

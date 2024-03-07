@@ -107,6 +107,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(UpdateCommandResponse<UserBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<UserBaseDTO>>> Put([FromBody] UpdateUserDTO user)
     {
         var response = await _mediator.Send(new UpdateUserCommand()

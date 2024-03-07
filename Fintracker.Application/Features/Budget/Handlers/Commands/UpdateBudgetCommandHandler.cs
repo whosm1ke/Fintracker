@@ -26,14 +26,14 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         var response = new UpdateCommandResponse<BudgetBaseDTO>();
         var validator = new UpdateBudgetDtoValidator(_unitOfWork);
         var validationResult = await validator.ValidateAsync(request.Budget);
+        
+        var budget = await _unitOfWork.BudgetRepository.GetAsync(request.Budget.Id);
+
+        if (budget is null)
+            throw new NotFoundException(nameof(Domain.Entities.Budget), request.Budget.Id);
 
         if (validationResult.IsValid)
         {
-            var budget = await _unitOfWork.BudgetRepository.GetAsync(request.Budget.Id);
-
-            if (budget is null)
-                throw new NotFoundException(nameof(Domain.Entities.Budget), request.Budget.Id);
-
             var oldBudget = _mapper.Map<BudgetBaseDTO>(budget);
             _mapper.Map(request.Budget, budget);
             var newBudget = _mapper.Map<BudgetBaseDTO>(budget);
@@ -50,9 +50,7 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         }
         else
         {
-            response.Message = "Update failed";
-            response.Success = false;
-            response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
         return response;

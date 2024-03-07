@@ -130,6 +130,7 @@ public class BudgetController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(CreateCommandResponse<CreateBudgetDTO>),StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CreateCommandResponse<CreateBudgetDTO>>> Post([FromBody] CreateBudgetDTO budget)
     {
         
@@ -145,6 +146,7 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(UpdateCommandResponse<BudgetBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<BudgetBaseDTO>>> Put([FromBody] UpdateBudgetDTO budget)
     {
         var response = await _mediator.Send(new UpdateBudgetCommand()

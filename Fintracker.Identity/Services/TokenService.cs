@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,20 +13,35 @@ public class TokenService : ITokenService
 {
     private readonly IConfiguration _cfg;
     private readonly SymmetricSecurityKey _key;
-    public TokenService(IConfiguration cfg)
+    private readonly UserManager<User> _userManager;
+    public TokenService(IConfiguration cfg, UserManager<User> userManager)
     {
         _cfg = cfg;
+        _userManager = userManager;
         _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_cfg["JWT:SigningKey"]!));
     }
 
-    public string CreateToken(User user)
+    public async Task<string> CreateToken(User user)
     {
-        var claims = new List<Claim>()
+        var userClaims = await _userManager.GetClaimsAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var roleClaims = new List<Claim>();
+
+        for (int i = 0; i < roles.Count; i++)
         {
-            new(JwtRegisteredClaimNames.Email, user.Email!),
-            new(JwtRegisteredClaimNames.Sub, user.UserName!),
-            new("Uid", user.Id.ToString()),
-        };
+            roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
+        }
+
+        var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+                new Claim("Uid", user.Id.ToString())
+            }
+            .Union(userClaims)
+            .Union(roleClaims);
 
         var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 

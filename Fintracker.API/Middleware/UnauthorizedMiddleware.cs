@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Fintracker.Application.Responses;
 
 namespace Fintracker.API.Middleware;
 
@@ -17,15 +17,16 @@ public class UnauthorizedMiddleware
 
         if (context.Response.StatusCode == StatusCodes.Status401Unauthorized)
         {
-            context.Response.ContentType = "application/json";
-            
-            string result = JsonConvert.SerializeObject(new ErrorDeatils
+            var response = new UnauthorizedResponse
             {
-                ErrorMessage = "Notnotnot",
-                ErrorType = "Failure"
-            });
-            
-            await context.Response.WriteAsync(result);
+                Id = Guid.NewGuid(),
+                When = DateTime.UtcNow,
+                Reason = "Unauthorized",
+                Details = "The user is not authorized to access this resource",
+                StatusCode = StatusCodes.Status401Unauthorized,
+            };
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsJsonAsync(response);
         }
     }
 }

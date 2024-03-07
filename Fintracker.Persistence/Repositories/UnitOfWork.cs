@@ -1,6 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
-using Microsoft.AspNetCore.Http;
 
 namespace Fintracker.Persistence.Repositories;
 
@@ -8,12 +7,10 @@ public class UnitOfWork : IUnitOfWork
 {
 
     private readonly AppDbContext _context;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UnitOfWork(AppDbContext context, IHttpContextAccessor httpContextAccessor)
+    public UnitOfWork(AppDbContext context)
     {
         _context = context;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     private IBudgetRepository _budgetRepository;
@@ -27,15 +24,13 @@ public class UnitOfWork : IUnitOfWork
     
     private ITransactionRepository _transactionRepository;
     public ITransactionRepository TransactionRepository => _transactionRepository ??= new TransactionRepository(_context);
-    public IUserRepository UserRepository { get; }
 
 
     private IWalletRepository _walletRepository;
     public IWalletRepository WalletRepository => _walletRepository ??= new WalletRepository(_context);
     public async Task SaveAsync()
     {
-        var username = _httpContextAccessor.HttpContext.User.FindFirst("Uid")?.Value;
-        await _context.SaveChangesAsync(username ?? "Not authorized");
+        await _context.SaveChangesAsync();
     }
 
     
