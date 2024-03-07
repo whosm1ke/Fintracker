@@ -19,6 +19,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Fintracker.Application\Fintracker.Application.csproj" />
       <ProjectReference Include="..\Fintracker.Identity\Fintracker.Identity.csproj" />
+      <ProjectReference Include="..\Fintracker.Infrastructure\Fintracker.Infrastructure.csproj" />
       <ProjectReference Include="..\Fintracker.Persistence\Fintracker.Persistence.csproj" />
     </ItemGroup>
 
