@@ -38,14 +38,14 @@ public class TransactionController : ControllerBase
     [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<TransactionBaseDTO>>> GetByCategoryId(Guid categoryId,
-        [FromQuery] string sortBy,
-        [FromQuery] bool isDescending)
+        [FromQuery] string? sortBy,
+        [FromQuery] bool? isDescending)
     {
         var sortRequest = new GetTransactionsByCategoryIdSortedRequest()
         {
             CategoryId = categoryId,
-            IsDescending = isDescending,
-            SortBy = sortBy
+            IsDescending = isDescending.HasValue && isDescending.Value,
+            SortBy = sortBy!
         };
 
         var simpleRequest = new GetTransactionsByCategoryIdRequest()
@@ -66,14 +66,14 @@ public class TransactionController : ControllerBase
     [HttpGet("user/{userId:guid}")]
     [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByUserId(Guid userId, [FromQuery] string sortBy,
-        [FromQuery] bool isDescending)
+    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByUserId(Guid userId, [FromQuery] string? sortBy,
+        [FromQuery] bool? isDescending)
     {
         var sortRequest = new GetTransactionsByUserIdSortedRequest()
         {
             UserId = userId,
-            IsDescending = isDescending,
-            SortBy = sortBy
+            IsDescending = isDescending.HasValue && isDescending.Value,
+            SortBy = sortBy!
         };
 
         var simpleRequest = new GetTransactionsByUserIdRequest()
@@ -94,14 +94,14 @@ public class TransactionController : ControllerBase
     [HttpGet("wallet/{walletId:guid}")]
     [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByWalletId(Guid walletId, [FromQuery] string sortBy,
-        [FromQuery] bool isDescending)
+    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByWalletId(Guid walletId, [FromQuery] string? sortBy,
+        [FromQuery] bool? isDescending)
     {
         var sortRequest = new GetTransactionsByWalletIdSortedRequest()
         {
             WalletId = walletId,
-            IsDescending = isDescending,
-            SortBy = sortBy
+            IsDescending = isDescending.HasValue && isDescending.Value,
+            SortBy = sortBy!
         };
 
         var simpleRequest = new GetTransactionsByWalletIdRequest()

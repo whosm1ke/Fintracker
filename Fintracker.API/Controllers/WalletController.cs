@@ -37,14 +37,14 @@ public class WalletController : ControllerBase
     [HttpGet("owner/{ownerId:guid}")]
     [ProducesResponseType(typeof(List<WalletBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<WalletBaseDTO>>> Get(Guid ownerId, [FromQuery] string sortBy,
-        [FromQuery] bool isDescending)
+    public async Task<ActionResult<List<WalletBaseDTO>>> Get(Guid ownerId, [FromQuery] string? sortBy,
+        [FromQuery] bool? isDescending)
     {
         var sortRequest = new GetWalletsByOwnerIdSortedRequest()
         {
             OwnerId = ownerId,
-            IsDescending = isDescending,
-            SortBy = sortBy
+            IsDescending = isDescending.HasValue && isDescending.Value,
+            SortBy = sortBy!
         };
 
         var simpleRequest = new GetWalletsByOwnerIdRequest()

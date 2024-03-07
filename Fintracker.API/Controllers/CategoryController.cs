@@ -24,12 +24,12 @@ public class CategoryController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(List<CategoryDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<CategoryDTO>>> Get([FromQuery] string sortBy, [FromQuery] bool isDescending = false)
+    public async Task<ActionResult<List<CategoryDTO>>> Get([FromQuery] string? sortBy, [FromQuery] bool? isDescending)
     {
         var sortRequest = new GetCategoriesSortedRequest()
         {
-            IsDescending = isDescending,
-            SortBy = sortBy
+            IsDescending = isDescending.HasValue && isDescending.Value,
+            SortBy = sortBy!
         };
 
         var simpleRequest = new GetCategoriesRequest();

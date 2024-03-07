@@ -34,12 +34,12 @@ public class CurrencyController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(List<CurrencyDTO>),StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<CurrencyDTO>>> Get([FromQuery] string sortBy, [FromQuery] bool isDescending)
+    public async Task<ActionResult<List<CurrencyDTO>>> Get([FromQuery] string? sortBy, [FromQuery] bool? isDescending)
     {
         var sortRequest = new GetCurrenciesSortedRequest()
         {
-            IsDescending = isDescending,
-            SortBy = sortBy
+            IsDescending = isDescending.HasValue && isDescending.Value,
+            SortBy = sortBy!
         };
 
         var simpleRequest = new GetCurrenciesRequest();

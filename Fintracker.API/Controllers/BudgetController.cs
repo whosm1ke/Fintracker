@@ -97,8 +97,8 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsByIdSorted([FromQuery] Guid id,
         [FromQuery] string type,
-        [FromQuery] string sortBy,
-        [FromQuery] bool isDescending)
+        [FromQuery] string? sortBy,
+        [FromQuery] bool? isDescending)
     {
         if (string.IsNullOrEmpty(type) ||
             (type.ToLower() != $"{nameof(Wallet).ToLower()}" && type.ToLower() != $"{nameof(User).ToLower()}"))
@@ -113,15 +113,15 @@ public class BudgetController : ControllerBase
             budgets = await _mediator.Send(new GetBudgetsByUserIdSortedRequest()
             {
                 UserId = id,
-                IsDescending = isDescending,
-                SortBy = sortBy
+                IsDescending = isDescending.HasValue && isDescending.Value,
+                SortBy = sortBy!
             });
         else
             budgets = await _mediator.Send(new GetBudgetsByWalletIdSortedRequest()
             {
                 WalletId = id,
-                IsDescending = isDescending,
-                SortBy = sortBy
+                IsDescending = isDescending.HasValue && isDescending.Value,
+                SortBy = sortBy!
             });
 
         return Ok(budgets);
