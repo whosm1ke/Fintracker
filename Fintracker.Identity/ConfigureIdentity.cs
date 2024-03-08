@@ -32,6 +32,7 @@ public static class ConfigureIdentity
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(cfg["JWT:SigningKey"]!))
             };
+            
     
         }).AddCookie(IdentityConstants.ApplicationScheme);
 

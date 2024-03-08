@@ -1,7 +1,5 @@
 using Fintracker.API.Middleware;
 using Fintracker.Application;
-using Fintracker.Application.Contracts.Infrastructure;
-using Fintracker.Application.Models.Mail;
 using Fintracker.Identity;
 using Fintracker.Infrastructure;
 using Fintracker.Persistence;
@@ -41,7 +39,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.ConfigureApplicationServices();
+builder.Services.ConfigureApplicationServices(builder.Configuration);
 builder.Services.ConfigureIdentityServices(builder.Configuration);
 builder.Services.ConfigurePresistenceServices(builder.Configuration);
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
@@ -64,18 +62,18 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-app.MapGet("hi", async (HttpContext context, IEmailSender emailSender) =>
-{
-    var res = await emailSender.SendEmailAsync(new EmailModel()
-    {
-        Email = "chermishan@gmail.com",
-        Subject = "Test attachment",
-        Name = "Photo",
-        PlainMessage = "Look at this picture!",
-        HtmlMessage = null
-    });
-
-    await context.Response.WriteAsJsonAsync(res);
-});
+//
+// app.MapGet("hi", async (HttpContext context, IEmailSender emailSender) =>
+// {
+//     var res = await emailSender.SendEmailAsync(new EmailModel()
+//     {
+//         Email = "chermishan@gmail.com",
+//         Subject = "Test attachment",
+//         Name = "Photo",
+//         PlainMessage = "Look at this picture!",
+//         HtmlMessage = null
+//     });
+//
+//     await context.Response.WriteAsJsonAsync(res);
+// });
 app.Run();

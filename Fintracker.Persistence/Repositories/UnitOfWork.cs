@@ -1,5 +1,4 @@
-﻿using Fintracker.Application.Contracts.Identity;
-using Fintracker.Application.Contracts.Persistence;
+﻿using Fintracker.Application.Contracts.Persistence;
 
 namespace Fintracker.Persistence.Repositories;
 

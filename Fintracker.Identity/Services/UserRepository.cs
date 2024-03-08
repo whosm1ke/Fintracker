@@ -44,6 +44,14 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<bool> HasMemberWallet(Guid walletId)
+    {
+        return await _userManager.Users
+            .AsNoTracking()
+            .Where(x => x.MemberWallets.Any(x => x.Id == walletId))
+            .FirstOrDefaultAsync() != null;
+    }
+
     public async Task<bool> ExistsAsync(Guid id)
     {
         return await _userManager.FindByIdAsync(id.ToString()) != null;

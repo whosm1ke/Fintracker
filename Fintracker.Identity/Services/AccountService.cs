@@ -60,7 +60,6 @@ public class AccountService : IAccountService
         var validator = new LoginRequestValidator(_userManager);
         var validationresult = await validator.ValidateAsync(login);
         var response = new LoginResponse();
-
         if (validationresult.IsValid)
         {
             var user = await _userManager.FindByEmailAsync(login.Email);
@@ -71,7 +70,7 @@ public class AccountService : IAccountService
             var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
 
             if (!checkPasswordResult.Succeeded) throw new LoginException("Invalid credentials");
-
+            
             response.UserId = user.Id;
             response.Token = await _tokenService.CreateToken(user);
             response.UserEmail = user.Email!;

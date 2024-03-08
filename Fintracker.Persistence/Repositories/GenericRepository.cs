@@ -39,7 +39,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IEnti
 
     public async Task<bool> ExistsAsync(Guid id)
     {
-        return await GetAsync(id) != null;
+        return await GetAsyncNoTracking(id) != null;
     }
 
     public async Task UpdateAsync(T item)

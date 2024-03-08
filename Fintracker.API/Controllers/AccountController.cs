@@ -1,6 +1,10 @@
-﻿using Fintracker.Application.Contracts.Identity;
+﻿using System.Security.Claims;
+using Fintracker.Application.Contracts.Identity;
+using Fintracker.Application.DTO.Invite;
+using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Identity;
 using Fintracker.Application.Responses;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +16,12 @@ namespace Fintracker.API.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
+    private readonly IMediator _mediator;
 
-    public AccountController(IAccountService accountService)
+    public AccountController(IAccountService accountService, IMediator mediator)
     {
         _accountService = accountService;
+        _mediator = mediator;
     }
 
     [HttpPost("register")]
@@ -50,5 +56,34 @@ public class AccountController : ControllerBase
         await _accountService.Logout();
 
         return Ok();
+    }
+    
+    [HttpPost("invite")]
+    [Authorize(Roles = "User, Admin")]
+    public async Task<IActionResult> InviteUser([FromBody] InviteDTO invite)
+    {
+        var userName = User.FindFirst("name")?.Value;
+        var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+        await _mediator.Send(new InviteUserCommand()
+        {
+            UserEmail = invite.Email,
+            WalletId = invite.WalletId,
+            WhoInvited = userName ?? "User",
+            CurrentUserEmail = currentUserEmail!
+        });
+
+        return Ok();
+    }
+    [HttpPost("invite/add-wallet")]
+    [ProducesResponseType(typeof(BaseCommandResponse), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<BaseCommandResponse>> AddUserToWallet([FromForm] Guid walletId, [FromQuery]string token)
+    {
+        var response = await _mediator.Send(new AddUserToWalletCommand()
+        {
+            WalletId = walletId,
+            Token = token
+        });
+
+        return Ok(response);
     }
 }

@@ -35,7 +35,7 @@ public class TokenService : ITokenService
 
         var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
+                new Claim(JwtRegisteredClaimNames.Name, user.UserName!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim("Uid", user.Id.ToString())
@@ -59,5 +59,21 @@ public class TokenService : ITokenService
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
         return tokenHandler.WriteToken(token);
+    }
+
+    public async Task<Tuple<bool, JwtSecurityToken>> ValidateToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenValidationParams = new TokenValidationParameters()
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = _key,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ClockSkew = TimeSpan.Zero
+        };
+
+        var validationResult = await tokenHandler.ValidateTokenAsync(token, tokenValidationParams);
+        return new Tuple<bool, JwtSecurityToken>(validationResult.IsValid,(JwtSecurityToken)validationResult.SecurityToken);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Category;
 using Fintracker.Application.DTO.Category.Validators;
