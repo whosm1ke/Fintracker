@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Fintracker.Application.Contracts.Identity;
+﻿using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.DTO.Invite;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Identity;
@@ -62,21 +61,17 @@ public class AccountController : ControllerBase
     [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> InviteUser([FromBody] InviteDTO invite)
     {
-        var userName = User.FindFirst("name")?.Value;
-        var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
         await _mediator.Send(new InviteUserCommand()
         {
             UserEmail = invite.Email,
             WalletId = invite.WalletId,
-            WhoInvited = userName ?? "User",
-            CurrentUserEmail = currentUserEmail!
         });
 
         return Ok();
     }
-    [HttpPost("invite/add-wallet")]
+    [HttpPost("invite/accept")]
     [ProducesResponseType(typeof(BaseCommandResponse), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<BaseCommandResponse>> AddUserToWallet([FromForm] Guid walletId, [FromQuery]string token)
+    public async Task<ActionResult<BaseCommandResponse>> AddUserToWallet([FromQuery] Guid walletId, [FromQuery]string token)
     {
         var response = await _mediator.Send(new AddUserToWalletCommand()
         {

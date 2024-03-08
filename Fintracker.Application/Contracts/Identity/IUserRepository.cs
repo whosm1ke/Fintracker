@@ -16,7 +16,6 @@ public interface IUserRepository
     Task<bool> ExistsAsync(string email);
     Task UpdateAsync(User item);
     Task DeleteAsync(User item);
-    
     Task<User?> GetAsync(Guid id);
     Task<User?> GetAsNoTrackingAsync(string email);
     Task<IReadOnlyList<User?>> GetAllAsync();

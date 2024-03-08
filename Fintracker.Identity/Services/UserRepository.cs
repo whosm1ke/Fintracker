@@ -8,6 +8,7 @@ namespace Fintracker.Identity.Services;
 public class UserRepository : IUserRepository
 {
     private readonly UserManager<User> _userManager;
+
     public UserRepository(UserManager<User> context)
     {
         _userManager = context;
@@ -27,7 +28,7 @@ public class UserRepository : IUserRepository
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
-    
+
     public async Task<User?> GetUserWithMemberWalletsByIdAsync(Guid id)
     {
         return await _userManager.Users
@@ -56,7 +57,7 @@ public class UserRepository : IUserRepository
     {
         return await _userManager.FindByIdAsync(id.ToString()) != null;
     }
-    
+
     public async Task<bool> ExistsAsync(string email)
     {
         return await _userManager.FindByEmailAsync(email) != null;
@@ -71,6 +72,7 @@ public class UserRepository : IUserRepository
     {
         await _userManager.DeleteAsync(item);
     }
+
 
     public async Task<User?> GetAsync(Guid id)
     {

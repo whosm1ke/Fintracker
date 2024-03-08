@@ -3,10 +3,10 @@ using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Invite.Validators;
-using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Mail;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
 namespace Fintracker.Application.Features.User.Handlers.Commands;
@@ -17,39 +17,46 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly AppSettings _appSettings;
 
     public InviteUserCommandHandler(IEmailSender emailSender, IUserRepository userRepository, IUnitOfWork unitOfWork,
-        ITokenService tokenService, IOptions<AppSettings> options)
+        ITokenService tokenService, IOptions<AppSettings> options, IHttpContextAccessor httpContextAccessor)
     {
         _emailSender = emailSender;
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
+        _httpContextAccessor = httpContextAccessor;
         _appSettings = options.Value;
     }
 
     public async Task<Unit> Handle(InviteUserCommand request, CancellationToken cancellationToken)
     {
-        var validator = new InviteUseValidator(_userRepository, _unitOfWork);
+        var validator = new InviteUseValidator(_userRepository, _unitOfWork, _httpContextAccessor);
         var validationResult = await validator.ValidateAsync(request);
 
         if (validationResult.IsValid)
         {
+            var whoInvited = _httpContextAccessor.HttpContext?.User.FindFirst("name")?.Value;
             var inviteEmailModel = new InviteEmailModel()
             {
-                WhoInvited = request.WhoInvited
+                WhoInvited = whoInvited ?? "User"
             };
             var existingUser = await _userRepository.GetAsNoTrackingAsync(request.UserEmail);
 
             if (existingUser == null)
-                //TODO change refs
-                inviteEmailModel.Ref = "google.com";
+            {
+                var token = await _tokenService.CreateInviteToken(request.UserEmail);
+                inviteEmailModel.Ref =
+                    $"{_appSettings.BaseUrl}/api/account/invite/accept?token={token}&walletId={request.WalletId}";
+            }
             else
             {
                 inviteEmailModel.WalletId = request.WalletId;
                 var token =
-                    await _tokenService.CreateToken(await _userRepository.GetAsNoTrackingAsync(request.UserEmail));
+                    await _tokenService.CreateLoginToken(
+                        (await _userRepository.GetAsNoTrackingAsync(request.UserEmail))!);
 
                 inviteEmailModel.Ref = $"{_appSettings.BaseUrl}/api/account/invite/add-wallet?token={token}";
             }
@@ -59,7 +66,7 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
             await _emailSender.SendEmailAsync(new EmailModel()
             {
                 Email = request.UserEmail,
-                Subject = $"{request.WhoInvited} invites you to join his wallet",
+                Subject = $"{inviteEmailModel.WhoInvited} invites you to join his wallet",
                 HtmlMessage = GetHtmlInviteString(),
                 Name = "",
                 PlainMessage = ""

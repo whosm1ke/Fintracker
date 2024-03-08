@@ -72,7 +72,7 @@ public class AccountService : IAccountService
             if (!checkPasswordResult.Succeeded) throw new LoginException("Invalid credentials");
             
             response.UserId = user.Id;
-            response.Token = await _tokenService.CreateToken(user);
+            response.Token = await _tokenService.CreateLoginToken(user);
             response.UserEmail = user.Email!;
             await _signInManager.SignInAsync(user, true);
             return response;
