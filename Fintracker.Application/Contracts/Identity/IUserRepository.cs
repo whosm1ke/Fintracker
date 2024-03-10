@@ -10,7 +10,7 @@ public interface IUserRepository
     Task<User?> GetUserWithMemberWalletsByIdAsync(Guid id);
     Task<User?> GetUserWithBudgetsByIdAsync(Guid id);
 
-    Task<bool> HasMemberWallet(Guid walletId);
+    Task<bool> HasMemberWallet(Guid walletId, string userEmail);
     
     Task<bool> ExistsAsync(Guid id);
     Task<bool> ExistsAsync(string email);

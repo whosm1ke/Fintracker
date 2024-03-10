@@ -16,8 +16,7 @@ public class AddUserToWalletValidator : AbstractValidator<AddUserToWalletCommand
             .WithMessage($"{nameof(AddUserToWalletCommand.WalletId)} can not be blank")
             .MustAsync(async (id, _) => await unitOfWork.WalletRepository.ExistsAsync(id))
             .WithMessage(x => $"Wallet with id [{x.WalletId}] does not exist")
-            .MustAsync(async (id, _) => !await userRepository.HasMemberWallet(id))
-            .WithMessage(x => $"User already has access to that wallet");
+            ;
 
         RuleFor(x => x.Token)
             .NotNull()

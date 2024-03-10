@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\inviteForm.css" />
     </ItemGroup>
 
 </Project>

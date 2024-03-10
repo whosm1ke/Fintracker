@@ -78,7 +78,8 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
         {
             UserName = email,
             Email = email,
-            Id = id
+            Id = id,
+            PasswordHash = Guid.NewGuid().ToString()
         };
         var userResult = await _userManager.CreateAsync(user);
         if (userResult.Succeeded)

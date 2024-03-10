@@ -45,11 +45,11 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<bool> HasMemberWallet(Guid walletId)
+    public async Task<bool> HasMemberWallet(Guid walletId, string userEmail)
     {
         return await _userManager.Users
             .AsNoTracking()
-            .Where(x => x.MemberWallets.Any(x => x.Id == walletId))
+            .Where(x => x.Email == userEmail && x.MemberWallets.Any(x => x.Id == walletId))
             .FirstOrDefaultAsync() != null;
     }
 

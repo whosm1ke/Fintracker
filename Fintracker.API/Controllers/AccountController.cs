@@ -1,4 +1,5 @@
-﻿using Fintracker.Application.Contracts.Identity;
+﻿using Fintracker.Application.BusinessRuleConstraints;
+using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.DTO.Invite;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Identity;
@@ -65,6 +66,7 @@ public class AccountController : ControllerBase
         {
             UserEmail = invite.Email,
             WalletId = invite.WalletId,
+            WhoInvited = HttpContext.User.FindFirst(ClaimTypeConstants.Name)?.Value
         });
 
         return Ok();

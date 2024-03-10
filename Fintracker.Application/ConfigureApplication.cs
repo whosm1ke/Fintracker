@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using Fintracker.Application.Contracts.Helpers;
+using Fintracker.Application.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +16,7 @@ public static class ConfigureApplication
         });
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+        services.AddTransient<IHtmlPageHelper, HtmlPagesHelper>();
         return services;
     }
 }

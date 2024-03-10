@@ -44,8 +44,6 @@ builder.Services.ConfigureIdentityServices(builder.Configuration);
 builder.Services.ConfigurePresistenceServices(builder.Configuration);
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
 builder.Services.AddControllers();
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
