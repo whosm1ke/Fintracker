@@ -46,11 +46,13 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
                 WhoInvited = request.WhoInvited ?? "User",
                 TempPass = _tempPass
             };
-            var existingUser = await _userRepository.GetAsNoTrackingAsync(request.UserEmail);
-
-            if (existingUser == null)
+            
+            var isUserExists = await _userRepository.ExistsAsync(request.UserEmail);
+            var user = new Domain.Entities.User();
+            
+            if (!isUserExists)
             {
-                var user = await _userRepository.RegisterUserWithTemporaryPassword(request.UserEmail, Guid.NewGuid(), _tempPass);
+                user = await _userRepository.RegisterUserWithTemporaryPassword(request.UserEmail, Guid.NewGuid(), _tempPass);
                 var token = await _tokenService.CreateToken(user);
                 inviteEmailModel.Ref =
                     $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
@@ -68,13 +70,16 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
             {
                 Email = request.UserEmail,
                 Subject = "Invitation to a new wallet",
-                HtmlPath = existingUser is null ? "inviteFormWithNewUser.html" : "inviteForm.html",
+                HtmlPath = isUserExists ? "inviteForm.html" : "inviteFormWithNewUser.html",
                 Name = "",
                 PlainMessage = ""
             }, inviteEmailModel);
 
             if (!isEmailSent)
+            {
+                await _userManager.DeleteAsync(user);
                 throw new BadRequestException($"Email to {request.UserEmail} was not sent!");
+            }
 
             return Unit.Value;
         }
