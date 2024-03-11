@@ -35,6 +35,13 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<IReadOnlyList<Budget>> GetBudgetsByCategoryId(Guid categoryId)
+    {
+        return await _db.Budgets.Where(x => x.Categories
+                                                    .Any(x => x.Id == categoryId))
+                                .ToListAsync();
+    }
+
     public async Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId)
     {
         return await _db.Budgets

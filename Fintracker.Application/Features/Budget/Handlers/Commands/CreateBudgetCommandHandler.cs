@@ -15,6 +15,7 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
+
     public CreateBudgetCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IUserRepository userRepository)
     {
         _unitOfWork = unitOfWork;
@@ -26,19 +27,25 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
         CancellationToken cancellationToken)
     {
         var response = new CreateCommandResponse<CreateBudgetDTO>();
-        var validator = new CreateBudgetDtoValidator(_unitOfWork,_userRepository);
+        var validator = new CreateBudgetDtoValidator(_unitOfWork, _userRepository);
         var validationResult = await validator.ValidateAsync(request.Budget);
 
         if (validationResult.IsValid)
         {
             var budgetEntity = _mapper.Map<Domain.Entities.Budget>(request.Budget);
+            
+            var categories = await _unitOfWork.CategoryRepository.GetAllWithIds(request.Budget.CategoryIds);
+            foreach (var category in categories)
+            {
+                budgetEntity.Categories.Add(category);
+            }
             await _unitOfWork.BudgetRepository.AddAsync(budgetEntity);
 
             response.Message = "Created successfully";
             response.Success = true;
             response.Id = budgetEntity.Id;
             response.CreatedObject = request.Budget;
-            
+
             await _unitOfWork.SaveAsync();
         }
         else
