@@ -9,4 +9,8 @@ public class NotFoundException : ApplicationException
         Name = name;
         Key = key;
     }
+
+    public NotFoundException(string msg) : base(msg)
+    {
+    }
 }

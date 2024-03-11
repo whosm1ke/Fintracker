@@ -39,8 +39,6 @@
 
     <ItemGroup>
       <Compile Remove="Features\User\Handlers\Queries\IsUserExistsByEmailRequestHandler.cs" />
-      <Compile Remove="Features\User\Requests\Commands\ResetUserPasswordCommand.cs" />
-      <Compile Remove="Features\User\Handlers\Commands\ResetUserPasswordCommandHandler.cs" />
     </ItemGroup>
 
 </Project>

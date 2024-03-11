@@ -5,9 +5,8 @@ namespace Fintracker.Application.Contracts.Identity;
 
 public interface ITokenService
 {
-    Task<string> CreateLoginToken(User user);
+    Task<string> CreateToken(User user);
 
-    Task<string> CreateInviteToken(string email);
 
     Task<Tuple<bool, JwtSecurityToken>> ValidateToken(string token);
 }

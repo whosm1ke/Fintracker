@@ -4,7 +4,6 @@ namespace Fintracker.Application.Contracts.Infrastructure;
 
 public interface IEmailSender
 {
-    Task<bool> SendEmailAsync(EmailModel email);
+    Task<bool> SendEmail<T>(EmailModel email, T model);
 
-    public InviteEmailModel Model { get; set; }
 }

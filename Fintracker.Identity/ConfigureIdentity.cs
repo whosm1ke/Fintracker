@@ -37,7 +37,7 @@ public static class ConfigureIdentity
         }).AddCookie(IdentityConstants.ApplicationScheme);
 
         services.AddScoped<IAccountService, AccountService>();
-        services.AddScoped<ITokenService,LoginService>();
+        services.AddScoped<ITokenService,TokenService>();
         services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }

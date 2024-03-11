@@ -31,6 +31,7 @@ public static class ConfigurePresistence
         builder.AddSignInManager<SignInManager<User>>();
         builder.AddRoles<IdentityRole<Guid>>();
         builder.AddEntityFrameworkStores<AppDbContext>();
+        builder.AddDefaultTokenProviders();
         
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IBudgetRepository, BudgetRepository>();

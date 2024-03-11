@@ -1,4 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Identity;
+using Fintracker.Application.Exceptions;
 using Fintracker.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -85,6 +86,33 @@ public class UserRepository : IUserRepository
             .AsNoTracking()
             .Where(x => x.Email == email)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<User> RegisterUserWithTemporaryPassword(string? email, Guid id, string tempPass)
+    {
+        if (email is null || id == Guid.Empty)
+            throw new BadRequestException(
+                $"Can not register new user. Invalid param '{nameof(email)}' or '{nameof(id)}'");
+
+        var user = new User()
+        {
+            UserName = email,
+            Email = email,
+            Id = id
+        };
+        var userResult = await _userManager.CreateAsync(user, tempPass);
+
+        if (userResult.Succeeded)
+        {
+            var roleResult = await _userManager.AddToRoleAsync(user, "User");
+
+            if (!roleResult.Succeeded)
+                throw new BadRequestException(roleResult.Errors.Select(x => x.Description).ToList());
+
+            return user;
+        }
+
+        throw new BadRequestException(userResult.Errors.Select(x => x.Description).ToList());
     }
 
     public async Task<IReadOnlyList<User?>> GetAllAsync()

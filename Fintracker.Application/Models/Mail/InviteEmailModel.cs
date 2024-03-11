@@ -6,5 +6,5 @@ public class InviteEmailModel
 
     public string Ref { get; set; }
 
-    public Guid WalletId { get; set; }
+    public string? TempPass { get; set; }
 }

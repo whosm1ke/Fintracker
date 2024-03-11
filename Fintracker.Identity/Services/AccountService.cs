@@ -1,4 +1,5 @@
-﻿using Fintracker.Application.Contracts.Identity;
+﻿using Fintracker.Application.BusinessRuleConstraints;
+using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Models.Identity;
 using Fintracker.Domain.Entities;
@@ -70,9 +71,9 @@ public class AccountService : IAccountService
             var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
 
             if (!checkPasswordResult.Succeeded) throw new LoginException("Invalid credentials");
-            
+
             response.UserId = user.Id;
-            response.Token = await _tokenService.CreateLoginToken(user);
+            response.Token = await _tokenService.CreateToken(user);
             response.UserEmail = user.Email!;
             await _signInManager.SignInAsync(user, true);
             return response;
@@ -82,6 +83,27 @@ public class AccountService : IAccountService
             .Select(x => x.ErrorMessage).ToList());
     }
 
+    public async Task<bool> ResetPassword(ResetPasswordModel model)
+    {
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        
+        var restPasswordResult = await _userManager.ResetPasswordAsync(user!, model.Token, model.Password);
+
+        return restPasswordResult.Succeeded;
+    }
+
+    public async Task<string> GenerateResetPasswordToken(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user is null)
+            throw new NotFoundException("Invalid email");
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        return token;
+    }
+    
     public async Task Logout()
     {
         await _signInManager.SignOutAsync();

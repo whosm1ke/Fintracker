@@ -63,7 +63,7 @@ app.MapControllers();
 //
 // app.MapGet("hi", async (HttpContext context, IEmailSender emailSender) =>
 // {
-//     var res = await emailSender.SendEmailAsync(new EmailModel()
+//     var res = await emailSender.SendEmail(new EmailModel()
 //     {
 //         Email = "chermishan@gmail.com",
 //         Subject = "Test attachment",

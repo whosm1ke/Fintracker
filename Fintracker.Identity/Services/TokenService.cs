@@ -10,19 +10,19 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Fintracker.Identity.Services;
 
-public class LoginService : ITokenService
+public class TokenService : ITokenService
 {
     private readonly IConfiguration _cfg;
     private readonly SymmetricSecurityKey _key;
     private readonly UserManager<User> _userManager;
-    public LoginService(IConfiguration cfg, UserManager<User> userManager)
+    public TokenService(IConfiguration cfg, UserManager<User> userManager)
     {
         _cfg = cfg;
         _userManager = userManager;
         _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_cfg["JWT:SigningKey"]!));
     }
 
-    public async Task<string> CreateLoginToken(User user)
+    public async Task<string> CreateToken(User user)
     {
         var userClaims = await _userManager.GetClaimsAsync(user);
         var roles = await _userManager.GetRolesAsync(user);
@@ -62,32 +62,6 @@ public class LoginService : ITokenService
         return tokenHandler.WriteToken(token);
     }
     
-    public async Task<string> CreateInviteToken(string email)
-    {
-        var claims = new[]
-        {
-            new Claim(ClaimTypeConstants.Role, "User"),
-            new Claim(ClaimTypeConstants.Email, email),
-            new Claim(ClaimTypeConstants.Uid, Guid.NewGuid().ToString()),
-        };
-        
-        var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
-
-        var tokenDescriptor = new SecurityTokenDescriptor()
-        {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddMinutes(5),
-            Issuer = _cfg["JWT:Issuer"],
-            Audience = _cfg["JWT:Audience"],
-            SigningCredentials = creds
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-
-        return tokenHandler.WriteToken(token);
-    }
 
     public async Task<Tuple<bool, JwtSecurityToken>> ValidateToken(string token)
     {
