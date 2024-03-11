@@ -36,6 +36,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
             var createdObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
             await DecreaseBalanceInWallet(transaction.WalletId, transaction.Amount);
+            await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount);
 
             response.Success = true;
             response.Message = "Created successfully";
@@ -52,6 +53,16 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         return response;
     }
 
+    private async Task DecreaseBalanceInBudgets(Guid categoryId, decimal amount)
+    {
+        var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
+
+        foreach (var budget in budgets)
+        {
+            budget.Balance -= amount;
+        }
+    }
+
     private async Task DecreaseBalanceInWallet(Guid walletId, decimal amount)
     {
         var wallet = await _unitOfWork.WalletRepository.GetAsync(walletId);
@@ -61,6 +72,5 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
 
         wallet.Balance -= amount;
 
-        await _unitOfWork.WalletRepository.UpdateAsync(wallet);
     }
 }

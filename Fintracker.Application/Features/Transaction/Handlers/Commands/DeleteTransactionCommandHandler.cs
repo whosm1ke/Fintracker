@@ -22,18 +22,38 @@ public class DeleteTransactionCommandHandler : IRequestHandler<DeleteTransaction
     {
         var response = new DeleteCommandResponse<TransactionBaseDTO>();
         
-        var transaction = await _unitOfWork.TransactionRepository.GetAsync(request.Id);
+        var transaction = await _unitOfWork.TransactionRepository.GetTransactionWithWalletAsync(request.Id);
 
         if (transaction is null)
             throw new NotFoundException(nameof(Domain.Entities.Transaction), request.Id);
 
         var deletedObj = _mapper.Map<TransactionBaseDTO>(transaction);
+
+        await IncreaseWalletBalance(transaction.Wallet, transaction.Amount);
+        await IncreaseBudgetBalance(transaction.CategoryId, transaction.Amount);
+        
         await _unitOfWork.TransactionRepository.DeleteAsync(transaction);
 
         response.Success = true;
         response.Message = "Deleted successfully";
         response.DeletedObj = deletedObj;
+        await _unitOfWork.SaveAsync();
         
         return response;
+    }
+
+    private async Task IncreaseWalletBalance(Domain.Entities.Wallet wallet, decimal amount)
+    {
+        wallet.Balance += amount;
+    }
+    
+    private async Task IncreaseBudgetBalance(Guid categoryId, decimal amount)
+    {
+        var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
+
+        foreach (var budget in budgets)
+        {
+            budget.Balance += amount;
+        }
     }
 }

@@ -26,6 +26,8 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     {
         return await _db.Transactions
             .Include(x => x.Wallet)
+            .Include(x => x.Category)
+            .Include(x => x.Currency)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
