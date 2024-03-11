@@ -38,7 +38,7 @@ public class SentResetPasswordCommandHandler : IRequestHandler<SentResetPassword
             Email = request.Email,
             Subject = "Reset Password Confirmation",
             HtmlPath = "resetPassword.html",
-        }, new { Ref = $"{_appSettings.BaseUrl}/change-password-page?token={token}"});
+        }, new { Ref = $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}"});
 
         return Unit.Value;
     }

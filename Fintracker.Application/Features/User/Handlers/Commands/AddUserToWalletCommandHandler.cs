@@ -6,7 +6,6 @@ using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Responses;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace Fintracker.Application.Features.User.Handlers.Commands;
 

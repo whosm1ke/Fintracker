@@ -67,7 +67,8 @@ public class AccountController : ControllerBase
         {
             UserEmail = invite.Email,
             WalletId = invite.WalletId,
-            WhoInvited = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            WhoInvited = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+            UrlCallback = invite.UrlCallback
         };
         await _mediator.Send(inviteCommand);
 
@@ -91,11 +92,12 @@ public class AccountController : ControllerBase
 
 
     [HttpPost("reset-pass-request")]
-    public async Task<IActionResult> ResetPasswordRequest()
+    public async Task<IActionResult> ResetPasswordRequest([FromBody] string urlCallback)
     {
         await _mediator.Send(new SentResetPasswordCommand()
         {
-            Email = HttpContext.User.FindFirst(ClaimTypeConstants.Email)?.Value ?? "no"
+            Email = HttpContext.User.FindFirst(ClaimTypeConstants.Email)?.Value ?? "no",
+            UrlCallback = urlCallback
         });
 
         return Ok();

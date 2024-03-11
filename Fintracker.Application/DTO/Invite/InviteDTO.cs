@@ -4,4 +4,6 @@ public class InviteDTO
 {
     public string Email { get; set; }
     public Guid WalletId { get; set; }
+
+    public string UrlCallback { get; set; }
 }

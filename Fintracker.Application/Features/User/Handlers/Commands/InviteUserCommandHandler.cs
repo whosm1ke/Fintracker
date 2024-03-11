@@ -53,7 +53,7 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
                 var user = await _userRepository.RegisterUserWithTemporaryPassword(request.UserEmail, Guid.NewGuid(), _tempPass);
                 var token = await _tokenService.CreateToken(user);
                 inviteEmailModel.Ref =
-                    $"{_appSettings.BaseUrl}/login?token={token}&walletId={request.WalletId}";
+                    $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
             }
             else
             {
@@ -61,7 +61,7 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
                     await _tokenService.CreateToken(
                         (await _userRepository.GetAsNoTrackingAsync(request.UserEmail))!);
 
-                inviteEmailModel.Ref = $"{_appSettings.BaseUrl}/login?token={token}&walletId={request.WalletId}";
+                inviteEmailModel.Ref = $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
             }
             
             var isEmailSent = await _emailSender.SendEmail(new EmailModel()
