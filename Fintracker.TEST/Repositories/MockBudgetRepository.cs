@@ -165,7 +165,7 @@ public class MockBudgetRepository
             .Returns(async (Guid id) => { return budgets.FirstOrDefault(x => x.Id == id) != null; });
 
     //BudgetRepository
-        mock.Setup(x => x.GetBudgetWithCategoriesAsync(It.IsAny<Guid>()))
+        mock.Setup(x => x.GetBudgetAsync(It.IsAny<Guid>()))
             .Returns( async (Guid id) => { return budgets.FirstOrDefault(x => x.Id == id); });
 
         

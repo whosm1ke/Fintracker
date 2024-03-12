@@ -21,9 +21,11 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<Budget?> GetBudgetWithCategoriesAsync(Guid id)
+    public async Task<Budget?> GetBudgetAsync(Guid id)
     {
-        return await _db.Budgets.Include(x => x.Categories)
+        return await _db.Budgets
+            .Include(x => x.Categories)
+            .Include(x => x.Currency)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }

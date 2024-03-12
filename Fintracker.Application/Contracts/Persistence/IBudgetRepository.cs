@@ -5,7 +5,7 @@ namespace Fintracker.Application.Contracts.Persistence;
 public interface IBudgetRepository : IGenericRepository<Budget>
 {
     Task<Budget?> GetBudgetWithWalletAsync(Guid id);
-    Task<Budget?> GetBudgetWithCategoriesAsync(Guid id);
+    Task<Budget?> GetBudgetAsync(Guid id);
     Task<Budget?> GetBudgetWithUserAsync(Guid id);
 
     Task<IReadOnlyList<Budget>> GetBudgetsByCategoryId(Guid categoryId);

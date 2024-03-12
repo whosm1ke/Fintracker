@@ -20,7 +20,7 @@ public class GetBudgetByIdRequestHandler : IRequestHandler<GetBudgetByIdRequest,
 
     public async Task<BudgetBaseDTO> Handle(GetBudgetByIdRequest request, CancellationToken cancellationToken)
     {
-        var budget = await _unitOfWork.BudgetRepository.GetBudgetWithCategoriesAsync(request.Id);
+        var budget = await _unitOfWork.BudgetRepository.GetBudgetAsync(request.Id);
 
         if (budget is null)
             throw new NotFoundException(nameof(Domain.Entities.Budget), request.Id);

@@ -53,7 +53,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseUnauthorizedMiddleware();
 app.UseExceptionMiddleware();
 app.UseStaticFiles();
 app.UseHttpsRedirection();

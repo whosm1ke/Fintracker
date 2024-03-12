@@ -27,7 +27,7 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         var validator = new UpdateBudgetDtoValidator(_unitOfWork);
         var validationResult = await validator.ValidateAsync(request.Budget);
         
-        var budget = await _unitOfWork.BudgetRepository.GetAsync(request.Budget.Id);
+        var budget = await _unitOfWork.BudgetRepository.GetBudgetAsync(request.Budget.Id);
 
         if (budget is null)
             throw new NotFoundException(nameof(Domain.Entities.Budget), request.Budget.Id);
@@ -37,6 +37,14 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
             var oldBudget = _mapper.Map<BudgetBaseDTO>(budget);
             _mapper.Map(request.Budget, budget);
             var newBudget = _mapper.Map<BudgetBaseDTO>(budget);
+            
+            var categories = await _unitOfWork.CategoryRepository.GetAllWithIds(request.Budget.CategoryIds);
+            
+            budget.Categories = new HashSet<Domain.Entities.Category>();
+            foreach (var category in categories)
+            {
+                budget.Categories.Add(category);
+            }
             
             await _unitOfWork.BudgetRepository.UpdateAsync(budget);
 
