@@ -7,9 +7,6 @@ namespace Fintracker.Persistence.Configurations;
 
 public class BudgetConfiguration : IEntityTypeConfiguration<Budget>
 {
-    
-   
-
     public void Configure(EntityTypeBuilder<Budget> builder)
     {
         builder.HasKey(x => x.Id);
@@ -22,7 +19,7 @@ public class BudgetConfiguration : IEntityTypeConfiguration<Budget>
         builder.HasMany(x => x.Categories)
             .WithMany()
             .UsingEntity(j => j.ToTable("BudgetCategory"));
-        
+
 
         builder.Property(x => x.Name)
             .IsRequired()

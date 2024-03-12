@@ -1,4 +1,5 @@
-﻿using Fintracker.Domain.Entities;
+﻿using Fintracker.Application.BusinessRuleConstants;
+using Fintracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,8 +20,33 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(x => x.User)
             .HasForeignKey(x => x.UserId);
 
-        builder.OwnsOne(x => x.UserDetails)
-            .Property(x => x.DateOfBirth)
-            .HasColumnType("date");
+        builder.OwnsOne(x => x.UserDetails, ba =>
+        {
+            ba.ToTable("UserDetails", ba =>
+            {
+                ba.HasCheckConstraint("CK_UserDetails_Birthday", "\"Birthday\" >= '1915-01-01'");
+            });
+
+            ba.Property(x => x.DateOfBirth)
+                .HasColumnType("date")
+                .HasColumnName("Birthday");
+
+            ba.Property(x => x.Avatar)
+                .HasMaxLength(UserDetailsConstraints.MaxAvatarLength);
+            
+            ba.Property(x => x.FName)
+                .HasMaxLength(UserDetailsConstraints.MaxNameLength);
+
+            ba.Property(x => x.LName)
+                .HasMaxLength(UserDetailsConstraints.MaxNameLength);
+                
+            ba.Property(x => x.Sex)
+                .HasMaxLength(UserDetailsConstraints.MaxSexLength);
+
+            ba.Property(x => x.Language)
+                .HasConversion<string>();
+        });
+            
+        
     }
 }

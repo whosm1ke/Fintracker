@@ -7,7 +7,6 @@ namespace Fintracker.Persistence.Configurations;
 
 public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
-
     public void Configure(EntityTypeBuilder<Category> builder)
     {
         builder.HasKey(x => x.Id);
@@ -32,6 +31,5 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(x => x.IconColour)
             .IsRequired()
             .HasMaxLength(CategoryConstraints.MaximumIconColourLength);
-        
     }
 }

@@ -7,7 +7,6 @@ namespace Fintracker.Persistence.Configurations;
 
 public class CurrencyConfiguration : IEntityTypeConfiguration<Currency>
 {
-  
     public void Configure(EntityTypeBuilder<Currency> builder)
     {
         builder.HasKey(x => x.Id);
@@ -24,7 +23,5 @@ public class CurrencyConfiguration : IEntityTypeConfiguration<Currency>
         builder.Property(x => x.Symbol)
             .IsRequired()
             .HasMaxLength(CurrencyConstraints.MaxSymbolLength);
-
-
     }
 }
