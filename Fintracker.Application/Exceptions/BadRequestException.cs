@@ -1,18 +1,13 @@
-﻿
-namespace Fintracker.Application.Exceptions;
+﻿namespace Fintracker.Application.Exceptions;
 
-public class BadRequestException : ApplicationException
+public class BadRequestException : BaseError
 {
-    public List<string> Errors { get; set; }
-    
-    
-    public BadRequestException(string message) : base(message)
+    public BadRequestException(List<ExceptionDetails> errors) : base(errors)
     {
-        Errors = new List<string>() { message };
     }
 
-    public BadRequestException(List<string> errors)
+    public BadRequestException(ExceptionDetails details): base(details)
     {
-        Errors = errors;
+        
     }
 }

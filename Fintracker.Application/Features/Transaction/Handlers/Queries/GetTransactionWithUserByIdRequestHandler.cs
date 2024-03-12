@@ -7,7 +7,9 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Handlers.Queries;
 
-public class GetTransactionWithUserByIdRequestHandler : IRequestHandler<GetTransactionWithUserByIdRequest, TransactionWithUserDTO>
+public class
+    GetTransactionWithUserByIdRequestHandler : IRequestHandler<GetTransactionWithUserByIdRequest,
+    TransactionWithUserDTO>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
@@ -17,12 +19,18 @@ public class GetTransactionWithUserByIdRequestHandler : IRequestHandler<GetTrans
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
-    public async Task<TransactionWithUserDTO> Handle(GetTransactionWithUserByIdRequest request, CancellationToken cancellationToken)
+
+    public async Task<TransactionWithUserDTO> Handle(GetTransactionWithUserByIdRequest request,
+        CancellationToken cancellationToken)
     {
         var transaction = await _unitOfWork.TransactionRepository.GetTransactionWithUserAsync(request.Id);
 
         if (transaction is null)
-            throw new NotFoundException(nameof(Domain.Entities.Transaction), request.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Id}]",
+                PropertyName = nameof(request.Id)
+            },nameof(Domain.Entities.Transaction));
 
         return _mapper.Map<TransactionWithUserDTO>(transaction);
     }

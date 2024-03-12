@@ -45,7 +45,7 @@ public class TransactionsCommandTests
             .Without(x => x.Note)
             .Create();
 
-        var result = await handler.Handle(new CreateTransactionCommand()
+        var result = await handler.Handle(new CreateTransactionCommand
         {
             Transaction = transactionToAdd
         }, default);
@@ -76,7 +76,7 @@ public class TransactionsCommandTests
             .With(x => x.Note, " Note 1")
             .Create();
 
-        var result = await handler.Handle(new CreateTransactionCommand()
+        var result = await handler.Handle(new CreateTransactionCommand
         {
             Transaction = transactionToAdd
         }, default);
@@ -102,7 +102,7 @@ public class TransactionsCommandTests
             .With(x => x.CurrencyId,new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"))
             .Create();
         
-        var result = await handler.Handle(new UpdateTransactionCommand()
+        var result = await handler.Handle(new UpdateTransactionCommand
         {
             Transaction = transactionToUpdate
         }, default);
@@ -120,7 +120,7 @@ public class TransactionsCommandTests
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new DeleteTransactionCommandHandler(_mapper, mockUnitOfWork);
         
-        var result = await handler.Handle(new DeleteTransactionCommand()
+        var result = await handler.Handle(new DeleteTransactionCommand
         {
             Id = new Guid("87D1A139-D842-4DC1-AAE3-07FE5A586527")
         }, default);

@@ -23,7 +23,11 @@ public class GetBudgetByIdRequestHandler : IRequestHandler<GetBudgetByIdRequest,
         var budget = await _unitOfWork.BudgetRepository.GetBudgetAsync(request.Id);
 
         if (budget is null)
-            throw new NotFoundException(nameof(Domain.Entities.Budget), request.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Id}]",
+                PropertyName = nameof(request.Id)
+            },nameof(Domain.Entities.Budget));
 
         return _mapper.Map<BudgetBaseDTO>(budget);
     }

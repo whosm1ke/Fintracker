@@ -10,37 +10,34 @@ public class TransactionBaseDtoValidator : AbstractValidator<ITransactionDto>
     {
         RuleFor(x => x.Amount)
             .NotNull()
-            .WithMessage($"{nameof(ITransactionDto.Amount)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(ITransactionDto.Amount)} can not be blank")
+            .WithMessage("Can not be blank")
             .GreaterThan(TransactionConstraints.MinimalTransactionAmount)
-            .WithMessage(
-                $"{nameof(ITransactionDto.Amount)} should be greater than {TransactionConstraints.MinimalTransactionAmount}");
+            .WithMessage($"Should be greater than {TransactionConstraints.MinimalTransactionAmount}");
 
         RuleFor(x => x.Label)
             .Length(0, TransactionConstraints.MaximumLabelLength)
-            .WithMessage(
-                $"{nameof(ITransactionDto.Label)} is optional, but should be less than {TransactionConstraints.MaximumLabelLength}");
+            .WithMessage($"Is optional, but should be less than {TransactionConstraints.MaximumLabelLength}");
 
         RuleFor(x => x.Note)
             .Length(0, TransactionConstraints.MaximumNoteLength)
-            .WithMessage(
-                $"{nameof(ITransactionDto.Note)} is optional, but should be less than {TransactionConstraints.MaximumNoteLength}");
+            .WithMessage($"Is optional, but should be less than {TransactionConstraints.MaximumNoteLength}");
 
         RuleFor(x => x.CategoryId)
             .NotNull()
-            .WithMessage($"{nameof(ITransactionDto.CategoryId)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(ITransactionDto.CategoryId)} can not be blank")
-            .MustAsync((id, _) => unitOfWork.CategoryRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.Category)} with id [{x.CategoryId}] does not exists");
+            .WithMessage("Can not be blank")
+            .MustAsync(async (id, _) => await unitOfWork.CategoryRepository.ExistsAsync(id))
+            .WithMessage(x => $"{nameof(Domain.Entities.Category)} with id does not exist [{x.CategoryId}]");
 
         RuleFor(x => x.CurrencyId)
             .NotNull()
-            .WithMessage($"{nameof(ITransactionDto.CurrencyId)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(ITransactionDto.CurrencyId)} can not be blank")
-            .MustAsync((id, _) => unitOfWork.CurrencyRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.Currency)} with id [{x.CurrencyId}] does not exists");
+            .WithMessage("Can not be blank")
+            .MustAsync(async (id, _) => await unitOfWork.CurrencyRepository.ExistsAsync(id))
+            .WithMessage(x => $"{nameof(Domain.Entities.Currency)} with id does not exist [{x.CurrencyId}]");
     }
 }

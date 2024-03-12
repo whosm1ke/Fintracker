@@ -34,13 +34,13 @@ public class UserRequestTests
     {
         var mockUserRepo = MockUserRepository.GetUserRepository().Object;
         var handler = new GetUserByIdRequestHandler(_mapper, mockUserRepo);
-        var expectedResult = new UserBaseDTO()
+        var expectedResult = new UserBaseDTO
         {
             Id = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
             Email = "user1@gmail.com",
         };
 
-        var actualResult = await handler.Handle(new GetUserByIdRequest()
+        var actualResult = await handler.Handle(new GetUserByIdRequest
         {
             Id = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7")
         }, default);
@@ -68,7 +68,7 @@ public class UserRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetUsersAccessedToWalletRequest()
+        var actualResult = await handler.Handle(new GetUsersAccessedToWalletRequest
         {
             WalletId = new Guid("BC3CCC22-F825-4522-8FF8-18DE43D198A9")
         }, default);
@@ -83,10 +83,10 @@ public class UserRequestTests
     {
         var mockUserRepo = MockUserRepository.GetUserRepository().Object;
         var handler = new GetUserWithBudgetsByIdRequestHandler(_mapper, mockUserRepo);
-        var expectedResult = new UserWithBudgetsDTO()
+        var expectedResult = new UserWithBudgetsDTO
         {
             Id = new Guid("E126CEFE-57A3-4E2A-93A6-5EE7F819B10C"),
-            Budgets = new List<BudgetBaseDTO>()
+            Budgets = new List<BudgetBaseDTO>
             {
                 new()
                 {
@@ -103,7 +103,7 @@ public class UserRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetUserWithBudgetsByIdRequest()
+        var actualResult = await handler.Handle(new GetUserWithBudgetsByIdRequest
         {
             Id = new Guid("E126CEFE-57A3-4E2A-93A6-5EE7F819B10C"),
         }, default);
@@ -118,11 +118,11 @@ public class UserRequestTests
     {
         var mockUserRepo = MockUserRepository.GetUserRepository().Object;
         var handler = new GetUserWithMemberWalletsByIdRequestHandler(_mapper, mockUserRepo);
-        var expectedResult = new UserWithMemberWalletsDTO()
+        var expectedResult = new UserWithMemberWalletsDTO
         {
             Id = new Guid("2F566F81-4723-4D28-AB7C-A3004F98735C"),
             Email = "accessToWalletUser1",
-            MemberWallets = new List<WalletBaseDTO>()
+            MemberWallets = new List<WalletBaseDTO>
             {
                 new()
                 {
@@ -152,10 +152,10 @@ public class UserRequestTests
     {
         var mockUserRepo = MockUserRepository.GetUserRepository().Object;
         var handler = new GetUserWithOwnedWalletsByIdRequestHandler(_mapper, mockUserRepo);
-        var expectedResult = new UserWithOwnedWalletsDTO()
+        var expectedResult = new UserWithOwnedWalletsDTO
         {
             Id = new Guid("5718AD4F-3065-4E46-85A4-785E64F60EC5"),
-            OwnedWallets = new List<WalletBaseDTO>()
+            OwnedWallets = new List<WalletBaseDTO>
             {
                 new ()
                 {

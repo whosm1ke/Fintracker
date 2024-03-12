@@ -16,11 +16,12 @@ public class GetCategoriesByTypeRequestHandler : IRequestHandler<GetCategoriesBy
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public async Task<IReadOnlyList<CategoryDTO>> Handle(GetCategoriesByTypeRequest request, CancellationToken cancellationToken)
+
+    public async Task<IReadOnlyList<CategoryDTO>> Handle(GetCategoriesByTypeRequest request,
+        CancellationToken cancellationToken)
     {
         var category = await _unitOfWork.CategoryRepository.GetByTypeAsync(request.Type);
 
-       
 
         return _mapper.Map<List<CategoryDTO>>(category);
     }

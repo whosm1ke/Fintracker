@@ -83,7 +83,7 @@ public class MockBudgetRepository
                     Balance = 1000,
                     Name = "Wallet 1",
                 },
-                User = new User()
+                User = new User
                 {
                     Id = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7")
                 },
@@ -105,7 +105,7 @@ public class MockBudgetRepository
                 Name = "Budget with user",
                 Id = new Guid("9055E428-38C3-4616-A389-0102B766FD98"),
                 Wallet =  new(),
-                User = new User()
+                User = new User
                 {
                     Id = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
                     Email = "user@mail.com"

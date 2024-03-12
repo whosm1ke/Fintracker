@@ -1,4 +1,4 @@
-﻿namespace Fintracker.Application.Responses;
+﻿namespace Fintracker.Application.Responses.API_Responses;
 
 public class NotFoundResponse : BaseResponse
 {

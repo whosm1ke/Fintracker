@@ -24,13 +24,13 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 
         List<IdentityRole<Guid>> roles = new()
         {
-            new IdentityRole<Guid>()
+            new IdentityRole<Guid>
             {
                 Name = "Admin",
                 NormalizedName = "ADMIN",
                 Id = new Guid("DEEBA8F0-E75F-46F4-A447-68F5341FDBEC")
             },
-            new IdentityRole<Guid>()
+            new IdentityRole<Guid>
             {
                 Name = "User",
                 NormalizedName = "USER",

@@ -51,7 +51,7 @@ public class CategoryRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetCategoriesByTypeRequest()
+        var actualResult = await handler.Handle(new GetCategoriesByTypeRequest
         {
             Type = CategoryType.INCOME
         }, default);
@@ -101,7 +101,7 @@ public class CategoryRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetCategoriesSortedRequest()
+        var actualResult = await handler.Handle(new GetCategoriesSortedRequest
         {
             SortBy = "Name"
         }, default);
@@ -116,7 +116,7 @@ public class CategoryRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetCategoryByIdRequestHandler(mockUnitOfWork, _mapper);
-        var expectedResult = new CategoryDTO()
+        var expectedResult = new CategoryDTO
         {
             Id = new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6"),
             Type = CategoryTypeEnum.INCOME,
@@ -125,7 +125,7 @@ public class CategoryRequestTests
             IconColour = "pink"
         };
 
-        var actualResult = await handler.Handle(new GetCategoryByIdRequest()
+        var actualResult = await handler.Handle(new GetCategoryByIdRequest
         {
             Id = new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6")
         }, default);
@@ -139,7 +139,7 @@ public class CategoryRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetCategoriesRequestHandler(mockUnitOfWork, _mapper);
-        var expectedResult = new List<CategoryDTO>()
+        var expectedResult = new List<CategoryDTO>
         {
             new()
             {

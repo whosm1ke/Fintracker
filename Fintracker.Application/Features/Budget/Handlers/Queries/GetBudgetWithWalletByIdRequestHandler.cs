@@ -7,8 +7,9 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Budget.Handlers.Queries;
 
-public class GetBudgetWithWalletByIdRequestHandler : IRequestHandler<GetBudgetWithWalletByIdRequest, BudgetWithWalletDTO>
-{    
+public class
+    GetBudgetWithWalletByIdRequestHandler : IRequestHandler<GetBudgetWithWalletByIdRequest, BudgetWithWalletDTO>
+{
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
@@ -17,12 +18,19 @@ public class GetBudgetWithWalletByIdRequestHandler : IRequestHandler<GetBudgetWi
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public async Task<BudgetWithWalletDTO> Handle(GetBudgetWithWalletByIdRequest request, CancellationToken cancellationToken)
+
+    public async Task<BudgetWithWalletDTO> Handle(GetBudgetWithWalletByIdRequest request,
+        CancellationToken cancellationToken)
     {
         var budget = await _unitOfWork.BudgetRepository.GetBudgetWithWalletAsync(request.Id);
 
         if (budget is null)
-            throw new NotFoundException(nameof(Domain.Entities.Budget), request.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Id}]",
+                PropertyName = nameof(request.Id)
+            },nameof(Domain.Entities.Budget));
+
 
         var b = _mapper.Map<BudgetWithWalletDTO>(budget);
         return b;

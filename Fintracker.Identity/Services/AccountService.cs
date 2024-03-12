@@ -23,11 +23,11 @@ public class AccountService : IAccountService
     public async Task<RegisterResponse> Register(RegisterRequest register)
     {
         var validator = new RegisterRequestValidator(_userManager);
-        var validationresult = await validator.ValidateAsync(register);
+        var validationResult = await validator.ValidateAsync(register);
         var response = new RegisterResponse();
-        if (validationresult.IsValid)
+        if (validationResult.IsValid)
         {
-            var appUser = new User()
+            var appUser = new User
             {
                 UserName = register.UserName,
                 Email = register.Email
@@ -45,31 +45,48 @@ public class AccountService : IAccountService
                 }
 
                 await _userManager.DeleteAsync(appUser);
-                throw new RegisterAccountException(roleResult.Errors.Select(x => x.Description).ToList());
+                throw new RegisterAccountException(roleResult.Errors.Select(x => new ExceptionDetails
+                {
+                    ErrorMessage = x.Description,
+                    PropertyName = null
+                }).ToList());
             }
 
-            throw new RegisterAccountException(createdUser.Errors.Select(x => x.Description).ToList());
+            throw new RegisterAccountException(createdUser.Errors.Select(x => new ExceptionDetails
+            {
+                ErrorMessage = x.Description,
+                PropertyName = null
+            }).ToList());
         }
 
-        throw new RegisterAccountException(validationresult.Errors
-            .Select(x => x.ErrorMessage).ToList());
+        throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
+            { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
     }
 
     public async Task<LoginResponse> Login(LoginRequest login)
     {
         var validator = new LoginRequestValidator(_userManager);
-        var validationresult = await validator.ValidateAsync(login);
+        var validationResult = await validator.ValidateAsync(login);
         var response = new LoginResponse();
-        if (validationresult.IsValid)
+        if (validationResult.IsValid)
         {
             var user = await _userManager.FindByEmailAsync(login.Email);
             if (user is null)
-                throw new LoginException(validationresult.Errors
-                    .Select(x => x.ErrorMessage).ToList());
+                throw new LoginException(validationResult.Errors
+                    .Select(x => new ExceptionDetails
+                    {
+                        PropertyName = x.PropertyName,
+                        ErrorMessage = x.ErrorMessage
+                    }).ToList());
 
             var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
 
-            if (!checkPasswordResult.Succeeded) throw new LoginException("Invalid credentials");
+            if (!checkPasswordResult.Succeeded)
+                throw new LoginException(new ExceptionDetails
+                {
+                    ErrorMessage = "Invalid credentials",
+                    PropertyName = nameof(User)
+                });
 
             response.UserId = user.Id;
             response.Token = await _tokenService.CreateToken(user);
@@ -78,14 +95,14 @@ public class AccountService : IAccountService
             return response;
         }
 
-        throw new LoginException(validationresult.Errors
-            .Select(x => x.ErrorMessage).ToList());
+        throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
+            { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
     }
 
     public async Task<bool> ResetPassword(ResetPasswordModel model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
-        
+
         var restPasswordResult = await _userManager.ResetPasswordAsync(user!, model.Token, model.Password);
 
         return restPasswordResult.Succeeded;
@@ -96,13 +113,17 @@ public class AccountService : IAccountService
         var user = await _userManager.FindByEmailAsync(email);
 
         if (user is null)
-            throw new NotFoundException("Invalid email");
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found [{email}]",
+                PropertyName = nameof(User.Email)
+            }, nameof(User));
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         return token;
     }
-    
+
     public async Task Logout()
     {
         await _signInManager.SignOutAsync();

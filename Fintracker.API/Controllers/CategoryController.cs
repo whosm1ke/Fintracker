@@ -1,7 +1,8 @@
 ﻿using Fintracker.Application.DTO.Category;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Features.Category.Requests.Queries;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.API_Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using Fintracker.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +27,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<CategoryDTO>>> Get([FromQuery] string? sortBy, [FromQuery] bool? isDescending)
     {
-        var sortRequest = new GetCategoriesSortedRequest()
+        var sortRequest = new GetCategoriesSortedRequest
         {
             IsDescending = isDescending.HasValue && isDescending.Value,
             SortBy = sortBy!
@@ -50,7 +51,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CategoryDTO>> Get(Guid id)
     {
-        var response = await _mediator.Send(new GetCategoryByIdRequest()
+        var response = await _mediator.Send(new GetCategoryByIdRequest
         {
             Id = id
         });
@@ -63,7 +64,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<CategoryDTO>>> Get(CategoryType type)
     {
-        var response = await _mediator.Send(new GetCategoriesByTypeRequest()
+        var response = await _mediator.Send(new GetCategoriesByTypeRequest
         {
             Type = type
         });
@@ -78,7 +79,7 @@ public class CategoryController : ControllerBase
     public async Task<ActionResult<CreateCommandResponse<CategoryDTO>>> Post([FromBody] CreateCategoryDTO category)
     {
         
-        var response = await _mediator.Send(new CreateCategoryCommand()
+        var response = await _mediator.Send(new CreateCategoryCommand
         {
             Category = category
         });
@@ -93,7 +94,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<CategoryDTO>>> Put([FromBody] UpdateCategoryDTO category)
     {
-        var response = await _mediator.Send(new UpdateCategoryCommand()
+        var response = await _mediator.Send(new UpdateCategoryCommand
         {
             Category = category
         });
@@ -107,7 +108,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<CategoryDTO>>> Delete(Guid id)
     {
-        var response = await _mediator.Send(new DeleteCategoryCommand()
+        var response = await _mediator.Send(new DeleteCategoryCommand
         {
             Id = id
         });

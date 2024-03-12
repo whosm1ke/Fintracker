@@ -46,7 +46,7 @@ public class TokenService : ITokenService
 
         var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
-        var tokenDescriptor = new SecurityTokenDescriptor()
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.Now.AddDays(1),
@@ -66,7 +66,7 @@ public class TokenService : ITokenService
     public async Task<Tuple<bool, JwtSecurityToken>> ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var tokenValidationParams = new TokenValidationParameters()
+        var tokenValidationParams = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = _key,

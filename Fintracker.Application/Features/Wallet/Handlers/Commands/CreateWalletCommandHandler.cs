@@ -5,7 +5,7 @@ using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.DTO.Wallet.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Wallet.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.Wallet.Handlers.Commands;
@@ -15,6 +15,7 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
+
     public CreateWalletCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IUserRepository userRepository)
     {
         _unitOfWork = unitOfWork;
@@ -22,10 +23,11 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
         _userRepository = userRepository;
     }
 
-    public async Task<CreateCommandResponse<WalletBaseDTO>> Handle(CreateWalletCommand request, CancellationToken cancellationToken)
+    public async Task<CreateCommandResponse<WalletBaseDTO>> Handle(CreateWalletCommand request,
+        CancellationToken cancellationToken)
     {
         var response = new CreateCommandResponse<WalletBaseDTO>();
-        var validator = new CreateWalletDtoValidator(_unitOfWork,_userRepository);
+        var validator = new CreateWalletDtoValidator(_unitOfWork, _userRepository);
         var validationResult = await validator.ValidateAsync(request.Wallet);
 
         if (validationResult.IsValid)
@@ -34,7 +36,7 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
 
             await _unitOfWork.WalletRepository.AddAsync(wallet);
             var createdObject = _mapper.Map<WalletBaseDTO>(wallet);
-            
+
             response.Success = true;
             response.Message = "Created successfully";
             response.CreatedObject = createdObject;
@@ -43,7 +45,8 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
         }
         else
         {
-            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
+                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
         }
 
         return response;

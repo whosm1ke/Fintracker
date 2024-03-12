@@ -88,13 +88,29 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<User?> FindByEmailAsync(string email)
+    {
+        return await _userManager.FindByEmailAsync(email);
+    }
+
     public async Task<User> RegisterUserWithTemporaryPassword(string? email, Guid id, string tempPass)
     {
         if (email is null || id == Guid.Empty)
-            throw new BadRequestException(
-                $"Can not register new user. Invalid param '{nameof(email)}' or '{nameof(id)}'");
+            throw new BadRequestException(new List<ExceptionDetails>
+            {
+                new()
+                {
+                    PropertyName = nameof(email),
+                    ErrorMessage = "Invalid email. Check spelling"
+                },
+                new()
+                {
+                    PropertyName = nameof(id),
+                    ErrorMessage = "Attempt to assign incorrect id"
+                }
+            });
 
-        var user = new User()
+        var user = new User
         {
             UserName = email,
             Email = email,
@@ -107,12 +123,20 @@ public class UserRepository : IUserRepository
             var roleResult = await _userManager.AddToRoleAsync(user, "User");
 
             if (!roleResult.Succeeded)
-                throw new BadRequestException(roleResult.Errors.Select(x => x.Description).ToList());
+                throw new BadRequestException(roleResult.Errors.Select(x => new ExceptionDetails
+                {
+                    ErrorMessage = x.Description,
+                    PropertyName = null
+                }).ToList());
 
             return user;
         }
 
-        throw new BadRequestException(userResult.Errors.Select(x => x.Description).ToList());
+        throw new BadRequestException(userResult.Errors.Select(x => new ExceptionDetails
+        {
+            ErrorMessage = x.Description,
+            PropertyName = null
+        }).ToList());
     }
 
     public async Task<IReadOnlyList<User?>> GetAllAsync()

@@ -42,7 +42,7 @@ public class WalletCommandTests
             .With(x => x.CurrencyId,new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"))
             .Create();
 
-        var result = await handler.Handle(new CreateWalletCommand()
+        var result = await handler.Handle(new CreateWalletCommand
         {
             Wallet = walletToAdd
         }, default);
@@ -66,7 +66,7 @@ public class WalletCommandTests
             .With(x => x.CurrencyId,new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"))
             .Create();
         
-        var result = await handler.Handle(new UpdateWalletCommand()
+        var result = await handler.Handle(new UpdateWalletCommand
         {
             Wallet = budgetToUpdate
         }, default);
@@ -84,7 +84,7 @@ public class WalletCommandTests
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new DeleteWalletCommandHandler(mockUnitOfWork, _mapper);
         
-        var result = await handler.Handle(new DeleteWalletCommand()
+        var result = await handler.Handle(new DeleteWalletCommand
         {
             Id = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0")
         }, default);

@@ -1,7 +1,8 @@
 ﻿using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.Features.Transaction.Requests.Queries;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.API_Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ public class TransactionController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TransactionBaseDTO>> Get(Guid id)
     {
-        var response = await _mediator.Send(new GetTransactionByIdRequest()
+        var response = await _mediator.Send(new GetTransactionByIdRequest
         {
             Id = id
         });
@@ -41,14 +42,14 @@ public class TransactionController : ControllerBase
         [FromQuery] string? sortBy,
         [FromQuery] bool? isDescending)
     {
-        var sortRequest = new GetTransactionsByCategoryIdSortedRequest()
+        var sortRequest = new GetTransactionsByCategoryIdSortedRequest
         {
             CategoryId = categoryId,
             IsDescending = isDescending.HasValue && isDescending.Value,
             SortBy = sortBy!
         };
 
-        var simpleRequest = new GetTransactionsByCategoryIdRequest()
+        var simpleRequest = new GetTransactionsByCategoryIdRequest
         {
             CategoryId = categoryId
         };
@@ -69,14 +70,14 @@ public class TransactionController : ControllerBase
     public async Task<ActionResult<List<TransactionBaseDTO>>> GetByUserId(Guid userId, [FromQuery] string? sortBy,
         [FromQuery] bool? isDescending)
     {
-        var sortRequest = new GetTransactionsByUserIdSortedRequest()
+        var sortRequest = new GetTransactionsByUserIdSortedRequest
         {
             UserId = userId,
             IsDescending = isDescending.HasValue && isDescending.Value,
             SortBy = sortBy!
         };
 
-        var simpleRequest = new GetTransactionsByUserIdRequest()
+        var simpleRequest = new GetTransactionsByUserIdRequest
         {
             UserId = userId
         };
@@ -97,14 +98,14 @@ public class TransactionController : ControllerBase
     public async Task<ActionResult<List<TransactionBaseDTO>>> GetByWalletId(Guid walletId, [FromQuery] string? sortBy,
         [FromQuery] bool? isDescending)
     {
-        var sortRequest = new GetTransactionsByWalletIdSortedRequest()
+        var sortRequest = new GetTransactionsByWalletIdSortedRequest
         {
             WalletId = walletId,
             IsDescending = isDescending.HasValue && isDescending.Value,
             SortBy = sortBy!
         };
 
-        var simpleRequest = new GetTransactionsByWalletIdRequest()
+        var simpleRequest = new GetTransactionsByWalletIdRequest
         {
             WalletId = walletId
         };
@@ -135,7 +136,7 @@ public class TransactionController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TransactionWithWalletDTO>> GetWithWallet(Guid id)
     {
-        var response = await _mediator.Send(new GetTransactionWithWalletByIdRequest()
+        var response = await _mediator.Send(new GetTransactionWithWalletByIdRequest
         {
             Id = id
         });
@@ -149,7 +150,7 @@ public class TransactionController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TransactionWithUserDTO>> GetWithUser(Guid id)
     {
-        var response = await _mediator.Send(new GetTransactionWithUserByIdRequest()
+        var response = await _mediator.Send(new GetTransactionWithUserByIdRequest
         {
             Id = id
         });
@@ -164,7 +165,7 @@ public class TransactionController : ControllerBase
     public async Task<ActionResult<CreateCommandResponse<TransactionBaseDTO>>> Post(
         [FromBody] CreateTransactionDTO transaction)
     {
-        var response = await _mediator.Send(new CreateTransactionCommand()
+        var response = await _mediator.Send(new CreateTransactionCommand
         {
             Transaction = transaction
         });
@@ -180,7 +181,7 @@ public class TransactionController : ControllerBase
     public async Task<ActionResult<UpdateCommandResponse<TransactionBaseDTO>>> Put(
         [FromBody] UpdateTransactionDTO transaction)
     {
-        var response = await _mediator.Send(new UpdateTransactionCommand()
+        var response = await _mediator.Send(new UpdateTransactionCommand
         {
             Transaction = transaction
         });
@@ -194,7 +195,7 @@ public class TransactionController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<TransactionBaseDTO>>> Delete(Guid id)
     {
-        var response = await _mediator.Send(new DeleteTransactionCommand()
+        var response = await _mediator.Send(new DeleteTransactionCommand
         {
             Id = id
         });

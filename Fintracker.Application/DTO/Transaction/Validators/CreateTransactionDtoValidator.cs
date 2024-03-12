@@ -12,18 +12,18 @@ public class CreateTransactionDtoValidator : AbstractValidator<CreateTransaction
 
         RuleFor(x => x.UserId)
             .NotNull()
-            .WithMessage($"{nameof(CreateTransactionDTO.UserId)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(CreateTransactionDTO.UserId)} can not be blank")
-            .MustAsync((id, _) => userRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id [{x.UserId}] does not exists");
+            .WithMessage("Can not be blank")
+            .MustAsync(async (id, _) => await userRepository.ExistsAsync(id))
+            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.UserId}]");
 
         RuleFor(x => x.WalletId)
             .NotNull()
-            .WithMessage($"{nameof(CreateTransactionDTO.WalletId)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(CreateTransactionDTO.WalletId)} can not be blank")
-            .MustAsync((id, _) => unitOfWork.WalletRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.Wallet)} with id [{x.WalletId}] does not exists");
+            .WithMessage("Can not be blank")
+            .MustAsync(async (id, _) => await unitOfWork.WalletRepository.ExistsAsync(id))
+            .WithMessage(x => $"{nameof(Domain.Entities.Wallet)} with id does not exist [{x.WalletId}]");
     }
 }

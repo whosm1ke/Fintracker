@@ -1,6 +1,6 @@
 ﻿using Fintracker.Application.DTO.Currency;
 using Fintracker.Application.Features.Currency.Requests.Queries;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.API_Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,7 @@ public class CurrencyController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CurrencyDTO>> Get(Guid id)
     {
-        var response = await _mediator.Send(new GetCurrencyByIdRequest()
+        var response = await _mediator.Send(new GetCurrencyByIdRequest
         {
             Id = id
         });
@@ -36,7 +36,7 @@ public class CurrencyController : ControllerBase
     [ProducesResponseType(typeof(List<CurrencyDTO>),StatusCodes.Status200OK)]
     public async Task<ActionResult<List<CurrencyDTO>>> Get([FromQuery] string? sortBy, [FromQuery] bool? isDescending)
     {
-        var sortRequest = new GetCurrenciesSortedRequest()
+        var sortRequest = new GetCurrenciesSortedRequest
         {
             IsDescending = isDescending.HasValue && isDescending.Value,
             SortBy = sortBy!

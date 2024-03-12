@@ -10,7 +10,7 @@ public class AccountRequestTests
     public async Task Register_Test()
     {
         var mockAccount = MockAccountService.GetAccountService().Object;
-        var registerRequest = new RegisterRequest()
+        var registerRequest = new RegisterRequest
         {
             UserName = "username",
             Email = "test@mail.com",
@@ -28,12 +28,12 @@ public class AccountRequestTests
     public async Task Login_Test()
     {
         var mockAccount = MockAccountService.GetAccountService().Object;
-        var loginRequest = new LoginRequest()
+        var loginRequest = new LoginRequest
         {
             Email = "test@mail.com",
             Password = "Password123!",
         };
-        var expectedLoginResponse = new LoginResponse()
+        var expectedLoginResponse = new LoginResponse
         {
             UserId = new Guid("A6F29D61-2014-43D1-9EAE-0042781DD703"),
             UserEmail = "test@email.com",

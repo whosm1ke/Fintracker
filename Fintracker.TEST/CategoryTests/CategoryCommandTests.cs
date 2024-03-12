@@ -38,7 +38,7 @@ public class CategoryCommandTests
             .Create();
 
 
-        var result = await handler.Handle(new CreateCategoryCommand()
+        var result = await handler.Handle(new CreateCategoryCommand
         {
             Category = categoryToAdd
         }, default);
@@ -62,7 +62,7 @@ public class CategoryCommandTests
             .Create();
 
 
-        var result = await handler.Handle(new UpdateCategoryCommand()
+        var result = await handler.Handle(new UpdateCategoryCommand
         {
             Category = categoryToUpdate
         }, default);
@@ -86,7 +86,7 @@ public class CategoryCommandTests
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new DeleteCategoryCommandHandler(mockUnitOfWork, _mapper);
         
-        var result = await handler.Handle(new DeleteCategoryCommand()
+        var result = await handler.Handle(new DeleteCategoryCommand
         {
             Id = new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6")
         }, default);

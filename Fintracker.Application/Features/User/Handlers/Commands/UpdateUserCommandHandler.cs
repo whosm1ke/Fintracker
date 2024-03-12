@@ -4,7 +4,7 @@ using Fintracker.Application.DTO.User;
 using Fintracker.Application.DTO.User.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.User.Handlers.Commands;
@@ -30,8 +30,12 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
         var user = await _userRepository.GetAsync(request.User.Id);
 
         if (user is null)
-            throw new NotFoundException(nameof(Domain.Entities.User), request.User.Id);
-        
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.User.Id}]",
+                PropertyName = nameof(request.User.Id)
+            },nameof(Domain.Entities.User));
+
         if (validationResult.IsValid)
         {
             var oldUser = _mapper.Map<UserBaseDTO>(user);
@@ -48,7 +52,8 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
         }
         else
         {
-            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
+                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
         }
 
         return response;

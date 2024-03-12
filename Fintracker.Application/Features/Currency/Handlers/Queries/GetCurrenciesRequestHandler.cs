@@ -16,7 +16,9 @@ public class GetCurrenciesRequestHandler : IRequestHandler<GetCurrenciesRequest,
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public async Task<IReadOnlyList<CurrencyDTO>> Handle(GetCurrenciesRequest request, CancellationToken cancellationToken)
+
+    public async Task<IReadOnlyList<CurrencyDTO>> Handle(GetCurrenciesRequest request,
+        CancellationToken cancellationToken)
     {
         var currencies = await _unitOfWork.CurrencyRepository.GetAllAsync();
 

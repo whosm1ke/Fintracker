@@ -11,17 +11,16 @@ public class AddUserToWalletValidator : AbstractValidator<AddUserToWalletCommand
     {
         RuleFor(x => x.WalletId)
             .NotNull()
-            .WithMessage($"{nameof(AddUserToWalletCommand.WalletId)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(AddUserToWalletCommand.WalletId)} can not be blank")
+            .WithMessage("Can not be blank")
             .MustAsync(async (id, _) => await unitOfWork.WalletRepository.ExistsAsync(id))
-            .WithMessage(x => $"Wallet with id [{x.WalletId}] does not exist")
-            ;
+            .WithMessage(x => $"Wallet with id does not exist [{x.WalletId}]");
 
         RuleFor(x => x.Token)
             .NotNull()
-            .WithMessage($"{nameof(AddUserToWalletCommand.Token)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(AddUserToWalletCommand.Token)} can not be blank");
+            .WithMessage("Can not be blank");
     }
 }

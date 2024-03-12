@@ -4,7 +4,7 @@ using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.DTO.Wallet.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Wallet.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.Wallet.Handlers.Commands;
@@ -30,16 +30,20 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
         var wallet = await _unitOfWork.WalletRepository.GetWalletById(request.Wallet.Id);
 
         if (wallet is null)
-            throw new NotFoundException(nameof(Domain.Entities.Wallet), request.Wallet.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Wallet.Id}]",
+                PropertyName = nameof(request.Wallet.Id)
+            },nameof(Domain.Entities.Wallet));
 
         if (validationResult.IsValid)
         {
             var oldObject = _mapper.Map<WalletBaseDTO>(wallet);
             _mapper.Map(request.Wallet, wallet);
             await _unitOfWork.WalletRepository.UpdateAsync(wallet);
-            
+
             await _unitOfWork.SaveAsync();
-            
+
             var newObject = _mapper.Map<WalletBaseDTO>(wallet);
 
             response.Success = true;
@@ -47,11 +51,11 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
             response.Old = oldObject;
             response.New = newObject;
             response.Id = request.Wallet.Id;
-
         }
         else
         {
-            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
+                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
         }
 
         return response;

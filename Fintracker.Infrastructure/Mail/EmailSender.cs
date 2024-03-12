@@ -20,7 +20,7 @@ public class EmailSender : IEmailSender
     {
         _htmlPageHelper = htmlPageHelper;
         _emailSettings = emailOptions.Value;
-        _sender = new SmtpSender(() => new SmtpClient()
+        _sender = new SmtpSender(() => new SmtpClient
         {
             Host = "smtp.gmail.com",
             Port = 587,

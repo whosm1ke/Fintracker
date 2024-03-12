@@ -1,4 +1,5 @@
 ﻿using Fintracker.Domain.Common;
+using Fintracker.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Fintracker.Domain.Entities;
@@ -36,5 +37,5 @@ public class UserDetails
 
     public string? Avatar { get; set; }
 
-    public string? Language { get; set; }
+    public Language? Language { get; set; }
 }

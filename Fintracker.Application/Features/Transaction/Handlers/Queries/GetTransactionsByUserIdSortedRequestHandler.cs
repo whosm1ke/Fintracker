@@ -33,7 +33,11 @@ public class GetTransactionsByUserIdSortedRequestHandler : IRequestHandler<GetTr
     {
         if (!_allowedSortColumns.Contains(request.SortBy))
             throw new BadRequestException(
-                $"Invalid sortBy parameter. Allowed values {string.Join(',', _allowedSortColumns)}");
+                new ExceptionDetails
+                {
+                    PropertyName = nameof(request.SortBy),
+                    ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
+                });
 
         var transactions =
             await _unitOfWork.TransactionRepository.GetByUserIdSortedAsync(request.UserId, request.SortBy,

@@ -3,7 +3,7 @@ using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Budget.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.Budget.Handlers.Commands;
@@ -27,16 +27,21 @@ public class DeleteBudgetCommandHandler : IRequestHandler<DeleteBudgetCommand, D
         var budget = await _unitOfWork.BudgetRepository.GetAsync(request.Id);
 
         if (budget is null)
-            throw new NotFoundException(nameof(Domain.Entities.Budget), request.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Attempt to delete non-existing item with by id [{request.Id}]",
+                PropertyName = nameof(request.Id)
+            },nameof(Domain.Entities.Budget));
+
 
         var budgetBaseDto = _mapper.Map<BudgetBaseDTO>(budget);
         await _unitOfWork.BudgetRepository.DeleteAsync(budget);
-        
+
         response.Success = true;
         response.Message = "Deleted successfully";
         response.DeletedObj = budgetBaseDto;
         response.Id = budgetBaseDto.Id;
-        
+
         await _unitOfWork.SaveAsync();
 
         return response;

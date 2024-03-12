@@ -3,7 +3,7 @@ using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.DTO.User;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.User.Handlers.Commands;
@@ -18,18 +18,24 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Delet
         _mapper = mapper;
         _userRepository = userRepository;
     }
-    public async Task<DeleteCommandResponse<UserBaseDTO>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+
+    public async Task<DeleteCommandResponse<UserBaseDTO>> Handle(DeleteUserCommand request,
+        CancellationToken cancellationToken)
     {
         var response = new DeleteCommandResponse<UserBaseDTO>();
 
         var user = await _userRepository.GetAsync(request.Id);
 
         if (user is null)
-            throw new NotFoundException(nameof(Domain.Entities.User), request.Id);
-        
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Id}]",
+                PropertyName = nameof(request.Id)
+            },nameof(Domain.Entities.User));
+
         var deletedObj = _mapper.Map<UserBaseDTO>(user);
         await _userRepository.DeleteAsync(user);
-        
+
         response.Success = true;
         response.Message = "Deleted successfully";
         response.DeletedObj = deletedObj;

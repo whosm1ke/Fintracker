@@ -3,7 +3,6 @@ using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace Fintracker.Application.Features.User.Handlers.Commands;
@@ -12,24 +11,28 @@ public class SentResetPasswordCommandHandler : IRequestHandler<SentResetPassword
 {
     private readonly IAccountService _accountService;
     private readonly IEmailSender _emailSender;
+    private readonly IUserRepository _userRepository;
     private readonly AppSettings _appSettings;
-    private readonly UserManager<Domain.Entities.User> _userManager;
 
     public SentResetPasswordCommandHandler(IAccountService accountService,
-        UserManager<Domain.Entities.User> userManager, IEmailSender emailSender, IOptions<AppSettings> appSettings)
+        IUserRepository userRepository, IEmailSender emailSender, IOptions<AppSettings> appSettings)
     {
         _accountService = accountService;
-        _userManager = userManager;
+        _userRepository = userRepository;
         _emailSender = emailSender;
         _appSettings = appSettings.Value;
     }
 
     public async Task<Unit> Handle(SentResetPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await _userRepository.FindByEmailAsync(request.Email);
 
         if (user is null)
-            throw new BadRequestException("Invalid email");
+            throw new BadRequestException(new ExceptionDetails
+            {
+                PropertyName = nameof(request.Email),
+                ErrorMessage = "Invalid email. Check spelling."
+            });
 
         var token = await _accountService.GenerateResetPasswordToken(request.Email);
 
@@ -37,8 +40,8 @@ public class SentResetPasswordCommandHandler : IRequestHandler<SentResetPassword
         {
             Email = request.Email,
             Subject = "Reset Password Confirmation",
-            HtmlPath = "resetPassword.html",
-        }, new { Ref = $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}"});
+            HtmlPath = "resetPassword.html"
+        }, new { Ref = $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}" });
 
         return Unit.Value;
     }

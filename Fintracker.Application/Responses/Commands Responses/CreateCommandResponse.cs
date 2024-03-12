@@ -1,4 +1,4 @@
-﻿namespace Fintracker.Application.Responses;
+﻿namespace Fintracker.Application.Responses.Commands_Responses;
 
 public class CreateCommandResponse<T> : BaseCommandResponse
 {

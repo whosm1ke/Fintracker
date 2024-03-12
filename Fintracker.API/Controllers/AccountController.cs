@@ -4,7 +4,8 @@ using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.DTO.Invite;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Identity;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.API_Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,7 +64,7 @@ public class AccountController : ControllerBase
     [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> InviteUser([FromBody] InviteDTO invite)
     {
-        var inviteCommand = new InviteUserCommand()
+        var inviteCommand = new InviteUserCommand
         {
             UserEmail = invite.Email,
             WalletId = invite.WalletId,
@@ -80,7 +81,7 @@ public class AccountController : ControllerBase
     public async Task<ActionResult<BaseCommandResponse>> AddUserToWallet([FromQuery] Guid walletId,
         [FromQuery] string token)
     {
-        var response = await _mediator.Send(new AddUserToWalletCommand()
+        var response = await _mediator.Send(new AddUserToWalletCommand
         {
             WalletId = walletId,
             Token = token
@@ -94,7 +95,7 @@ public class AccountController : ControllerBase
     [HttpPost("reset-pass-request")]
     public async Task<IActionResult> ResetPasswordRequest([FromBody] string urlCallback)
     {
-        await _mediator.Send(new SentResetPasswordCommand()
+        await _mediator.Send(new SentResetPasswordCommand
         {
             Email = HttpContext.User.FindFirst(ClaimTypeConstants.Email)?.Value ?? "no",
             UrlCallback = urlCallback

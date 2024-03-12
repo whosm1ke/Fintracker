@@ -5,7 +5,7 @@ using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.DTO.Budget.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Budget.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.Budget.Handlers.Commands;
@@ -33,12 +33,13 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
         if (validationResult.IsValid)
         {
             var budgetEntity = _mapper.Map<Domain.Entities.Budget>(request.Budget);
-            
+
             var categories = await _unitOfWork.CategoryRepository.GetAllWithIds(request.Budget.CategoryIds);
             foreach (var category in categories)
             {
                 budgetEntity.Categories.Add(category);
             }
+
             await _unitOfWork.BudgetRepository.AddAsync(budgetEntity);
 
             response.Message = "Created successfully";
@@ -50,7 +51,8 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
         }
         else
         {
-            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
+                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
         }
 
         return response;

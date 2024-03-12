@@ -1,11 +1,12 @@
 ﻿namespace Fintracker.Application.Exceptions;
 
-public class RegisterAccountException : ApplicationException
+public class RegisterAccountException : BaseError
 {
-    public List<string> Errors { get; set; } = new();
-
-    public RegisterAccountException(List<string> errors)
+    public RegisterAccountException(List<ExceptionDetails> errors) : base(errors)
     {
-        errors.ForEach(x => Errors.Add(x));
+    }
+    public RegisterAccountException(ExceptionDetails details): base(details)
+    {
+        
     }
 }

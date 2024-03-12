@@ -37,7 +37,7 @@ public class TransactionRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetTransactionByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new TransactionBaseDTO()
+        var expectedResult = new TransactionBaseDTO
         {
             Id = new Guid("B77ADE7A-5861-4899-AA20-FB97786E8767"),
             Amount = 100,
@@ -46,7 +46,7 @@ public class TransactionRequestTests
             Category = new() { Id = new Guid("2CA5CC74-6D96-4878-8625-BC8E78DD295E") },
         };
 
-        var actualResult = await handler.Handle(new GetTransactionByIdRequest()
+        var actualResult = await handler.Handle(new GetTransactionByIdRequest
         {
             Id = new Guid("B77ADE7A-5861-4899-AA20-FB97786E8767")
         }, default);
@@ -80,7 +80,7 @@ public class TransactionRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetTransactionsByCategoryIdRequest()
+        var actualResult = await handler.Handle(new GetTransactionsByCategoryIdRequest
         {
             CategoryId = new Guid("FA79B6AB-7E69-46CC-9522-D0F68DF0FE19")
         }, default);
@@ -114,7 +114,7 @@ public class TransactionRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetTransactionsByCategoryIdSortedRequest()
+        var actualResult = await handler.Handle(new GetTransactionsByCategoryIdSortedRequest
         {
             CategoryId = new Guid("FA79B6AB-7E69-46CC-9522-D0F68DF0FE19"),
             SortBy = "Amount"
@@ -149,7 +149,7 @@ public class TransactionRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetTransactionsByUserIdRequest()
+        var actualResult = await handler.Handle(new GetTransactionsByUserIdRequest
         {
             UserId = new Guid("2A9E1D20-7464-4C82-BB23-001CC7F1783A")
         }, default);
@@ -183,7 +183,7 @@ public class TransactionRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetTransactionsByUserIdSortedRequest()
+        var actualResult = await handler.Handle(new GetTransactionsByUserIdSortedRequest
         {
             UserId = new Guid("2A9E1D20-7464-4C82-BB23-001CC7F1783A"),
             SortBy = "Amount"
@@ -218,7 +218,7 @@ public class TransactionRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetTransactionsByWalletIdRequest()
+        var actualResult = await handler.Handle(new GetTransactionsByWalletIdRequest
         {
             WalletId = new Guid("9B2EAEC4-DD3B-4572-9A69-48FBC50C8506")
         }, default);
@@ -252,7 +252,7 @@ public class TransactionRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetTransactionsByWalletIdSortedRequest()
+        var actualResult = await handler.Handle(new GetTransactionsByWalletIdSortedRequest
         {
             WalletId = new Guid("9B2EAEC4-DD3B-4572-9A69-48FBC50C8506"),
             SortBy = "Amount"
@@ -267,7 +267,7 @@ public class TransactionRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetTransactionWithWalletByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new TransactionWithWalletDTO()
+        var expectedResult = new TransactionWithWalletDTO
         {
             Id = new Guid("D2E41134-B415-4450-B47A-D48A96EA9226"),
             Amount = 220,
@@ -276,7 +276,7 @@ public class TransactionRequestTests
             Wallet = new() { Id = new Guid("9B2EAEC4-DD3B-4572-9A69-48FBC50C8506"), Name = "Wallet 1" },
         };
 
-        var actualResult = await handler.Handle(new GetTransactionWithWalletByIdRequest()
+        var actualResult = await handler.Handle(new GetTransactionWithWalletByIdRequest
         {
             Id = new Guid("D2E41134-B415-4450-B47A-D48A96EA9226")
         }, default);
@@ -290,7 +290,7 @@ public class TransactionRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetTransactionWithUserByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new TransactionWithUserDTO()
+        var expectedResult = new TransactionWithUserDTO
         {
             Id = new Guid("89748830-B290-4ED2-AB51-B2853D91B785"),
             Amount = 220,
@@ -299,7 +299,7 @@ public class TransactionRequestTests
             User = new() { Id = new Guid("3DCF7BFC-C7A1-48F2-A56D-B33740E4B3FF"), Email = "transUser@mail.com" },
         };
 
-        var actualResult = await handler.Handle(new GetTransactionWithUserByIdRequest()
+        var actualResult = await handler.Handle(new GetTransactionWithUserByIdRequest
         {
             Id = new Guid("89748830-B290-4ED2-AB51-B2853D91B785")
         }, default);

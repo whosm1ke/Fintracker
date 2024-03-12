@@ -9,7 +9,7 @@ public class MockWalletRepository
 {
     public static Mock<IWalletRepository> GetWalletRepository()
     {
-        var wallets = new List<Wallet>()
+        var wallets = new List<Wallet>
         {
             new()
             {
@@ -36,14 +36,14 @@ public class MockWalletRepository
                 Id = new Guid("95E0ECF9-0647-450B-9495-B2A709D166B5"),
                 Balance = 500,
                 Name = "With Owner",
-                Owner = new User() { Id = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"), Email = "owner@gmail.com" },
+                Owner = new User { Id = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"), Email = "owner@gmail.com" },
             },
             new()
             {
                 Id = new Guid("83D7946B-3CCD-401E-8EF4-62BCA04FD528"),
                 Balance = 2000,
                 Name = "With Members",
-                Users = new List<User>()
+                Users = new List<User>
                 {
                     new()
                     {
@@ -61,7 +61,7 @@ public class MockWalletRepository
             {
                 Id = new Guid("8ED1883D-1833-47CB-8E12-27AC26F5E6A7"),
                 Name = "With Transactions",
-                Transactions = new List<Transaction>()
+                Transactions = new List<Transaction>
                 {
                     new()
                     {
@@ -79,7 +79,7 @@ public class MockWalletRepository
             {
                 Id = new Guid("32A22A34-F772-4F65-B806-51B2E8528D6E"),
                 Name = "With Budgets",
-                Budgets = new List<Budget>()
+                Budgets = new List<Budget>
                 {
                     new()
                     {

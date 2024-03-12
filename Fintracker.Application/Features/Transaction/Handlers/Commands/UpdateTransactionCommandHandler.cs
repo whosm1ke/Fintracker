@@ -4,7 +4,7 @@ using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.DTO.Transaction.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Handlers.Commands;
@@ -32,17 +32,21 @@ public class
         var transaction = await _unitOfWork.TransactionRepository.GetTransactionWithWalletAsync(request.Transaction.Id);
 
         if (transaction is null)
-            throw new NotFoundException(nameof(Domain.Entities.Transaction), request.Transaction.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Transaction.Id}]",
+                PropertyName = nameof(request.Transaction.Id)
+            },nameof(Domain.Entities.Transaction));
 
         if (validationResult.IsValid)
         {
             var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
             _mapper.Map(request.Transaction, transaction);
-            
+
             await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount);
             await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
             await _unitOfWork.TransactionRepository.UpdateAsync(transaction);
-            
+
             await _unitOfWork.SaveAsync();
             var newObject = _mapper.Map<TransactionBaseDTO>(transaction);
 
@@ -51,11 +55,11 @@ public class
             response.Old = oldObject;
             response.New = newObject;
             response.Id = request.Transaction.Id;
-
         }
         else
         {
-            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
+                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
         }
 
         return response;

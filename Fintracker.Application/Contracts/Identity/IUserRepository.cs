@@ -20,5 +20,6 @@ public interface IUserRepository
     Task DeleteAsync(User item);
     Task<User?> GetAsync(Guid id);
     Task<User?> GetAsNoTrackingAsync(string email);
+    Task<User?> FindByEmailAsync(string email);
     Task<IReadOnlyList<User?>> GetAllAsync();
 }

@@ -8,12 +8,13 @@ public class CreateCategoryDtoValidator : AbstractValidator<CreateCategoryDTO>
     {
         Include(new CategoryBaseValidator());
 
-        string allowedTypeValues = string.Join(',', Enum.GetNames<CategoryTypeEnum>());
 
         RuleFor(x => x.Type)
             .NotNull()
-            .WithMessage($"{nameof(CreateCategoryDTO.Type)} must be included")
+            .WithMessage("Must be included")
+            .NotEmpty()
+            .WithMessage("Can not be blank")
             .IsInEnum()
-            .WithMessage($"{nameof(CreateCategoryDTO.Type)} has allowed values: {allowedTypeValues}");
+            .WithMessage($"Has allowed values: {CategoryTypeEnum.INCOME} or {CategoryTypeEnum.EXPENSE}");
     }
 }

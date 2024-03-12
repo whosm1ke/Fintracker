@@ -5,16 +5,19 @@ using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.DTO.Transaction.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Handlers.Commands;
 
-public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, CreateCommandResponse<TransactionBaseDTO>>
+public class
+    CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand,
+    CreateCommandResponse<TransactionBaseDTO>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
+
     public CreateTransactionCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IUserRepository userRepository)
     {
         _mapper = mapper;
@@ -22,10 +25,11 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         _userRepository = userRepository;
     }
 
-    public async Task<CreateCommandResponse<TransactionBaseDTO>> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
+    public async Task<CreateCommandResponse<TransactionBaseDTO>> Handle(CreateTransactionCommand request,
+        CancellationToken cancellationToken)
     {
         var response = new CreateCommandResponse<TransactionBaseDTO>();
-        var validator = new CreateTransactionDtoValidator(_unitOfWork,_userRepository);
+        var validator = new CreateTransactionDtoValidator(_unitOfWork, _userRepository);
         var validationResult = await validator.ValidateAsync(request.Transaction);
 
         if (validationResult.IsValid)
@@ -47,9 +51,10 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         }
         else
         {
-            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
+                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
         }
-        
+
         return response;
     }
 
@@ -67,10 +72,6 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
     {
         var wallet = await _unitOfWork.WalletRepository.GetAsync(walletId);
 
-        if (wallet is null)
-            throw new BadRequestException($"Cannot find wallet with id [{walletId.ToString()}]");
-
-        wallet.Balance -= amount;
-
+        wallet!.Balance -= amount;
     }
 }

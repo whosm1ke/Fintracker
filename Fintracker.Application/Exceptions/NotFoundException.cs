@@ -1,16 +1,17 @@
 ﻿namespace Fintracker.Application.Exceptions;
 
-public class NotFoundException : ApplicationException
+public class NotFoundException : BaseError
 {
-    public string Name { get; }
-    public object Key { get; }
-    public NotFoundException(string name, object key) : base($"{name} was not found [{key}]")
+
+    public NotFoundException(List<ExceptionDetails> errors, string type) : base(errors)
     {
-        Name = name;
-        Key = key;
+        Type = type;
     }
 
-    public NotFoundException(string msg) : base(msg)
+    public NotFoundException(ExceptionDetails details, string type): base(details)
     {
+        Type = type;
     }
+
+    public string Type { get; set; } = default!;
 }

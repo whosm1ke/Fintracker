@@ -38,7 +38,7 @@ public class WalletRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetWalletsByOwnerIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new List<WalletBaseDTO>()
+        var expectedResult = new List<WalletBaseDTO>
         {
             new()
             {
@@ -56,7 +56,7 @@ public class WalletRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetWalletsByOwnerIdRequest()
+        var actualResult = await handler.Handle(new GetWalletsByOwnerIdRequest
         {
             OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9")
         }, default);
@@ -105,11 +105,11 @@ public class WalletRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetWalletWithBudgetsByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new WalletWithBudgetsDTO()
+        var expectedResult = new WalletWithBudgetsDTO
         {
             Id = new Guid("32A22A34-F772-4F65-B806-51B2E8528D6E"),
             Name = "With Budgets",
-            Budgets = new List<BudgetBaseDTO>()
+            Budgets = new List<BudgetBaseDTO>
             {
                 new()
                 {
@@ -140,12 +140,12 @@ public class WalletRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetWalletWithMembersByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new WalletWithMembersDTO()
+        var expectedResult = new WalletWithMembersDTO
         {
             Id = new Guid("83D7946B-3CCD-401E-8EF4-62BCA04FD528"),
             Balance = 2000,
             Name = "With Members",
-            Users = new List<UserBaseDTO>()
+            Users = new List<UserBaseDTO>
             {
                 new()
                 {
@@ -174,13 +174,12 @@ public class WalletRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetWalletByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new WalletBaseDTO()
+        var expectedResult = new WalletBaseDTO
         {
             Id = new Guid("95E0ECF9-0647-450B-9495-B2A709D166B5"),
             Balance = 500,
             Name = "With Owner",
-            Owner = new UserBaseDTO()
-                { Id = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"), Email = "owner@gmail.com" }
+            Owner = new UserBaseDTO { Id = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"), Email = "owner@gmail.com" }
         };
 
         var actualResult = await handler.Handle(new GetWalletByIdRequest
@@ -197,11 +196,11 @@ public class WalletRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetWalletWithTransactionsByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new WalletWithTransactionsDTO()
+        var expectedResult = new WalletWithTransactionsDTO
         {
             Id = new Guid("8ED1883D-1833-47CB-8E12-27AC26F5E6A7"),
             Name = "With Transactions",
-            Transactions = new List<TransactionBaseDTO>()
+            Transactions = new List<TransactionBaseDTO>
             {
                 new()
                 {
@@ -216,7 +215,7 @@ public class WalletRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetWalletWithTransactionsByIdRequest()
+        var actualResult = await handler.Handle(new GetWalletWithTransactionsByIdRequest
         {
             Id = new Guid("8ED1883D-1833-47CB-8E12-27AC26F5E6A7"),
         }, default);

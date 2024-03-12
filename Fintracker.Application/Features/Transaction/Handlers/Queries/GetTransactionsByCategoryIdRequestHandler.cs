@@ -6,7 +6,9 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Handlers.Queries;
 
-public class GetTransactionsByCategoryIdRequestHandler: IRequestHandler<GetTransactionsByCategoryIdRequest, IReadOnlyList<TransactionBaseDTO>>
+public class
+    GetTransactionsByCategoryIdRequestHandler : IRequestHandler<GetTransactionsByCategoryIdRequest,
+    IReadOnlyList<TransactionBaseDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
@@ -16,10 +18,12 @@ public class GetTransactionsByCategoryIdRequestHandler: IRequestHandler<GetTrans
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
-    public async Task<IReadOnlyList<TransactionBaseDTO>> Handle(GetTransactionsByCategoryIdRequest request, CancellationToken cancellationToken)
+
+    public async Task<IReadOnlyList<TransactionBaseDTO>> Handle(GetTransactionsByCategoryIdRequest request,
+        CancellationToken cancellationToken)
     {
         var transactions = await _unitOfWork.TransactionRepository.GetByCategoryIdAsync(request.CategoryId);
-        
+
         //TODO validation logic if needed
 
         return _mapper.Map<List<TransactionBaseDTO>>(transactions);

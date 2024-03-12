@@ -28,9 +28,12 @@ public class GetCategoriesSortedRequestHandler : IRequestHandler<GetCategoriesSo
         CancellationToken cancellationToken)
     {
         if (!_allowedSortColumns.Contains(request.SortBy))
-            throw new BadRequestException(
-                $"Invalid sortBy parameter. Allowed values {string.Join(',', _allowedSortColumns)}");
-        
+            throw new BadRequestException(new ExceptionDetails
+            {
+                PropertyName = nameof(request.SortBy),
+                ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
+            });
+
         var categories = await _unitOfWork.CategoryRepository.GetAllSortedAsync(request.SortBy, request.IsDescending);
 
         return _mapper.Map<List<CategoryDTO>>(categories);

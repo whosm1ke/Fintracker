@@ -15,66 +15,65 @@ public class BudgetBaseDtoValidator : AbstractValidator<IBudgetDto>
 
         RuleFor(x => x.Balance)
             .NotNull()
-            .WithMessage($"{nameof(CreateBudgetDTO.Balance)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(CreateBudgetDTO.Balance)} can not be blank")
+            .WithMessage("Can not be blank")
             .GreaterThanOrEqualTo(BudgetConstraints.MinBalance)
             .WithMessage(x =>
                 $"Minimal balance should be greater or equal to {BudgetConstraints.MinBalance}")
             .LessThanOrEqualTo(BudgetConstraints.MaxBalance)
             .WithMessage(x =>
-                $"Maximum balance should be less or equal to {BudgetConstraints.MaxBalance}")
-            .NotEmpty()
-            .WithMessage($"{nameof(CreateBudgetDTO.Balance)} can not be blank");
+                $"Maximum balance should be less or equal to {BudgetConstraints.MaxBalance}");
 
         RuleFor(x => x.Name)
             .NotNull()
-            .WithMessage($"{nameof(CreateBudgetDTO.Name)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(CreateBudgetDTO.Name)} can not be blank")
+            .WithMessage("Can not be blank")
             .MaximumLength(BudgetConstraints.MaximumNameLength)
             .WithMessage(x =>
-                $"{nameof(CreateBudgetDTO.Name)} should be less then {BudgetConstraints.MaximumNameLength}")
+                $"Should be less then {BudgetConstraints.MaximumNameLength}")
             .MinimumLength(BudgetConstraints.MinimumNameLength)
             .WithMessage(x =>
-                $"{nameof(CreateBudgetDTO.Name)} should be less then {BudgetConstraints.MinimumNameLength}");
+                $"Should be less then {BudgetConstraints.MinimumNameLength}");
 
         RuleFor(x => x.CurrencyId)
-            .NotEmpty()
-            .WithMessage($"{nameof(CreateBudgetDTO.CurrencyId)} can not be blank")
             .NotNull()
-            .WithMessage($"{nameof(CreateBudgetDTO.CurrencyId)} must be included")
-            .MustAsync((guid, token) => { return _unitOfWork.CurrencyRepository.ExistsAsync(guid); })
-            .WithMessage(x => $"Currency with id [{x.CurrencyId}] does not exists");
+            .WithMessage("Must be included")
+            .NotEmpty()
+            .WithMessage("Can not be blank")
+            .MustAsync(async (guid, _) => await _unitOfWork.CurrencyRepository.ExistsAsync(guid))
+            .WithMessage(x => $"Does not exists [{x.CurrencyId}]");
 
         RuleFor(x => x.WalletId)
             .NotEmpty()
-            .WithMessage($"{nameof(CreateBudgetDTO.WalletId)} can not be blank")
             .NotNull()
-            .WithMessage($"{nameof(CreateBudgetDTO.WalletId)} must be included")
-            .MustAsync((guid, token) => { return _unitOfWork.WalletRepository.ExistsAsync(guid); })
-            .WithMessage(x => $"Wallet with id [{x.WalletId}] does not exists");
+            .WithMessage("Must be included")
+            .NotEmpty()
+            .WithMessage("Can not be blank")
+            .MustAsync(async (guid, _) => await _unitOfWork.WalletRepository.ExistsAsync(guid))
+            .WithMessage(x => $"Does not exists [{x.WalletId}]");
 
 
         RuleFor(x => x.StartDate)
-            .NotEmpty()
-            .WithMessage($"{nameof(CreateBudgetDTO.StartDate)} can not be blank")
             .NotNull()
-            .WithMessage($"{nameof(CreateBudgetDTO.StartDate)} must be included")
+            .WithMessage("Must be included")
+            .NotEmpty()
+            .WithMessage("Can not be blank")
             .LessThanOrEqualTo(x => x.EndDate)
-            .WithMessage("Start Date should be less than End Date");
+            .WithMessage("Should be less than End Date");
 
         RuleFor(x => x.EndDate)
-            .NotEmpty()
-            .WithMessage($"{nameof(CreateBudgetDTO.EndDate)} can not be blank")
             .NotNull()
-            .WithMessage($"{nameof(CreateBudgetDTO.EndDate)} must be included")
+            .WithMessage("Must be included")
+            .NotEmpty()
+            .WithMessage("Can not be blank")
             .GreaterThanOrEqualTo(x => x.StartDate)
-            .WithMessage("End Date should be greater than Start Date");
+            .WithMessage("Should be greater than Start Date");
 
         RuleFor(x => x.CategoryIds)
-            .MustAsync((guids, token) => ExistInDatabase(guids))
-            .WithMessage("One or more CategoryIds do not exist in the database.");
+            .MustAsync(async (guids, _) => await ExistInDatabase(guids))
+            .WithMessage("One or more do not exist.");
     }
 
     private async Task<bool> ExistInDatabase(ICollection<Guid> categoryIds)

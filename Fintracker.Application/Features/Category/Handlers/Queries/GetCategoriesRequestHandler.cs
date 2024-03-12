@@ -17,10 +17,11 @@ public class GetCategoriesRequestHandler : IRequestHandler<GetCategoriesRequest,
         _mapper = mapper;
     }
 
-    public async Task<IReadOnlyList<CategoryDTO>> Handle(GetCategoriesRequest request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<CategoryDTO>> Handle(GetCategoriesRequest request,
+        CancellationToken cancellationToken)
     {
         var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
-        
+
         //TODO add validation logic if needed
 
         return _mapper.Map<List<CategoryDTO>>(categories);

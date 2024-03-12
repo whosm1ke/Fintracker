@@ -33,7 +33,7 @@ public class UserCommandTests
         var handler = new DeleteUserCommandHandler(_mapper, userMockRepo);
         var expectedResult = 5;
         
-        var handlerResult = await handler.Handle(new DeleteUserCommand()
+        var handlerResult = await handler.Handle(new DeleteUserCommand
         {
             Id = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7")
         }, default);
@@ -49,20 +49,20 @@ public class UserCommandTests
     {
         var userMockRepo = MockUserRepository.GetUserRepository().Object;
         var handler = new UpdateUserCommandHandler(_mapper, userMockRepo);
-        var expectedResult = new UserBaseDTO()
+        var expectedResult = new UserBaseDTO
         {
             Id = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
             Email = "user1gmail.com",
             UserDetails = new()
             {
                 Avatar = "Avatar",
-                Language = "Ukr",
+                Language = LanguageTypeEnum.Ukrainian,
                 Sex = "Male",
                 FName = "Misha"
             }
         };
 
-        var actualResult = await handler.Handle(new UpdateUserCommand()
+        var actualResult = await handler.Handle(new UpdateUserCommand
         {
             User = new()
             {
@@ -71,7 +71,7 @@ public class UserCommandTests
                 UserDetails = new()
                 {
                     Avatar = "Avatar",
-                    Language = "Ukr",
+                    Language = LanguageTypeEnum.Ukrainian,
                     Sex = "Male",
                     FName = "Misha"
                 }

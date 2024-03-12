@@ -23,7 +23,7 @@ public static class ConfigureIdentity
                                 o.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(o =>
         {
-            o.TokenValidationParameters = new TokenValidationParameters()
+            o.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidIssuer = cfg["JWT:Issuer"],

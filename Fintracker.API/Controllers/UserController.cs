@@ -1,7 +1,8 @@
 ﻿using Fintracker.Application.DTO.User;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Features.User.Requests.Queries;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.API_Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserBaseDTO>> Get(Guid id)
     {
-        var response = await _mediator.Send(new GetUserByIdRequest()
+        var response = await _mediator.Send(new GetUserByIdRequest
         {
             Id = id
         });
@@ -39,7 +40,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<UserBaseDTO>>> GetWithAccessedWallets(Guid walletId)
     {
-        var response = await _mediator.Send(new GetUsersAccessedToWalletRequest()
+        var response = await _mediator.Send(new GetUsersAccessedToWalletRequest
         {
             WalletId = walletId
         });
@@ -53,7 +54,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserWithBudgetsDTO>> GetWithBudgets(Guid id)
     {
-        var response = await _mediator.Send(new GetUserWithBudgetsByIdRequest()
+        var response = await _mediator.Send(new GetUserWithBudgetsByIdRequest
         {
             Id = id
         });
@@ -67,7 +68,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserWithOwnedWalletsDTO>> GetWithOwnWallets(Guid id)
     {
-        var response = await _mediator.Send(new GetUserWithOwnedWalletsByIdRequest()
+        var response = await _mediator.Send(new GetUserWithOwnedWalletsByIdRequest
         {
             Id = id
         });
@@ -81,7 +82,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserWithMemberWalletsDTO>> GetWithMemberWallets(Guid id)
     {
-        var response = await _mediator.Send(new GetUserWithMemberWalletsByIdRequest()
+        var response = await _mediator.Send(new GetUserWithMemberWalletsByIdRequest
         {
             Id = id
         });
@@ -95,7 +96,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<UserBaseDTO>>> Delete(Guid id)
     {
-        var response = await _mediator.Send(new DeleteUserCommand()
+        var response = await _mediator.Send(new DeleteUserCommand
         {
             Id = id
         });
@@ -110,7 +111,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<UserBaseDTO>>> Put([FromBody] UpdateUserDTO user)
     {
-        var response = await _mediator.Send(new UpdateUserCommand()
+        var response = await _mediator.Send(new UpdateUserCommand
         {
             User = user
         });

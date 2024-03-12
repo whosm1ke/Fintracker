@@ -9,7 +9,7 @@ public class MockTransactionRepository
 {
     public static Mock<ITransactionRepository> GetTransactionRepository()
     {
-        var transactions = new List<Transaction>()
+        var transactions = new List<Transaction>
         {
             new()
             {

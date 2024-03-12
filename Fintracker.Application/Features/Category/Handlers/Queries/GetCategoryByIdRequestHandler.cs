@@ -17,12 +17,17 @@ public class GetCategoryByIdRequestHandler : IRequestHandler<GetCategoryByIdRequ
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
+
     public async Task<CategoryDTO> Handle(GetCategoryByIdRequest request, CancellationToken cancellationToken)
     {
         var category = await _unitOfWork.CategoryRepository.GetAsync(request.Id);
 
         if (category is null)
-            throw new NotFoundException(nameof(Domain.Entities.Category), request.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Id}]",
+                PropertyName = nameof(request.Id)
+            },nameof(Domain.Entities.Category));
 
         return _mapper.Map<CategoryDTO>(category);
     }

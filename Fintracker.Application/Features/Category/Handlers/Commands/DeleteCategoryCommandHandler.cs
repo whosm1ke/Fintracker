@@ -3,7 +3,7 @@ using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Category;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Category.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.Category.Handlers.Commands;
@@ -18,13 +18,19 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public async Task<DeleteCommandResponse<CategoryDTO>> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
+
+    public async Task<DeleteCommandResponse<CategoryDTO>> Handle(DeleteCategoryCommand request,
+        CancellationToken cancellationToken)
     {
         var response = new DeleteCommandResponse<CategoryDTO>();
         var category = await _unitOfWork.CategoryRepository.GetAsync(request.Id);
 
         if (category is null)
-            throw new NotFoundException(nameof(Domain.Entities.Category), request.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Attempt to delete non-existing item by id [{request.Id}]",
+                PropertyName = nameof(request.Id)
+            },nameof(Domain.Entities.Category));
 
         var deletedObj = _mapper.Map<CategoryDTO>(category);
         await _unitOfWork.CategoryRepository.DeleteAsync(category);

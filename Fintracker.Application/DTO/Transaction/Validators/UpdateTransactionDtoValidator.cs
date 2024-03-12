@@ -11,10 +11,10 @@ public class UpdateTransactionDtoValidator : AbstractValidator<UpdateTransaction
 
         RuleFor(x => x.Id)
             .NotNull()
-            .WithMessage($"{nameof(UpdateTransactionDTO.Id)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(UpdateTransactionDTO.Id)} can not be blank")
-            .MustAsync((id, _) => unitOfWork.TransactionRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.Transaction)} with id [{x.Id}] does not exists");
+            .WithMessage("Can not be blank")
+            .MustAsync(async (id, _) => await unitOfWork.TransactionRepository.ExistsAsync(id))
+            .WithMessage(x => $"{nameof(Domain.Entities.Transaction)} with id does not exists [{x.Id}]");
     }
 }

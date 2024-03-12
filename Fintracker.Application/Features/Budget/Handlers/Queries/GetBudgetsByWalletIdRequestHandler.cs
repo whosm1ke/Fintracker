@@ -9,7 +9,6 @@ namespace Fintracker.Application.Features.Budget.Handlers.Queries;
 public class
     GetBudgetsByWalletIdRequestHandler : IRequestHandler<GetBudgetsByWalletIdRequest, IReadOnlyList<BudgetBaseDTO>>
 {
-    
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
@@ -18,7 +17,9 @@ public class
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    public async Task<IReadOnlyList<BudgetBaseDTO>> Handle(GetBudgetsByWalletIdRequest request, CancellationToken cancellationToken)
+
+    public async Task<IReadOnlyList<BudgetBaseDTO>> Handle(GetBudgetsByWalletIdRequest request,
+        CancellationToken cancellationToken)
     {
         var budgets = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(request.WalletId);
 

@@ -1,7 +1,8 @@
 ﻿using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.Features.Wallet.Requests.Commands;
 using Fintracker.Application.Features.Wallet.Requests.Queries;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.API_Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ public class WalletController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WalletBaseDTO>> Get(Guid id)
     {
-        var response = await _mediator.Send(new GetWalletByIdRequest()
+        var response = await _mediator.Send(new GetWalletByIdRequest
         {
             Id = id
         });
@@ -40,14 +41,14 @@ public class WalletController : ControllerBase
     public async Task<ActionResult<List<WalletBaseDTO>>> Get(Guid ownerId, [FromQuery] string? sortBy,
         [FromQuery] bool? isDescending)
     {
-        var sortRequest = new GetWalletsByOwnerIdSortedRequest()
+        var sortRequest = new GetWalletsByOwnerIdSortedRequest
         {
             OwnerId = ownerId,
             IsDescending = isDescending.HasValue && isDescending.Value,
             SortBy = sortBy!
         };
 
-        var simpleRequest = new GetWalletsByOwnerIdRequest()
+        var simpleRequest = new GetWalletsByOwnerIdRequest
         {
             OwnerId = ownerId
         };
@@ -68,7 +69,7 @@ public class WalletController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WalletWithBudgetsDTO>> GetWithBudget(Guid id)
     {
-        var response = await _mediator.Send(new GetWalletWithBudgetsByIdRequest()
+        var response = await _mediator.Send(new GetWalletWithBudgetsByIdRequest
         {
             Id = id
         });
@@ -82,7 +83,7 @@ public class WalletController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WalletWithMembersDTO>> GetWithMembers(Guid id)
     {
-        var response = await _mediator.Send(new GetWalletWithMembersByIdRequest()
+        var response = await _mediator.Send(new GetWalletWithMembersByIdRequest
         {
             Id = id
         });
@@ -96,7 +97,7 @@ public class WalletController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WalletWithTransactionsDTO>> GetWithTransactions(Guid id)
     {
-        var response = await _mediator.Send(new GetWalletWithTransactionsByIdRequest()
+        var response = await _mediator.Send(new GetWalletWithTransactionsByIdRequest
         {
             Id = id
         });
@@ -110,7 +111,7 @@ public class WalletController : ControllerBase
     [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CreateCommandResponse<WalletBaseDTO>>> Post([FromBody] CreateWalletDTO wallet)
     {
-        var response = await _mediator.Send(new CreateWalletCommand()
+        var response = await _mediator.Send(new CreateWalletCommand
         {
             Wallet = wallet
         });
@@ -125,7 +126,7 @@ public class WalletController : ControllerBase
     [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<WalletBaseDTO>>> Put([FromBody] UpdateWalletDTO wallet)
     {
-        var response = await _mediator.Send(new UpdateWalletCommand()
+        var response = await _mediator.Send(new UpdateWalletCommand
         {
             Wallet = wallet
         });
@@ -139,7 +140,7 @@ public class WalletController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<WalletBaseDTO>>> Delete(Guid id)
     {
-        var response = await _mediator.Send(new DeleteWalletCommand()
+        var response = await _mediator.Send(new DeleteWalletCommand
         {
             Id = id
         });

@@ -23,12 +23,18 @@ public class GetCurrenciesSortedRequestHandler : IRequestHandler<GetCurrenciesSo
             nameof(Domain.Entities.Currency.Symbol)
         };
     }
-    public async Task<IReadOnlyList<CurrencyDTO>> Handle(GetCurrenciesSortedRequest request, CancellationToken cancellationToken)
+
+    public async Task<IReadOnlyList<CurrencyDTO>> Handle(GetCurrenciesSortedRequest request,
+        CancellationToken cancellationToken)
     {
         if (!_allowedSortColumns.Contains(request.SortBy))
             throw new BadRequestException(
-                $"Invalid sortBy parameter. Allowed values {string.Join(',', _allowedSortColumns)}");
-        
+                new ExceptionDetails
+                {
+                    PropertyName = nameof(request.SortBy),
+                    ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
+                });
+
         var currencies = await _unitOfWork.CurrencyRepository.GetCurrenciesSorted(request.SortBy, request.IsDescending);
 
         return _mapper.Map<List<CurrencyDTO>>(currencies);

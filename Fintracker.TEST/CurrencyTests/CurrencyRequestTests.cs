@@ -27,7 +27,7 @@ public class CurrencyRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetCurrenciesRequestHandler(mockUnitOfWork, _mapper);
-        var expectedResult = new List<CurrencyDTO>()
+        var expectedResult = new List<CurrencyDTO>
         {
             new()
             {
@@ -54,7 +54,7 @@ public class CurrencyRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetCurrenciesSortedRequestHandler(mockUnitOfWork, _mapper);
-        var expectedResult = new List<CurrencyDTO>()
+        var expectedResult = new List<CurrencyDTO>
         {
             new()
             {
@@ -70,7 +70,7 @@ public class CurrencyRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetCurrenciesSortedRequest()
+        var actualResult = await handler.Handle(new GetCurrenciesSortedRequest
         {
             SortBy = "Symbol"
         }, default);
@@ -84,14 +84,14 @@ public class CurrencyRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetCurrencyByIdRequestHandler(mockUnitOfWork, _mapper);
-        var expectedResult = new CurrencyDTO()
+        var expectedResult = new CurrencyDTO
         {
             Id = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"),
             Name = "Ukrainian hrivna",
             Symbol = "UAH"
         };
 
-        var actualResult = await handler.Handle(new GetCurrencyByIdRequest()
+        var actualResult = await handler.Handle(new GetCurrencyByIdRequest
         {
             Id = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
         }, default);

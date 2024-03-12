@@ -18,7 +18,7 @@ public class GetTransactionsByCategoryIdSortedRequestHandler : IRequestHandler<G
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
-        
+
         _allowedSortColumns = new()
         {
             nameof(Domain.Entities.Transaction.Label),
@@ -33,9 +33,12 @@ public class GetTransactionsByCategoryIdSortedRequestHandler : IRequestHandler<G
         CancellationToken cancellationToken)
     {
         if (!_allowedSortColumns.Contains(request.SortBy))
-            throw new BadRequestException(
-                $"Invalid sortBy parameter. Allowed values {string.Join(',', _allowedSortColumns)}");
-        
+            throw new BadRequestException(new ExceptionDetails
+            {
+                PropertyName = nameof(request.SortBy),
+                ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
+            });
+
         var transactions =
             await _unitOfWork.TransactionRepository.GetByCategoryIdSortedAsync(request.CategoryId, request.SortBy,
                 request.IsDescending);

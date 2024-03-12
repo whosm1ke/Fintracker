@@ -1,7 +1,8 @@
 ﻿using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.Features.Budget.Requests.Commands;
 using Fintracker.Application.Features.Budget.Requests.Queries;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.API_Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using Fintracker.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +28,7 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BudgetWithWalletDTO>> GetBudgetWithWallet(Guid id)
     {
-        var response = await _mediator.Send(new GetBudgetWithWalletByIdRequest()
+        var response = await _mediator.Send(new GetBudgetWithWalletByIdRequest
         {
             Id = id
         });
@@ -41,7 +42,7 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BudgetWithUserDTO>> GetBudgetWithUser(Guid id)
     {
-        var response = await _mediator.Send(new GetBudgetWithUserByIdRequest()
+        var response = await _mediator.Send(new GetBudgetWithUserByIdRequest
         {
             Id = id
         });
@@ -55,7 +56,7 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BudgetBaseDTO>> GetById(Guid id)
     {
-        var budget = await _mediator.Send(new GetBudgetByIdRequest()
+        var budget = await _mediator.Send(new GetBudgetByIdRequest
         {
             Id = id
         });
@@ -79,12 +80,12 @@ public class BudgetController : ControllerBase
         IReadOnlyList<BudgetBaseDTO> budgets;
 
         if (type == nameof(User).ToLower())
-            budgets = await _mediator.Send(new GetBudgetsByUserIdRequest()
+            budgets = await _mediator.Send(new GetBudgetsByUserIdRequest
             {
                 UserId = id
             });
         else
-            budgets = await _mediator.Send(new GetBudgetsByWalletIdRequest()
+            budgets = await _mediator.Send(new GetBudgetsByWalletIdRequest
             {
                 WalletId = id
             });
@@ -110,14 +111,14 @@ public class BudgetController : ControllerBase
         IReadOnlyList<BudgetBaseDTO> budgets;
 
         if (type == nameof(User).ToLower())
-            budgets = await _mediator.Send(new GetBudgetsByUserIdSortedRequest()
+            budgets = await _mediator.Send(new GetBudgetsByUserIdSortedRequest
             {
                 UserId = id,
                 IsDescending = isDescending.HasValue && isDescending.Value,
                 SortBy = sortBy!
             });
         else
-            budgets = await _mediator.Send(new GetBudgetsByWalletIdSortedRequest()
+            budgets = await _mediator.Send(new GetBudgetsByWalletIdSortedRequest
             {
                 WalletId = id,
                 IsDescending = isDescending.HasValue && isDescending.Value,
@@ -134,7 +135,7 @@ public class BudgetController : ControllerBase
     public async Task<ActionResult<CreateCommandResponse<CreateBudgetDTO>>> Post([FromBody] CreateBudgetDTO budget)
     {
         
-        var response = await _mediator.Send(new CreateBudgetCommand()
+        var response = await _mediator.Send(new CreateBudgetCommand
         {
             Budget = budget
         });
@@ -149,7 +150,7 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<BudgetBaseDTO>>> Put([FromBody] UpdateBudgetDTO budget)
     {
-        var response = await _mediator.Send(new UpdateBudgetCommand()
+        var response = await _mediator.Send(new UpdateBudgetCommand
         {
             Budget = budget
         });
@@ -163,7 +164,7 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<BudgetBaseDTO>>> Delete(Guid id)
     {
-        var response = await _mediator.Send(new DeleteBudgetCommand()
+        var response = await _mediator.Send(new DeleteBudgetCommand
         {
             Id = id
         });

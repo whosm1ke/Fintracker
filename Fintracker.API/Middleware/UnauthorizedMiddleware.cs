@@ -1,4 +1,4 @@
-﻿using Fintracker.Application.Responses;
+﻿using Fintracker.Application.Responses.API_Responses;
 
 namespace Fintracker.API.Middleware;
 
@@ -19,11 +19,11 @@ public class UnauthorizedMiddleware
         {
             var response = new UnauthorizedResponse
             {
-                Id = Guid.NewGuid(),
+                TraceId = Guid.NewGuid(),
                 When = DateTime.UtcNow,
                 Reason = "Unauthorized",
-                Details = "The user is not authorized to access this resource",
-                StatusCode = StatusCodes.Status401Unauthorized,
+                Message = "User does not have access to requested resource",
+                StatusCode = StatusCodes.Status401Unauthorized
             };
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsJsonAsync(response);

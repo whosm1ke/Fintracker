@@ -4,7 +4,7 @@ using Fintracker.Application.DTO.Category;
 using Fintracker.Application.DTO.Category.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Category.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.Category.Handlers.Commands;
@@ -28,18 +28,22 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         var validationResult = await validator.ValidateAsync(request.Category);
 
         var category = await _unitOfWork.CategoryRepository.GetAsync(request.Category.Id);
-        
+
         if (category is null)
-            throw new NotFoundException(nameof(Domain.Entities.Category), request.Category.Id);
-        
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Category.Id}]",
+                PropertyName = nameof(request.Category.Id)
+            },nameof(Domain.Entities.Category));
+
         if (validationResult.IsValid)
         {
             var oldCategory = _mapper.Map<CategoryDTO>(category);
             _mapper.Map(request.Category, category);
-            
+
             await _unitOfWork.CategoryRepository.UpdateAsync(category);
             await _unitOfWork.SaveAsync();
-            
+
             var newCategory = _mapper.Map<CategoryDTO>(category);
 
             response.Success = true;
@@ -50,7 +54,8 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         }
         else
         {
-            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
+                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
         }
 
         return response;

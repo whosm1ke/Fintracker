@@ -1,13 +1,13 @@
 ﻿namespace Fintracker.Application.Exceptions;
 
-public class LoginException : RegisterAccountException
+public class LoginException : BaseError
 {
-    public LoginException(List<string> errors) : base(errors)
+    public LoginException(List<ExceptionDetails> errors) : base(errors)
+    {
+    }
+    
+    public LoginException(ExceptionDetails details): base(details)
     {
         
-    }
-
-    public LoginException(string error) : base(new List<string>() {error})
-    {
     }
 }

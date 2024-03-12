@@ -9,18 +9,18 @@ public class UpdateUserDtoValidator : AbstractValidator<UpdateUserDTO>
     {
         RuleFor(x => x.Id)
             .NotNull()
-            .WithMessage($"{nameof(UpdateUserDTO.Id)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(UpdateUserDTO.Id)} can not be blank")
-            .MustAsync((id, _) => userRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id [{x.Id}] does not exists");
-        
+            .WithMessage("Can not be blank")
+            .MustAsync(async (id, _) => await userRepository.ExistsAsync(id))
+            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.Id}]");
+
         RuleFor(x => x.Email)
             .NotNull()
-            .WithMessage($"{nameof(UpdateUserDTO.Email)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(UpdateUserDTO.Email)} can not be blank")
-            .MustAsync(async (dto, email,_) =>
+            .WithMessage("Can not be blank")
+            .MustAsync(async (dto, email, _) =>
             {
                 var existingUser = await userRepository.GetAsNoTrackingAsync(email);
 
@@ -28,9 +28,10 @@ public class UpdateUserDtoValidator : AbstractValidator<UpdateUserDTO>
                     return true;
                 if (existingUser.Email == dto.Email && existingUser.Id == dto.Id)
                     return true;
-                return false;            })
-            .WithMessage(x => $"{nameof(Domain.Entities.User)} with email [{x.Email}] already exists");
-        
-        //TODO: add rules for user details
+                return false;
+            })
+            .WithMessage(x => $"Invalid email [{x.Email}]");
+
+        RuleFor(x => x.UserDetails).SetValidator(new UserDetailsValidator());
     }
 }

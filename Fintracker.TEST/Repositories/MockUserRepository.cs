@@ -8,7 +8,7 @@ public class MockUserRepository
 {
     public static Mock<IUserRepository> GetUserRepository()
     {
-        var users = new List<User>()
+        var users = new List<User>
         {
             new()
             {
@@ -34,7 +34,7 @@ public class MockUserRepository
             {
                 Id = new Guid("2F566F81-4723-4D28-AB7C-A3004F98735C"),
                 Email = "accessToWalletUser1",
-                MemberWallets = new List<Wallet>()
+                MemberWallets = new List<Wallet>
                 {
                     new()
                     {
@@ -53,7 +53,7 @@ public class MockUserRepository
             {
                 Id = new Guid("D4577085-22CE-4DE3-91E2-7C454C9653BE"),
                 Email = "accessToWalletUser2",
-                MemberWallets = new List<Wallet>()
+                MemberWallets = new List<Wallet>
                 {
                     new()
                     {
@@ -67,7 +67,7 @@ public class MockUserRepository
             {
                 Id = new Guid("E126CEFE-57A3-4E2A-93A6-5EE7F819B10C"),
                 UserName = "With budget",
-                Budgets = new List<Budget>()
+                Budgets = new List<Budget>
                 {
                     new()
                     {
@@ -86,7 +86,7 @@ public class MockUserRepository
             {
                 Id = new Guid("5718AD4F-3065-4E46-85A4-785E64F60EC5"),
                 UserName = "With owned wallets",
-                OwnedWallets = new List<Wallet>()
+                OwnedWallets = new List<Wallet>
                 {
                     new ()
                     {

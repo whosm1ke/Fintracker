@@ -1,5 +1,5 @@
 ﻿using Fintracker.Application.Exceptions;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.API_Responses;
 
 namespace Fintracker.API.Middleware;
 
@@ -32,70 +32,59 @@ public class ExceptionMiddleware
         {
             case BadRequestException bad:
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                var badRequestResponse = new BaseResponse()
+                var badRequestResponse = new BaseResponse
                 {
                     When = DateTime.UtcNow,
                     StatusCode = StatusCodes.Status400BadRequest,
                     Reason = "Bad Request",
-                    Details = string.Join(',', bad.Errors),
-                    Id = Guid.NewGuid()
+                    Details = bad.Errors,
+                    TraceId = Guid.NewGuid()
                 };
                 await context.Response.WriteAsJsonAsync(badRequestResponse);
                 break;
             case NotFoundException notFound:
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
-                var notFountResponse = new NotFoundResponse()
+                var notFountResponse = new NotFoundResponse
                 {
-                    Id = Guid.NewGuid(),
+                    TraceId = Guid.NewGuid(),
                     When = DateTime.UtcNow,
                     Reason = "Not Found",
-                    Details = $"Requested {notFound.Name} with id [{notFound.Key}] was not found",
-                    Type = notFound.Name,
+                    Details = notFound.Errors,
+                    Type = notFound.Type,
                     StatusCode = StatusCodes.Status404NotFound
                 };
                 await context.Response.WriteAsJsonAsync(notFountResponse);
                 break;
             case LoginException log:
-                var logResponse = new UnauthorizedResponse()
+                var logResponse = new UnauthorizedResponse
                 {
-                    Id = Guid.NewGuid(),
+                    TraceId = Guid.NewGuid(),
                     When = DateTime.UtcNow,
                     Reason = "Unauthorized",
-                    Details = "The user is not authorized to access this resource",
+                    Details = log.Errors,
                     StatusCode = StatusCodes.Status401Unauthorized,
                 };
                 await context.Response.WriteAsJsonAsync(logResponse);
                 break;
             case RegisterAccountException reg:
-                var regResponse = new UnauthorizedResponse()
+                var regResponse = new UnauthorizedResponse
                 {
-                    Id = Guid.NewGuid(),
+                    TraceId = Guid.NewGuid(),
                     When = DateTime.UtcNow,
                     Reason = "Unauthorized",
-                    Details = string.Join(',', reg.Errors),
+                    Details = reg.Errors,
                     StatusCode = StatusCodes.Status409Conflict
                 };
                 await context.Response.WriteAsJsonAsync(regResponse);
                 break;
-            case UnauthorizedAccessException unauthorizedExc:
-                var unauthorizedExcResponse = new UnauthorizedResponse()
-                {
-                    Id = Guid.NewGuid(),
-                    When = DateTime.UtcNow,
-                    Reason = "Unauthorized",
-                    Details = unauthorizedExc.Message,
-                    StatusCode = StatusCodes.Status409Conflict
-                };
-                await context.Response.WriteAsJsonAsync(unauthorizedExcResponse);
-                break;
             default:
-                var response = new BaseResponse()
+                var response = new BaseResponse
                 {
                     When = DateTime.UtcNow,
                     StatusCode = StatusCodes.Status500InternalServerError,
                     Reason = "Internal Server Error",
-                    Details = exception.Message,
-                    Id = Guid.NewGuid()
+                    Message = exception.Message,
+                    TraceId = Guid.NewGuid()
                 };
                 await context.Response.WriteAsJsonAsync(response);
                 break;

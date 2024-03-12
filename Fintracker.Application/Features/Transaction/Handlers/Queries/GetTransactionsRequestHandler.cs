@@ -16,10 +16,12 @@ public class GetTransactionsRequestHandler : IRequestHandler<GetTransactionsRequ
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
-    public async Task<IReadOnlyList<TransactionBaseDTO>> Handle(GetTransactionsRequest request, CancellationToken cancellationToken)
+
+    public async Task<IReadOnlyList<TransactionBaseDTO>> Handle(GetTransactionsRequest request,
+        CancellationToken cancellationToken)
     {
         var transaction = await _unitOfWork.TransactionRepository.GetAllAsync();
-        
+
 
         return _mapper.Map<List<TransactionBaseDTO>>(transaction);
     }

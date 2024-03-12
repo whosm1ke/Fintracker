@@ -13,14 +13,14 @@ public class MockAccountService
         mock.Setup(x => x.Register(It.IsAny<RegisterRequest>()))
             .Returns((RegisterRequest rq) =>
                 Task.FromResult(
-                    new RegisterResponse()
+                    new RegisterResponse
                     {
                         UserId = new Guid("A6F29D61-2014-43D1-9EAE-0042781DD703")
                     }
                 ));
 
         mock.Setup(x => x.Login(It.IsAny<LoginRequest>()))
-            .Returns((LoginRequest lq) => Task.FromResult(new LoginResponse()
+            .Returns((LoginRequest lq) => Task.FromResult(new LoginResponse
             {
                 UserId = new Guid("A6F29D61-2014-43D1-9EAE-0042781DD703"),
                 UserEmail = "test@email.com",

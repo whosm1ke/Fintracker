@@ -4,7 +4,7 @@ using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Invite.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
-using Fintracker.Application.Responses;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 
 namespace Fintracker.Application.Features.User.Handlers.Commands;
@@ -33,7 +33,11 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
 
         if (!validatedTokenResult.Item1)
         {
-            throw new BadRequestException("Token is not valid");
+            throw new BadRequestException(new ExceptionDetails
+            {
+                ErrorMessage = "Provided token is not valid",
+                PropertyName = nameof(request.Token)
+            });
         }
 
         if (validationResult.IsValid)
@@ -42,7 +46,11 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
             var user = await _userRepository.GetAsync(Guid.Parse(userId!));
 
             if (user is null)
-                throw new LoginException("Invalid credentials to add a wallet");
+                throw new LoginException(new ExceptionDetails()
+                {
+                    ErrorMessage = "Invalid credentials",
+                    PropertyName = nameof(Domain.Entities.User)
+                });
 
             var wallet = await _unitOfWork.WalletRepository.GetAsyncNoTracking(request.WalletId);
 
@@ -56,7 +64,8 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
         }
         else
         {
-            throw new BadRequestException(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
+                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
         }
 
         return response;

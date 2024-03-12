@@ -17,12 +17,17 @@ public class GetWalletByIdRequestHandler : IRequestHandler<GetWalletByIdRequest,
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
+
     public async Task<WalletBaseDTO> Handle(GetWalletByIdRequest request, CancellationToken cancellationToken)
     {
         var wallet = await _unitOfWork.WalletRepository.GetWalletById(request.Id);
 
         if (wallet is null)
-            throw new NotFoundException(nameof(Domain.Entities.Wallet), request.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Id}]",
+                PropertyName = nameof(request.Id)
+            },nameof(Domain.Entities.Wallet));
 
         return _mapper.Map<WalletBaseDTO>(wallet);
     }

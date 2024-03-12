@@ -32,8 +32,11 @@ public class GetTransactionsByWalletIdSortedRequestHandler : IRequestHandler<Get
         CancellationToken cancellationToken)
     {
         if (!_allowedSortColumns.Contains(request.SortBy))
-            throw new BadRequestException(
-                $"Invalid sortBy parameter. Allowed values {string.Join(',', _allowedSortColumns)}");
+            throw new BadRequestException(new ExceptionDetails
+            {
+                PropertyName = nameof(request.SortBy),
+                ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
+            });
 
         var transactions =
             await _unitOfWork.TransactionRepository.GetByWalletIdSortedAsync(request.WalletId, request.SortBy,

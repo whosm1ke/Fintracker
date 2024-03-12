@@ -10,7 +10,7 @@ public class MockCategoryRepository
 {
     public static Mock<ICategoryRepository> GetCategoryRepository()
     {
-        var categories = new List<Category>()
+        var categories = new List<Category>
         {
             new()
             {

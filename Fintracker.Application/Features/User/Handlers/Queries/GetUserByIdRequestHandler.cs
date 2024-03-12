@@ -23,7 +23,11 @@ public class GetUserByIdRequestHandler : IRequestHandler<GetUserByIdRequest, Use
         var user = await _userRepository.GetAsync(request.Id);
 
         if (user is null)
-            throw new NotFoundException(nameof(Domain.Entities.User), request.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Id}]",
+                PropertyName = nameof(request.Id)
+            },nameof(Domain.Entities.User));
 
         return _mapper.Map<UserBaseDTO>(user);
     }

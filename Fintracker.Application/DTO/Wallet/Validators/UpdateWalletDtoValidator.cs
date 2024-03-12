@@ -11,10 +11,10 @@ public class UpdateWalletDtoValidator : AbstractValidator<UpdateWalletDTO>
 
         RuleFor(x => x.Id)
             .NotNull()
-            .WithMessage($"{nameof(UpdateWalletDTO.Id)} must be included")
+            .WithMessage("Must be included")
             .NotEmpty()
-            .WithMessage($"{nameof(UpdateWalletDTO.Id)} can not be blank")
+            .WithMessage("Can not be blank")
             .MustAsync(async (id, _) => await unitOfWork.WalletRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.Wallet)} with id [{x.Id}] does not exists");
+            .WithMessage(x => $"{nameof(Domain.Entities.Wallet)} with id does not exist [{x.Id}]");
     }
 }

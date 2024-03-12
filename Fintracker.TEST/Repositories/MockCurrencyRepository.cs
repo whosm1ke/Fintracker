@@ -9,7 +9,7 @@ public class MockCurrencyRepository
 {
     public static Mock<ICurrencyRepository> GetCurrencyRepository()
     {
-        var currencies = new List<Currency>()
+        var currencies = new List<Currency>
         {
             new()
             {

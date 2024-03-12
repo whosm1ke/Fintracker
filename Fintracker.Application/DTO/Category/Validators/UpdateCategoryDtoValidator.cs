@@ -8,13 +8,13 @@ public class UpdateCategoryDtoValidator : AbstractValidator<UpdateCategoryDTO>
     public UpdateCategoryDtoValidator(IUnitOfWork unitOfWork)
     {
         Include(new CategoryBaseValidator());
-        
+
         RuleFor(x => x.Id)
-            .NotEmpty()
-            .WithMessage($"{nameof(UpdateCategoryDTO.Id)} can not be blank")
             .NotNull()
-            .WithMessage($"{nameof(UpdateCategoryDTO.Id)} must be included")
-            .MustAsync((guid, token) => { return unitOfWork.CategoryRepository.ExistsAsync(guid); })
-            .WithMessage(x => $"Category with id [{x.Id}] does not exists");
+            .WithMessage("Must be included")
+            .NotEmpty()
+            .WithMessage("Can not be blank")
+            .MustAsync(async (guid, _) => await unitOfWork.CategoryRepository.ExistsAsync(guid))
+            .WithMessage(x => $"Category with id does not exists [{x.Id}]");
     }
 }

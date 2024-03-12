@@ -17,12 +17,17 @@ public class GetCurrencyByIdRequestHandler : IRequestHandler<GetCurrencyByIdRequ
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
+
     public async Task<CurrencyDTO> Handle(GetCurrencyByIdRequest request, CancellationToken cancellationToken)
     {
         var currency = await _unitOfWork.CurrencyRepository.GetAsync(request.Id);
 
         if (currency is null)
-            throw new NotFoundException(nameof(Domain.Entities.Currency), request.Id);
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = $"Was not found by id [{request.Id}]",
+                PropertyName = nameof(request.Id)
+            },nameof(Domain.Entities.Currency));
 
         return _mapper.Map<CurrencyDTO>(currency);
     }

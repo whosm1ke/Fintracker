@@ -11,12 +11,12 @@ public class UpdateBudgetDtoValidator : AbstractValidator<UpdateBudgetDTO>
         Include(new BudgetBaseDtoValidator(unitOfWork));
         
         RuleFor(x => x.Id)
-            .NotEmpty()
-            .WithMessage($"{nameof(UpdateBudgetDTO.Id)} can not be blank")
             .NotNull()
-            .WithMessage($"{nameof(UpdateBudgetDTO.Id)} must be included")
-            .MustAsync(async (guid, token) => await unitOfWork.BudgetRepository.ExistsAsync(guid))
-            .WithMessage(x => $"Budget with id [{x.Id}] does not exists");
+            .WithMessage("Must be included")
+            .NotEmpty()
+            .WithMessage("Can not be blank")
+            .MustAsync(async (guid, _) => await unitOfWork.BudgetRepository.ExistsAsync(guid))
+            .WithMessage(x => $"Budget with id does not exist [{x.Id}]");
             
     }
 }
