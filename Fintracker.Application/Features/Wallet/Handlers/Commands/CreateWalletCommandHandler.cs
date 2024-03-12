@@ -38,6 +38,7 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
             response.Success = true;
             response.Message = "Created successfully";
             response.CreatedObject = createdObject;
+            response.Id = wallet.Id;
             await _unitOfWork.SaveAsync();
         }
         else

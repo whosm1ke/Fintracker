@@ -36,25 +36,22 @@ public class
 
         if (validationResult.IsValid)
         {
-            var oldTransaction = _mapper.Map<TransactionBaseDTO>(transaction);
+            var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
             _mapper.Map(request.Transaction, transaction);
-            var newTransaction = _mapper.Map<TransactionBaseDTO>(transaction);
-
-            await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount,
-                oldTransaction.Amount);
-
-            await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount,
-                oldTransaction.Amount);
-
+            
+            await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount);
+            await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
             await _unitOfWork.TransactionRepository.UpdateAsync(transaction);
+            
+            await _unitOfWork.SaveAsync();
+            var newObject = _mapper.Map<TransactionBaseDTO>(transaction);
 
             response.Success = true;
             response.Message = "Updated successfully";
-            response.Old = oldTransaction;
-            response.New = newTransaction;
+            response.Old = oldObject;
+            response.New = newObject;
             response.Id = request.Transaction.Id;
 
-            await _unitOfWork.SaveAsync();
         }
         else
         {

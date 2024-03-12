@@ -27,16 +27,19 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
         var validator = new UpdateWalletDtoValidator(_unitOfWork);
         var validationResult = await validator.ValidateAsync(request.Wallet);
 
-        var wallet = await _unitOfWork.WalletRepository.GetAsync(request.Wallet.Id);
+        var wallet = await _unitOfWork.WalletRepository.GetWalletById(request.Wallet.Id);
 
         if (wallet is null)
             throw new NotFoundException(nameof(Domain.Entities.Wallet), request.Wallet.Id);
-        
+
         if (validationResult.IsValid)
         {
             var oldObject = _mapper.Map<WalletBaseDTO>(wallet);
             _mapper.Map(request.Wallet, wallet);
             await _unitOfWork.WalletRepository.UpdateAsync(wallet);
+            
+            await _unitOfWork.SaveAsync();
+            
             var newObject = _mapper.Map<WalletBaseDTO>(wallet);
 
             response.Success = true;
@@ -45,7 +48,6 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
             response.New = newObject;
             response.Id = request.Wallet.Id;
 
-            await _unitOfWork.SaveAsync();
         }
         else
         {

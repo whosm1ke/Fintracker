@@ -27,13 +27,13 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Delet
         if (user is null)
             throw new NotFoundException(nameof(Domain.Entities.User), request.Id);
         
-        var userBaseDto = _mapper.Map<UserBaseDTO>(user);
+        var deletedObj = _mapper.Map<UserBaseDTO>(user);
         await _userRepository.DeleteAsync(user);
         
         response.Success = true;
         response.Message = "Deleted successfully";
-        response.DeletedObj = userBaseDto;
-        
+        response.DeletedObj = deletedObj;
+        response.Id = deletedObj.Id;
 
         return response;
     }

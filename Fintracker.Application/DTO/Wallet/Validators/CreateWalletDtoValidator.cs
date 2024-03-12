@@ -16,6 +16,6 @@ public class CreateWalletDtoValidator : AbstractValidator<CreateWalletDTO>
             .NotEmpty()
             .WithMessage($"{nameof(CreateWalletDTO.OwnerId)} can not be blank")
             .MustAsync(async (id, _) => await userRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.Wallet)} with id [{x.OwnerId}] does not exists");
+            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id [{x.OwnerId}] does not exists");
     }
 }

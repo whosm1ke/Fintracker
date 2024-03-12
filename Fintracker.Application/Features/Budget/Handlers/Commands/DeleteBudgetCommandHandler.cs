@@ -35,6 +35,7 @@ public class DeleteBudgetCommandHandler : IRequestHandler<DeleteBudgetCommand, D
         response.Success = true;
         response.Message = "Deleted successfully";
         response.DeletedObj = budgetBaseDto;
+        response.Id = budgetBaseDto.Id;
         
         await _unitOfWork.SaveAsync();
 

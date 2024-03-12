@@ -15,7 +15,7 @@ public class UpdateBudgetDtoValidator : AbstractValidator<UpdateBudgetDTO>
             .WithMessage($"{nameof(UpdateBudgetDTO.Id)} can not be blank")
             .NotNull()
             .WithMessage($"{nameof(UpdateBudgetDTO.Id)} must be included")
-            .MustAsync(async (guid, token) => { return await unitOfWork.BudgetRepository.ExistsAsync(guid); })
+            .MustAsync(async (guid, token) => await unitOfWork.BudgetRepository.ExistsAsync(guid))
             .WithMessage(x => $"Budget with id [{x.Id}] does not exists");
             
     }

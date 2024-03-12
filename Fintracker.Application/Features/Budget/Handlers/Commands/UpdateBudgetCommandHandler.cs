@@ -35,11 +35,16 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         if (validationResult.IsValid)
         {
             var oldBudget = _mapper.Map<BudgetBaseDTO>(budget);
+            
+            if (request.Budget.CurrencyId != budget.CurrencyId)
+            {
+                var currency = await _unitOfWork.CurrencyRepository.GetAsync(request.Budget.CurrencyId);
+                budget.Currency = currency ?? budget.Currency;
+            }
             _mapper.Map(request.Budget, budget);
-            var newBudget = _mapper.Map<BudgetBaseDTO>(budget);
+            
             
             var categories = await _unitOfWork.CategoryRepository.GetAllWithIds(request.Budget.CategoryIds);
-            
             budget.Categories = new HashSet<Domain.Entities.Category>();
             foreach (var category in categories)
             {
@@ -47,14 +52,16 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
             }
             
             await _unitOfWork.BudgetRepository.UpdateAsync(budget);
+            await _unitOfWork.SaveAsync();
 
+            var newBudget = _mapper.Map<BudgetBaseDTO>(budget);
+            
             response.Message = "Updated successfully";
             response.Success = true;
             response.Id = budget.Id;
             response.Old = oldBudget;
             response.New = newBudget;
             
-            await _unitOfWork.SaveAsync();
         }
         else
         {

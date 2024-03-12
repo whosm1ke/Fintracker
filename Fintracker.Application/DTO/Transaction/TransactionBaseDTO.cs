@@ -22,5 +22,4 @@ public class TransactionBaseDTO : IBaseDto
     
     public string? Label { get; set; }
 
-    public DateTime CreatedAt { get; set; }
 }

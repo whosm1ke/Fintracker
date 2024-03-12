@@ -52,6 +52,7 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
 
             response.Message = "Added user to wallet successfully";
             response.Success = true;
+            response.Id = user.Id;
         }
         else
         {

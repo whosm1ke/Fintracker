@@ -37,6 +37,7 @@ public class DeleteTransactionCommandHandler : IRequestHandler<DeleteTransaction
         response.Success = true;
         response.Message = "Deleted successfully";
         response.DeletedObj = deletedObj;
+        response.Id = deletedObj.Id;
         await _unitOfWork.SaveAsync();
         
         return response;

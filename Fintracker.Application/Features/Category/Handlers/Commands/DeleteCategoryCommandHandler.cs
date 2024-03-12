@@ -33,6 +33,7 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
         response.DeletedObj = deletedObj;
         response.Message = "Deleted successfully";
         response.Success = true;
+        response.Id = deletedObj.Id;
 
         return response;
     }

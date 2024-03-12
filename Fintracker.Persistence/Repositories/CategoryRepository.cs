@@ -27,6 +27,8 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
 
     public async Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids)
     {
-        return await _db.Categories.Where(c => ids.Contains(c.Id)).ToListAsync();
+        return await _db.Categories
+            .Where(c => ids.Contains(c.Id))
+            .ToListAsync();
     }
 }

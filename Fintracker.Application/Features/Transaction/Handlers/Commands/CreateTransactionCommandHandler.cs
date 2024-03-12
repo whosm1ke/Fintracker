@@ -40,7 +40,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
 
             response.Success = true;
             response.Message = "Created successfully";
-            response.Id = createdObj.Id;
+            response.Id = transaction.Id;
             response.CreatedObject = createdObj;
 
             await _unitOfWork.SaveAsync();

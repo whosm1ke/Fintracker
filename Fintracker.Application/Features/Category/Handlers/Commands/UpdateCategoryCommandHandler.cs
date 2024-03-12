@@ -36,15 +36,17 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         {
             var oldCategory = _mapper.Map<CategoryDTO>(category);
             _mapper.Map(request.Category, category);
-            var newCategory = _mapper.Map<CategoryDTO>(category);
+            
             await _unitOfWork.CategoryRepository.UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
+            
+            var newCategory = _mapper.Map<CategoryDTO>(category);
 
             response.Success = true;
             response.Message = "Updated successfully";
             response.Old = oldCategory;
             response.New = newCategory;
             response.Id = category.Id;
-            await _unitOfWork.SaveAsync();
         }
         else
         {

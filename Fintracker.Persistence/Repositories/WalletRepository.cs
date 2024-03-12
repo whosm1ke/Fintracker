@@ -22,7 +22,7 @@ public class WalletRepository: GenericRepository<Wallet>, IWalletRepository
             .FirstOrDefaultAsync();
     }
 
-  
+   
 
     public async Task<Wallet?> GetWalletWithMembersAsync(Guid id)
     {

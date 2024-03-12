@@ -23,10 +23,10 @@ public class DeleteWalletCommandHandler : IRequestHandler<DeleteWalletCommand, D
     {
         var response = new DeleteCommandResponse<WalletBaseDTO>();
 
-        var wallet = await _unitOfWork.WalletRepository.GetAsync(request.Id);
+        var wallet = await _unitOfWork.WalletRepository.GetWalletById(request.Id);
 
         if (wallet is null)
-            throw new NotFoundException(nameof(Domain.Entities.Wallet), response.Id);
+            throw new NotFoundException(nameof(Domain.Entities.Wallet), request.Id);
 
         var deletedObj = _mapper.Map<WalletBaseDTO>(wallet);
         await _unitOfWork.WalletRepository.DeleteAsync(wallet);
@@ -34,6 +34,7 @@ public class DeleteWalletCommandHandler : IRequestHandler<DeleteWalletCommand, D
         response.Success = true;
         response.Message = "Deleted successfully";
         response.DeletedObj = deletedObj;
+        response.Id = deletedObj.Id;
         
         await _unitOfWork.SaveAsync();
         
