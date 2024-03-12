@@ -23,8 +23,16 @@ public static class BudgetExtensions
 
         // Apply the sorting to the query
         var query = isDescending
-            ? budgets.Where(x => x.UserId == userId).OrderByDescending(lambda)
-            : budgets.Where(x => x.UserId == userId).OrderBy(lambda);
+            ? budgets
+                .Include(x => x.Categories)
+                .Include(x => x.Currency)
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(lambda)
+            : budgets
+                .Include(x => x.Categories)
+                .Include(x => x.Currency)
+                .Where(x => x.UserId == userId)
+                .OrderBy(lambda);
 
         return await query.ToListAsync();
     }
@@ -46,8 +54,16 @@ public static class BudgetExtensions
 
         // Apply the sorting to the query
         var query = isDescending
-            ? budgets.Where(x => x.WalletId == walletId).OrderByDescending(lambda)
-            : budgets.Where(x => x.WalletId == walletId).OrderBy(lambda);
+            ? budgets
+                .Include(x => x.Categories)
+                .Include(x => x.Currency)
+                .Where(x => x.WalletId == walletId)
+                .OrderByDescending(lambda)
+            : budgets
+                .Include(x => x.Categories)
+                .Include(x => x.Currency)
+                .Where(x => x.WalletId == walletId)
+                .OrderBy(lambda);
 
         return await query.ToListAsync();
     }

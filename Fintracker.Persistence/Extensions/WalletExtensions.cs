@@ -23,12 +23,17 @@ public static class WalletExtensions
 
         // Apply the sorting to the query
         var query = isDescending
-            ? wallets.Where(x => x.OwnerId == ownerId).OrderByDescending(lambda)
-            : wallets.Where(x => x.OwnerId == ownerId).OrderBy(lambda);
+            ? wallets
+                .Include(x => x.Owner)
+                .Include(x => x.Currency)
+                .Where(x => x.OwnerId == ownerId)
+                .OrderByDescending(lambda)
+            : wallets
+                .Include(x => x.Owner)
+                .Include(x => x.Currency)
+                .Where(x => x.OwnerId == ownerId)
+                .OrderBy(lambda);
 
         return await query.ToListAsync();
     }
-    
-    
-   
 }

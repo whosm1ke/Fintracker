@@ -27,6 +27,8 @@ public class WalletRepository: GenericRepository<Wallet>, IWalletRepository
     public async Task<Wallet?> GetWalletWithMembersAsync(Guid id)
     {
         return await _db.Wallets
+            .Include(x => x.Owner)
+            .Include(x => x.Currency)
             .Include(x => x.Users)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
@@ -35,6 +37,8 @@ public class WalletRepository: GenericRepository<Wallet>, IWalletRepository
     public async Task<Wallet?> GetWalletWithTransactionsAsync(Guid id)
     {
         return await _db.Wallets
+            .Include(x => x.Owner)
+            .Include(x => x.Currency)
             .Include(x => x.Transactions)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
@@ -43,6 +47,8 @@ public class WalletRepository: GenericRepository<Wallet>, IWalletRepository
     public async Task<Wallet?> GetWalletWithBudgetsAsync(Guid id)
     {
         return await _db.Wallets
+            .Include(x => x.Owner)
+            .Include(x => x.Currency)
             .Include(x => x.Budgets)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
@@ -51,6 +57,8 @@ public class WalletRepository: GenericRepository<Wallet>, IWalletRepository
     public async Task<IReadOnlyList<Wallet>> GetByOwnerIdAsync(Guid ownerId)
     {
         return await _db.Wallets
+            .Include(x => x.Owner)
+            .Include(x => x.Currency)
             .Where(x => x.OwnerId == ownerId)
             .ToListAsync();
     }

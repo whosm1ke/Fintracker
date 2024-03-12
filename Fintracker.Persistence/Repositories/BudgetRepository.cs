@@ -16,7 +16,10 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
 
     public async Task<Budget?> GetBudgetWithWalletAsync(Guid id)
     {
-        return await _db.Budgets.Include(x => x.Wallet)
+        return await _db.Budgets
+            .Include(x => x.Wallet)
+            .Include(x => x.Categories)
+            .Include(x => x.Currency)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
@@ -32,14 +35,20 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
 
     public async Task<Budget?> GetBudgetWithUserAsync(Guid id)
     {
-        return await _db.Budgets.Include(x => x.User)
+        return await _db.Budgets
+            .Include(x => x.User)
+            .Include(x => x.Categories)
+            .Include(x => x.Currency)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
 
     public async Task<IReadOnlyList<Budget>> GetBudgetsByCategoryId(Guid categoryId)
     {
-        return await _db.Budgets.Where(x => x.Categories
+        return await _db.Budgets
+            .Include(x => x.Categories)
+            .Include(x => x.Currency)
+            .Where(x => x.Categories
                                                     .Any(x => x.Id == categoryId))
                                 .ToListAsync();
     }
@@ -47,6 +56,8 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
     public async Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId)
     {
         return await _db.Budgets
+            .Include(x => x.Categories)
+            .Include(x => x.Currency)
             .Where(x => x.UserId == userId)
             .ToListAsync();
     }
@@ -54,6 +65,8 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
     public async Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId)
     {
         return await _db.Budgets
+            .Include(x => x.Categories)
+            .Include(x => x.Currency)
             .Where(x => x.WalletId == walletId)
             .ToListAsync();
     }

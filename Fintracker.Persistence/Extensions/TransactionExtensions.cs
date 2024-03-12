@@ -23,12 +23,20 @@ public static class TransactionExtensions
 
         // Apply the sorting to the query
         var query = isDescending
-            ? transactions.Where(x => x.UserId == userId).OrderByDescending(lambda)
-            : transactions.Where(x => x.UserId == userId).OrderBy(lambda);
+            ? transactions
+                .Include(x => x.Category)
+                .Include(x => x.Currency)
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(lambda)
+            : transactions
+                .Include(x => x.Category)
+                .Include(x => x.Currency)
+                .Where(x => x.UserId == userId)
+                .OrderBy(lambda);
 
         return await query.ToListAsync();
     }
-    
+
     public static async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(
         this DbSet<Transaction> transactions,
         Guid walletId,
@@ -46,12 +54,20 @@ public static class TransactionExtensions
 
         // Apply the sorting to the query
         var query = isDescending
-            ? transactions.Where(x => x.WalletId == walletId).OrderByDescending(lambda)
-            : transactions.Where(x => x.WalletId == walletId).OrderBy(lambda);
+            ? transactions
+                .Include(x => x.Category)
+                .Include(x => x.Currency)
+                .Where(x => x.WalletId == walletId)
+                .OrderByDescending(lambda)
+            : transactions
+                .Include(x => x.Category)
+                .Include(x => x.Currency)
+                .Where(x => x.WalletId == walletId)
+                .OrderBy(lambda);
 
         return await query.ToListAsync();
     }
-    
+
     public static async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(
         this DbSet<Transaction> transactions,
         Guid categoryId,
@@ -69,8 +85,16 @@ public static class TransactionExtensions
 
         // Apply the sorting to the query
         var query = isDescending
-            ? transactions.Where(x => x.CategoryId == categoryId).OrderByDescending(lambda)
-            : transactions.Where(x => x.CategoryId == categoryId).OrderBy(lambda);
+            ? transactions
+                .Include(x => x.Category)
+                .Include(x => x.Currency)
+                .Where(x => x.CategoryId == categoryId)
+                .OrderByDescending(lambda)
+            : transactions
+                .Include(x => x.Category)
+                .Include(x => x.Currency)
+                .Where(x => x.CategoryId == categoryId)
+                .OrderBy(lambda);
 
         return await query.ToListAsync();
     }
