@@ -6,7 +6,7 @@ public interface IEntity<Tid>
 
     public DateTime CreatedAt { get; set; }
     
-    public string CreatedBy { get; set; }
+    public string CreatedBy { get; set; } 
     
     public DateTime ModifiedAt { get; set; }
 

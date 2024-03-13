@@ -85,13 +85,13 @@ public class MockWalletRepository
                     {
                         Id = new Guid("438A3485-E4F0-4C79-971C-DC07FB92BAD8"),
                         Name = "Budget 1",
-                        Categories = null
+                        Categories = null!
                     },
                     new()
                     {
                         Id = new Guid("B036C34F-FD3F-484C-9CA2-7E603E5E076A"),
                         Name = "Budget 2",
-                        Categories = null
+                        Categories = null!
                     }
                 }
             }
@@ -102,14 +102,14 @@ public class MockWalletRepository
         //GenericRepository
 
         mock.Setup(x => x.AddAsync(It.IsAny<Wallet>()))
-            .Returns(async (Wallet b) =>
+            .Returns((Wallet b) =>
             {
                 wallets.Add(b);
                 return b;
             });
 
         mock.Setup(x => x.UpdateAsync(It.IsAny<Wallet>()))
-            .Returns(async (Wallet b) =>
+            .Returns((Wallet b) =>
             {
                 if (wallets.Find(x => x.Id == b.Id) != null)
                 {
@@ -119,10 +119,10 @@ public class MockWalletRepository
             });
 
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
-            .Returns(async (Guid id) => { return wallets.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return wallets.Find(x => x.Id == id); });
 
         mock.Setup(x => x.GetAsyncNoTracking(It.IsAny<Guid>()))
-            .Returns(async (Guid id) => { return wallets.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return wallets.Find(x => x.Id == id); });
 
         mock.Setup(x => x.GetAllAsync())
             .ReturnsAsync(wallets);
@@ -131,7 +131,7 @@ public class MockWalletRepository
             .ReturnsAsync(wallets);
 
         mock.Setup(x => x.DeleteAsync(It.IsAny<Wallet>()))
-            .Returns(async (Wallet b) =>
+            .Returns((Wallet b) =>
             {
                 if (wallets.Find(x => x.Id == b.Id) != null)
                 {
@@ -141,7 +141,7 @@ public class MockWalletRepository
             });
 
         mock.Setup(x => x.ExistsAsync(It.IsAny<Guid>()))
-            .Returns(async (Guid id) => { return wallets.Find(x => x.Id == id) != null; });
+            .Returns((Guid id) => { return wallets.Find(x => x.Id == id) != null; });
 
         //WalletRepository
 

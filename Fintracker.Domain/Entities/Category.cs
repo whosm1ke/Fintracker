@@ -9,17 +9,17 @@ public class Category : IEntity<Guid>
     
     public DateTime CreatedAt { get; set; }
     
-    public string CreatedBy { get; set; }
+    public string CreatedBy { get; set; } = default!;
     
     public DateTime ModifiedAt { get; set; }
     
-    public string ModifiedBy { get; set; }
+    public string ModifiedBy { get; set; } = default!;
 
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
     public CategoryType Type { get; set; }
 
-    public string Image { get; set; }
+    public string Image { get; set; } = default!;
 
-    public string IconColour { get; set; }
+    public string IconColour { get; set; } = default!;
 }

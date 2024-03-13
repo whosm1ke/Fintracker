@@ -20,9 +20,9 @@ public class User: IdentityUser<Guid>, IEntity<Guid>
 
     public UserDetails? UserDetails { get; set; }
     public DateTime CreatedAt { get; set; }
-    public string CreatedBy { get; set; }
+    public string CreatedBy { get; set; } = default!;
     public DateTime ModifiedAt { get; set; }
-    public string ModifiedBy { get; set; }
+    public string ModifiedBy { get; set; } = default!;
 }
 
 public class UserDetails

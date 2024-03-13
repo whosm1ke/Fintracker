@@ -98,14 +98,14 @@ public class MockTransactionRepository
         //GenericRepository
 
         mock.Setup(x => x.AddAsync(It.IsAny<Transaction>()))
-            .Returns(async (Transaction b) =>
+            .Returns((Transaction b) =>
             {
                 transactions.Add(b);
                 return b;
             });
 
         mock.Setup(x => x.UpdateAsync(It.IsAny<Transaction>()))
-            .Returns(async (Transaction b) =>
+            .Returns((Transaction b) =>
             {
                 if (transactions.Find(x => x.Id == b.Id) != null)
                 {
@@ -115,19 +115,19 @@ public class MockTransactionRepository
             });
 
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
-            .Returns(async (Guid id) => { return transactions.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return transactions.Find(x => x.Id == id); });
 
         mock.Setup(x => x.GetAsyncNoTracking(It.IsAny<Guid>()))
-            .Returns(async (Guid id) => { return transactions.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return transactions.Find(x => x.Id == id); });
 
         mock.Setup(x => x.GetAllAsync())
-            .Returns(async () => { return transactions; });
+            .Returns(() => { return transactions; });
 
         mock.Setup(x => x.GetAllAsyncNoTracking())
-            .Returns(async () => { return transactions; });
+            .Returns(() => { return transactions; });
 
         mock.Setup(x => x.DeleteAsync(It.IsAny<Transaction>()))
-            .Returns(async (Transaction b) =>
+            .Returns((Transaction b) =>
             {
                 if (transactions.Find(x => x.Id == b.Id) != null)
                 {
@@ -137,7 +137,7 @@ public class MockTransactionRepository
             });
 
         mock.Setup(x => x.ExistsAsync(It.IsAny<Guid>()))
-            .Returns(async (Guid id) => { return transactions.Find(x => x.Id == id) != null; });
+            .Returns((Guid id) => { return transactions.Find(x => x.Id == id) != null; });
 
         //TransactionRepository
 
@@ -184,7 +184,7 @@ public class MockTransactionRepository
             .Returns((Guid id) => Task.FromResult(transactions.FirstOrDefault(x => x.Id == id)));
         
         mock.Setup(x => x.GetTransactionAsync(It.IsAny<Guid>()))
-            .Returns(async (Guid id) => { return transactions.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return transactions.Find(x => x.Id == id); });
         
         return mock;
     }

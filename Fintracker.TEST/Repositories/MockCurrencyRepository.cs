@@ -27,13 +27,13 @@ public class MockCurrencyRepository
         var mock = new Mock<ICurrencyRepository>();
 
         mock.Setup(x => x.ExistsAsync(It.IsAny<Guid>()))
-            .Returns(async (Guid id) =>
+            .Returns((Guid id) =>
             {
                 return currencies.Find(c => c.Id == id) != null;
             });
 
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
-            .Returns(async (Guid id) =>
+            .Returns((Guid id) =>
             {
                 return currencies.FirstOrDefault(x => x.Id == id);
             });

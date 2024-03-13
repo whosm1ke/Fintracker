@@ -48,16 +48,16 @@ public class MockCategoryRepository
         var mock = new Mock<ICategoryRepository>();
     //Generic Repository
         mock.Setup(x => x.ExistsAsync(It.IsAny<Guid>()))
-            .Returns(async (Guid id) =>
+            .Returns((Guid id) =>
             {
                 return categories.Find(c => c.Id == id) != null;
             });
         
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
-            .Returns(async (Guid id) => { return categories.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return categories.Find(x => x.Id == id); });
         
         mock.Setup(x => x.GetAsyncNoTracking(It.IsAny<Guid>()))
-            .Returns(async (Guid id) => { return categories.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return categories.Find(x => x.Id == id); });
 
         mock.Setup(x => x.GetAllAsyncNoTracking())
             .ReturnsAsync(categories);
@@ -66,14 +66,14 @@ public class MockCategoryRepository
             .ReturnsAsync(categories);
 
         mock.Setup(x => x.AddAsync(It.IsAny<Category>()))
-            .Returns(async (Category c) =>
+            .Returns((Category c) =>
             {
                 categories.Add(c);
                 return c;
             });
 
         mock.Setup(x => x.UpdateAsync(It.IsAny<Category>()))
-            .Returns(async (Category c) =>
+            .Returns((Category c) =>
             {
                 if (categories.Find(x => x.Id == c.Id) != null)
                 {
@@ -83,7 +83,7 @@ public class MockCategoryRepository
             });
         
         mock.Setup(x => x.DeleteAsync(It.IsAny<Category>()))
-            .Returns(async (Category c) =>
+            .Returns((Category c) =>
             {
                 if (categories.Find(x => x.Id == c.Id) != null)
                 {
@@ -94,7 +94,7 @@ public class MockCategoryRepository
         
     //ICategoryRepository
     mock.Setup(x => x.GetByTypeAsync(It.IsAny<CategoryType>()))
-        .Returns(async (CategoryType type) =>
+        .Returns((CategoryType type) =>
         {
             return categories.Where(x => x.Type == type).ToList();
         });
