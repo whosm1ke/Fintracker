@@ -1,23 +1,24 @@
 ﻿using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Features.Budget.Requests.Commands;
+using Fintracker.Application.Helpers;
 using FluentValidation;
 
 namespace Fintracker.Application.DTO.Budget.Validators;
 
-public class CreateBudgetDtoValidator : AbstractValidator<CreateBudgetDTO>
+public class CreateBudgetDtoValidator : AbstractValidator<CreateBudgetCommand>
 {
 
     public CreateBudgetDtoValidator(IUnitOfWork unitOfWork, IUserRepository userRepository)
     {
+        RuleFor(x => x.Budget)
+            .SetValidator(new BudgetBaseDtoValidator(unitOfWork))
+            .OverridePropertyName(string.Empty);
         
-        Include(new BudgetBaseDtoValidator(unitOfWork));
-        
-        RuleFor(x => x.UserId)
-            .NotNull()
-            .WithMessage("Must be included")
-            .NotEmpty()
-            .WithMessage("Can not be blank")
+        RuleFor(x => x.Budget.UserId)
+            .ApplyCommonRules()
+            .OverridePropertyName(nameof(CreateBudgetCommand.Budget.UserId))
             .MustAsync(async (guid, _) => await userRepository.ExistsAsync(guid))
-            .WithMessage(x => $"Does not exist [{x.UserId}]");
+            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.Budget.UserId}]");
     }
 }

@@ -2,8 +2,6 @@
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Transaction;
-using Fintracker.Application.DTO.Transaction.Validators;
-using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
@@ -29,31 +27,22 @@ public class
         CancellationToken cancellationToken)
     {
         var response = new CreateCommandResponse<TransactionBaseDTO>();
-        var validator = new CreateTransactionDtoValidator(_unitOfWork, _userRepository);
-        var validationResult = await validator.ValidateAsync(request.Transaction);
 
-        if (validationResult.IsValid)
-        {
-            var transaction = _mapper.Map<Domain.Entities.Transaction>(request.Transaction);
-            await _unitOfWork.TransactionRepository.AddAsync(transaction);
+        var transaction = _mapper.Map<Domain.Entities.Transaction>(request.Transaction);
+        await _unitOfWork.TransactionRepository.AddAsync(transaction);
 
-            var createdObj = _mapper.Map<TransactionBaseDTO>(transaction);
+        var createdObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
-            await DecreaseBalanceInWallet(transaction.WalletId, transaction.Amount);
-            await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount);
+        await DecreaseBalanceInWallet(transaction.WalletId, transaction.Amount);
+        await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount);
 
-            response.Success = true;
-            response.Message = "Created successfully";
-            response.Id = transaction.Id;
-            response.CreatedObject = createdObj;
+        response.Success = true;
+        response.Message = "Created successfully";
+        response.Id = transaction.Id;
+        response.CreatedObject = createdObj;
 
-            await _unitOfWork.SaveAsync();
-        }
-        else
-        {
-            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
-                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
-        }
+        await _unitOfWork.SaveAsync();
+
 
         return response;
     }

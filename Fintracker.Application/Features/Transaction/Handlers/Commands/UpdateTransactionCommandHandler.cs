@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Transaction;
-using Fintracker.Application.DTO.Transaction.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
@@ -26,8 +25,6 @@ public class
         CancellationToken cancellationToken)
     {
         var response = new UpdateCommandResponse<TransactionBaseDTO>();
-        var validator = new UpdateTransactionDtoValidator(_unitOfWork);
-        var validationResult = await validator.ValidateAsync(request.Transaction);
 
         var transaction = await _unitOfWork.TransactionRepository.GetTransactionWithWalletAsync(request.Transaction.Id);
 
@@ -36,31 +33,25 @@ public class
             {
                 ErrorMessage = $"Was not found by id [{request.Transaction.Id}]",
                 PropertyName = nameof(request.Transaction.Id)
-            },nameof(Domain.Entities.Transaction));
+            }, nameof(Domain.Entities.Transaction));
 
-        if (validationResult.IsValid)
-        {
-            var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
-            _mapper.Map(request.Transaction, transaction);
 
-            await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount);
-            await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
-            await _unitOfWork.TransactionRepository.UpdateAsync(transaction);
+        var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
+        _mapper.Map(request.Transaction, transaction);
 
-            await _unitOfWork.SaveAsync();
-            var newObject = _mapper.Map<TransactionBaseDTO>(transaction);
+        await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount);
+        await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
+        await _unitOfWork.TransactionRepository.UpdateAsync(transaction);
 
-            response.Success = true;
-            response.Message = "Updated successfully";
-            response.Old = oldObject;
-            response.New = newObject;
-            response.Id = request.Transaction.Id;
-        }
-        else
-        {
-            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
-                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
-        }
+        await _unitOfWork.SaveAsync();
+        var newObject = _mapper.Map<TransactionBaseDTO>(transaction);
+
+        response.Success = true;
+        response.Message = "Updated successfully";
+        response.Old = oldObject;
+        response.New = newObject;
+        response.Id = request.Transaction.Id;
+
 
         return response;
     }

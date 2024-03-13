@@ -2,8 +2,6 @@
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Wallet;
-using Fintracker.Application.DTO.Wallet.Validators;
-using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Wallet.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
@@ -27,27 +25,19 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
         CancellationToken cancellationToken)
     {
         var response = new CreateCommandResponse<WalletBaseDTO>();
-        var validator = new CreateWalletDtoValidator(_unitOfWork, _userRepository);
-        var validationResult = await validator.ValidateAsync(request.Wallet);
 
-        if (validationResult.IsValid)
-        {
-            var wallet = _mapper.Map<Domain.Entities.Wallet>(request.Wallet);
 
-            await _unitOfWork.WalletRepository.AddAsync(wallet);
-            var createdObject = _mapper.Map<WalletBaseDTO>(wallet);
+        var wallet = _mapper.Map<Domain.Entities.Wallet>(request.Wallet);
 
-            response.Success = true;
-            response.Message = "Created successfully";
-            response.CreatedObject = createdObject;
-            response.Id = wallet.Id;
-            await _unitOfWork.SaveAsync();
-        }
-        else
-        {
-            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
-                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
-        }
+        await _unitOfWork.WalletRepository.AddAsync(wallet);
+        var createdObject = _mapper.Map<WalletBaseDTO>(wallet);
+
+        response.Success = true;
+        response.Message = "Created successfully";
+        response.CreatedObject = createdObject;
+        response.Id = wallet.Id;
+        await _unitOfWork.SaveAsync();
+
 
         return response;
     }

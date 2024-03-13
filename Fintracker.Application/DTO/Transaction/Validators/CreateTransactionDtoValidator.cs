@@ -1,29 +1,30 @@
 ﻿using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Features.Transaction.Requests.Commands;
+using Fintracker.Application.Helpers;
 using FluentValidation;
 
 namespace Fintracker.Application.DTO.Transaction.Validators;
 
-public class CreateTransactionDtoValidator : AbstractValidator<CreateTransactionDTO>
+public class CreateTransactionDtoValidator : AbstractValidator<CreateTransactionCommand>
 {
     public CreateTransactionDtoValidator(IUnitOfWork unitOfWork, IUserRepository userRepository)
     {
-        Include(new TransactionBaseDtoValidator(unitOfWork));
+        RuleFor(x => x.Transaction)
+            .SetValidator(new TransactionBaseDtoValidator(unitOfWork))
+            .OverridePropertyName(string.Empty);
 
-        RuleFor(x => x.UserId)
-            .NotNull()
-            .WithMessage("Must be included")
-            .NotEmpty()
-            .WithMessage("Can not be blank")
+
+        RuleFor(x => x.Transaction.UserId)
+            .ApplyCommonRules()
+            .OverridePropertyName(nameof(CreateTransactionCommand.Transaction.UserId))
             .MustAsync(async (id, _) => await userRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.UserId}]");
+            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.Transaction.UserId}]");
 
-        RuleFor(x => x.WalletId)
-            .NotNull()
-            .WithMessage("Must be included")
-            .NotEmpty()
-            .WithMessage("Can not be blank")
+        RuleFor(x => x.Transaction.WalletId)
+            .ApplyCommonRules()
+            .OverridePropertyName(nameof(CreateTransactionCommand.Transaction.WalletId))
             .MustAsync(async (id, _) => await unitOfWork.WalletRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.Wallet)} with id does not exist [{x.WalletId}]");
+            .WithMessage(x => $"{nameof(Domain.Entities.Wallet)} with id does not exist [{x.Transaction.WalletId}]");
     }
 }

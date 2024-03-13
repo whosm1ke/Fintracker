@@ -1,20 +1,22 @@
 ﻿using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Features.Category.Requests.Commands;
+using Fintracker.Application.Helpers;
 using FluentValidation;
 
 namespace Fintracker.Application.DTO.Category.Validators;
 
-public class UpdateCategoryDtoValidator : AbstractValidator<UpdateCategoryDTO>
+public class UpdateCategoryDtoValidator : AbstractValidator<UpdateCategoryCommand>
 {
     public UpdateCategoryDtoValidator(IUnitOfWork unitOfWork)
     {
-        Include(new CategoryBaseValidator());
+        RuleFor(x => x.Category)
+            .SetValidator(new CategoryBaseValidator())
+            .OverridePropertyName(string.Empty);
 
-        RuleFor(x => x.Id)
-            .NotNull()
-            .WithMessage("Must be included")
-            .NotEmpty()
-            .WithMessage("Can not be blank")
+        RuleFor(x => x.Category.Id)
+            .ApplyCommonRules()
+            .OverridePropertyName(nameof(UpdateCategoryCommand.Category.Id))
             .MustAsync(async (guid, _) => await unitOfWork.CategoryRepository.ExistsAsync(guid))
-            .WithMessage(x => $"Category with id does not exists [{x.Id}]");
+            .WithMessage(x => $"Category with id does not exists [{x.Category.Id}]");
     }
 }

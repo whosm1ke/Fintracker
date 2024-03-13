@@ -1,5 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Fintracker.Domain.Entities;
+﻿using Fintracker.Domain.Entities;
 
 namespace Fintracker.Application.Contracts.Identity;
 

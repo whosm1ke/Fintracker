@@ -42,6 +42,13 @@
   &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\fluentemail.core\3.0.2" Loaded="True" /&gt;&#xD;
   &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\fluentemail.smtp\3.0.2" Loaded="True" /&gt;&#xD;
   &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\microsoft.aspnetcore.app\2.1.1" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\serilog\2.12.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\serilog\3.1.1" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\mediatr.aspnetcore.endpoints\3.2.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\mediatr\11.0.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\mediatr\12.1.1" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\mediatr\12.2.0" Loaded="True" /&gt;&#xD;
+  &lt;PhysicalFolder Path="C:\Users\cherm\.nuget\packages\mediatr\9.0.0" Loaded="True" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=20818874_002D8aea_002D4f4f_002D94ce_002D274976ee04c5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddAsync_Should_Return_Added_Object #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\cherm\OneDrive\Рабочий стол\Fintracker_Project\Fintracker\Fintracker.TEST" Presentation="&amp;lt;test&amp;gt;\&amp;lt;Fintracker.TEST&amp;gt;" /&gt;&#xD;

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.DTO.User;
-using Fintracker.Application.DTO.User.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
@@ -23,9 +22,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
     public async Task<UpdateCommandResponse<UserBaseDTO>> Handle(UpdateUserCommand request,
         CancellationToken cancellationToken)
     {
-        var validator = new UpdateUserDtoValidator(_userRepository);
         var response = new UpdateCommandResponse<UserBaseDTO>();
-        var validationResult = await validator.ValidateAsync(request.User);
 
         var user = await _userRepository.GetAsync(request.User.Id);
 
@@ -34,27 +31,21 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
             {
                 ErrorMessage = $"Was not found by id [{request.User.Id}]",
                 PropertyName = nameof(request.User.Id)
-            },nameof(Domain.Entities.User));
+            }, nameof(Domain.Entities.User));
 
-        if (validationResult.IsValid)
-        {
-            var oldUser = _mapper.Map<UserBaseDTO>(user);
-            _mapper.Map(request.User, user);
-            var newUser = _mapper.Map<UserBaseDTO>(user);
 
-            await _userRepository.UpdateAsync(user);
+        var oldUser = _mapper.Map<UserBaseDTO>(user);
+        _mapper.Map(request.User, user);
+        var newUser = _mapper.Map<UserBaseDTO>(user);
 
-            response.Message = "Updated successfully";
-            response.Success = true;
-            response.Id = user.Id;
-            response.Old = oldUser;
-            response.New = newUser;
-        }
-        else
-        {
-            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
-                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
-        }
+        await _userRepository.UpdateAsync(user);
+
+        response.Message = "Updated successfully";
+        response.Success = true;
+        response.Id = user.Id;
+        response.Old = oldUser;
+        response.New = newUser;
+
 
         return response;
     }

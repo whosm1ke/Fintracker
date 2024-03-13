@@ -33,7 +33,6 @@ public class AccountController : ControllerBase
     public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest register)
     {
         var response = await _accountService.Register(register);
-
         return Ok(response);
     }
 

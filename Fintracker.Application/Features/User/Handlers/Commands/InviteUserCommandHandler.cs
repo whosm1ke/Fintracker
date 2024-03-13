@@ -2,7 +2,6 @@
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
-using Fintracker.Application.DTO.Invite.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Mail;
@@ -33,62 +32,53 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
 
     public async Task<Unit> Handle(InviteUserCommand request, CancellationToken cancellationToken)
     {
-        var validator = new InviteUserValidator(_userRepository, _unitOfWork);
-        var validationResult = await validator.ValidateAsync(request);
-
-        if (validationResult.IsValid)
+        var inviteEmailModel = new InviteEmailModel
         {
-            var inviteEmailModel = new InviteEmailModel
-            {
-                WhoInvited = request.WhoInvited ?? "User",
-                TempPass = _tempPass
-            };
+            WhoInvited = request.WhoInvited ?? "User",
+            TempPass = _tempPass
+        };
 
-            var isUserExists = await _userRepository.ExistsAsync(request.UserEmail);
-            var user = new Domain.Entities.User();
+        var isUserExists = await _userRepository.ExistsAsync(request.UserEmail);
+        var user = new Domain.Entities.User();
 
-            if (!isUserExists)
-            {
-                user = await _userRepository.RegisterUserWithTemporaryPassword(request.UserEmail, Guid.NewGuid(),
-                    _tempPass);
-                var token = await _tokenService.CreateToken(user);
-                inviteEmailModel.Ref =
-                    $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
-            }
-            else
-            {
-                var token =
-                    await _tokenService.CreateToken(
-                        (await _userRepository.GetAsNoTrackingAsync(request.UserEmail))!);
+        if (!isUserExists)
+        {
+            user = await _userRepository.RegisterUserWithTemporaryPassword(request.UserEmail, Guid.NewGuid(),
+                _tempPass);
+            var token = await _tokenService.CreateToken(user);
+            inviteEmailModel.Ref =
+                $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
+        }
+        else
+        {
+            var token =
+                await _tokenService.CreateToken(
+                    (await _userRepository.GetAsNoTrackingAsync(request.UserEmail))!);
 
-                inviteEmailModel.Ref =
-                    $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
-            }
-
-            var isEmailSent = await _emailSender.SendEmail(new EmailModel
-            {
-                Email = request.UserEmail,
-                Subject = "Invitation to a new wallet",
-                HtmlPath = isUserExists ? "inviteForm.html" : "inviteFormWithNewUser.html",
-                Name = "",
-                PlainMessage = ""
-            }, inviteEmailModel);
-
-            if (!isEmailSent)
-            {
-                await _userRepository.DeleteAsync(user);
-                throw new BadRequestException(new ExceptionDetails()
-                {
-                    PropertyName = "Email",
-                    ErrorMessage = $"Was not sent to {request.UserEmail}. Check spelling"
-                });
-            }
-
-            return Unit.Value;
+            inviteEmailModel.Ref =
+                $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
         }
 
-        throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
-            { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
+        var isEmailSent = await _emailSender.SendEmail(new EmailModel
+        {
+            Email = request.UserEmail,
+            Subject = "Invitation to a new wallet",
+            HtmlPath = isUserExists ? "inviteForm.html" : "inviteFormWithNewUser.html",
+            Name = "",
+            PlainMessage = ""
+        }, inviteEmailModel);
+
+        if (!isEmailSent)
+        {
+            await _userRepository.DeleteAsync(user);
+            throw new BadRequestException(new ExceptionDetails()
+            {
+                PropertyName = "Email",
+                ErrorMessage = $"Was not sent to {request.UserEmail}. Check spelling"
+            });
+        }
+
+        return Unit.Value;
     }
 
 

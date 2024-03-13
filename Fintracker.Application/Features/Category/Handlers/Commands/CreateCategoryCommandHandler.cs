@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Category;
-using Fintracker.Application.DTO.Category.Validators;
-using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
@@ -24,27 +22,18 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         CancellationToken cancellationToken)
     {
         var response = new CreateCommandResponse<CategoryDTO>();
-        var validator = new CreateCategoryDtoValidator();
-        var validationResult = validator.Validate(request.Category);
 
-        if (validationResult.IsValid)
-        {
-            var categoryEntity = _mapper.Map<Domain.Entities.Category>(request.Category);
-            await _unitOfWork.CategoryRepository.AddAsync(categoryEntity);
-            var categoryDto = _mapper.Map<CategoryDTO>(categoryEntity);
+        var categoryEntity = _mapper.Map<Domain.Entities.Category>(request.Category);
+        await _unitOfWork.CategoryRepository.AddAsync(categoryEntity);
+        var categoryDto = _mapper.Map<CategoryDTO>(categoryEntity);
 
-            response.Success = true;
-            response.Message = "Created successfully";
-            response.Id = categoryEntity.Id;
-            response.CreatedObject = categoryDto;
+        response.Success = true;
+        response.Message = "Created successfully";
+        response.Id = categoryEntity.Id;
+        response.CreatedObject = categoryDto;
 
-            await _unitOfWork.SaveAsync();
-        }
-        else
-        {
-            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
-                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
-        }
+        await _unitOfWork.SaveAsync();
+
 
         return response;
     }

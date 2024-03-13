@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Wallet;
-using Fintracker.Application.DTO.Wallet.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Wallet.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
@@ -24,8 +23,6 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
         CancellationToken cancellationToken)
     {
         var response = new UpdateCommandResponse<WalletBaseDTO>();
-        var validator = new UpdateWalletDtoValidator(_unitOfWork);
-        var validationResult = await validator.ValidateAsync(request.Wallet);
 
         var wallet = await _unitOfWork.WalletRepository.GetWalletById(request.Wallet.Id);
 
@@ -34,29 +31,23 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
             {
                 ErrorMessage = $"Was not found by id [{request.Wallet.Id}]",
                 PropertyName = nameof(request.Wallet.Id)
-            },nameof(Domain.Entities.Wallet));
+            }, nameof(Domain.Entities.Wallet));
 
-        if (validationResult.IsValid)
-        {
-            var oldObject = _mapper.Map<WalletBaseDTO>(wallet);
-            _mapper.Map(request.Wallet, wallet);
-            await _unitOfWork.WalletRepository.UpdateAsync(wallet);
 
-            await _unitOfWork.SaveAsync();
+        var oldObject = _mapper.Map<WalletBaseDTO>(wallet);
+        _mapper.Map(request.Wallet, wallet);
+        await _unitOfWork.WalletRepository.UpdateAsync(wallet);
 
-            var newObject = _mapper.Map<WalletBaseDTO>(wallet);
+        await _unitOfWork.SaveAsync();
 
-            response.Success = true;
-            response.Message = "Updated successfully";
-            response.Old = oldObject;
-            response.New = newObject;
-            response.Id = request.Wallet.Id;
-        }
-        else
-        {
-            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
-                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
-        }
+        var newObject = _mapper.Map<WalletBaseDTO>(wallet);
+
+        response.Success = true;
+        response.Message = "Updated successfully";
+        response.Old = oldObject;
+        response.New = newObject;
+        response.Id = request.Wallet.Id;
+
 
         return response;
     }

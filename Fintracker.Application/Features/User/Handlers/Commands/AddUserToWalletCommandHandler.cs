@@ -1,7 +1,5 @@
-﻿using Fintracker.Application.BusinessRuleConstraints;
-using Fintracker.Application.Contracts.Identity;
+﻿using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
-using Fintracker.Application.DTO.Invite.Validators;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
@@ -25,9 +23,7 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
 
     public async Task<BaseCommandResponse> Handle(AddUserToWalletCommand request, CancellationToken cancellationToken)
     {
-        var validator = new AddUserToWalletValidator(_userRepository, _unitOfWork);
         var response = new BaseCommandResponse();
-        var validationResult = await validator.ValidateAsync(request);
 
         var validatedTokenResult = await _tokenService.ValidateToken(request.Token);
 
@@ -40,41 +36,35 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
             });
         }
 
-        if (validationResult.IsValid)
-        {
-            var userId = _tokenService.GetUidClaimValue(request.Token);
-            
-            if(!userId.HasValue)
-                throw new BadRequestException(new ExceptionDetails
-                {
-                    ErrorMessage = "Invalid token format",
-                    PropertyName = nameof(request.Token)
-                });
-            
-            var user = await _userRepository.GetAsync(userId.Value);
 
-            if (user is null)
-                throw new LoginException(new ExceptionDetails
-                {
-                    ErrorMessage = "Invalid credentials",
-                    PropertyName = nameof(Domain.Entities.User)
-                });
+        var userId = _tokenService.GetUidClaimValue(request.Token);
 
-            var wallet = await _unitOfWork.WalletRepository.GetAsyncNoTracking(request.WalletId);
+        if (!userId.HasValue)
+            throw new BadRequestException(new ExceptionDetails
+            {
+                ErrorMessage = "Invalid token format",
+                PropertyName = nameof(request.Token)
+            });
 
-            user.MemberWallets.Add(wallet!);
+        var user = await _userRepository.GetAsync(userId.Value);
 
-            await _unitOfWork.SaveAsync();
+        if (user is null)
+            throw new LoginException(new ExceptionDetails
+            {
+                ErrorMessage = "Invalid credentials",
+                PropertyName = nameof(Domain.Entities.User)
+            });
 
-            response.Message = "Added user to wallet successfully";
-            response.Success = true;
-            response.Id = user.Id;
-        }
-        else
-        {
-            throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
-                { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
-        }
+        var wallet = await _unitOfWork.WalletRepository.GetAsyncNoTracking(request.WalletId);
+
+        user.MemberWallets.Add(wallet!);
+
+        await _unitOfWork.SaveAsync();
+
+        response.Message = "Added user to wallet successfully";
+        response.Success = true;
+        response.Id = user.Id;
+
 
         return response;
     }

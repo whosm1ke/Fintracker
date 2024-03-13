@@ -3,12 +3,13 @@ using Fintracker.Application;
 using Fintracker.Identity;
 using Fintracker.Infrastructure;
 using Fintracker.Persistence;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
@@ -29,11 +30,11 @@ builder.Services.AddSwaggerGen(option =>
             {
                 Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
                 }
             },
-            new string[]{}
+            new string[] { }
         }
     });
 });
@@ -42,7 +43,10 @@ builder.Services.ConfigureApplicationServices(builder.Configuration, builder.Env
 builder.Services.ConfigurePresistenceServices(builder.Configuration);
 builder.Services.ConfigureIdentityServices(builder.Configuration);
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
-builder.Services.AddControllers();
+builder.Services.AddControllers(x =>
+{
+    x.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,6 +54,24 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+} else
+{
+    app.UseExceptionHandler(errorApp =>
+    {
+        errorApp.Run(async context =>
+        {
+            context.Response.StatusCode = 500; // or another Status accordingly to Exception Type
+            context.Response.ContentType = "application/json";
+
+            var error = context.Features.Get<IExceptionHandlerFeature>();
+            if (error != null)
+            {
+                var ex = error.Error;
+
+                await context.Response.WriteAsync(ex.Message); // or your custom message
+            }
+        });
+    });
 }
 
 app.UseUnauthorizedMiddleware();
@@ -59,18 +81,5 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-//
-// app.MapGet("hi", async (HttpContext context, IEmailSender emailSender) =>
-// {
-//     var res = await emailSender.SendEmail(new EmailModel()
-//     {
-//         Email = "chermishan@gmail.com",
-//         Subject = "Test attachment",
-//         Name = "Photo",
-//         PlainMessage = "Look at this picture!",
-//         HtmlMessage = null
-//     });
-//
-//     await context.Response.WriteAsJsonAsync(res);
-// });
+
 app.Run();
