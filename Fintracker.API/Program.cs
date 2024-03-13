@@ -38,7 +38,6 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureApplicationServices(builder.Configuration, builder.Environment.WebRootPath);
 builder.Services.ConfigurePresistenceServices(builder.Configuration);
 builder.Services.ConfigureIdentityServices(builder.Configuration);

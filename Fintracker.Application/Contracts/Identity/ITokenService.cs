@@ -8,5 +8,7 @@ public interface ITokenService
     Task<string> CreateToken(User user);
 
 
-    Task<Tuple<bool, JwtSecurityToken>> ValidateToken(string token);
+    Task<bool> ValidateToken(string token);
+
+    Guid? GetUidClaimValue(string token);
 }

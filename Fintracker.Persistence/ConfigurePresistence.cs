@@ -33,6 +33,7 @@ public static class ConfigurePresistence
         builder.AddEntityFrameworkStores<AppDbContext>();
         builder.AddDefaultTokenProviders();
         
+        services.AddHttpContextAccessor();
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IBudgetRepository, BudgetRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();

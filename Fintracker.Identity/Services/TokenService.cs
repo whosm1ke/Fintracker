@@ -63,7 +63,7 @@ public class TokenService : ITokenService
     }
     
 
-    public async Task<Tuple<bool, JwtSecurityToken>> ValidateToken(string token)
+    public async Task<bool> ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenValidationParams = new TokenValidationParameters
@@ -76,6 +76,14 @@ public class TokenService : ITokenService
         };
 
         var validationResult = await tokenHandler.ValidateTokenAsync(token, tokenValidationParams);
-        return new Tuple<bool, JwtSecurityToken>(validationResult.IsValid,(JwtSecurityToken)validationResult.SecurityToken);
+        return validationResult.IsValid;
+    }
+
+    public Guid? GetUidClaimValue(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(token);
+        var uidClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.Uid)?.Value;
+        return uidClaim is not null ? Guid.Parse(uidClaim) : null;
     }
 }

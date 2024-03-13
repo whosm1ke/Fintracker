@@ -31,7 +31,7 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
 
         var validatedTokenResult = await _tokenService.ValidateToken(request.Token);
 
-        if (!validatedTokenResult.Item1)
+        if (!validatedTokenResult)
         {
             throw new BadRequestException(new ExceptionDetails
             {
@@ -42,11 +42,19 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
 
         if (validationResult.IsValid)
         {
-            var userId = validatedTokenResult.Item2.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.Uid)?.Value;
-            var user = await _userRepository.GetAsync(Guid.Parse(userId!));
+            var userId = _tokenService.GetUidClaimValue(request.Token);
+            
+            if(!userId.HasValue)
+                throw new BadRequestException(new ExceptionDetails
+                {
+                    ErrorMessage = "Invalid token format",
+                    PropertyName = nameof(request.Token)
+                });
+            
+            var user = await _userRepository.GetAsync(userId.Value);
 
             if (user is null)
-                throw new LoginException(new ExceptionDetails()
+                throw new LoginException(new ExceptionDetails
                 {
                     ErrorMessage = "Invalid credentials",
                     PropertyName = nameof(Domain.Entities.User)
