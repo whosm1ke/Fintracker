@@ -8,7 +8,8 @@ namespace Fintracker.Application;
 
 public static class ConfigureApplication
 {
-    public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services,
+        IConfiguration configuration, string webRoot)
     {
         services.AddMediatR(x =>
         {
@@ -16,7 +17,7 @@ public static class ConfigureApplication
         });
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
-        services.AddTransient<IHtmlPageHelper, HtmlPagesHelper>();
+        services.AddTransient<IHtmlPageHelper>(_ => new HtmlPageHelper(webRoot));
         return services;
     }
 }

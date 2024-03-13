@@ -18,7 +18,7 @@ public class User: IdentityUser<Guid>, IEntity<Guid>
     
     public ICollection<Budget> Budgets { get; set; }
 
-    public UserDetails UserDetails { get; set; }
+    public UserDetails? UserDetails { get; set; }
     public DateTime CreatedAt { get; set; }
     public string CreatedBy { get; set; }
     public DateTime ModifiedAt { get; set; }

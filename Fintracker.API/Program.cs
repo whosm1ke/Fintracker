@@ -39,9 +39,9 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.ConfigureApplicationServices(builder.Configuration);
-builder.Services.ConfigureIdentityServices(builder.Configuration);
+builder.Services.ConfigureApplicationServices(builder.Configuration, builder.Environment.WebRootPath);
 builder.Services.ConfigurePresistenceServices(builder.Configuration);
+builder.Services.ConfigureIdentityServices(builder.Configuration);
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
 builder.Services.AddControllers();
 var app = builder.Build();
