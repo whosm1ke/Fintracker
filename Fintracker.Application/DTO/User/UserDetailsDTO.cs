@@ -13,4 +13,5 @@ public class UserDetailsDTO
     public string? Avatar { get; set; }
 
     public LanguageTypeEnum? Language { get; set; }
+    
 }

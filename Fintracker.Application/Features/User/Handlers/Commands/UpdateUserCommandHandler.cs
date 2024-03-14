@@ -33,7 +33,18 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
                 PropertyName = nameof(request.User.Id)
             }, nameof(Domain.Entities.User));
 
-
+        if (request.User.Avatar != null)
+        {
+            var fileName = Path.GetFileName(request.User.Avatar.FileName);
+            var filePath = Path.Combine(request.WWWRoot,"images" ,fileName);
+            using (var stream = File.Create(filePath))
+            {
+                await request.User.Avatar.CopyToAsync(stream);
+            }
+            request.User.UserDetails.Avatar = filePath;
+        }
+        
+        
         var oldUser = _mapper.Map<UserBaseDTO>(user);
         _mapper.Map(request.User, user);
         var newUser = _mapper.Map<UserBaseDTO>(user);

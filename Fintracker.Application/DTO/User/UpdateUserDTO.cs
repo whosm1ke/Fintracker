@@ -1,4 +1,5 @@
 ﻿using Fintracker.Application.DTO.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace Fintracker.Application.DTO.User;
 
@@ -8,4 +9,7 @@ public class UpdateUserDTO : IBaseDto
     
     public string Email { get; set; } = default!;
     public UserDetailsDTO UserDetails { get; set; } = default!;
+    
+    public IFormFile? Avatar { get; set; }
+
 }

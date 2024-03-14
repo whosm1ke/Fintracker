@@ -11,7 +11,9 @@ public class UserProfile : Profile
     {
         CreateMap<User, UserBaseDTO>().ReverseMap();
         CreateMap<User, UpdateUserDTO>().ReverseMap();
-        CreateMap<UserDetails, UserDetailsDTO>().ReverseMap();
+        CreateMap<UserDetails, UserDetailsDTO>()
+            .ReverseMap();
+            // .ForMember(x => x.Avatar, opt => opt.MapFrom(x => x.Avatar));
         CreateMap<User, UserWithBudgetsDTO>().ReverseMap();
         CreateMap<User, UserWithOwnedWalletsDTO>().ReverseMap();
         CreateMap<User, UserWithMemberWalletsDTO>().ReverseMap();

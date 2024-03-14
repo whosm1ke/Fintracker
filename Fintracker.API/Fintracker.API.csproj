@@ -30,4 +30,8 @@
       <_ContentIncludedByDefault Remove="wwwroot\css\inviteForm.css" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\images\" />
+    </ItemGroup>
+
 </Project>

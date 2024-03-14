@@ -10,7 +10,7 @@ public static class BudgetConstraints
 
 public static class UserDetailsConstraints
 {
-    public const int MaxAvatarLength = 50;
+    public const int MaxAvatarLength = 250;
     public const int MaxNameLength = 60;
     public const int MaxSexLength = 20;
 }
