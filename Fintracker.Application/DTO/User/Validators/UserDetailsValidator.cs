@@ -1,20 +1,21 @@
 ﻿using Fintracker.Application.BusinessRuleConstants;
 using Fintracker.Application.Helpers;
 using FluentValidation;
+using Microsoft.Extensions.Options;
 
 namespace Fintracker.Application.DTO.User.Validators;
 
 public class UserDetailsValidator : AbstractValidator<UserDetailsDTO>
 {
-    private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
-
-    public UserDetailsValidator()
+    private readonly AppSettings _appSettings;
+    public UserDetailsValidator(IOptions<AppSettings> options)
     {
-        RuleFor(x => x.Avatar)
+        _appSettings = options.Value;
+        RuleFor(x => x.Avatar!.FileName)
             .ApplyLength(UserDetailsConstraints.MaxAvatarLength)
             .Must(BeAValidExtension)
-            .When(x => !string.IsNullOrEmpty(x.Avatar))
-            .WithMessage($"Allowed file extensions: {string.Join(", ", _allowedExtensions)}");
+            .When(x => x.Avatar is not null)
+            .WithMessage($"Allowed file extensions: {string.Join(", ", _appSettings.AllowedExtensions)}");
 
         RuleFor(x => x.DateOfBirth)
             .GreaterThan(new DateTime(1915, 1, 1))
@@ -44,6 +45,6 @@ public class UserDetailsValidator : AbstractValidator<UserDetailsDTO>
         if (string.IsNullOrEmpty(avatar))
             return true;
         var extension = Path.GetExtension(avatar).ToLower();
-        return _allowedExtensions.Contains(extension);
+        return _appSettings.AllowedExtensions.Contains(extension);
     }
 }

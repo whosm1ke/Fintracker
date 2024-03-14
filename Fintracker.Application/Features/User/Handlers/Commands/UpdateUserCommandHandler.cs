@@ -33,15 +33,15 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
                 PropertyName = nameof(request.User.Id)
             }, nameof(Domain.Entities.User));
 
-        if (request.User.Avatar != null)
+        if (request.User.UserDetails.Avatar != null)
         {
-            var fileName = Path.GetFileName(request.User.Avatar.FileName);
+            var avatar = request.User.UserDetails.Avatar;
+            var fileName = Path.GetFileName(avatar.FileName);
             var filePath = Path.Combine(request.WWWRoot,"images" ,fileName);
             using (var stream = File.Create(filePath))
             {
-                await request.User.Avatar.CopyToAsync(stream);
+                await avatar.CopyToAsync(stream);
             }
-            request.User.UserDetails.Avatar = filePath;
         }
         
         

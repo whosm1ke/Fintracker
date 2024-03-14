@@ -2,13 +2,15 @@
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Helpers;
 using FluentValidation;
+using Microsoft.Extensions.Options;
+
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 namespace Fintracker.Application.DTO.User.Validators;
 
 public class UpdateUserDtoValidator : AbstractValidator<UpdateUserCommand>
 {
-    public UpdateUserDtoValidator(IUserRepository userRepository)
+    public UpdateUserDtoValidator(IUserRepository userRepository, IOptions<AppSettings> options)
     {
         RuleFor(x => x.User.Id)
             .ApplyCommonRules()
@@ -33,7 +35,7 @@ public class UpdateUserDtoValidator : AbstractValidator<UpdateUserCommand>
             .WithMessage(x => $"Invalid email [{x.User.Email}]");
 
         RuleFor(x => x.User.UserDetails)
-            .SetValidator(new UserDetailsValidator())
+            .SetValidator(new UserDetailsValidator(options))
             .OverridePropertyName(string.Empty);
     }
 }

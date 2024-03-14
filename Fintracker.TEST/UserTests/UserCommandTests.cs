@@ -5,6 +5,7 @@ using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.MapProfiles;
 using Fintracker.TEST.Repositories;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 
 namespace Fintracker.TEST.UserTests;
 
@@ -55,7 +56,7 @@ public class UserCommandTests
             Email = "user1gmail.com",
             UserDetails = new()
             {
-                Avatar = "Avatar",
+                Avatar = null, 
                 Language = LanguageTypeEnum.Ukrainian,
                 Sex = "Male",
                 FName = "Misha"
@@ -70,7 +71,7 @@ public class UserCommandTests
                 Email = "user1gmail.com",
                 UserDetails = new()
                 {
-                    Avatar = "Avatar",
+                    Avatar = null,
                     Language = LanguageTypeEnum.Ukrainian,
                     Sex = "Male",
                     FName = "Misha"
