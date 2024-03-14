@@ -1,10 +1,11 @@
-﻿using Fintracker.Application.Exceptions;
+﻿using Fintracker.Application.Contracts.Helpers;
+using Fintracker.Application.Exceptions;
 using FluentValidation;
 using MediatR.Pipeline;
 
 namespace Fintracker.Application.Features.Behaviours;
 
-public class ValidationBehaviourPreProcess<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
+public class ValidationBehaviourPreProcess<TRequest> : IRequestPreProcessor<TRequest> where TRequest : INotGetRequest
 {
     private readonly IValidator<TRequest> _validator;
     public ValidationBehaviourPreProcess(IValidator<TRequest> validator)

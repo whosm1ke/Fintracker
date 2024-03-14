@@ -28,10 +28,10 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
 
 
         var wallet = _mapper.Map<Domain.Entities.Wallet>(request.Wallet);
-
+        wallet.Currency = await _unitOfWork.CurrencyRepository.GetAsync(request.Wallet.CurrencyId) ?? default!;
         await _unitOfWork.WalletRepository.AddAsync(wallet);
         var createdObject = _mapper.Map<WalletBaseDTO>(wallet);
-
+        
         response.Success = true;
         response.Message = "Created successfully";
         response.CreatedObject = createdObject;

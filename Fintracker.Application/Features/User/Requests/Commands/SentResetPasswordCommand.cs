@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Fintracker.Application.Contracts.Helpers;
+using MediatR;
 
 namespace Fintracker.Application.Features.User.Requests.Commands;
 
-public class SentResetPasswordCommand : IRequest<Unit>
+public class SentResetPasswordCommand : IRequest<Unit>, INotGetRequest
 {
     public string Email { get; set; } = default!;
 
