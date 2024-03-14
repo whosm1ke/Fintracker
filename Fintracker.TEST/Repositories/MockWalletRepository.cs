@@ -105,7 +105,7 @@ public class MockWalletRepository
             .Returns((Wallet b) =>
             {
                 wallets.Add(b);
-                return b;
+                return Task.FromResult(b);
             });
 
         mock.Setup(x => x.Update(It.IsAny<Wallet>()))
@@ -119,16 +119,16 @@ public class MockWalletRepository
             });
 
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return wallets.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return Task.FromResult(wallets.Find(x => x.Id == id)); });
 
         mock.Setup(x => x.GetAsyncNoTracking(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return wallets.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return Task.FromResult(wallets.Find(x => x.Id == id)); });
 
         mock.Setup(x => x.GetAllAsync())
-            .ReturnsAsync(wallets);
+            .Returns(() => Task.FromResult<IReadOnlyList<Wallet>>(wallets));
 
         mock.Setup(x => x.GetAllAsyncNoTracking())
-            .ReturnsAsync(wallets);
+            .Returns(() => Task.FromResult<IReadOnlyList<Wallet>>(wallets));
 
         mock.Setup(x => x.Delete(It.IsAny<Wallet>()))
             .Callback((Wallet b) =>
@@ -141,7 +141,7 @@ public class MockWalletRepository
             });
 
         mock.Setup(x => x.ExistsAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return wallets.Find(x => x.Id == id) != null; });
+            .Returns((Guid id) => { return Task.FromResult(wallets.Find(x => x.Id == id) != null); });
 
         //WalletRepository
 

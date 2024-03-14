@@ -77,7 +77,7 @@ public class MockBudgetRepository
                 StartDate = new DateTime(2024, 10, 14),
                 Name = "Budget3",
                 Id = new Guid("3DA8AFC6-1671-4E6C-A4AC-6A048C388764"),
-                Wallet =  new()
+                Wallet = new()
                 {
                     Id = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
                     Balance = 1000,
@@ -104,7 +104,7 @@ public class MockBudgetRepository
                 StartDate = new DateTime(2024, 10, 14),
                 Name = "Budget with user",
                 Id = new Guid("9055E428-38C3-4616-A389-0102B766FD98"),
-                Wallet =  new(),
+                Wallet = new(),
                 User = new User
                 {
                     Id = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
@@ -121,14 +121,14 @@ public class MockBudgetRepository
 
         //GenericRepository
 
-    //AddAsync
+        //AddAsync
         mock.Setup(x => x.AddAsync(It.IsAny<Budget>()))
             .Returns((Budget b) =>
             {
                 budgets.Add(b);
-                return b;
+                return Task.FromResult(b);
             });
-    //UpdateAsync
+        //UpdateAsync
         mock.Setup(x => x.Update(It.IsAny<Budget>()))
             .Callback((Budget b) =>
             {
@@ -138,19 +138,19 @@ public class MockBudgetRepository
                     budgets[index] = b;
                 }
             });
-    //GetAsync
+        //GetAsync
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return budgets.Find(x => x.Id == id); });
-    //GetAsyncNoTracking
+            .Returns((Guid id) => { return Task.FromResult(budgets.Find(x => x.Id == id)); });
+        //GetAsyncNoTracking
         mock.Setup(x => x.GetAsyncNoTracking(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return budgets.Find(x => x.Id == id); });
-    //GetAllAsyncNoTracking
+            .Returns((Guid id) => { return Task.FromResult(budgets.Find(x => x.Id == id)); });
+        //GetAllAsyncNoTracking
         mock.Setup(x => x.GetAllAsyncNoTracking())
-            .ReturnsAsync(budgets);
-    //GetAllAsync
+            .Returns(() => Task.FromResult<IReadOnlyList<Budget?>>(budgets));
+        //GetAllAsync
         mock.Setup(x => x.GetAllAsync())
-            .ReturnsAsync(budgets);
-    //DeleteAsync
+            .Returns(() => Task.FromResult<IReadOnlyList<Budget?>>(budgets));
+        //DeleteAsync
         mock.Setup(x => x.Delete(It.IsAny<Budget>()))
             .Callback((Budget b) =>
             {
@@ -160,43 +160,50 @@ public class MockBudgetRepository
                     budgets.RemoveAt(index);
                 }
             });
-    //ExistsAsync
+        //ExistsAsync
         mock.Setup(x => x.ExistsAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return budgets.FirstOrDefault(x => x.Id == id) != null; });
+            .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id) != null); });
 
-    //BudgetRepository
+        //BudgetRepository
         mock.Setup(x => x.GetBudgetAsync(It.IsAny<Guid>()))
-            .Returns( (Guid id) => { return budgets.FirstOrDefault(x => x.Id == id); });
+            .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id)); });
 
-        
+
         mock.Setup(x => x.GetBudgetWithWalletAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) =>
-            {
-                return budgets.FirstOrDefault(x => x.Id == id);
-            });
+            .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id)); });
 
         mock.Setup(x => x.GetBudgetWithUserAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return budgets.FirstOrDefault(x => x.Id == id); });
+            .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id)); });
 
         mock.Setup(x => x.GetByUserIdAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.UserId == id).ToList()));
 
         mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
-            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.UserId == id)
+            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Budget>)budgets
+                .Where(x => x.UserId == id)
                 .AsQueryable()
                 .OrderBy(sortBy)
                 .ToList()));
 
         mock.Setup(x => x.GetByWalletIdAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.WalletId == id).ToList()));
+            .Returns((Guid id) =>
+                Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.WalletId == id).ToList()));
 
         mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
-            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.WalletId == id)
+            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Budget>)budgets
+                .Where(x => x.WalletId == id)
                 .AsQueryable()
                 .OrderBy(sortBy)
                 .ToList()));
 
+        mock.Setup(x => x.GetBudgetsByCategoryId(It.IsAny<Guid>()))
+            .Returns((Guid catId) =>
+            {
+                IReadOnlyList<Budget> budgetsToReturn =
+                    budgets.Where(b => b.Categories.Any(c => c.Id == catId)).ToList();
 
+                return Task.FromResult(budgetsToReturn);
+            });
         return mock;
     }
 }

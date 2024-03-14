@@ -104,10 +104,10 @@ public class MockUserRepository
         var mock = new Mock<IUserRepository>();
 
         mock.Setup(x => x.ExistsAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return users.Find(c => c.Id == id) != null; });
+            .Returns((Guid id) => { return Task.FromResult(users.Find(c => c.Id == id) != null); });
 
         mock.Setup(x => x.ExistsAsync(It.IsAny<string>()))
-            .Returns((string email) => { return users.Find(c => c.Email == email) != null; });
+            .Returns((string email) => { return Task.FromResult(users.Find(c => c.Email == email) != null); });
 
         mock.Setup(x => x.GetAllAccessedToWalletAsync(It.IsAny<Guid>()))
             .Returns((Guid walletId) => Task.FromResult(
@@ -116,26 +116,26 @@ public class MockUserRepository
             ));
 
         mock.Setup(x => x.GetAllAsync())
-            .ReturnsAsync(users);
+            .Returns(() => Task.FromResult<IReadOnlyList<User?>>(users));
 
         mock.Setup(x => x.GetAsNoTrackingAsync(It.IsAny<string>()))
-            .Returns((string email) => { return users.Find(c => c.Email == email); });
+            .Returns((string email) => { return Task.FromResult(users.Find(c => c.Email == email)); });
 
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return users.Find(c => c.Id == id); });
+            .Returns((Guid id) => { return Task.FromResult(users.Find(c => c.Id == id)); });
 
         mock.Setup(x => x.GetUserWithBudgetsByIdAsync(It.IsAny<Guid>()))
-            .Returns( (Guid id) => Task.FromResult(
-               users.Find(x => x.Id == id)
+            .Returns((Guid id) => Task.FromResult(
+                users.Find(x => x.Id == id)
             ));
 
         mock.Setup(x => x.GetUserWithOwnedWalletsByIdAsync(It.IsAny<Guid>()))
-            .Returns( (Guid id) => Task.FromResult(
-               users.Find(x => x.Id == id)
+            .Returns((Guid id) => Task.FromResult(
+                users.Find(x => x.Id == id)
             ));
 
         mock.Setup(x => x.GetUserWithMemberWalletsByIdAsync(It.IsAny<Guid>()))
-            .Returns( (Guid id) => Task.FromResult(
+            .Returns((Guid id) => Task.FromResult(
                 users.Find(x => x.Id == id)
             ));
 
@@ -147,6 +147,8 @@ public class MockUserRepository
                     int index = users.FindIndex(x => x.Id == b.Id);
                     users[index] = b;
                 }
+
+                return Task.CompletedTask;
             });
 
         mock.Setup(x => x.DeleteAsync(It.IsAny<User>()))
@@ -157,6 +159,8 @@ public class MockUserRepository
                     int index = users.FindIndex(x => x.Id == b.Id);
                     users.RemoveAt(index);
                 }
+
+                return Task.CompletedTask;
             });
 
 

@@ -29,17 +29,17 @@ public class MockCurrencyRepository
         mock.Setup(x => x.ExistsAsync(It.IsAny<Guid>()))
             .Returns((Guid id) =>
             {
-                return currencies.Find(c => c.Id == id) != null;
+                return Task.FromResult(currencies.Find(c => c.Id == id) != null);
             });
 
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
             .Returns((Guid id) =>
             {
-                return currencies.FirstOrDefault(x => x.Id == id);
+                return Task.FromResult(currencies.FirstOrDefault(x => x.Id == id));
             });
 
         mock.Setup(x => x.GetAllAsync())
-            .ReturnsAsync(currencies);
+            .Returns(() => Task.FromResult<IReadOnlyList<Currency?>>(currencies));
         
         mock.Setup(x => x.GetCurrenciesSorted(It.IsAny<string>(), It.IsAny<bool>()))
             .Returns((string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Currency>)currencies

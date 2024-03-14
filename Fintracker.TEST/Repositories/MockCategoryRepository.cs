@@ -48,28 +48,28 @@ public class MockCategoryRepository
         var mock = new Mock<ICategoryRepository>();
     //Generic Repository
         mock.Setup(x => x.ExistsAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) =>
+            .Returns(async (Guid id) =>
             {
                 return categories.Find(c => c.Id == id) != null;
             });
         
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return categories.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return Task.FromResult(categories.Find(x => x.Id == id)); });
         
         mock.Setup(x => x.GetAsyncNoTracking(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return categories.Find(x => x.Id == id); });
+            .Returns((Guid id) => { return Task.FromResult(categories.Find(x => x.Id == id)); });
 
         mock.Setup(x => x.GetAllAsyncNoTracking())
-            .ReturnsAsync(categories);
+            .Returns(() => Task.FromResult<IReadOnlyList<Category?>>(categories));
         
         mock.Setup(x => x.GetAllAsync())
-            .ReturnsAsync(categories);
+            .Returns(() => Task.FromResult<IReadOnlyList<Category?>>(categories));
 
         mock.Setup(x => x.AddAsync(It.IsAny<Category>()))
             .Returns((Category c) =>
             {
                 categories.Add(c);
-                return c;
+                return Task.FromResult(c);
             });
 
         mock.Setup(x => x.Update(It.IsAny<Category>()))
@@ -96,7 +96,14 @@ public class MockCategoryRepository
     mock.Setup(x => x.GetByTypeAsync(It.IsAny<CategoryType>()))
         .Returns((CategoryType type) =>
         {
-            return categories.Where(x => x.Type == type).ToList();
+            return Task.FromResult<IReadOnlyList<Category>>(categories.Where(x => x.Type == type).ToList());
+        });
+    
+    mock.Setup(x => x.GetAllWithIds(It.IsAny<ICollection<Guid>>()))
+        .Returns((ICollection<Guid> ids) =>
+        {
+            IReadOnlyCollection<Category> cats = categories.Where(x => ids.Any(id => x.Id == id)).ToList();
+            return Task.FromResult(cats);
         });
 
     mock.Setup(x => x.GetAllSortedAsync(It.IsAny<string>(), It.IsAny<bool>()))
