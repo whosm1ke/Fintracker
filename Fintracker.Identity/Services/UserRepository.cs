@@ -1,6 +1,8 @@
-﻿using Fintracker.Application.Contracts.Identity;
+﻿using Fintracker.Application.BusinessRuleConstraints;
+using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Exceptions;
 using Fintracker.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,16 +11,21 @@ namespace Fintracker.Identity.Services;
 public class UserRepository : IUserRepository
 {
     private readonly UserManager<User> _userManager;
+    private readonly Guid _currentUserId;
 
-    public UserRepository(UserManager<User> context)
+    public UserRepository(UserManager<User> context, IHttpContextAccessor accessor)
     {
         _userManager = context;
+        var uid = accessor.HttpContext!.User.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypeConstants.Uid)?.Value;
+        if(!Guid.TryParse(uid, out _currentUserId))
+            _currentUserId = Guid.Empty;
     }
 
     public async Task<IReadOnlyList<User>> GetAllAccessedToWalletAsync(Guid walletId)
     {
         return await _userManager.Users
-            .Where(x => x.MemberWallets.Any(x => x.Id == walletId))
+            .Where(x => x.Id == _currentUserId && x.MemberWallets.Any(w => w.Id == walletId))
             .ToListAsync();
     }
 

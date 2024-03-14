@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fintracker.Persistence.Repositories;
 
-public class WalletRepository: GenericRepository<Wallet>, IWalletRepository
+public class WalletRepository : GenericRepository<Wallet>, IWalletRepository
 {
     private readonly AppDbContext _db;
-    public WalletRepository(AppDbContext context): base(context)
+
+    public WalletRepository(AppDbContext context) : base(context)
     {
         _db = context;
     }
@@ -22,7 +23,6 @@ public class WalletRepository: GenericRepository<Wallet>, IWalletRepository
             .FirstOrDefaultAsync();
     }
 
-   
 
     public async Task<Wallet?> GetWalletWithMembersAsync(Guid id)
     {
@@ -30,6 +30,7 @@ public class WalletRepository: GenericRepository<Wallet>, IWalletRepository
             .Include(x => x.Owner)
             .Include(x => x.Currency)
             .Include(x => x.Users)
+            .ThenInclude(x => x.UserDetails)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
@@ -47,9 +48,10 @@ public class WalletRepository: GenericRepository<Wallet>, IWalletRepository
     public async Task<Wallet?> GetWalletWithBudgetsAsync(Guid id)
     {
         return await _db.Wallets
-            .Include(x => x.Owner)
+            // .Include(x => x.Owner)
             .Include(x => x.Currency)
             .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
