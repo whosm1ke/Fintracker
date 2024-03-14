@@ -7,7 +7,7 @@ public class GetTransactionsByCategoryIdSortedRequest : IRequest<IReadOnlyList<T
 {
     public Guid CategoryId { get; set; }
 
-    public string SortBy { get; set; }
+    public string SortBy { get; set; } = default!;
     
     public bool IsDescending { get; set; }
 }

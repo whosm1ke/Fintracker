@@ -2,6 +2,6 @@
 
 public class UpdateCommandResponse<T> : BaseCommandResponse
 {
-    public T Old { get; set; }
+    public T Old { get; set; } = default!;
     public T? New { get; set; }
 }

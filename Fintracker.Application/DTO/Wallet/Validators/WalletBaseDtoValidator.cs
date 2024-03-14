@@ -2,6 +2,7 @@
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.Helpers;
 using FluentValidation;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 namespace Fintracker.Application.DTO.Wallet.Validators;
 
@@ -14,7 +15,7 @@ public class WalletBaseDtoValidator : AbstractValidator<IWalletDto>
             .ApplyLessThanEqual(WalletConstraints.MaxBalance);
 
         RuleFor(x => x.Name)
-            .ApplyCommonRules()
+            .ApplyCommonRules(x => x.Name is not null)
             .ApplyMinMaxLength(WalletConstraints.MinNameLength, WalletConstraints.MaxNameLength);
 
         RuleFor(x => x.CurrencyId)

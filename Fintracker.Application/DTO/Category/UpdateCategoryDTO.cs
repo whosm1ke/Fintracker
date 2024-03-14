@@ -6,9 +6,9 @@ public class UpdateCategoryDTO : IBaseDto, ICategoryDto
 {
     public Guid Id { get; set; }
     
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
     
-    public string Image { get; set; }
+    public string Image { get; set; } = default!;
 
-    public string IconColour { get; set; }
+    public string IconColour { get; set; } = default!;
 }

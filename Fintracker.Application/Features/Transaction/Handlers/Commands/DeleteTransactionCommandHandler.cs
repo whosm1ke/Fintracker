@@ -37,10 +37,10 @@ public class
 
         var deletedObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
-        await IncreaseWalletBalance(transaction.Wallet, transaction.Amount);
+        IncreaseWalletBalance(transaction.Wallet, transaction.Amount);
         await IncreaseBudgetBalance(transaction.CategoryId, transaction.Amount);
 
-        await _unitOfWork.TransactionRepository.DeleteAsync(transaction);
+        _unitOfWork.TransactionRepository.Delete(transaction);
 
         response.Success = true;
         response.Message = "Deleted successfully";
@@ -51,7 +51,7 @@ public class
         return response;
     }
 
-    private async Task IncreaseWalletBalance(Domain.Entities.Wallet wallet, decimal amount)
+    private void IncreaseWalletBalance(Domain.Entities.Wallet wallet, decimal amount)
     {
         wallet.Balance += amount;
     }

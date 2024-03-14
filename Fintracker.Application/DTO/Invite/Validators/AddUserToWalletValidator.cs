@@ -3,6 +3,7 @@ using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Helpers;
 using FluentValidation;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 namespace Fintracker.Application.DTO.Invite.Validators;
 
@@ -16,6 +17,6 @@ public class AddUserToWalletValidator : AbstractValidator<AddUserToWalletCommand
             .WithMessage(x => $"Wallet with id does not exist [{x.WalletId}]");
 
         RuleFor(x => x.Token)
-            .ApplyCommonRules();
+            .ApplyCommonRules(x => x.Token is not null);
     }
 }

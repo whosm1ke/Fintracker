@@ -7,5 +7,5 @@ public class AddUserToWalletCommand : IRequest<BaseCommandResponse>
 {
     public Guid WalletId { get; set; }
 
-    public string Token { get; set; }
+    public string Token { get; set; } = default!;
 }

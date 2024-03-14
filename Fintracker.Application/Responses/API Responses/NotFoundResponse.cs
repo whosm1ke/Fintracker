@@ -2,5 +2,5 @@
 
 public class NotFoundResponse : BaseResponse
 {
-    public string Type { get; set; }
+    public string Type { get; set; } = default!;
 }

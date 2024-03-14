@@ -5,7 +5,7 @@ namespace Fintracker.Application.Features.Category.Requests.Queries;
 
 public class GetCategoriesSortedRequest : IRequest<IReadOnlyList<CategoryDTO>>
 {
-    public string SortBy { get; set; }
+    public string SortBy { get; set; } = default!;
     
     public bool IsDescending { get; set; }
 }

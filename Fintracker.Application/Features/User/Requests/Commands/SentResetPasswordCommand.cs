@@ -4,7 +4,7 @@ namespace Fintracker.Application.Features.User.Requests.Commands;
 
 public class SentResetPasswordCommand : IRequest<Unit>
 {
-    public string Email { get; set; }
+    public string Email { get; set; } = default!;
 
-    public string UrlCallback { get; set; }
+    public string UrlCallback { get; set; } = default!;
 }

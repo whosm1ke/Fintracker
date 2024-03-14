@@ -52,7 +52,7 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
             budget.Categories.Add(category);
         }
 
-        await _unitOfWork.BudgetRepository.UpdateAsync(budget);
+        _unitOfWork.BudgetRepository.Update(budget);
         await _unitOfWork.SaveAsync();
 
         var newBudget = _mapper.Map<BudgetBaseDTO>(budget);

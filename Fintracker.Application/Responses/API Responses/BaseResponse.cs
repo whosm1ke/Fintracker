@@ -9,11 +9,11 @@ public class BaseResponse
 
     public DateTime When { get; set; }
 
-    public string Reason { get; set; }
+    public string Reason { get; set; } = default!;
 
-    public string Message { get; set; }
+    public string Message { get; set; } = default!;
 
-    public List<ExceptionDetails> Details { get; set; }
+    public List<ExceptionDetails> Details { get; set; } = default!;
 
     public int StatusCode { get; set; }
 }

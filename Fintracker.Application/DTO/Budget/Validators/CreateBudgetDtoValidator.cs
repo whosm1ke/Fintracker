@@ -17,8 +17,8 @@ public class CreateBudgetDtoValidator : AbstractValidator<CreateBudgetCommand>
         
         RuleFor(x => x.Budget.UserId)
             .ApplyCommonRules()
-            .OverridePropertyName(nameof(CreateBudgetCommand.Budget.UserId))
             .MustAsync(async (guid, _) => await userRepository.ExistsAsync(guid))
+            .OverridePropertyName(nameof(CreateBudgetCommand.Budget.UserId))
             .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.Budget.UserId}]");
     }
 }

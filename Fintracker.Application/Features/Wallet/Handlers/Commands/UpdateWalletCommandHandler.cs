@@ -36,7 +36,7 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
 
         var oldObject = _mapper.Map<WalletBaseDTO>(wallet);
         _mapper.Map(request.Wallet, wallet);
-        await _unitOfWork.WalletRepository.UpdateAsync(wallet);
+        _unitOfWork.WalletRepository.Update(wallet);
 
         await _unitOfWork.SaveAsync();
 

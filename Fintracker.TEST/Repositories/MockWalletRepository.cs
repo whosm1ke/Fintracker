@@ -108,8 +108,8 @@ public class MockWalletRepository
                 return b;
             });
 
-        mock.Setup(x => x.UpdateAsync(It.IsAny<Wallet>()))
-            .Returns((Wallet b) =>
+        mock.Setup(x => x.Update(It.IsAny<Wallet>()))
+            .Callback((Wallet b) =>
             {
                 if (wallets.Find(x => x.Id == b.Id) != null)
                 {
@@ -130,8 +130,8 @@ public class MockWalletRepository
         mock.Setup(x => x.GetAllAsyncNoTracking())
             .ReturnsAsync(wallets);
 
-        mock.Setup(x => x.DeleteAsync(It.IsAny<Wallet>()))
-            .Returns((Wallet b) =>
+        mock.Setup(x => x.Delete(It.IsAny<Wallet>()))
+            .Callback((Wallet b) =>
             {
                 if (wallets.Find(x => x.Id == b.Id) != null)
                 {

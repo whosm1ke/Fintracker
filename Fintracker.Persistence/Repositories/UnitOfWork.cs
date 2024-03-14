@@ -12,20 +12,20 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
     }
 
-    private IBudgetRepository _budgetRepository;
+    private IBudgetRepository _budgetRepository = default!;
     public IBudgetRepository BudgetRepository => _budgetRepository ??= new BudgetRepository(_context);
     
-    private ICategoryRepository _categoryRepository;
+    private ICategoryRepository _categoryRepository = default!;
     public ICategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_context);
     
-    private ICurrencyRepository _currencyRepository;
+    private ICurrencyRepository _currencyRepository = default!;
     public ICurrencyRepository CurrencyRepository => _currencyRepository ??= new CurrencyRepository(_context);
     
-    private ITransactionRepository _transactionRepository;
+    private ITransactionRepository _transactionRepository = default!;
     public ITransactionRepository TransactionRepository => _transactionRepository ??= new TransactionRepository(_context);
 
 
-    private IWalletRepository _walletRepository;
+    private IWalletRepository _walletRepository = default!;
     public IWalletRepository WalletRepository => _walletRepository ??= new WalletRepository(_context);
     public async Task SaveAsync()
     {

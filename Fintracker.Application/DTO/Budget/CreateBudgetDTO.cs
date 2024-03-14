@@ -2,7 +2,7 @@
 
 public class CreateBudgetDTO : IBudgetDto
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
     public decimal Balance { get; set; }
     
@@ -10,7 +10,7 @@ public class CreateBudgetDTO : IBudgetDto
     
     public Guid WalletId { get; set; }
     
-    public ICollection<Guid> CategoryIds { get; set; }
+    public ICollection<Guid> CategoryIds { get; set; } = default!;
     
     public DateTime StartDate { get; set; }
     

@@ -72,8 +72,8 @@ public class MockCategoryRepository
                 return c;
             });
 
-        mock.Setup(x => x.UpdateAsync(It.IsAny<Category>()))
-            .Returns((Category c) =>
+        mock.Setup(x => x.Update(It.IsAny<Category>()))
+            .Callback((Category c) =>
             {
                 if (categories.Find(x => x.Id == c.Id) != null)
                 {
@@ -82,8 +82,8 @@ public class MockCategoryRepository
                 }
             });
         
-        mock.Setup(x => x.DeleteAsync(It.IsAny<Category>()))
-            .Returns((Category c) =>
+        mock.Setup(x => x.Delete(It.IsAny<Category>()))
+            .Callback((Category c) =>
             {
                 if (categories.Find(x => x.Id == c.Id) != null)
                 {

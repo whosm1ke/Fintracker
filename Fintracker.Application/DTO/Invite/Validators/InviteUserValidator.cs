@@ -3,6 +3,7 @@ using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Helpers;
 using FluentValidation;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 namespace Fintracker.Application.DTO.Invite.Validators;
 
@@ -18,7 +19,7 @@ public class InviteUserValidator : AbstractValidator<InviteUserCommand>
             .WithMessage("User already has access to that wallet");
 
         RuleFor(x => x.UserEmail)
-            .ApplyCommonRules()
+            .ApplyCommonRules(x => x.UserEmail is not null)
             .NotEqual(x => x.WhoInvited)
             .WithMessage("Can not invite yourself")
             .ApplyEmail();

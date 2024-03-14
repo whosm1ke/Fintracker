@@ -2,6 +2,7 @@
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Helpers;
 using FluentValidation;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 namespace Fintracker.Application.DTO.User.Validators;
 
@@ -16,7 +17,7 @@ public class UpdateUserDtoValidator : AbstractValidator<UpdateUserCommand>
             .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.User.Id}]");
 
         RuleFor(x => x.User.Email)
-            .ApplyCommonRules()
+            .ApplyCommonRules(x => x.User.Email is not null)
             .ApplyEmail()
             .OverridePropertyName(nameof(UpdateUserCommand.User.Email))
             .MustAsync(async (dto, email, _) =>

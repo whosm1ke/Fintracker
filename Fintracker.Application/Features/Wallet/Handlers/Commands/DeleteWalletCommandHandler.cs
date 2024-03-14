@@ -34,7 +34,7 @@ public class DeleteWalletCommandHandler : IRequestHandler<DeleteWalletCommand, D
             },nameof(Domain.Entities.Wallet));
 
         var deletedObj = _mapper.Map<WalletBaseDTO>(wallet);
-        await _unitOfWork.WalletRepository.DeleteAsync(wallet);
+        _unitOfWork.WalletRepository.Delete(wallet);
 
         response.Success = true;
         response.Message = "Deleted successfully";

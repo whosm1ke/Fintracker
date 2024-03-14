@@ -40,8 +40,8 @@ public class
         _mapper.Map(request.Transaction, transaction);
 
         await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount);
-        await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
-        await _unitOfWork.TransactionRepository.UpdateAsync(transaction);
+        UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
+        _unitOfWork.TransactionRepository.Update(transaction);
 
         await _unitOfWork.SaveAsync();
         var newObject = _mapper.Map<TransactionBaseDTO>(transaction);
@@ -56,7 +56,7 @@ public class
         return response;
     }
 
-    private async Task UpdateWalletBalance(Domain.Entities.Wallet wallet, decimal newAmount, decimal oldAmount)
+    private void UpdateWalletBalance(Domain.Entities.Wallet wallet, decimal newAmount, decimal oldAmount)
     {
         decimal difference = newAmount - oldAmount;
 

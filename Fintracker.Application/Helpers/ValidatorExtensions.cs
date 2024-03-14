@@ -5,15 +5,21 @@ namespace Fintracker.Application.Helpers;
 public static class ValidatorExtensions
 {
     public static IRuleBuilderOptions<T, TProperty> ApplyCommonRules<T, TProperty>(
-        this IRuleBuilder<T, TProperty> ruleBuilder)
+        this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, bool>? when = null)
     {
         return ruleBuilder
-            .NotNull()
-            .WithMessage("Must be included")
             .NotEmpty()
             .WithMessage("Can not be blank")
-            .When(x => x is not null);
+            .When(x =>
+            {
+                if (when is null)
+                    return false;
+                return when(x);
+            })
+            .NotNull()
+            .WithMessage("Must be included");
     }
+
 
     public static IRuleBuilderOptions<T, string> ApplyMinMaxLength<T>(this IRuleBuilder<T, string> ruleBuilder, int min,
         int max)
@@ -22,7 +28,7 @@ public static class ValidatorExtensions
             .ApplyMinLength(min)
             .ApplyMaxLength(max);
     }
-    
+
     public static IRuleBuilderOptions<T, string> ApplyEmail<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
         return ruleBuilder
@@ -48,7 +54,7 @@ public static class ValidatorExtensions
             .GreaterThanOrEqualTo(min)
             .WithMessage($"Should be greater than or equal to {min}");
     }
-    
+
     public static IRuleBuilderOptions<T, TProperty> ApplyLessThanEqual<T, TProperty>(
         this IRuleBuilder<T, TProperty> ruleBuilder, TProperty max)
         where TProperty : IComparable<TProperty>, IComparable
@@ -71,8 +77,9 @@ public static class ValidatorExtensions
             .MinimumLength(min)
             .WithMessage($"Minimum length is {min}");
     }
-    
-    public static IRuleBuilderOptions<T, string?> ApplyLength<T>(this IRuleBuilder<T, string?> ruleBuilder, int max, int min = 0)
+
+    public static IRuleBuilderOptions<T, string?> ApplyLength<T>(this IRuleBuilder<T, string?> ruleBuilder, int max,
+        int min = 0)
     {
         return ruleBuilder
             .Length(min, max)

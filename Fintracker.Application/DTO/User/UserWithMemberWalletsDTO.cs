@@ -4,5 +4,5 @@ namespace Fintracker.Application.DTO.User;
 
 public class UserWithMemberWalletsDTO : UserBaseDTO
 {
-    public ICollection<WalletBaseDTO> MemberWallets { get; set; }
+    public ICollection<WalletBaseDTO> MemberWallets { get; set; } = default!;
 }

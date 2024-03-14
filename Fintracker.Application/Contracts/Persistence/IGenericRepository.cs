@@ -10,6 +10,6 @@ public interface IGenericRepository<T> where T : class, IEntity<Guid>
     Task<IReadOnlyList<T?>> GetAllAsyncNoTracking();
     Task<T> AddAsync(T item);
     Task<bool> ExistsAsync(Guid id);
-    Task UpdateAsync(T item);
-    Task DeleteAsync(T item);
+    void Update(T item);
+    void Delete(T item);
 }

@@ -43,7 +43,7 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
-        var username = _httpContextAccessor.HttpContext.User.FindFirst("Uid")?.Value;
+        var username = _httpContextAccessor.HttpContext!.User.FindFirst("Uid")?.Value;
         
         foreach (var entry in base.ChangeTracker.Entries<IEntity<Guid>>()
                      .Where(q => q.State == EntityState.Added || q.State == EntityState.Modified))

@@ -12,9 +12,9 @@ public class TransactionBaseDTO : IBaseDto
     
     public Guid UserId { get; set; }
 
-    public CategoryDTO Category { get; set; }
+    public CategoryDTO Category { get; set; } = default!;
     
-    public CurrencyDTO Currency { get; set; }
+    public CurrencyDTO Currency { get; set; } = default!;
 
     public decimal Amount { get; set; }
 

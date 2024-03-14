@@ -4,5 +4,5 @@ namespace Fintracker.Application.DTO.Budget;
 
 public class BudgetWithUserDTO : BudgetBaseDTO
 {
-    public UserBaseDTO User { get; set; }
+    public UserBaseDTO User { get; set; } = default!;
 }

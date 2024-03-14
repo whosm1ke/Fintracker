@@ -8,13 +8,13 @@ public class BudgetBaseDTO : IBaseDto
 {
     public Guid Id { get; set; }
 
-    public ICollection<CategoryDTO> Categories { get; set; }
+    public ICollection<CategoryDTO> Categories { get; set; } = default!;
     
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
     public decimal Balance { get; set; }
 
-    public CurrencyDTO Currency { get; set; }
+    public CurrencyDTO Currency { get; set; } = default!;
     
     public DateTime StartDate { get; set; }
     

@@ -2,8 +2,8 @@
 
 public class EmailSettings
 {
-    public string ApiKey { get; set; }
-    public string FromName { get; set; }
-    public string FromPassword { get; set; }
-    public string FromAddress { get; set; }
+    public string ApiKey { get; set; } = default!;
+    public string FromName { get; set; } = default!;
+    public string FromPassword { get; set; } = default!;
+    public string FromAddress { get; set; } = default!;
 }

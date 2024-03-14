@@ -4,5 +4,5 @@ namespace Fintracker.Application.DTO.Wallet;
 
 public class WalletWithBudgetsDTO : WalletBaseDTO
 {
-    public ICollection<BudgetBaseDTO> Budgets { get; set; }
+    public ICollection<BudgetBaseDTO> Budgets { get; set; } = default!;
 }

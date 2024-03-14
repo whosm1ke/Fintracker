@@ -5,7 +5,7 @@ namespace Fintracker.Application.DTO.Transaction;
 
 public class TransactionWithWalletAndUserDTO : TransactionBaseDTO
 {
-    public WalletBaseDTO Wallet { get; set; }
+    public WalletBaseDTO Wallet { get; set; } = default!;
 
-    public UserBaseDTO User { get; set; }
+    public UserBaseDTO User { get; set; } = default!;
 }

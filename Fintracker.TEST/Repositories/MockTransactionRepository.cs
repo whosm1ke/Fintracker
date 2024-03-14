@@ -104,8 +104,8 @@ public class MockTransactionRepository
                 return b;
             });
 
-        mock.Setup(x => x.UpdateAsync(It.IsAny<Transaction>()))
-            .Returns((Transaction b) =>
+        mock.Setup(x => x.Update(It.IsAny<Transaction>()))
+            .Callback((Transaction b) =>
             {
                 if (transactions.Find(x => x.Id == b.Id) != null)
                 {
@@ -126,8 +126,8 @@ public class MockTransactionRepository
         mock.Setup(x => x.GetAllAsyncNoTracking())
             .Returns(() => { return transactions; });
 
-        mock.Setup(x => x.DeleteAsync(It.IsAny<Transaction>()))
-            .Returns((Transaction b) =>
+        mock.Setup(x => x.Delete(It.IsAny<Transaction>()))
+            .Callback((Transaction b) =>
             {
                 if (transactions.Find(x => x.Id == b.Id) != null)
                 {

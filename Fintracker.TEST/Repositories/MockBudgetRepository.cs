@@ -129,8 +129,8 @@ public class MockBudgetRepository
                 return b;
             });
     //UpdateAsync
-        mock.Setup(x => x.UpdateAsync(It.IsAny<Budget>()))
-            .Returns((Budget b) =>
+        mock.Setup(x => x.Update(It.IsAny<Budget>()))
+            .Callback((Budget b) =>
             {
                 if (budgets.Find(x => x.Id == b.Id) != null)
                 {
@@ -151,8 +151,8 @@ public class MockBudgetRepository
         mock.Setup(x => x.GetAllAsync())
             .ReturnsAsync(budgets);
     //DeleteAsync
-        mock.Setup(x => x.DeleteAsync(It.IsAny<Budget>()))
-            .Returns((Budget b) =>
+        mock.Setup(x => x.Delete(It.IsAny<Budget>()))
+            .Callback((Budget b) =>
             {
                 if (budgets.Find(x => x.Id == b.Id) != null)
                 {

@@ -6,5 +6,5 @@ namespace Fintracker.Application.Features.Category.Requests.Commands;
 
 public class UpdateCategoryCommand : IRequest<UpdateCommandResponse<CategoryDTO>>
 {
-    public UpdateCategoryDTO Category { get; set; }
+    public UpdateCategoryDTO Category { get; set; } = default!;
 }

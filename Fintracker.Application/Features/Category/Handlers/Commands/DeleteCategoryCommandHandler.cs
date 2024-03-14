@@ -33,7 +33,7 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
             },nameof(Domain.Entities.Category));
 
         var deletedObj = _mapper.Map<CategoryDTO>(category);
-        await _unitOfWork.CategoryRepository.DeleteAsync(category);
+        _unitOfWork.CategoryRepository.Delete(category);
         await _unitOfWork.SaveAsync();
 
         response.DeletedObj = deletedObj;

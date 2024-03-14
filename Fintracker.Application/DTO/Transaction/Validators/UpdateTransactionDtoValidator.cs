@@ -15,6 +15,7 @@ public class UpdateTransactionDtoValidator : AbstractValidator<UpdateTransaction
 
         RuleFor(x => x.Transaction.Id)
             .ApplyCommonRules()
+            .OverridePropertyName(nameof(UpdateTransactionCommand.Transaction.Id))
             .MustAsync(async (id, _) => await unitOfWork.TransactionRepository.ExistsAsync(id))
             .WithMessage(x => $"{nameof(Domain.Entities.Transaction)} with id does not exists [{x.Transaction.Id}]");
     }
