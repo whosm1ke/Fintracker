@@ -83,4 +83,12 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     {
         return await _db.Transactions.GetByCategoryIdSortedAsync(categoryId, sortBy, isDescending);
     }
+
+    public new async Task<IReadOnlyList<Transaction?>> GetAllAsync()
+    {
+        return await _db.Transactions
+            .Include(x => x.Category)
+            .Include(x => x.Currency)
+            .ToListAsync();
+    }
 }

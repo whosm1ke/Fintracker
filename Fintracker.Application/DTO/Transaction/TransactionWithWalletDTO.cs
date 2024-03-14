@@ -4,5 +4,5 @@ namespace Fintracker.Application.DTO.Transaction;
 
 public class TransactionWithWalletDTO : TransactionBaseDTO
 {
-    public WalletBaseDTO Wallet { get; set; } = default!;
+    public WalletPureDTO Wallet { get; set; } = default!;
 }

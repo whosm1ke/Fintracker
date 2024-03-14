@@ -21,8 +21,8 @@ public class
         _unitOfWork = unitOfWork;
         _allowedSortColumns = new()
         {
-            nameof(Domain.Entities.Wallet.Name),
-            nameof(Domain.Entities.Wallet.Balance)
+            nameof(Domain.Entities.Wallet.Name).ToLowerInvariant(),
+            nameof(Domain.Entities.Wallet.Balance).ToLowerInvariant()
         };
     }
 

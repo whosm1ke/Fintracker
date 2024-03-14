@@ -23,9 +23,7 @@ public class GetTransactionsByCategoryIdSortedRequestHandler : IRequestHandler<G
         {
             nameof(Domain.Entities.Transaction.Label),
             nameof(Domain.Entities.Transaction.Note),
-            nameof(Domain.Entities.Transaction.Amount),
-            nameof(Domain.Entities.Transaction.Category),
-            nameof(Domain.Entities.Transaction.User)
+            nameof(Domain.Entities.Transaction.Amount)
         };
     }
 
