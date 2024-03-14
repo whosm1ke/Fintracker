@@ -1,6 +1,7 @@
 ﻿using Fintracker.Application.Exceptions;
 using Fintracker.Application.Responses.API_Responses;
 using Serilog;
+using Serilog.Context;
 
 namespace Fintracker.API.Middleware;
 
@@ -28,7 +29,6 @@ public class ExceptionMiddleware
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
-
         switch (exception)
         {
             case BadRequestException bad:
