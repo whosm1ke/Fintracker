@@ -5,7 +5,6 @@ using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.MapProfiles;
 using Fintracker.TEST.Repositories;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 
 namespace Fintracker.TEST.UserTests;
 

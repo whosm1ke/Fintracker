@@ -1,7 +1,6 @@
 ﻿using Fintracker.Application.Exceptions;
 using Fintracker.Application.Responses.API_Responses;
 using Serilog;
-using Serilog.Context;
 
 namespace Fintracker.API.Middleware;
 

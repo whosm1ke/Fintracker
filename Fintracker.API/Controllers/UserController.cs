@@ -112,10 +112,22 @@ public class UserController : ControllerBase
     public async Task<ActionResult<UpdateCommandResponse<UserBaseDTO>>> Put([FromForm] UpdateUserDTO user,
         [FromServices] IWebHostEnvironment env)
     {
+        if (user.Avatar != null)
+        {
+            var avatar = user.Avatar;
+            var fileName = Path.GetFileName(avatar.FileName);
+            var filePath = Path.Combine(env.WebRootPath,"images" ,fileName);
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                await avatar.CopyToAsync(stream);
+            }
+
+            user.UserDetails.Avatar = filePath;
+        }
+        
         var response = await _mediator.Send(new UpdateUserCommand
         {
-            User = user,
-            WWWRoot = env.WebRootPath
+            User = user
         });
 
         return Ok(response);

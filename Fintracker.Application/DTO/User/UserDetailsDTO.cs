@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Fintracker.Application.DTO.User;
+﻿namespace Fintracker.Application.DTO.User;
 
 public class UserDetailsDTO
 {
@@ -12,7 +10,7 @@ public class UserDetailsDTO
 
     public DateTime? DateOfBirth { get; set; }
 
-    public IFormFile? Avatar { get; set; }
+    public string? Avatar { get; set; }
 
     public LanguageTypeEnum? Language { get; set; }
     

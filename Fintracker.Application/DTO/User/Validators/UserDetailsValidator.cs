@@ -11,7 +11,7 @@ public class UserDetailsValidator : AbstractValidator<UserDetailsDTO>
     public UserDetailsValidator(IOptions<AppSettings> options)
     {
         _appSettings = options.Value;
-        RuleFor(x => x.Avatar!.FileName)
+        RuleFor(x => x.Avatar)
             .ApplyLength(UserDetailsConstraints.MaxAvatarLength)
             .Must(BeAValidExtension)
             .When(x => x.Avatar is not null)
