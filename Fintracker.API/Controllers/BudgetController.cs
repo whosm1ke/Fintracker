@@ -68,7 +68,7 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(List<BudgetBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsById(Guid id,
-        [FromQuery] string type)
+        [FromQuery] string type = "wallet")
     {
         if (string.IsNullOrEmpty(type) ||
             (type.ToLower() != $"{nameof(Wallet).ToLower()}" && type.ToLower() != $"{nameof(User).ToLower()}"))
@@ -97,9 +97,9 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(List<BudgetBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsByIdSorted([FromQuery] Guid id,
-        [FromQuery] string type,
         [FromQuery] string? sortBy,
-        [FromQuery] bool? isDescending)
+        [FromQuery] bool? isDescending,
+        [FromQuery] string type = "wallet")
     {
         if (string.IsNullOrEmpty(type) ||
             (type.ToLower() != $"{nameof(Wallet).ToLower()}" && type.ToLower() != $"{nameof(User).ToLower()}"))

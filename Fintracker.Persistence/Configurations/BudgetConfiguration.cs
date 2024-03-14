@@ -58,8 +58,7 @@ public class BudgetConfiguration : IEntityTypeConfiguration<Budget>
         builder.ToTable("Budgets", t =>
         {
             t.HasCheckConstraint("CK_Budgets_EndStartDate", "\"StartDate\" <= \"EndDate\"");
-            t.HasCheckConstraint("CK_Budgets_Balance", $"\"Balance\" >= {BudgetConstraints.MinBalance}" +
-                                                       $" and \"Balance\" <= {BudgetConstraints.MaxBalance}");
+            t.HasCheckConstraint("CK_Budgets_Balance", $"\"Balance\" <= {BudgetConstraints.MaxBalance}");
         });
     }
 }

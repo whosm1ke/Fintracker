@@ -21,10 +21,10 @@ public class
         _mapper = mapper;
         _allowedSortColumns = new List<string>
         {
-            nameof(Domain.Entities.Budget.Name),
-            nameof(Domain.Entities.Budget.StartDate),
-            nameof(Domain.Entities.Budget.EndDate),
-            nameof(Domain.Entities.Budget.Balance)
+            nameof(Domain.Entities.Budget.Name).ToLowerInvariant(),
+            nameof(Domain.Entities.Budget.StartDate).ToLowerInvariant(),
+            nameof(Domain.Entities.Budget.EndDate).ToLowerInvariant(),
+            nameof(Domain.Entities.Budget.Balance).ToLowerInvariant()
         };
     }
 

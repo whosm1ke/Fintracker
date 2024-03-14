@@ -37,6 +37,7 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
     {
         return await _db.Budgets
             .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
             .Include(x => x.Categories)
             .Include(x => x.Currency)
             .Where(x => x.Id == id)
