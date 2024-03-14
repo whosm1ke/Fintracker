@@ -19,7 +19,8 @@ public static class WalletExtensions
         var property = Expression.Property(parameter, sortBy);
 
         // Create a lambda expression for the OrderBy method
-        var lambda = Expression.Lambda<Func<Wallet, object>>(property, parameter);
+        var converted = Expression.Convert(property, typeof(object));
+        var lambda = Expression.Lambda<Func<Wallet, object>>(converted, parameter);
 
         // Apply the sorting to the query
         var query = isDescending
