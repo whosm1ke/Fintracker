@@ -29,8 +29,7 @@ public class BudgetCommandTests
     public async Task AddAsync_Should_Return_True()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var mockUserRepository = MockUserRepository.GetUserRepository().Object;
-        var handler = new CreateBudgetCommandHandler(mockUnitOfWork, _mapper, mockUserRepository);
+        var handler = new CreateBudgetCommandHandler(mockUnitOfWork, _mapper);
         var budgetToAdd = _fixture.Build<CreateBudgetDTO>()
             .With(c => c.Name, "New Budget")
             .With(c => c.Balance, 100)

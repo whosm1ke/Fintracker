@@ -17,8 +17,8 @@ public static class ConfigureApplication
         services.AddMediatR(x =>
         {
             x.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            x.AddOpenRequestPreProcessor(typeof(ValidationBehaviourPreProcess<>));
             x.AddOpenBehavior(typeof(LoggingPipelineBehaviour<,>));
+            x.AddOpenRequestPreProcessor(typeof(ValidationBehaviourPreProcess<>));
         });
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.Configure<AppSettings>(configuration.GetSection("AppSettings"));

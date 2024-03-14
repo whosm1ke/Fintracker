@@ -12,13 +12,11 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IUserRepository _userRepository;
 
-    public CreateBudgetCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IUserRepository userRepository)
+    public CreateBudgetCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _userRepository = userRepository;
     }
 
     public async Task<CreateCommandResponse<CreateBudgetDTO>> Handle(CreateBudgetCommand request,
