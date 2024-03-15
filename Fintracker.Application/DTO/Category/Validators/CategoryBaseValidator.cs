@@ -1,6 +1,7 @@
 ﻿using Fintracker.Application.BusinessRuleConstraints;
 using Fintracker.Application.Helpers;
 using FluentValidation;
+
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 namespace Fintracker.Application.DTO.Category.Validators;

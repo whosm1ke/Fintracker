@@ -8,7 +8,7 @@ namespace Fintracker.Persistence.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class, IEntity<Guid>
 {
-    private readonly IDictionary<string, string> _columnsNames = new Dictionary<string, string>()
+    private readonly IDictionary<string, string> _columnsNames = new Dictionary<string, string>
     {
         { nameof(User), "AspNetUsers" },
         { nameof(Budget), "Budgets" },

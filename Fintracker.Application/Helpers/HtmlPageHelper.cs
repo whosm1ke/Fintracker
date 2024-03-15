@@ -1,4 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Helpers;
+
 namespace Fintracker.Application.Helpers;
 public class HtmlPageHelper : IHtmlPageHelper
 {

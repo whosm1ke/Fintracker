@@ -1,7 +1,7 @@
-﻿using Fintracker.Application.Contracts.Persistence;
+﻿using System.Linq.Dynamic.Core;
+using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Domain.Entities;
 using Moq;
-using System.Linq.Dynamic.Core;
 
 namespace Fintracker.TEST.Repositories;
 

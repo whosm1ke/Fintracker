@@ -1,5 +1,4 @@
-﻿using Fintracker.Application.Responses.Commands_Responses;
-using MediatR;
+﻿using MediatR;
 using Serilog;
 
 namespace Fintracker.Application.Features.Behaviours;

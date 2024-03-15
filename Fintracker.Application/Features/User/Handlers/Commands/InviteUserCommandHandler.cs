@@ -71,7 +71,7 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
         if (!isEmailSent)
         {
             await _userRepository.DeleteAsync(user);
-            throw new BadRequestException(new ExceptionDetails()
+            throw new BadRequestException(new ExceptionDetails
             {
                 PropertyName = "Email",
                 ErrorMessage = $"Was not sent to {request.UserEmail}. Check spelling"

@@ -1,7 +1,7 @@
+using System.Linq.Dynamic.Core;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Domain.Entities;
 using Moq;
-using System.Linq.Dynamic.Core;
 
 namespace Fintracker.TEST.Repositories;
 
@@ -37,7 +37,7 @@ public class MockTransactionRepository
                 Note = "Note 3",
                 Category = new() { Id = new Guid("FA79B6AB-7E69-46CC-9522-D0F68DF0FE19") },
                 CategoryId = new Guid("FA79B6AB-7E69-46CC-9522-D0F68DF0FE19"),
-                Wallet = new Wallet() {Balance = 100}
+                Wallet = new Wallet {Balance = 100}
             },
             new()
             {

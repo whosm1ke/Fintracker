@@ -2,6 +2,7 @@
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.Helpers;
 using FluentValidation;
+
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 namespace Fintracker.Application.DTO.Wallet.Validators;
