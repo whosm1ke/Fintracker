@@ -10,7 +10,8 @@ public static class BudgetExtensions
         this DbSet<Budget> budgets,
         Guid userId,
         string sortBy,
-        bool isDescending)
+        bool isDescending,
+        bool isPublic)
     {
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Budget), "x");
@@ -27,12 +28,12 @@ public static class BudgetExtensions
             ? budgets
                 .Include(x => x.Categories)
                 .Include(x => x.Currency)
-                .Where(x => x.UserId == userId)
+                .Where(x => x.IsPublic == isPublic && x.UserId == userId)
                 .OrderByDescending(lambda)
             : budgets
                 .Include(x => x.Categories)
                 .Include(x => x.Currency)
-                .Where(x => x.UserId == userId)
+                .Where(x => x.IsPublic == isPublic && x.UserId == userId)
                 .OrderBy(lambda);
 
         return await query.ToListAsync();
@@ -42,7 +43,8 @@ public static class BudgetExtensions
         this DbSet<Budget> budgets,
         Guid walletId,
         string sortBy,
-        bool isDescending)
+        bool isDescending,
+        bool isPublic)
     {
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Budget), "x");
@@ -59,12 +61,12 @@ public static class BudgetExtensions
             ? budgets
                 .Include(x => x.Categories)
                 .Include(x => x.Currency)
-                .Where(x => x.WalletId == walletId)
+                .Where(x => x.IsPublic == isPublic && x.WalletId == walletId)
                 .OrderByDescending(lambda)
             : budgets
                 .Include(x => x.Categories)
                 .Include(x => x.Currency)
-                .Where(x => x.WalletId == walletId)
+                .Where(x => x.IsPublic == isPublic && x.WalletId == walletId)
                 .OrderBy(lambda);
 
         return await query.ToListAsync();

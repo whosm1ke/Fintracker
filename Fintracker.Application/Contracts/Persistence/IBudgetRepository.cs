@@ -9,9 +9,9 @@ public interface IBudgetRepository : IGenericRepository<Budget>
     Task<Budget?> GetBudgetWithUserAsync(Guid id);
 
     Task<IReadOnlyList<Budget>> GetBudgetsByCategoryId(Guid categoryId);
-    Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId);
-    Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId);
+    Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId, bool isPublic);
+    Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId, bool isPublic);
 
-    Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, string sortBy, bool isDescending);
-    Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, string sortBy, bool isDescending);
+    Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, string sortBy, bool isDescending, bool isPublic);
+    Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, string sortBy, bool isDescending, bool isPublic);
 }

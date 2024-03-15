@@ -33,12 +33,13 @@ public class
             {
                 ErrorMessage = $"Was not found by id [{request.Id}]",
                 PropertyName = nameof(request.Id)
-            },nameof(Domain.Entities.Transaction));
+            }, nameof(Domain.Entities.Transaction));
 
         var deletedObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
         IncreaseWalletBalance(transaction.Wallet, transaction.Amount);
-        await IncreaseBudgetBalance(transaction.CategoryId, transaction.Amount);
+        if (transaction.UserId.HasValue)
+            await IncreaseBudgetBalance(transaction.CategoryId, transaction.Amount, transaction.UserId.Value);
 
         _unitOfWork.TransactionRepository.Delete(transaction);
 
@@ -56,13 +57,14 @@ public class
         wallet.Balance += amount;
     }
 
-    private async Task IncreaseBudgetBalance(Guid categoryId, decimal amount)
+    private async Task IncreaseBudgetBalance(Guid categoryId, decimal amount, Guid userId)
     {
         var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
 
         foreach (var budget in budgets)
         {
-            budget.Balance += amount;
+            if (budget.IsPublic || budget.UserId == userId)
+                budget.Balance += amount;
         }
     }
 }

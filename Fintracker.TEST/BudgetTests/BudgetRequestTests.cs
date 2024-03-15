@@ -134,7 +134,7 @@ public class BudgetRequestTests
         var actualSortedBudgets = await handler.Handle(new GetBudgetsByUserIdSortedRequest
         {
             UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
-            SortBy = "Name"
+            SortBy = "name"
         }, default);
 
         actualSortedBudgets.Should().NotBeNull();
@@ -169,7 +169,7 @@ public class BudgetRequestTests
         var actualSortedBudgets = await handler.Handle(new GetBudgetsByWalletIdSortedRequest
         {
             WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
-            SortBy = "Name"
+            SortBy = "name"
         }, default);
 
         actualSortedBudgets.Should().NotBeNull();

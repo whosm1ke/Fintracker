@@ -20,7 +20,7 @@ public class GetBudgetsByUserIdRequestHandler : IRequestHandler<GetBudgetsByUser
     public async Task<IReadOnlyList<BudgetBaseDTO>> Handle(GetBudgetsByUserIdRequest request,
         CancellationToken cancellationToken)
     {
-        var budgets = await _unitOfWork.BudgetRepository.GetByUserIdAsync(request.UserId);
+        var budgets = await _unitOfWork.BudgetRepository.GetByUserIdAsync(request.UserId, request.IsPublic);
 
         //TODO: may be there should be some validation logic to ensure that list is not empty
 

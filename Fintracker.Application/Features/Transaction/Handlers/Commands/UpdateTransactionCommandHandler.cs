@@ -39,7 +39,8 @@ public class
         var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
         _mapper.Map(request.Transaction, transaction);
 
-        await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount);
+        await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount,
+            oldObject.UserId);
         UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
         _unitOfWork.TransactionRepository.Update(transaction);
 
@@ -66,17 +67,20 @@ public class
             wallet.Balance -= difference;
     }
 
-    private async Task UpdateBudgetBalance(Guid categoryId, decimal newAmount, decimal oldAmount)
+    private async Task UpdateBudgetBalance(Guid categoryId, decimal newAmount, decimal oldAmount, Guid userId)
     {
         var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
         decimal difference = newAmount - oldAmount;
 
         foreach (var budget in budgets)
         {
-            if (difference > 0)
-                budget.Balance += difference;
-            else
-                budget.Balance -= difference;
+            if (budget.IsPublic || budget.UserId == userId)
+            {
+                if (difference > 0)
+                    budget.Balance += difference;
+                else
+                    budget.Balance -= difference;
+            }
         }
     }
 }

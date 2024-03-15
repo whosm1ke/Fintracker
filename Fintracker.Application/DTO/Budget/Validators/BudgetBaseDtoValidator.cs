@@ -51,6 +51,9 @@ public class BudgetBaseDtoValidator : AbstractValidator<IBudgetDto>
             .ApplyCommonRules(x => x.CategoryIds is not null)
             .MustAsync(async (guids, _) => await ExistInDatabase(guids))
             .WithMessage("One or more category(ies) do not exist.");
+
+        RuleFor(x => x.IsPublic)
+            .ApplyCommonRules();
     }
 
     private async Task<bool> ExistInDatabase(ICollection<Guid> categoryIds)

@@ -21,7 +21,8 @@ public class
     public async Task<IReadOnlyList<BudgetBaseDTO>> Handle(GetBudgetsByWalletIdRequest request,
         CancellationToken cancellationToken)
     {
-        var budgets = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(request.WalletId);
+        var budgets = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(request.WalletId,
+            request.IsPublic);
 
         //TODO: may be there should be some validation logic to ensure that list is not empty
 

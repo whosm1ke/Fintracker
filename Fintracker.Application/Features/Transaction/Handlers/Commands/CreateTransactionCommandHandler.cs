@@ -34,7 +34,8 @@ public class
         var createdObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
         await DecreaseBalanceInWallet(transaction.WalletId, transaction.Amount);
-        await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount);
+        if (transaction.UserId.HasValue)
+            await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount, transaction.UserId.Value);
 
         response.Success = true;
         response.Message = "Created successfully";
@@ -47,13 +48,16 @@ public class
         return response;
     }
 
-    private async Task DecreaseBalanceInBudgets(Guid categoryId, decimal amount)
+    private async Task DecreaseBalanceInBudgets(Guid categoryId, decimal amount, Guid userId)
     {
         var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
 
         foreach (var budget in budgets)
         {
-            budget.Balance -= amount;
+            if (budget.IsPublic || budget.UserId == userId)
+            {
+                budget.Balance -= amount;
+            }
         }
     }
 

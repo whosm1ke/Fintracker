@@ -54,31 +54,31 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId)
+    public async Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId, bool isPublic)
     {
         return await _db.Budgets
             .Include(x => x.Categories)
             .Include(x => x.Currency)
-            .Where(x => x.UserId == userId)
+            .Where(x => x.UserId == userId && x.IsPublic == isPublic)
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId)
+    public async Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId, bool isPublic)
     {
         return await _db.Budgets
             .Include(x => x.Categories)
             .Include(x => x.Currency)
-            .Where(x => x.WalletId == walletId)
+            .Where(x => x.WalletId == walletId && x.IsPublic == isPublic)
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, string sortBy, bool isDescending)
+    public async Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, string sortBy, bool isDescending, bool isPublic)
     {
-        return await _db.Budgets.GetByUserIdSortedAsync(userId, sortBy, isDescending);
+        return await _db.Budgets.GetByUserIdSortedAsync(userId, sortBy, isDescending, isPublic);
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, string sortBy, bool isDescending)
+    public async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, string sortBy, bool isDescending, bool isPublic)
     {
-        return await _db.Budgets.GetByWalletIdSortedAsync(walletId, sortBy, isDescending);
+        return await _db.Budgets.GetByWalletIdSortedAsync(walletId, sortBy, isDescending, isPublic);
     }
 }

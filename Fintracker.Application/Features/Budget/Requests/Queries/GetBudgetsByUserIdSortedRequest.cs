@@ -9,4 +9,5 @@ public class GetBudgetsByUserIdSortedRequest : IRequest<IReadOnlyList<BudgetBase
     public string SortBy { get; set; } = default!;
 
     public bool IsDescending { get; set; }
+    public bool IsPublic { get; set; }
 }

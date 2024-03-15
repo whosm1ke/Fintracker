@@ -41,7 +41,7 @@ public class
 
         var budgets =
             await _unitOfWork.BudgetRepository.GetByUserIdSortedAsync(request.UserId, request.SortBy,
-                request.IsDescending);
+                request.IsDescending, request.IsPublic);
 
         //TODO: may be there should be some validation logic to ensure that list is not empty
 

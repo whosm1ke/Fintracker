@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Fintracker.Application.DTO.Budget;
 using Fintracker.Domain.Entities;
+using Fintracker.Domain.Enums;
 
 namespace Fintracker.Application.MapProfiles;
 

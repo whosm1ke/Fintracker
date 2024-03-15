@@ -7,18 +7,21 @@ namespace Fintracker.Application.Features.Behaviours;
 
 public class ValidationBehaviourPreProcess<TRequest> : IRequestPreProcessor<TRequest> where TRequest : INotGetRequest
 {
-    private readonly IValidator<TRequest> _validator;
-    public ValidationBehaviourPreProcess(IValidator<TRequest> validator)
+    private readonly IEnumerable<IValidator<TRequest>> _validators;
+
+    public ValidationBehaviourPreProcess(IEnumerable<IValidator<TRequest>> validators)
     {
-        _validator = validator;
+        _validators = validators;
     }
+
     public async Task Process(TRequest request, CancellationToken cancellationToken)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (_validator is not null)
+        if (_validators.Any())
         {
             var context = new ValidationContext<TRequest>(request);
-            var validationResults = await Task.WhenAll(_validator.ValidateAsync(context, cancellationToken));
+            var validationResults =
+                await Task.WhenAll(_validators.Select(x => x.ValidateAsync(context, cancellationToken)));
             var failures = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
             if (failures.Count != 0)
                 throw new BadRequestException(failures.Select(x => new ExceptionDetails

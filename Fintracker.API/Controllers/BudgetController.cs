@@ -67,7 +67,7 @@ public class BudgetController : ControllerBase
     [HttpGet("{id:guid}/list")]
     [ProducesResponseType(typeof(List<BudgetBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsById(Guid id,
+    public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsById(Guid id, [FromQuery] bool? isPublic,
         [FromQuery] string type = "wallet")
     {
         if (string.IsNullOrEmpty(type) ||
@@ -82,12 +82,14 @@ public class BudgetController : ControllerBase
         if (type == nameof(User).ToLower())
             budgets = await _mediator.Send(new GetBudgetsByUserIdRequest
             {
-                UserId = id
+                UserId = id,
+                IsPublic = isPublic.HasValue && isPublic.Value
             });
         else
             budgets = await _mediator.Send(new GetBudgetsByWalletIdRequest
             {
-                WalletId = id
+                WalletId = id,
+                IsPublic = isPublic.HasValue && isPublic.Value
             });
 
         return Ok(budgets);
@@ -97,6 +99,7 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(List<BudgetBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsByIdSorted([FromQuery] Guid id,
+        [FromQuery] bool? isPublic,
         [FromQuery] string? sortBy,
         [FromQuery] bool? isDescending,
         [FromQuery] string type = "wallet")
@@ -115,14 +118,16 @@ public class BudgetController : ControllerBase
             {
                 UserId = id,
                 IsDescending = isDescending.HasValue && isDescending.Value,
-                SortBy = sortBy!
+                SortBy = sortBy!,
+                IsPublic = isPublic.HasValue && isPublic.Value
             });
         else
             budgets = await _mediator.Send(new GetBudgetsByWalletIdSortedRequest
             {
                 WalletId = id,
                 IsDescending = isDescending.HasValue && isDescending.Value,
-                SortBy = sortBy!
+                SortBy = sortBy!,
+                IsPublic = isPublic.HasValue && isPublic.Value
             });
 
         return Ok(budgets);

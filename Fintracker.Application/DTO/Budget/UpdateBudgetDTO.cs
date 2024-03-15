@@ -19,4 +19,6 @@ public class UpdateBudgetDTO :  IBaseDto, IBudgetDto
     public DateTime StartDate { get; set; }
     
     public DateTime EndDate { get; set; }
+    
+    public bool IsPublic { get; set; }
 }
