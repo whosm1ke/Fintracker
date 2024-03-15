@@ -93,10 +93,12 @@ public class MockCategoryRepository
             });
         
     //ICategoryRepository
-    mock.Setup(x => x.GetByTypeAsync(It.IsAny<CategoryType>()))
-        .Returns((CategoryType type) =>
+    mock.Setup(x => x.GetByTypeAsync( It.IsAny<Guid>(),It.IsAny<CategoryType>()))
+        .Returns((Guid userId, CategoryType type) =>
         {
-            return Task.FromResult<IReadOnlyList<Category>>(categories.Where(x => x.Type == type).ToList());
+            return Task.FromResult<IReadOnlyList<Category>>(categories
+                .Where(c => c.UserId == null || c.UserId == userId)
+                .Where(x => x.Type == type).ToList());
         });
     
     mock.Setup(x => x.GetAllWithIds(It.IsAny<ICollection<Guid>>()))
@@ -106,8 +108,8 @@ public class MockCategoryRepository
             return Task.FromResult(cats);
         });
 
-    mock.Setup(x => x.GetAllSortedAsync(It.IsAny<string>(), It.IsAny<bool>()))
-        .Returns((string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Category>)categories
+    mock.Setup(x => x.GetAllSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
+        .Returns((Guid userId, string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Category>)categories
             .AsQueryable()
             .OrderBy(sortBy)
             .ToList()));

@@ -50,8 +50,8 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
             .Include(x => x.Categories)
             .Include(x => x.Currency)
             .Where(x => x.Categories
-                                                    .Any(x => x.Id == categoryId))
-                                .ToListAsync();
+                .Any(x => x.Id == categoryId))
+            .ToListAsync();
     }
 
     public async Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId)

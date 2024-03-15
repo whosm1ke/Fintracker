@@ -8,4 +8,6 @@ public class GetCategoriesSortedRequest : IRequest<IReadOnlyList<CategoryDTO>>
     public string SortBy { get; set; } = default!;
     
     public bool IsDescending { get; set; }
+    
+    public Guid UserId { get; set; }
 }

@@ -5,9 +5,11 @@ namespace Fintracker.Application.Contracts.Persistence;
 
 public interface ICategoryRepository : IGenericRepository<Category>
 {
-    Task<IReadOnlyList<Category>> GetByTypeAsync(CategoryType type);
+    Task<IReadOnlyList<Category>> GetByTypeAsync(Guid userId, CategoryType type);
 
-    Task<IReadOnlyList<Category>> GetAllSortedAsync(string sortBy, bool isDescending);
+    Task<IReadOnlyList<Category>> GetAllSortedAsync(Guid userId, string sortBy, bool isDescending);
 
     Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids);
+
+    Task<IReadOnlyList<Category>> GetAllAsync(Guid userId);
 }

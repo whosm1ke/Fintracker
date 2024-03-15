@@ -33,9 +33,19 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
                 PropertyName = nameof(request.Category.Id)
             }, nameof(Domain.Entities.Category));
 
+        if (request.Category.UserId != category.UserId)
+        {
+            throw new ForbidenException(new ExceptionDetails
+            {
+                ErrorMessage = "User has no access to change this category",
+                PropertyName = nameof(Domain.Entities.Category)
+            });
+        }
+        
         var oldCategory = _mapper.Map<CategoryDTO>(category);
         _mapper.Map(request.Category, category);
 
+        
         _unitOfWork.CategoryRepository.Update(category);
         await _unitOfWork.SaveAsync();
 

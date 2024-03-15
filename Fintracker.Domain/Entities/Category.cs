@@ -22,4 +22,6 @@ public class Category : IEntity<Guid>
     public string Image { get; set; } = default!;
 
     public string IconColour { get; set; } = default!;
+
+    public Guid? UserId { get; set; }
 }

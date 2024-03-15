@@ -15,14 +15,24 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
         _db = context;
     }
 
-    public async Task<IReadOnlyList<Category>> GetByTypeAsync(CategoryType type)
+    public async Task<IReadOnlyList<Category>> GetAllAsync(Guid userId)
     {
-        return await _db.Categories.Where(x => x.Type == type).ToListAsync();
+        return await _db.Categories
+            .Where(c => c.UserId == null || c.UserId == userId)
+            .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Category>> GetAllSortedAsync(string sortBy, bool isDescending)
+    public async Task<IReadOnlyList<Category>> GetByTypeAsync(Guid userId, CategoryType type)
     {
-        return await _db.Categories.GetAllSortedAsync(sortBy, isDescending);
+        return await _db.Categories
+            .Where(c => c.UserId == null || c.UserId == userId)
+            .Where(x => x.Type == type)
+            .ToListAsync();
+    }
+
+    public async Task<IReadOnlyList<Category>> GetAllSortedAsync(Guid userId, string sortBy, bool isDescending)
+    {
+        return await _db.Categories.GetAllSortedAsync(userId,sortBy, isDescending);
     }
 
     public async Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids)

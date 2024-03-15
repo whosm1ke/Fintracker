@@ -20,7 +20,8 @@ public class GetCategoriesByTypeRequestHandler : IRequestHandler<GetCategoriesBy
     public async Task<IReadOnlyList<CategoryDTO>> Handle(GetCategoriesByTypeRequest request,
         CancellationToken cancellationToken)
     {
-        var category = await _unitOfWork.CategoryRepository.GetByTypeAsync(request.Type);
+        var category = await _unitOfWork.CategoryRepository
+            .GetByTypeAsync(request.UserId, request.Type);
 
 
         return _mapper.Map<List<CategoryDTO>>(category);

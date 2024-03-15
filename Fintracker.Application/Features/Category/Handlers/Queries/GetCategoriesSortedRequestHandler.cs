@@ -34,7 +34,9 @@ public class GetCategoriesSortedRequestHandler : IRequestHandler<GetCategoriesSo
                 ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
             });
 
-        var categories = await _unitOfWork.CategoryRepository.GetAllSortedAsync(request.SortBy, request.IsDescending);
+        var categories =
+            await _unitOfWork.CategoryRepository.GetAllSortedAsync(request.UserId, request.SortBy,
+                request.IsDescending);
 
         return _mapper.Map<List<CategoryDTO>>(categories);
     }

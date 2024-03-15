@@ -8,6 +8,7 @@ public static class CategoryExtensions
 {
     public static async Task<IReadOnlyList<Category>> GetAllSortedAsync(
         this DbSet<Category> categories,
+        Guid userId,
         string sortBy,
         bool isDescending)
     {
@@ -23,8 +24,11 @@ public static class CategoryExtensions
 
         // Apply the sorting to the query
         var query = isDescending
-            ? categories.OrderByDescending(lambda)
-            : categories.OrderBy(lambda);
+            ? categories.Where(c => c.UserId == null || c.UserId == userId)
+                .OrderByDescending(lambda)
+            : categories
+                .Where(c => c.UserId == null || c.UserId == userId)
+                .OrderBy(lambda);
 
         return await query.ToListAsync();
     }

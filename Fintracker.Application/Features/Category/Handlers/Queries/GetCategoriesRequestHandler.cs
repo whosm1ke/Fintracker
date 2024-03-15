@@ -20,7 +20,7 @@ public class GetCategoriesRequestHandler : IRequestHandler<GetCategoriesRequest,
     public async Task<IReadOnlyList<CategoryDTO>> Handle(GetCategoriesRequest request,
         CancellationToken cancellationToken)
     {
-        var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
+        var categories = await _unitOfWork.CategoryRepository.GetAllAsync(request.UserId);
 
         //TODO add validation logic if needed
 

@@ -31,6 +31,15 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
                 ErrorMessage = $"Attempt to delete non-existing item by id [{request.Id}]",
                 PropertyName = nameof(request.Id)
             },nameof(Domain.Entities.Category));
+        
+        if (request.UserId != category.UserId)
+        {
+            throw new ForbidenException(new ExceptionDetails
+            {
+                ErrorMessage = "User has no access to change this category",
+                PropertyName = nameof(Domain.Entities.Category)
+            });
+        }
 
         var deletedObj = _mapper.Map<CategoryDTO>(category);
         _unitOfWork.CategoryRepository.Delete(category);

@@ -8,4 +8,5 @@ namespace Fintracker.Application.Features.Category.Requests.Commands;
 public class DeleteCategoryCommand : IRequest<DeleteCommandResponse<CategoryDTO>>, INotGetRequest
 {
     public Guid Id { get; set; }
+    public Guid UserId { get; set; }
 }

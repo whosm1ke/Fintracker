@@ -1,4 +1,5 @@
-﻿using Fintracker.Application.Features.Category.Requests.Commands;
+﻿using Fintracker.Application.Contracts.Identity;
+using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Helpers;
 using FluentValidation;
 
@@ -6,7 +7,7 @@ namespace Fintracker.Application.DTO.Category.Validators;
 
 public class CreateCategoryDtoValidator : AbstractValidator<CreateCategoryCommand>
 {
-    public CreateCategoryDtoValidator()
+    public CreateCategoryDtoValidator(IUserRepository userRepository)
     {
         RuleFor(x => x.Category)
             .SetValidator(new CategoryBaseValidator())
@@ -18,5 +19,11 @@ public class CreateCategoryDtoValidator : AbstractValidator<CreateCategoryComman
             .OverridePropertyName(nameof(CreateCategoryCommand.Category.Type))
             .IsInEnum()
             .WithMessage($"Has allowed values: {CategoryTypeEnum.INCOME} or {CategoryTypeEnum.EXPENSE}");
+
+        RuleFor(x => x.Category.UserId)
+            .ApplyCommonRules()
+            .OverridePropertyName(nameof(CreateCategoryCommand.Category.UserId))
+            .MustAsync(async (id, _) => await userRepository.ExistsAsync(id))
+            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.Category.UserId}]");
     }
 }
