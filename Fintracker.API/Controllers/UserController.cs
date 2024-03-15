@@ -127,7 +127,8 @@ public class UserController : ControllerBase
         
         var response = await _mediator.Send(new UpdateUserCommand
         {
-            User = user
+            User = user,
+            WWWRoot = env.WebRootPath
         });
 
         return Ok(response);

@@ -9,4 +9,5 @@ public class UpdateUserCommand : IRequest<UpdateCommandResponse<UserBaseDTO>>, I
 {
     public UpdateUserDTO User { get; set; } = default!;
 
+    public string WWWRoot { get; set; }
 }
