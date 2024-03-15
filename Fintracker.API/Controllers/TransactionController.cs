@@ -120,12 +120,15 @@ public class TransactionController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet]
+    [HttpGet("user/{userId:guid}/all")]
     [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<TransactionBaseDTO>>> Get()
+    public async Task<ActionResult<List<TransactionBaseDTO>>> GetAllForUser(Guid userId)
     {
-        var response = await _mediator.Send(new GetTransactionsRequest());
+        var response = await _mediator.Send(new GetTransactionsRequest()
+        {
+            UserId = userId
+        });
 
         return Ok(response);
     }

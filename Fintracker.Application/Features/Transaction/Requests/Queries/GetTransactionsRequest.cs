@@ -5,4 +5,5 @@ namespace Fintracker.Application.Features.Transaction.Requests.Queries;
 
 public class GetTransactionsRequest : IRequest<IReadOnlyList<TransactionBaseDTO>>
 {
+    public Guid UserId { get; set; }
 }

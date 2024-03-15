@@ -42,6 +42,13 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
             .FirstOrDefaultAsync();
     }
 
+    public async Task<IReadOnlyList<Transaction>> GetAllAsync(Guid userId)
+    {
+        return await _db.Transactions
+            .Where(t => t.UserId == userId)
+            .ToListAsync();
+    }
+
     public async Task<IReadOnlyList<Transaction>> GetByUserIdAsync(Guid userId)
     {
         return await _db.Transactions
