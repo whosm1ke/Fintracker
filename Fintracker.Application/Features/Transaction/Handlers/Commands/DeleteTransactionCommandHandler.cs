@@ -38,8 +38,7 @@ public class
         var deletedObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
         IncreaseWalletBalance(transaction.Wallet, transaction.Amount);
-        if (transaction.UserId.HasValue)
-            await IncreaseBudgetBalance(transaction.CategoryId, transaction.Amount, transaction.UserId.Value);
+        await IncreaseBudgetBalance(transaction.CategoryId, transaction.Amount, transaction.UserId);
 
         _unitOfWork.TransactionRepository.Delete(transaction);
 
