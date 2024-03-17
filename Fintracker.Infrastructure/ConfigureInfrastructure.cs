@@ -1,6 +1,7 @@
 ﻿using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Models.Mail;
 using Fintracker.Infrastructure.Mail;
+using Fintracker.Infrastructure.Monobank;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +13,11 @@ public static class ConfigureInfrastructure
     {
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
         services.AddTransient<IEmailSender,EmailSender>();
-
+        services.AddHttpClient("MonobankClient",x =>
+        {
+            x.BaseAddress = new Uri("https://api.monobank.ua");
+        });
+        services.AddTransient<IMonobankService, MonobankService>();
         return services;
     }
 }
