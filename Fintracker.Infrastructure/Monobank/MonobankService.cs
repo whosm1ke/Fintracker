@@ -69,7 +69,7 @@ public class MonobankService : IMonobankService
             HttpResponseMessage responseMessage = await client.SendAsync(requestMessage);
 
             if (responseMessage.StatusCode == HttpStatusCode.Forbidden)
-                throw new ForbidenException(new ExceptionDetails
+                throw new ForbiddenException(new ExceptionDetails
                 {
                     ErrorMessage = "Unknown 'X-Token'",
                     PropertyName = nameof(token)
@@ -140,7 +140,7 @@ public class MonobankService : IMonobankService
             HttpResponseMessage responseMessage = await client.SendAsync(requestMessage);
 
             if (responseMessage.StatusCode == HttpStatusCode.Forbidden)
-                throw new ForbidenException(new ExceptionDetails
+                throw new ForbiddenException(new ExceptionDetails
                 {
                     ErrorMessage = "Unknown 'X-Token'",
                     PropertyName = nameof(token)

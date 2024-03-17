@@ -5,6 +5,8 @@ using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.MapProfiles;
 using Fintracker.TEST.Repositories;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Moq;
 
 namespace Fintracker.TEST.UserTests;
 
@@ -55,13 +57,14 @@ public class UserCommandTests
             Email = "user1gmail.com",
             UserDetails = new()
             {
-                Avatar = null, 
+                Avatar = "avatar", 
                 Language = LanguageTypeEnum.Ukrainian,
                 Sex = "Male",
                 FName = "Misha"
             }
         };
-
+        var formFileMock = new Mock<IFormFile>();
+        formFileMock.SetupGet(x => x.FileName).Returns("avatar");
         var actualResult = await handler.Handle(new UpdateUserCommand
         {
             User = new()
@@ -70,12 +73,15 @@ public class UserCommandTests
                 Email = "user1gmail.com",
                 UserDetails = new()
                 {
-                    Avatar = null,
+                    Avatar = "avatar",
                     Language = LanguageTypeEnum.Ukrainian,
                     Sex = "Male",
                     FName = "Misha"
-                }
-            }
+                },
+                Avatar = formFileMock.Object
+                
+            },
+            WWWRoot = "fake root"
         }, default);
 
         actualResult.Success.Should().BeTrue();

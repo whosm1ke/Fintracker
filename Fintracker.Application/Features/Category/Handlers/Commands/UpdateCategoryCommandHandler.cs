@@ -35,7 +35,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 
         if (request.Category.UserId != category.UserId)
         {
-            throw new ForbidenException(new ExceptionDetails
+            throw new ForbiddenException(new ExceptionDetails
             {
                 ErrorMessage = "User has no access to change this category",
                 PropertyName = nameof(Domain.Entities.Category)

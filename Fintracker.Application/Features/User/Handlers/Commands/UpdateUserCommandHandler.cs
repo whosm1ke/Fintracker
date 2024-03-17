@@ -34,8 +34,8 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
             }, nameof(Domain.Entities.User));
         
         var oldUser = _mapper.Map<UserBaseDTO>(user);
-        var oldAvatar = oldUser.UserDetails.Avatar;
-        var newAvatar = Path.Combine(request.WWWRoot, "images", request.User.Avatar!.FileName);
+        var oldAvatar = oldUser.UserDetails?.Avatar;
+        var newAvatar = Path.Combine(request.WWWRoot, "images", request.User.Avatar?.FileName!);
         if (File.Exists(oldAvatar) && oldAvatar != newAvatar)
         {
             File.Delete(oldAvatar);

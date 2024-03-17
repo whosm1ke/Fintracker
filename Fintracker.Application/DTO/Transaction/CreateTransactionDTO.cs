@@ -15,6 +15,4 @@ public class CreateTransactionDTO : ITransactionDto
     public string? Note { get; set; }
     
     public string? Label { get; set; }
-    
-    public bool IsBankTransaction { get; set; }
 }

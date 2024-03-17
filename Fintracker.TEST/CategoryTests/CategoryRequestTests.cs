@@ -175,7 +175,11 @@ public class CategoryRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetCategoriesRequest(), default);
+        var actualResult = await handler.Handle(new GetCategoriesRequest
+        {
+            //NON EXISTING USER
+            UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
+        }, default);
 
         actualResult.Should().NotBeNull();
         actualResult.Count.Should().Be(expectedResult.Count);

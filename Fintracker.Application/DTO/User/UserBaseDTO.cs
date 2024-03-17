@@ -8,5 +8,5 @@ public class UserBaseDTO : IBaseDto
     
     public string Email { get; set; } = default!;
 
-    public UserDetailsDTO UserDetails { get; set; } = default!;
+    public UserDetailsDTO? UserDetails { get; set; } = default!;
 }

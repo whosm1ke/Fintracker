@@ -38,7 +38,7 @@ public class AddInitialTransactionToNewBankWalletCommandHandler : IRequestHandle
         var xToken = await _monobankService.GetMonobankTokenAsync(request.Payload.Email);
         var accountBalance = await _monobankService.GetAccountBalance(xToken!, request.Payload.AccountId);
 
-        var bankWalletDto = new CreateWalletDTO()
+        var bankWalletDto = new CreateWalletDTO
         {
             Balance = accountBalance / 100m,
             IsBanking = true,

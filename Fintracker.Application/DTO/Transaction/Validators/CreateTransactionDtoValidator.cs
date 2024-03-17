@@ -26,9 +26,5 @@ public class CreateTransactionDtoValidator : AbstractValidator<CreateTransaction
             .OverridePropertyName(nameof(CreateTransactionCommand.Transaction.WalletId))
             .MustAsync(async (id, _) => await unitOfWork.WalletRepository.ExistsAsync(id))
             .WithMessage(x => $"{nameof(Domain.Entities.Wallet)} with id does not exist [{x.Transaction.WalletId}]");
-
-        RuleFor(x => x.Transaction.IsBankTransaction)
-            .ApplyCommonRules()
-            .OverridePropertyName(nameof(CreateTransactionCommand.Transaction.IsBankTransaction));
     }
 }

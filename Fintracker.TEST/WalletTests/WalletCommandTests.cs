@@ -24,6 +24,7 @@ public class WalletCommandTests
         {
             c.AddProfile<WalletProfile>();
             c.AddProfile<UserProfile>();
+            c.AddProfile<CurrencyProfile>();
         });
 
         _mapper = mapperCfg.CreateMapper();

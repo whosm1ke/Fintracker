@@ -65,6 +65,10 @@ public class MockCategoryRepository
         mock.Setup(x => x.GetAllAsync())
             .Returns(() => Task.FromResult<IReadOnlyList<Category?>>(categories));
 
+        mock.Setup(x => x.GetAllAsync(It.IsAny<Guid>()))
+            .Returns((Guid userId) => Task.FromResult<IReadOnlyList<Category>>(categories
+                .Where(x => x.UserId == userId || x.UserId == null).ToList()));
+
         mock.Setup(x => x.AddAsync(It.IsAny<Category>()))
             .Returns((Category c) =>
             {

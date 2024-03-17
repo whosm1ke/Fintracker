@@ -77,7 +77,7 @@ public class BankController : ControllerBase
 
         var transactions = await _mediator.Send(new GetMonobankUserTransactionsRequest
         {
-            Configuration = new MonobankConfiguration()
+            Configuration = new MonobankConfiguration
             {
                 AccountId = accountId,
                 From = _cache.Get<long>("mono_from_value")
@@ -85,7 +85,7 @@ public class BankController : ControllerBase
             Email = email
         });
 
-        var addTransactionsResponse = await _mediator.Send(new AddNewTransactionsToBankingWalletCommand()
+        var addTransactionsResponse = await _mediator.Send(new AddNewTransactionsToBankingWalletCommand
         {
             Payload = new()
             {

@@ -31,6 +31,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Http">
+        <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.3\Microsoft.AspNetCore.Http.dll</HintPath>
+      </Reference>
       <Reference Include="Microsoft.AspNetCore.Http.Features">
         <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.3\Microsoft.AspNetCore.Http.Features.dll</HintPath>
       </Reference>

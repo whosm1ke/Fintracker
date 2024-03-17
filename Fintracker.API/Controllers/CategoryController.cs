@@ -44,7 +44,7 @@ public class CategoryController : ControllerBase
             UserId = GetCurrentUserId()
         };
 
-        var simpleRequest = new GetCategoriesRequest()
+        var simpleRequest = new GetCategoriesRequest
         {
             
             UserId = GetCurrentUserId()

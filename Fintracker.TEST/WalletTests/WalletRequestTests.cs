@@ -92,7 +92,7 @@ public class WalletRequestTests
         var actualResult = await handler.Handle(new GetWalletsByOwnerIdSortedRequest
         {
             OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"),
-            SortBy = "Balance"
+            SortBy = "balance"
         }, default);
 
         actualResult.Should().NotBeNull();

@@ -51,12 +51,12 @@ public class TransactionsCommandTests
         }, default);
         
         var transactionsCount = (await mockUnitOfWork.TransactionRepository.GetAllAsync()).Count;
-        var walletBalance = ((await mockUnitOfWork.WalletRepository.GetAsync(transactionToAdd.WalletId))!).Balance;
+        var walletBalance = (await mockUnitOfWork.WalletRepository.GetAsync(transactionToAdd.WalletId))!.Balance;
 
         walletBalance.Should().Be(500);
         result.Success.Should().BeTrue();
         result.CreatedObject.Should().NotBeNull();
-        result.CreatedObject.Should().BeOfType<TransactionBaseDTO>();
+        result.CreatedObject.Should().BeOfType<TransactionPureDTO>();
         transactionsCount.Should().Be(10);
     }
     
@@ -84,7 +84,7 @@ public class TransactionsCommandTests
         var budgetsCount = (await mockUnitOfWork.TransactionRepository.GetAllAsync()).Count;
         result.Success.Should().BeTrue();
         result.CreatedObject.Should().NotBeNull();
-        result.CreatedObject.Should().BeOfType<TransactionBaseDTO>();
+        result.CreatedObject.Should().BeOfType<TransactionPureDTO>();
         budgetsCount.Should().Be(10);
     }
     

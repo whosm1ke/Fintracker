@@ -35,7 +35,7 @@ public class
                 PropertyName = nameof(request.Transaction.Id)
             }, nameof(Domain.Entities.Transaction));
 
-        if (transaction.Amount.CompareTo(request.Transaction.Amount) != 0)
+        if (transaction.IsBankTransaction && transaction.Amount.CompareTo(request.Transaction.Amount) != 0)
             throw new BadRequestException(new ExceptionDetails
             {
                 ErrorMessage = "Can not change bank transaction amount",

@@ -125,7 +125,7 @@ public class TransactionController : ControllerBase
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<TransactionBaseDTO>>> GetAllForUser(Guid userId)
     {
-        var response = await _mediator.Send(new GetTransactionsRequest()
+        var response = await _mediator.Send(new GetTransactionsRequest
         {
             UserId = userId
         });

@@ -8,7 +8,7 @@ public class MonoTransactionDTOToTransactionConverter : ITypeConverter<MonoTrans
 {
     public Transaction Convert(MonoTransactionDTO source, Transaction destination, ResolutionContext context)
     {
-        return new Transaction()
+        return new Transaction
         {
             Amount = source.Amount,
             Label = source.Comment,
