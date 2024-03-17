@@ -11,5 +11,7 @@ public class WalletPureDTO: IBaseDto
 
     public decimal Balance { get; set; }
     
-    public Guid CurrencyId { get; set; } = default!;
+    public Guid CurrencyId { get; set; }
+    
+    public bool IsBanking { get; set; }
 }

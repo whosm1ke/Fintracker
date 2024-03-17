@@ -35,8 +35,16 @@ public class
                 PropertyName = nameof(request.Id)
             }, nameof(Domain.Entities.Transaction));
 
+        if (transaction.IsBankTransaction)
+            throw new BadRequestException(new ExceptionDetails
+            {
+                ErrorMessage = "Can not delete bank transaction",
+                PropertyName = nameof(transaction.IsBankTransaction)
+            });
+
         var deletedObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
+        
         IncreaseWalletBalance(transaction.Wallet, transaction.Amount);
         await IncreaseBudgetBalance(transaction.CategoryId, transaction.Amount, transaction.UserId);
 

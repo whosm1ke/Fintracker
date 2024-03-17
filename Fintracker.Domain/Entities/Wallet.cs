@@ -38,4 +38,6 @@ public class Wallet : IEntity<Guid>
     public Guid CurrencyId { get; set; }
     
     public Currency Currency { get; set; } = default!;
+
+    public bool IsBanking { get; set; }
 }

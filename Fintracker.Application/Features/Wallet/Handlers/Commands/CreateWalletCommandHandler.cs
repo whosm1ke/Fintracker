@@ -12,13 +12,11 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IUserRepository _userRepository;
 
-    public CreateWalletCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IUserRepository userRepository)
+    public CreateWalletCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _userRepository = userRepository;
     }
 
     public async Task<CreateCommandResponse<WalletBaseDTO>> Handle(CreateWalletCommand request,

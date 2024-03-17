@@ -9,4 +9,6 @@ public class CreateWalletDTO: IWalletDto
     public Guid CurrencyId { get; set; }
 
     public Guid OwnerId { get; set; }
+    
+    public bool IsBanking { get; set; }
 }

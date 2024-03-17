@@ -33,8 +33,7 @@ public class WalletCommandTests
     public async Task AddAsync_Should_Return_True()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var mockUserRepository = MockUserRepository.GetUserRepository().Object;
-        var handler = new CreateWalletCommandHandler(mockUnitOfWork, _mapper, mockUserRepository);
+        var handler = new CreateWalletCommandHandler(mockUnitOfWork, _mapper);
         var walletToAdd = _fixture.Build<CreateWalletDTO>()
             .With(c => c.Name, "New Budget")
             .With(c => c.Balance, 100)

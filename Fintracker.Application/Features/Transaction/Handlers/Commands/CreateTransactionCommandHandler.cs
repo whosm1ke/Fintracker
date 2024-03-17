@@ -33,9 +33,11 @@ public class
 
         var createdObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
-        await DecreaseBalanceInWallet(transaction.WalletId, transaction.Amount);
-
-        await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount, transaction.UserId);
+        if (!transaction.IsBankTransaction)
+        {
+            await DecreaseBalanceInWallet(transaction.WalletId, transaction.Amount);
+            await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount, transaction.UserId);
+        }
 
         response.Success = true;
         response.Message = "Created successfully";

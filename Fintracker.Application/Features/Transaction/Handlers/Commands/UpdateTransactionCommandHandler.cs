@@ -35,14 +35,23 @@ public class
                 PropertyName = nameof(request.Transaction.Id)
             }, nameof(Domain.Entities.Transaction));
 
-
+        if (transaction.Amount.CompareTo(request.Transaction.Amount) != 0)
+            throw new BadRequestException(new ExceptionDetails
+            {
+                ErrorMessage = "Can not change bank transaction amount",
+                PropertyName = nameof(request.Transaction.Amount)
+            });
+        
         var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
         _mapper.Map(request.Transaction, transaction);
-
-        await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount,
-            oldObject.UserId);
-        UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
-        _unitOfWork.TransactionRepository.Update(transaction);
+        
+        if (!transaction.IsBankTransaction)
+        {
+            await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount,
+                oldObject.UserId);
+            UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
+            _unitOfWork.TransactionRepository.Update(transaction);
+        }
 
         await _unitOfWork.SaveAsync();
         var newObject = _mapper.Map<TransactionBaseDTO>(transaction);

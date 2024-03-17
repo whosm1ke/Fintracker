@@ -24,4 +24,5 @@ public class TransactionBaseDTO : IBaseDto
 
     public DateTime CreatedAt { get; set; } = default!;
 
+    public bool IsBankTransaction { get; set; }
 }

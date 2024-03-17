@@ -36,5 +36,6 @@ public class Transaction : IEntity<Guid>
     public string? Note { get; set; }
     
     public string? Label { get; set; }
-    
+
+    public bool IsBankTransaction { get; set; }
 }
