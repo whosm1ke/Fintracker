@@ -11,4 +11,5 @@ public interface IWalletRepository : IGenericRepository<Wallet>
     Task<IReadOnlyList<Wallet>> GetByOwnerIdAsync(Guid ownerId);
 
     Task<IReadOnlyList<Wallet>> GetByOwnerIdSortedAsync(Guid ownerId, string sortBy, bool isDescending);
+    Task<Wallet?> GetWalletByBankAccount(string accountId);
 }

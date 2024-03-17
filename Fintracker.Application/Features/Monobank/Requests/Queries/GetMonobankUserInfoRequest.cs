@@ -8,5 +8,7 @@ public class GetMonobankUserInfoRequest : IRequest<MonobankUserInfoDTO>
     /// <summary>
     /// Should be provided from header
     /// </summary>
-    public string Token { get; set; } = "0";
+    public string Token { get; set; } = default!;
+
+    public string Email { get; set; }
 }

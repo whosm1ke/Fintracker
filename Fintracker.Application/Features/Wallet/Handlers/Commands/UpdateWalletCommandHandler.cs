@@ -33,6 +33,12 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
                 PropertyName = nameof(request.Wallet.Id)
             }, nameof(Domain.Entities.Wallet));
 
+        if (wallet.IsBanking && wallet.Balance.CompareTo(request.Wallet.Balance) != 0)
+            throw new BadRequestException(new ExceptionDetails
+            {
+                ErrorMessage = "Can not change balance in banking wallet",
+                PropertyName = nameof(wallet.Balance)
+            });
 
         var oldObject = _mapper.Map<WalletBaseDTO>(wallet);
         _mapper.Map(request.Wallet, wallet);

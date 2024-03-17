@@ -10,28 +10,26 @@ namespace Fintracker.Application.Features.Transaction.Handlers.Commands;
 
 public class
     CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand,
-    CreateCommandResponse<TransactionBaseDTO>>
+    CreateCommandResponse<TransactionPureDTO>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IUserRepository _userRepository;
 
     public CreateTransactionCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IUserRepository userRepository)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
-        _userRepository = userRepository;
     }
 
-    public async Task<CreateCommandResponse<TransactionBaseDTO>> Handle(CreateTransactionCommand request,
+    public async Task<CreateCommandResponse<TransactionPureDTO>> Handle(CreateTransactionCommand request,
         CancellationToken cancellationToken)
     {
-        var response = new CreateCommandResponse<TransactionBaseDTO>();
+        var response = new CreateCommandResponse<TransactionPureDTO>();
 
         var transaction = _mapper.Map<Domain.Entities.Transaction>(request.Transaction);
         await _unitOfWork.TransactionRepository.AddAsync(transaction);
 
-        var createdObj = _mapper.Map<TransactionBaseDTO>(transaction);
+        var createdObj = _mapper.Map<TransactionPureDTO>(transaction);
 
         if (!transaction.IsBankTransaction)
         {

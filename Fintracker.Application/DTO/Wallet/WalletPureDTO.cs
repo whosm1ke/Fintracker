@@ -14,4 +14,6 @@ public class WalletPureDTO: IBaseDto
     public Guid CurrencyId { get; set; }
     
     public bool IsBanking { get; set; }
+
+    public string BankAccountId { get; set; } = default!;
 }

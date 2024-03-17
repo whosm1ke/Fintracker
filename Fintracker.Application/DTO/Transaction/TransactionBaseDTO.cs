@@ -4,18 +4,21 @@ using Fintracker.Application.DTO.Currency;
 
 namespace Fintracker.Application.DTO.Transaction;
 
-public class TransactionBaseDTO : IBaseDto
+public class TransactionBaseDTO : TransactionPureDTO
+{
+    public CategoryDTO Category { get; set; } = default!;
+    
+    public CurrencyDTO Currency { get; set; } = default!;
+}
+
+public class TransactionPureDTO : IBaseDto
 {
     public Guid Id { get; set; }
     
     public Guid WalletId { get; set; }
     
     public Guid UserId { get; set; }
-
-    public CategoryDTO Category { get; set; } = default!;
     
-    public CurrencyDTO Currency { get; set; } = default!;
-
     public decimal Amount { get; set; }
 
     public string? Note { get; set; }

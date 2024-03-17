@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Fintracker.Application.DTO.Monobank;
 using Fintracker.Application.DTO.Transaction;
 using Fintracker.Domain.Entities;
 
@@ -14,5 +15,7 @@ public class TransactionProfile : Profile
         CreateMap<Transaction, TransactionWithUserDTO>().ReverseMap();
         CreateMap<Transaction, TransactionWithWalletAndUserDTO>().ReverseMap();
         CreateMap<Transaction, TransactionWithWalletDTO>().ReverseMap();
+        CreateMap<MonoTransactionDTO, Transaction>()
+            .ConvertUsing<MonoTransactionDTOToTransactionConverter>();
     }
 }

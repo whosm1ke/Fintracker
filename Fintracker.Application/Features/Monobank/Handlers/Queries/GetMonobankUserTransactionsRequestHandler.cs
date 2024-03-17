@@ -20,9 +20,20 @@ public class
     public async Task<IReadOnlyList<MonoTransactionDTO>> Handle(GetMonobankUserTransactionsRequest request,
         CancellationToken cancellationToken)
     {
-        var userInfo = await _monobankService.GetUserTransactions(request.Token, request.From,
-            request.To, request.AccountId);
+        var token = await _monobankService.GetMonobankTokenAsync(request.Email);
 
-        return userInfo;
+        if (token is null)
+            throw new BadRequestException(new ExceptionDetails
+            {
+                ErrorMessage = "Monobank token was not provided",
+                PropertyName = nameof(token)
+            });
+
+        request.Configuration.To ??= (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
+
+        var monoTransactions = await _monobankService.GetUserTransactions(token, request.Configuration.From,
+            request.Configuration.To.Value, request.Configuration.AccountId);
+
+        return monoTransactions;
     }
 }

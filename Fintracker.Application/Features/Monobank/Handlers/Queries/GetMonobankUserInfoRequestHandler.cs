@@ -1,6 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.DTO.Monobank;
-using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Monobank.Requests.Queries;
 using MediatR;
 
@@ -20,8 +19,9 @@ public class
         CancellationToken cancellationToken)
     {
         var userInfo = await _monobankService.GetUserFullInfo(request.Token);
-        
 
-        return userInfo;
+        await _monobankService.SetMonobankTokenAsync(request.Email, request.Token);
+        
+        return userInfo!;
     }
 }

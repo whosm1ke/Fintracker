@@ -118,7 +118,6 @@ public class AccountService : IAccountService
                 ErrorMessage = $"Was not found [{email}]",
                 PropertyName = nameof(User.Email)
             }, nameof(User));
-
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         return token;

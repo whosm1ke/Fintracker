@@ -1,8 +1,14 @@
-﻿using Fintracker.Application.DTO.Monobank;
+﻿using Fintracker.Application.BusinessRuleConstraints;
+using Fintracker.Application.DTO.Monobank;
+using Fintracker.Application.DTO.Wallet;
+using Fintracker.Application.Features.Monobank.Requests.Commands;
 using Fintracker.Application.Features.Monobank.Requests.Queries;
+using Fintracker.Application.Models.Monobank;
+using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Fintracker.API.Controllers;
 
@@ -12,35 +18,84 @@ namespace Fintracker.API.Controllers;
 public class BankController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMemoryCache _cache;
 
-    public BankController(IMediator mediator)
+    public BankController(IMediator mediator, IMemoryCache cache)
     {
         _mediator = mediator;
+        _cache = cache;
     }
 
     [HttpGet("monobank")]
     public async Task<ActionResult<MonobankUserInfoDTO>> GetMonobankUserInfo([FromHeader] string xToken)
     {
-        var response = await _mediator.Send(new GetMonobankUserInfoRequest()
+        string email = HttpContext.User.FindFirst(x => x.Type == ClaimTypeConstants.Email)?.Value!;
+        var response = await _mediator.Send(new GetMonobankUserInfoRequest
         {
-            Token = xToken
+            Token = xToken,
+            Email = email
         });
+
 
         return Ok(response);
     }
-    
-    [HttpGet("monobank/transactions")]
-    public async Task<ActionResult<IReadOnlyList<MonoTransactionDTO>>> GetMonobankTransactions([FromHeader] string xToken,
-        [FromQuery] string accountId, [FromQuery] long from, [FromQuery] long? to)
+
+    [HttpPost("monobank/add-initial-transactions")]
+    public async Task<ActionResult<CreateCommandResponse<WalletBaseDTO>>> AddMonobankTransactions(
+        [FromBody] MonobankConfiguration monoCfg)
     {
-        var response = await _mediator.Send(new GetMonobankUserTransactionsRequest()
+        string id = HttpContext.User.FindFirst(x => x.Type == ClaimTypeConstants.Uid)?.Value!;
+        string email = HttpContext.User.FindFirst(x => x.Type == ClaimTypeConstants.Email)?.Value!;
+        Guid userId = Guid.Parse(id);
+
+        var transactions = await _mediator.Send(new GetMonobankUserTransactionsRequest
         {
-            Token = xToken,
-            AccountId = accountId,
-            From = from,
-            To = to ?? (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds
+            Configuration = monoCfg,
+            Email = email
         });
 
-        return Ok(response);
+        var addTransactionsResponse = await _mediator.Send(new AddInitialTransactionToNewBankWalletCommand
+        {
+            Payload = new()
+            {
+                OwnerId = userId,
+                Transactions = transactions.ToList(),
+                Email = email,
+                AccountId = monoCfg.AccountId
+            }
+        });
+
+        return Ok(addTransactionsResponse);
+    }
+
+    [HttpPost("monobank/add-new-transactions")]
+    public async Task<IActionResult> AddNewMonoTransactions([FromBody] string accountId)
+    {
+        string id = HttpContext.User.FindFirst(x => x.Type == ClaimTypeConstants.Uid)?.Value!;
+        string email = HttpContext.User.FindFirst(x => x.Type == ClaimTypeConstants.Email)?.Value!;
+        Guid userId = Guid.Parse(id);
+
+        var transactions = await _mediator.Send(new GetMonobankUserTransactionsRequest
+        {
+            Configuration = new MonobankConfiguration()
+            {
+                AccountId = accountId,
+                From = _cache.Get<long>("mono_from_value")
+            },
+            Email = email
+        });
+
+        var addTransactionsResponse = await _mediator.Send(new AddNewTransactionsToBankingWalletCommand()
+        {
+            Payload = new()
+            {
+                OwnerId = userId,
+                Transactions = transactions.ToList(),
+                Email = email,
+                AccountId = accountId
+            }
+        });
+
+        return Ok(addTransactionsResponse);
     }
 }

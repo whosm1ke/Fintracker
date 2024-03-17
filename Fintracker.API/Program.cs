@@ -4,6 +4,7 @@ using Fintracker.Identity;
 using Fintracker.Infrastructure;
 using Fintracker.Persistence;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -53,6 +54,7 @@ builder.Services.AddControllers(x =>
 {
     x.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
 });
+builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

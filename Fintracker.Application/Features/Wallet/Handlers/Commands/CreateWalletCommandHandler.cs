@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.Features.Wallet.Requests.Commands;

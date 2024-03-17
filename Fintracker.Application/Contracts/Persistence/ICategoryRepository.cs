@@ -12,4 +12,7 @@ public interface ICategoryRepository : IGenericRepository<Category>
     Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids);
 
     Task<IReadOnlyList<Category>> GetAllAsync(Guid userId);
+
+    Task<Guid> GetDefaultBankIncomeCategoryId();
+    Task<Guid> GetDefaultBankExpenseCategoryId();
 }

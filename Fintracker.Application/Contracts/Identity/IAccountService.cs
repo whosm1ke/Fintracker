@@ -10,6 +10,6 @@ public interface IAccountService
     Task<bool> ResetPassword(ResetPasswordModel model);
 
     Task<string> GenerateResetPasswordToken(string email);
-
+    
     Task Logout();
 }

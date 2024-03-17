@@ -69,4 +69,11 @@ public class WalletRepository : GenericRepository<Wallet>, IWalletRepository
     {
         return await _db.Wallets.GetByOwnerIdSortedAsync(ownerId, sortBy, isDescending);
     }
+
+    public async Task<Wallet?> GetWalletByBankAccount(string accountId)
+    {
+        return await _db.Wallets
+            .Where(x => x.BankAccountId == accountId && x.IsBanking)
+            .FirstOrDefaultAsync();
+    }
 }

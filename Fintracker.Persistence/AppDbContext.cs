@@ -51,7 +51,11 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
             entry.Entity.ModifiedAt = DateTime.Now;
             entry.Entity.ModifiedBy = username ?? "SYSTEM";
 
-            if (entry.State == EntityState.Added)
+            if (entry.Entity is Transaction transaction && transaction.IsBankTransaction)
+            {
+                entry.Entity.CreatedBy = "Monobank";
+            }
+            else
             {
                 entry.Entity.CreatedAt = DateTime.Now;
                 entry.Entity.CreatedBy = username ?? "SYSTEM";
