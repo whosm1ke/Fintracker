@@ -20,7 +20,7 @@ public class GetCategoryByIdRequestHandler : IRequestHandler<GetCategoryByIdRequ
 
     public async Task<CategoryDTO> Handle(GetCategoryByIdRequest request, CancellationToken cancellationToken)
     {
-        var category = await _unitOfWork.CategoryRepository.GetAsync(request.Id);
+        var category = await _unitOfWork.CategoryRepository.GetAsync(request.UserId, request.Id);
 
         if (category is null)
             throw new NotFoundException(new ExceptionDetails

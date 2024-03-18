@@ -27,16 +27,16 @@ public class GetCategoriesSortedRequestHandler : IRequestHandler<GetCategoriesSo
     public async Task<IReadOnlyList<CategoryDTO>> Handle(GetCategoriesSortedRequest request,
         CancellationToken cancellationToken)
     {
-        if (!_allowedSortColumns.Contains(request.SortBy))
+        if (!_allowedSortColumns.Contains(request.Params.SortBy))
             throw new BadRequestException(new ExceptionDetails
             {
-                PropertyName = nameof(request.SortBy),
+                PropertyName = nameof(request.Params.SortBy),
                 ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
             });
 
         var categories =
-            await _unitOfWork.CategoryRepository.GetAllSortedAsync(request.UserId, request.SortBy,
-                request.IsDescending);
+            await _unitOfWork.CategoryRepository.GetAllSortedAsync(request.UserId, request.Params.SortBy,
+                request.Params.IsDescending);
 
         return _mapper.Map<List<CategoryDTO>>(categories);
     }

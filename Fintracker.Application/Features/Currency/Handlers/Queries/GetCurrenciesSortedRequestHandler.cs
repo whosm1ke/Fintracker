@@ -27,15 +27,17 @@ public class GetCurrenciesSortedRequestHandler : IRequestHandler<GetCurrenciesSo
     public async Task<IReadOnlyList<CurrencyDTO>> Handle(GetCurrenciesSortedRequest request,
         CancellationToken cancellationToken)
     {
-        if (!_allowedSortColumns.Contains(request.SortBy))
+        if (!_allowedSortColumns.Contains(request.Params.SortBy))
             throw new BadRequestException(
                 new ExceptionDetails
                 {
-                    PropertyName = nameof(request.SortBy),
+                    PropertyName = nameof(request.Params.SortBy),
                     ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
                 });
 
-        var currencies = await _unitOfWork.CurrencyRepository.GetCurrenciesSorted(request.SortBy, request.IsDescending);
+        var currencies =
+            await _unitOfWork.CurrencyRepository.GetCurrenciesSorted(request.Params.SortBy,
+                request.Params.IsDescending);
 
         return _mapper.Map<List<CurrencyDTO>>(currencies);
     }

@@ -31,16 +31,16 @@ public class
     public async Task<IReadOnlyList<BudgetBaseDTO>> Handle(GetBudgetsByWalletIdSortedRequest request,
         CancellationToken cancellationToken)
     {
-        if (!_allowedSortColumns.Contains(request.SortBy))
+        if (!_allowedSortColumns.Contains(request.Params.SortBy))
             throw new BadRequestException(new ExceptionDetails
             {
-                PropertyName = nameof(request.SortBy),
+                PropertyName = nameof(request.Params.SortBy),
                 ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
             });
 
         var budgets =
-            await _unitOfWork.BudgetRepository.GetByWalletIdSortedAsync(request.WalletId, request.SortBy,
-                request.IsDescending, request.IsPublic);
+            await _unitOfWork.BudgetRepository.GetByWalletIdSortedAsync(request.WalletId, request.Params.SortBy,
+                request.Params.IsDescending, request.IsPublic);
 
 
         return _mapper.Map<List<BudgetBaseDTO>>(budgets);

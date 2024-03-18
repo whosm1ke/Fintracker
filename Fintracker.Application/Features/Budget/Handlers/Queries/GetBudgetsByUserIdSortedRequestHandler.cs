@@ -31,17 +31,17 @@ public class
     public async Task<IReadOnlyList<BudgetBaseDTO>> Handle(GetBudgetsByUserIdSortedRequest request,
         CancellationToken cancellationToken)
     {
-        if (!_allowedSortColumns.Contains(request.SortBy))
+        if (!_allowedSortColumns.Contains(request.Params.SortBy))
             throw new BadRequestException(new ExceptionDetails
             {
-                PropertyName = nameof(request.SortBy),
+                PropertyName = nameof(request.Params.SortBy),
                 ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
             });
 
 
         var budgets =
-            await _unitOfWork.BudgetRepository.GetByUserIdSortedAsync(request.UserId, request.SortBy,
-                request.IsDescending, request.IsPublic);
+            await _unitOfWork.BudgetRepository.GetByUserIdSortedAsync(request.UserId, request.Params.SortBy,
+                request.Params.IsDescending, request.IsPublic);
 
         //TODO: may be there should be some validation logic to ensure that list is not empty
 

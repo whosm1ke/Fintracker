@@ -29,16 +29,16 @@ public class GetTransactionsByWalletIdSortedRequestHandler : IRequestHandler<Get
     public async Task<IReadOnlyList<TransactionBaseDTO>> Handle(GetTransactionsByWalletIdSortedRequest request,
         CancellationToken cancellationToken)
     {
-        if (!_allowedSortColumns.Contains(request.SortBy))
+        if (!_allowedSortColumns.Contains(request.Params.SortBy))
             throw new BadRequestException(new ExceptionDetails
             {
-                PropertyName = nameof(request.SortBy),
+                PropertyName = nameof(request.Params.SortBy),
                 ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
             });
 
         var transactions =
-            await _unitOfWork.TransactionRepository.GetByWalletIdSortedAsync(request.WalletId, request.SortBy,
-                request.IsDescending);
+            await _unitOfWork.TransactionRepository.GetByWalletIdSortedAsync(request.WalletId, request.Params.SortBy,
+                request.Params.IsDescending);
 
         return _mapper.Map<List<TransactionBaseDTO>>(transactions);
     }
