@@ -57,6 +57,13 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
         return expenseCategory.Id;
     }
 
+    public async Task<Category?> GetAsync(Guid userId, Guid id)
+    {
+        return await _db.Categories
+            .Where(x => x.UserId == userId && x.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<IReadOnlyList<Category>> GetByTypeAsync(Guid userId, CategoryType type)
     {
         return await _db.Categories
