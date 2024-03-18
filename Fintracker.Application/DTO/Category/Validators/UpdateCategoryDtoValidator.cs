@@ -20,10 +20,10 @@ public class UpdateCategoryDtoValidator : AbstractValidator<UpdateCategoryComman
             .MustAsync(async (guid, _) => await unitOfWork.CategoryRepository.ExistsAsync(guid))
             .WithMessage(x => $"Category with id does not exists [{x.Category.Id}]");
         
-        RuleFor(x => x.Category.UserId)
+        RuleFor(x => x.UserId)
             .ApplyCommonRules()
-            .OverridePropertyName(nameof(CreateCategoryCommand.Category.UserId))
+            .OverridePropertyName(nameof(CreateCategoryCommand.UserId))
             .MustAsync(async (id, _) => await userRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.Category.UserId}]");
+            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.UserId}]");
     }
 }

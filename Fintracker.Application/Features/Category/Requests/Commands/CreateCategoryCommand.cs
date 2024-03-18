@@ -8,4 +8,6 @@ namespace Fintracker.Application.Features.Category.Requests.Commands;
 public class CreateCategoryCommand : IRequest<CreateCommandResponse<CategoryDTO>>, INotGetRequest
 {
     public CreateCategoryDTO Category { get; set; } = default!;
+    
+    public Guid UserId { get; set; }
 }

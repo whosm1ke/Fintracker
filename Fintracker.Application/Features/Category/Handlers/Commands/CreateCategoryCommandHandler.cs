@@ -24,6 +24,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         var response = new CreateCommandResponse<CategoryDTO>();
 
         var categoryEntity = _mapper.Map<Domain.Entities.Category>(request.Category);
+        categoryEntity.UserId = request.UserId;
         await _unitOfWork.CategoryRepository.AddAsync(categoryEntity);
         var categoryDto = _mapper.Map<CategoryDTO>(categoryEntity);
 

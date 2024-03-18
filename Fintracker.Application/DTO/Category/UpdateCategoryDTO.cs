@@ -6,8 +6,6 @@ public class UpdateCategoryDTO : IBaseDto, ICategoryDto
 {
     public Guid Id { get; set; }
     
-    public Guid UserId { get; set; }
-    
     public string Name { get; set; } = default!;
     
     public string Image { get; set; } = default!;

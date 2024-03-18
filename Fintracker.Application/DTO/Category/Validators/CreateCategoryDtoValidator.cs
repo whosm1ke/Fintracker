@@ -20,10 +20,10 @@ public class CreateCategoryDtoValidator : AbstractValidator<CreateCategoryComman
             .IsInEnum()
             .WithMessage($"Has allowed values: {CategoryTypeEnum.INCOME} or {CategoryTypeEnum.EXPENSE}");
 
-        RuleFor(x => x.Category.UserId)
+        RuleFor(x => x.UserId)
             .ApplyCommonRules()
-            .OverridePropertyName(nameof(CreateCategoryCommand.Category.UserId))
+            .OverridePropertyName(nameof(CreateCategoryCommand.UserId))
             .MustAsync(async (id, _) => await userRepository.ExistsAsync(id))
-            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.Category.UserId}]");
+            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.UserId}]");
     }
 }

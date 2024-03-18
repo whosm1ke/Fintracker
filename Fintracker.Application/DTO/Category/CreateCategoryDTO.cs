@@ -10,6 +10,5 @@ public class CreateCategoryDTO : ICategoryDto
     public string Image { get; set; } = default!;
 
     public string IconColour { get; set; } = default!;
-
-    public Guid UserId { get; set; }
+    
 }

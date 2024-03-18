@@ -42,7 +42,8 @@ public class CategoryCommandTests
 
         var result = await handler.Handle(new CreateCategoryCommand
         {
-            Category = categoryToAdd
+            Category = categoryToAdd,
+            UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
         }, default);
 
         int categoriesCount = (await mockUnitOfWork.CategoryRepository.GetAllAsync()).Count;
@@ -61,14 +62,14 @@ public class CategoryCommandTests
             .With(x => x.Image, "New Icon")
             .With(x => x.Id, new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6"))
             .With(x => x.IconColour, "red")
-            .With(x => x.UserId,new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A") )
             .Create();
 
 
        
            var result = await handler.Handle(new UpdateCategoryCommand
             {
-                Category = categoryToUpdate
+                Category = categoryToUpdate,
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             }, default);
 
 

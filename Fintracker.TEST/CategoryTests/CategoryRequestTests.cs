@@ -40,7 +40,6 @@ public class CategoryRequestTests
                 Name = "Category 1",
                 Image = "Glory",
                 IconColour = "pink",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -49,7 +48,6 @@ public class CategoryRequestTests
                 Name = "Category 3",
                 Image = "Image 1",
                 IconColour = "yellow",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             }
         };
 
@@ -77,7 +75,6 @@ public class CategoryRequestTests
                 Name = "Category 1",
                 Image = "Glory",
                 IconColour = "pink",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -86,7 +83,6 @@ public class CategoryRequestTests
                 Name = "Category 2",
                 Image = "frog",
                 IconColour = "green",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -95,7 +91,6 @@ public class CategoryRequestTests
                 Name = "Category 3",
                 Image = "Image 1",
                 IconColour = "yellow",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -104,7 +99,6 @@ public class CategoryRequestTests
                 Name = "Category 4",
                 Image = "log",
                 IconColour = "cyan",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             }
         };
 
@@ -134,7 +128,6 @@ public class CategoryRequestTests
             Name = "Category 1",
             Image = "Glory",
             IconColour = "pink",
-            UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
         };
 
         var actualResult = await handler.Handle(new GetCategoryByIdRequest
@@ -161,7 +154,6 @@ public class CategoryRequestTests
                 Name = "Category 1",
                 Image = "Glory",
                 IconColour = "pink",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -170,7 +162,6 @@ public class CategoryRequestTests
                 Name = "Category 2",
                 Image = "frog",
                 IconColour = "green",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -179,7 +170,6 @@ public class CategoryRequestTests
                 Name = "Category 3",
                 Image = "Image 1",
                 IconColour = "yellow",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -188,7 +178,6 @@ public class CategoryRequestTests
                 Name = "Category 4",
                 Image = "log",
                 IconColour = "cyan",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             }
         };
 

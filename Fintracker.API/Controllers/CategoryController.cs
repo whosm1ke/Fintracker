@@ -97,6 +97,7 @@ public class CategoryController : ControllerBase
         var response = await _mediator.Send(new CreateCategoryCommand
         {
             Category = category,
+            UserId = GetCurrentUserId()
         });
 
         return Ok(response);
@@ -111,7 +112,8 @@ public class CategoryController : ControllerBase
     {
         var response = await _mediator.Send(new UpdateCategoryCommand
         {
-            Category = category
+            Category = category,
+            UserId = GetCurrentUserId()
         });
 
         return Ok(response);
