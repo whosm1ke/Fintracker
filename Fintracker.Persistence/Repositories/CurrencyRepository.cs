@@ -24,4 +24,11 @@ public class CurrencyRepository : GenericRepository<Currency>, ICurrencyReposito
             .Where(x => x.Symbol == symbol)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<Currency?> GetAsync(int code)
+    {
+        return await _db.Currencies
+            .Where(x => x.Code == code)
+            .FirstOrDefaultAsync();
+    }
 }

@@ -9,4 +9,6 @@ public class CurrencyDTO : IBaseDto
     public string Name { get; set; } = default!;
     
     public string Symbol { get; set; } = default!;
+    
+    public int Code { get; set; }
 }
