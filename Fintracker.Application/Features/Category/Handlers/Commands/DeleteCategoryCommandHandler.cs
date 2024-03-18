@@ -32,7 +32,7 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
                 PropertyName = nameof(request.Id)
             },nameof(Domain.Entities.Category));
         
-        if (request.UserId != category.UserId)
+        if (category.UserId == null || request.UserId != category.UserId)
         {
             throw new ForbiddenException(new ExceptionDetails
             {
