@@ -23,7 +23,7 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
         CancellationToken cancellationToken)
     {
         var response = new DeleteCommandResponse<CategoryDTO>();
-        var category = await _unitOfWork.CategoryRepository.GetAsync(request.Id);
+        var category = await _unitOfWork.CategoryRepository.GetAsync(request.UserId, request.Id);
 
         if (category is null)
             throw new NotFoundException(new ExceptionDetails

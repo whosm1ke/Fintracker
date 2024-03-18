@@ -1,5 +1,6 @@
 ﻿using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.Exceptions;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Fintracker.Domain.Enums;
 using Fintracker.Persistence.Extensions;
@@ -72,9 +73,9 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Category>> GetAllSortedAsync(Guid userId, string sortBy, bool isDescending)
+    public async Task<IReadOnlyList<Category>> GetAllSortedAsync(Guid userId, QueryParams queryParams)
     {
-        return await _db.Categories.GetAllSortedAsync(userId, sortBy, isDescending);
+        return await _db.Categories.GetAllSortedAsync(userId, queryParams);
     }
 
     public async Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids, Guid userId)

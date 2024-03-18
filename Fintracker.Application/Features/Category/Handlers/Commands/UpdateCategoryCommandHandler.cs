@@ -24,7 +24,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
     {
         var response = new UpdateCommandResponse<CategoryDTO>();
 
-        var category = await _unitOfWork.CategoryRepository.GetAsync(request.Category.Id);
+        var category = await _unitOfWork.CategoryRepository.GetAsync(request.Category.UserId, request.Category.Id);
 
         if (category is null)
             throw new NotFoundException(new ExceptionDetails
