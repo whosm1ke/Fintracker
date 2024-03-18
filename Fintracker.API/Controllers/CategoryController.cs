@@ -2,6 +2,7 @@
 using Fintracker.Application.DTO.Category;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Features.Category.Requests.Queries;
+using Fintracker.Application.Models;
 using Fintracker.Application.Responses.API_Responses;
 using Fintracker.Application.Responses.Commands_Responses;
 using Fintracker.Domain.Enums;
@@ -35,24 +36,22 @@ public class CategoryController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(List<CategoryDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<CategoryDTO>>> Get([FromQuery] string? sortBy, [FromQuery] bool? isDescending)
+    public async Task<ActionResult<List<CategoryDTO>>> Get([FromQuery] QueryParams query)
     {
         var sortRequest = new GetCategoriesSortedRequest
         {
-            IsDescending = isDescending.HasValue && isDescending.Value,
-            SortBy = sortBy!,
+            Params = query,
             UserId = GetCurrentUserId()
         };
 
         var simpleRequest = new GetCategoriesRequest
         {
-            
             UserId = GetCurrentUserId()
         };
 
         IReadOnlyList<CategoryDTO> response;
 
-        if (!string.IsNullOrEmpty(sortBy))
+        if (!string.IsNullOrEmpty(query.SortBy))
             response = await _mediator.Send(sortRequest);
         else
             response = await _mediator.Send(simpleRequest);

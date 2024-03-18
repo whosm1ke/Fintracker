@@ -1,6 +1,7 @@
 ﻿using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.Features.Wallet.Requests.Commands;
 using Fintracker.Application.Features.Wallet.Requests.Queries;
+using Fintracker.Application.Models;
 using Fintracker.Application.Responses.API_Responses;
 using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
@@ -38,14 +39,12 @@ public class WalletController : ControllerBase
     [HttpGet("owner/{ownerId:guid}")]
     [ProducesResponseType(typeof(List<WalletBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<WalletBaseDTO>>> Get(Guid ownerId, [FromQuery] string? sortBy,
-        [FromQuery] bool? isDescending)
+    public async Task<ActionResult<List<WalletBaseDTO>>> Get(Guid ownerId,[FromQuery] QueryParams query)
     {
         var sortRequest = new GetWalletsByOwnerIdSortedRequest
         {
             OwnerId = ownerId,
-            IsDescending = isDescending.HasValue && isDescending.Value,
-            SortBy = sortBy!
+            Params = query
         };
 
         var simpleRequest = new GetWalletsByOwnerIdRequest
@@ -55,7 +54,7 @@ public class WalletController : ControllerBase
 
         IReadOnlyList<WalletBaseDTO> response;
 
-        if (!string.IsNullOrEmpty(sortBy))
+        if (!string.IsNullOrEmpty(query.SortBy))
             response = await _mediator.Send(sortRequest);
         else
             response = await _mediator.Send(simpleRequest);

@@ -1,6 +1,7 @@
 ﻿using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.Features.Transaction.Requests.Queries;
+using Fintracker.Application.Models;
 using Fintracker.Application.Responses.API_Responses;
 using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
@@ -39,14 +40,12 @@ public class TransactionController : ControllerBase
     [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<TransactionBaseDTO>>> GetByCategoryId(Guid categoryId,
-        [FromQuery] string? sortBy,
-        [FromQuery] bool? isDescending)
+        [FromQuery] QueryParams query)
     {
         var sortRequest = new GetTransactionsByCategoryIdSortedRequest
         {
             CategoryId = categoryId,
-            IsDescending = isDescending.HasValue && isDescending.Value,
-            SortBy = sortBy!
+            Params = query
         };
 
         var simpleRequest = new GetTransactionsByCategoryIdRequest
@@ -56,7 +55,7 @@ public class TransactionController : ControllerBase
 
         IReadOnlyList<TransactionBaseDTO> response;
 
-        if (!string.IsNullOrEmpty(sortBy))
+        if (!string.IsNullOrEmpty(query.SortBy))
             response = await _mediator.Send(sortRequest);
         else
             response = await _mediator.Send(simpleRequest);
@@ -67,14 +66,12 @@ public class TransactionController : ControllerBase
     [HttpGet("user/{userId:guid}")]
     [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByUserId(Guid userId, [FromQuery] string? sortBy,
-        [FromQuery] bool? isDescending)
+    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByUserId(Guid userId,[FromQuery] QueryParams query)
     {
         var sortRequest = new GetTransactionsByUserIdSortedRequest
         {
             UserId = userId,
-            IsDescending = isDescending.HasValue && isDescending.Value,
-            SortBy = sortBy!
+            Params = query
         };
 
         var simpleRequest = new GetTransactionsByUserIdRequest
@@ -84,7 +81,7 @@ public class TransactionController : ControllerBase
 
         IReadOnlyList<TransactionBaseDTO> response;
 
-        if (!string.IsNullOrEmpty(sortBy))
+        if (!string.IsNullOrEmpty(query.SortBy))
             response = await _mediator.Send(sortRequest);
         else
             response = await _mediator.Send(simpleRequest);
@@ -95,14 +92,12 @@ public class TransactionController : ControllerBase
     [HttpGet("wallet/{walletId:guid}")]
     [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByWalletId(Guid walletId, [FromQuery] string? sortBy,
-        [FromQuery] bool? isDescending)
+    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByWalletId(Guid walletId, [FromQuery] QueryParams query)
     {
         var sortRequest = new GetTransactionsByWalletIdSortedRequest
         {
             WalletId = walletId,
-            IsDescending = isDescending.HasValue && isDescending.Value,
-            SortBy = sortBy!
+            Params = query
         };
 
         var simpleRequest = new GetTransactionsByWalletIdRequest
@@ -112,7 +107,7 @@ public class TransactionController : ControllerBase
 
         IReadOnlyList<TransactionBaseDTO> response;
 
-        if (!string.IsNullOrEmpty(sortBy))
+        if (!string.IsNullOrEmpty(query.SortBy))
             response = await _mediator.Send(sortRequest);
         else
             response = await _mediator.Send(simpleRequest);

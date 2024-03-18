@@ -1,6 +1,7 @@
 ﻿using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.Features.Budget.Requests.Commands;
 using Fintracker.Application.Features.Budget.Requests.Queries;
+using Fintracker.Application.Models;
 using Fintracker.Application.Responses.API_Responses;
 using Fintracker.Application.Responses.Commands_Responses;
 using Fintracker.Domain.Entities;
@@ -99,9 +100,8 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(List<BudgetBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsByIdSorted([FromQuery] Guid id,
-        [FromQuery] bool? isPublic,
-        [FromQuery] string? sortBy,
-        [FromQuery] bool? isDescending,
+        [FromQuery] QueryParams query,
+        [FromQuery] bool isPublic = false,
         [FromQuery] string type = "wallet")
     {
         if (string.IsNullOrEmpty(type) ||
@@ -117,17 +117,15 @@ public class BudgetController : ControllerBase
             budgets = await _mediator.Send(new GetBudgetsByUserIdSortedRequest
             {
                 UserId = id,
-                IsDescending = isDescending.HasValue && isDescending.Value,
-                SortBy = sortBy!,
-                IsPublic = isPublic.HasValue && isPublic.Value
+                Params = query,
+                IsPublic = isPublic
             });
         else
             budgets = await _mediator.Send(new GetBudgetsByWalletIdSortedRequest
             {
                 WalletId = id,
-                IsDescending = isDescending.HasValue && isDescending.Value,
-                SortBy = sortBy!,
-                IsPublic = isPublic.HasValue && isPublic.Value
+                Params = query,
+                IsPublic = isPublic
             });
 
         return Ok(budgets);
