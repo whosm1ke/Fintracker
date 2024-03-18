@@ -20,9 +20,9 @@ public class GetTransactionsByUserIdSortedRequestHandler : IRequestHandler<GetTr
         _unitOfWork = unitOfWork;
         _allowedSortColumns = new()
         {
-            nameof(Domain.Entities.Transaction.Label),
-            nameof(Domain.Entities.Transaction.Note),
-            nameof(Domain.Entities.Transaction.Amount)
+            nameof(Domain.Entities.Transaction.Label).ToLowerInvariant(),
+            nameof(Domain.Entities.Transaction.Note).ToLowerInvariant(),
+            nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant()
         };
     }
 

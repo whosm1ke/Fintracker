@@ -19,8 +19,8 @@ public class GetCurrenciesSortedRequestHandler : IRequestHandler<GetCurrenciesSo
         _mapper = mapper;
         _allowedSortColumns = new()
         {
-            nameof(Domain.Entities.Currency.Name),
-            nameof(Domain.Entities.Currency.Symbol)
+            nameof(Domain.Entities.Currency.Name).ToLowerInvariant(),
+            nameof(Domain.Entities.Currency.Symbol).ToLowerInvariant()
         };
     }
 

@@ -18,7 +18,8 @@ public class MockCategoryRepository
                 Type = CategoryType.INCOME,
                 Name = "Category 1",
                 Image = "Glory",
-                IconColour = "pink"
+                IconColour = "pink",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -26,7 +27,8 @@ public class MockCategoryRepository
                 Type = CategoryType.EXPENSE,
                 Name = "Category 2",
                 Image = "frog",
-                IconColour = "green"
+                IconColour = "green",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -34,7 +36,8 @@ public class MockCategoryRepository
                 Type = CategoryType.INCOME,
                 Name = "Category 3",
                 Image = "Image 1",
-                IconColour = "yellow"
+                IconColour = "yellow",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -42,7 +45,8 @@ public class MockCategoryRepository
                 Type = CategoryType.EXPENSE,
                 Name = "Category 4",
                 Image = "log",
-                IconColour = "cyan"
+                IconColour = "cyan",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             }
         };
         var mock = new Mock<ICategoryRepository>();
@@ -50,8 +54,8 @@ public class MockCategoryRepository
         mock.Setup(x => x.ExistsAsync(It.IsAny<Guid>()))
             .Returns(async (Guid id) => { return categories.Find(c => c.Id == id) != null; });
 
-        mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return Task.FromResult(categories.Find(x => x.Id == id)); });
+        mock.Setup(x => x.GetAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .Returns((Guid userId, Guid id) => { return Task.FromResult(categories.Find(x => x.UserId == userId && x.Id == id)); });
 
         mock.Setup(x => x.GetAsyncNoTracking(It.IsAny<Guid>()))
             .Returns((Guid id) => { return Task.FromResult(categories.Find(x => x.Id == id)); });

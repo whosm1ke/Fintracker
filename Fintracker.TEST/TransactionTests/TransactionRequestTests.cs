@@ -117,7 +117,10 @@ public class TransactionRequestTests
         var actualResult = await handler.Handle(new GetTransactionsByCategoryIdSortedRequest
         {
             CategoryId = new Guid("FA79B6AB-7E69-46CC-9522-D0F68DF0FE19"),
-            SortBy = "Amount"
+            Params = new()
+            {
+                SortBy = "amount"
+            }
         }, default);
 
         actualResult.Should().NotBeNull();
@@ -186,7 +189,10 @@ public class TransactionRequestTests
         var actualResult = await handler.Handle(new GetTransactionsByUserIdSortedRequest
         {
             UserId = new Guid("2A9E1D20-7464-4C82-BB23-001CC7F1783A"),
-            SortBy = "Amount"
+            Params = new()
+            {
+                SortBy = "amount"
+            }
         }, default);
 
         actualResult.Should().NotBeNull();
@@ -255,7 +261,10 @@ public class TransactionRequestTests
         var actualResult = await handler.Handle(new GetTransactionsByWalletIdSortedRequest
         {
             WalletId = new Guid("9B2EAEC4-DD3B-4572-9A69-48FBC50C8506"),
-            SortBy = "Amount"
+            Params = new()
+            {
+                SortBy = "amount"
+            }
         }, default);
 
         actualResult.Should().NotBeNull();

@@ -73,7 +73,8 @@ public class CategoryRequestTests
                 Type = CategoryTypeEnum.INCOME,
                 Name = "Category 1",
                 Image = "Glory",
-                IconColour = "pink"
+                IconColour = "pink",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -81,7 +82,8 @@ public class CategoryRequestTests
                 Type = CategoryTypeEnum.EXPENSE,
                 Name = "Category 2",
                 Image = "frog",
-                IconColour = "green"
+                IconColour = "green",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -89,7 +91,8 @@ public class CategoryRequestTests
                 Type = CategoryTypeEnum.INCOME,
                 Name = "Category 3",
                 Image = "Image 1",
-                IconColour = "yellow"
+                IconColour = "yellow",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -97,13 +100,18 @@ public class CategoryRequestTests
                 Type = CategoryTypeEnum.EXPENSE,
                 Name = "Category 4",
                 Image = "log",
-                IconColour = "cyan"
+                IconColour = "cyan",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             }
         };
 
         var actualResult = await handler.Handle(new GetCategoriesSortedRequest
         {
-            SortBy = "Name"
+            Params = new()
+            {
+                SortBy = "name"
+            },
+            UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
         }, default);
 
         actualResult.Should().NotBeNull();
@@ -122,12 +130,14 @@ public class CategoryRequestTests
             Type = CategoryTypeEnum.INCOME,
             Name = "Category 1",
             Image = "Glory",
-            IconColour = "pink"
+            IconColour = "pink",
+            UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
         };
 
         var actualResult = await handler.Handle(new GetCategoryByIdRequest
         {
-            Id = new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6")
+            Id = new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6"),
+            UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
         }, default);
 
         actualResult.Should().NotBeNull();
@@ -147,7 +157,8 @@ public class CategoryRequestTests
                 Type = CategoryTypeEnum.INCOME,
                 Name = "Category 1",
                 Image = "Glory",
-                IconColour = "pink"
+                IconColour = "pink",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -155,7 +166,8 @@ public class CategoryRequestTests
                 Type = CategoryTypeEnum.EXPENSE,
                 Name = "Category 2",
                 Image = "frog",
-                IconColour = "green"
+                IconColour = "green",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -163,7 +175,8 @@ public class CategoryRequestTests
                 Type = CategoryTypeEnum.INCOME,
                 Name = "Category 3",
                 Image = "Image 1",
-                IconColour = "yellow"
+                IconColour = "yellow",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -171,7 +184,8 @@ public class CategoryRequestTests
                 Type = CategoryTypeEnum.EXPENSE,
                 Name = "Category 4",
                 Image = "log",
-                IconColour = "cyan"
+                IconColour = "cyan",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             }
         };
 

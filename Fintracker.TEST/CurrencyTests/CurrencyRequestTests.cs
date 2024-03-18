@@ -72,7 +72,10 @@ public class CurrencyRequestTests
 
         var actualResult = await handler.Handle(new GetCurrenciesSortedRequest
         {
-            SortBy = "Symbol"
+            Params = new()
+            {
+                SortBy = "symbol"
+            }
         }, default);
 
         actualResult.Should().NotBeNull();

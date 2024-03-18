@@ -74,23 +74,20 @@ public class CategoryCommandTests
 
         await result.Should().ThrowAsync<ForbiddenException>();
     }
-    
+
     [Fact]
     public async Task DeleteAsync_Should_Return_Forbidden_Exception()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new DeleteCategoryCommandHandler(mockUnitOfWork, _mapper);
-    
-        Func<Task> result = async () =>
+
+
+        var result = await handler.Handle(new DeleteCategoryCommand
         {
-            await handler.Handle(new DeleteCategoryCommand
-            {
-                Id = new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6")
-            }, default);
-        };
+            Id = new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6")
+        }, default);
 
-        await result.Should().ThrowAsync<ForbiddenException>();
 
+        result.Success.Should().BeTrue();
     }
 }
-

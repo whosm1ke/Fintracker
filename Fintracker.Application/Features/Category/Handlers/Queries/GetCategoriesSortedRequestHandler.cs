@@ -19,8 +19,8 @@ public class GetCategoriesSortedRequestHandler : IRequestHandler<GetCategoriesSo
         _mapper = mapper;
         _allowedSortColumns = new()
         {
-            nameof(Domain.Entities.Category.Name),
-            nameof(Domain.Entities.Category.Type)
+            nameof(Domain.Entities.Category.Name).ToLowerInvariant(),
+            nameof(Domain.Entities.Category.Type).ToLowerInvariant()
         };
     }
 
