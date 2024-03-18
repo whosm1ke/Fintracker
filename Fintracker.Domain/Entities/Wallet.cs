@@ -41,5 +41,5 @@ public class Wallet : IEntity<Guid>
 
     public bool IsBanking { get; set; }
 
-    public string BankAccountId { get; set; } = default!;
+    public string? BankAccountId { get; set; } = default!;
 }
