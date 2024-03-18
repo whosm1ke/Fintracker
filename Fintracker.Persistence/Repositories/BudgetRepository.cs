@@ -1,4 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Fintracker.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -72,13 +73,13 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, string sortBy, bool isDescending, bool isPublic)
+    public async Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, QueryParams queryParams, bool isPublic)
     {
-        return await _db.Budgets.GetByUserIdSortedAsync(userId, sortBy, isDescending, isPublic);
+        return await _db.Budgets.GetByUserIdSortedAsync(userId, queryParams, isPublic);
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, string sortBy, bool isDescending, bool isPublic)
+    public async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, QueryParams queryParams, bool isPublic)
     {
-        return await _db.Budgets.GetByWalletIdSortedAsync(walletId, sortBy, isDescending, isPublic);
+        return await _db.Budgets.GetByWalletIdSortedAsync(walletId, queryParams, isPublic);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Fintracker.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -76,19 +77,19 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId, string sortBy, bool isDescending)
+    public async Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId, QueryParams queryParams)
     {
-        return await _db.Transactions.GetByUserIdSortedAsync(userId, sortBy, isDescending);
+        return await _db.Transactions.GetByUserIdSortedAsync(userId, queryParams);
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId, string sortBy, bool isDescending)
+    public async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId, QueryParams queryParams)
     {
-        return await _db.Transactions.GetByWalletIdSortedAsync(walletId, sortBy, isDescending);
+        return await _db.Transactions.GetByWalletIdSortedAsync(walletId, queryParams);
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, string sortBy, bool isDescending)
+    public async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, QueryParams queryParams)
     {
-        return await _db.Transactions.GetByCategoryIdSortedAsync(categoryId, sortBy, isDescending);
+        return await _db.Transactions.GetByCategoryIdSortedAsync(categoryId, queryParams);
     }
 
     public new async Task<IReadOnlyList<Transaction?>> GetAllAsync()

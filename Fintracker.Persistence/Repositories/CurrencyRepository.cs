@@ -1,4 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Fintracker.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,9 @@ public class CurrencyRepository : GenericRepository<Currency>, ICurrencyReposito
         _db = context;
     }
 
-    public async Task<IReadOnlyList<Currency>> GetCurrenciesSorted(string sortBy, bool isDescending)
+    public async Task<IReadOnlyList<Currency>> GetCurrenciesSorted(QueryParams queryParams)
     {
-        return await _db.Currencies.GetAllSortedAsync(sortBy, isDescending);
+        return await _db.Currencies.GetAllSortedAsync(queryParams);
     }
 
     public async Task<Currency?> GetAsync(string symbol)

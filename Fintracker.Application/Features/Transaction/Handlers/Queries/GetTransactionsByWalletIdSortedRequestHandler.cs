@@ -37,8 +37,7 @@ public class GetTransactionsByWalletIdSortedRequestHandler : IRequestHandler<Get
             });
 
         var transactions =
-            await _unitOfWork.TransactionRepository.GetByWalletIdSortedAsync(request.WalletId, request.Params.SortBy,
-                request.Params.IsDescending);
+            await _unitOfWork.TransactionRepository.GetByWalletIdSortedAsync(request.WalletId, request.Params);
 
         return _mapper.Map<List<TransactionBaseDTO>>(transactions);
     }

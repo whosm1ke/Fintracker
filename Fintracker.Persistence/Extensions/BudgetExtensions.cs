@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,28 +10,31 @@ public static class BudgetExtensions
     public static async Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(
         this DbSet<Budget> budgets,
         Guid userId,
-        string sortBy,
-        bool isDescending,
+        QueryParams queryParams,
         bool isPublic)
     {
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Budget), "x");
 
         // Create a property access expression for the specified sort column
-        var property = Expression.Property(parameter, sortBy);
+        var property = Expression.Property(parameter, queryParams.SortBy);
 
         // Create a lambda expression for the OrderBy method
         var converted = Expression.Convert(property, typeof(object));
         var lambda = Expression.Lambda<Func<Budget, object>>(converted, parameter);
 
         // Apply the sorting to the query
-        var query = isDescending
+        var query = queryParams.IsDescending
             ? budgets
+                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+                .Take(queryParams.PageSize)
                 .Include(x => x.Categories)
                 .Include(x => x.Currency)
                 .Where(x => x.IsPublic == isPublic && x.UserId == userId)
                 .OrderByDescending(lambda)
             : budgets
+                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+                .Take(queryParams.PageSize)
                 .Include(x => x.Categories)
                 .Include(x => x.Currency)
                 .Where(x => x.IsPublic == isPublic && x.UserId == userId)
@@ -42,28 +46,31 @@ public static class BudgetExtensions
     public static async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(
         this DbSet<Budget> budgets,
         Guid walletId,
-        string sortBy,
-        bool isDescending,
+        QueryParams queryParams,
         bool isPublic)
     {
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Budget), "x");
 
         // Create a property access expression for the specified sort column
-        var property = Expression.Property(parameter, sortBy);
+        var property = Expression.Property(parameter, queryParams.SortBy);
 
         // Create a lambda expression for the OrderBy method
         var converted = Expression.Convert(property, typeof(object));
         var lambda = Expression.Lambda<Func<Budget, object>>(converted, parameter);
 
         // Apply the sorting to the query
-        var query = isDescending
+        var query = queryParams.IsDescending
             ? budgets
+                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+                .Take(queryParams.PageSize)
                 .Include(x => x.Categories)
                 .Include(x => x.Currency)
                 .Where(x => x.IsPublic == isPublic && x.WalletId == walletId)
                 .OrderByDescending(lambda)
             : budgets
+                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+                .Take(queryParams.PageSize)
                 .Include(x => x.Categories)
                 .Include(x => x.Currency)
                 .Where(x => x.IsPublic == isPublic && x.WalletId == walletId)

@@ -37,8 +37,7 @@ public class
             });
 
         var wallets =
-            await _unitOfWork.WalletRepository.GetByOwnerIdSortedAsync(request.OwnerId, request.Params.SortBy,
-                request.Params.IsDescending);
+            await _unitOfWork.WalletRepository.GetByOwnerIdSortedAsync(request.OwnerId, request.Params);
 
 
         return _mapper.Map<List<WalletBaseDTO>>(wallets);

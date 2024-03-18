@@ -1,4 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Fintracker.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -65,9 +66,9 @@ public class WalletRepository : GenericRepository<Wallet>, IWalletRepository
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Wallet>> GetByOwnerIdSortedAsync(Guid ownerId, string sortBy, bool isDescending)
+    public async Task<IReadOnlyList<Wallet>> GetByOwnerIdSortedAsync(Guid ownerId, QueryParams queryParams)
     {
-        return await _db.Wallets.GetByOwnerIdSortedAsync(ownerId, sortBy, isDescending);
+        return await _db.Wallets.GetByOwnerIdSortedAsync(ownerId, queryParams);
     }
 
     public async Task<Wallet?> GetWalletByBankAccount(string accountId)

@@ -38,8 +38,7 @@ public class GetTransactionsByCategoryIdSortedRequestHandler : IRequestHandler<G
             });
 
         var transactions =
-            await _unitOfWork.TransactionRepository.GetByCategoryIdSortedAsync(request.CategoryId, request.Params.SortBy,
-                request.Params.IsDescending);
+            await _unitOfWork.TransactionRepository.GetByCategoryIdSortedAsync(request.CategoryId, request.Params);
 
 
         return _mapper.Map<List<TransactionBaseDTO>>(transactions);

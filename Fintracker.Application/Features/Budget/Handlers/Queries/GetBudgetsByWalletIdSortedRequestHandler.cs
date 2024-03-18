@@ -39,8 +39,7 @@ public class
             });
 
         var budgets =
-            await _unitOfWork.BudgetRepository.GetByWalletIdSortedAsync(request.WalletId, request.Params.SortBy,
-                request.Params.IsDescending, request.IsPublic);
+            await _unitOfWork.BudgetRepository.GetByWalletIdSortedAsync(request.WalletId, request.Params, request.IsPublic);
 
 
         return _mapper.Map<List<BudgetBaseDTO>>(budgets);

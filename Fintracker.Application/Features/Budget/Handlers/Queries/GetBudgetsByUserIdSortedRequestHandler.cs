@@ -40,8 +40,7 @@ public class
 
 
         var budgets =
-            await _unitOfWork.BudgetRepository.GetByUserIdSortedAsync(request.UserId, request.Params.SortBy,
-                request.Params.IsDescending, request.IsPublic);
+            await _unitOfWork.BudgetRepository.GetByUserIdSortedAsync(request.UserId, request.Params, request.IsPublic);
 
         //TODO: may be there should be some validation logic to ensure that list is not empty
 

@@ -38,8 +38,7 @@ public class GetTransactionsByUserIdSortedRequestHandler : IRequestHandler<GetTr
                 });
 
         var transactions =
-            await _unitOfWork.TransactionRepository.GetByUserIdSortedAsync(request.UserId, request.Params.SortBy,
-                request.Params.IsDescending);
+            await _unitOfWork.TransactionRepository.GetByUserIdSortedAsync(request.UserId, request.Params);
 
         return _mapper.Map<List<TransactionBaseDTO>>(transactions);
     }

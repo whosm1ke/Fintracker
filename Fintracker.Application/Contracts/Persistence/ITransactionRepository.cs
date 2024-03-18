@@ -1,4 +1,5 @@
-﻿using Fintracker.Domain.Entities;
+﻿using Fintracker.Application.Models;
+using Fintracker.Domain.Entities;
 
 namespace Fintracker.Application.Contracts.Persistence;
 
@@ -12,7 +13,7 @@ public interface ITransactionRepository : IGenericRepository<Transaction>
     Task<IReadOnlyList<Transaction>> GetByUserIdAsync(Guid userId);
     Task<IReadOnlyList<Transaction>> GetByWalletIdAsync(Guid walletId);
     Task<IReadOnlyList<Transaction>> GetByCategoryIdAsync(Guid categoryId);
-    Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId, string sortBy, bool isDescending);
-    Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId, string sortBy, bool isDescending);
-    Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, string sortBy, bool isDescending);
+    Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId, QueryParams queryParams);
+    Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId, QueryParams queryParams);
+    Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, QueryParams queryParams);
 }

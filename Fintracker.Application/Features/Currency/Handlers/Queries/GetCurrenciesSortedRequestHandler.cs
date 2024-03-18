@@ -36,8 +36,7 @@ public class GetCurrenciesSortedRequestHandler : IRequestHandler<GetCurrenciesSo
                 });
 
         var currencies =
-            await _unitOfWork.CurrencyRepository.GetCurrenciesSorted(request.Params.SortBy,
-                request.Params.IsDescending);
+            await _unitOfWork.CurrencyRepository.GetCurrenciesSorted(request.Params);
 
         return _mapper.Map<List<CurrencyDTO>>(currencies);
     }

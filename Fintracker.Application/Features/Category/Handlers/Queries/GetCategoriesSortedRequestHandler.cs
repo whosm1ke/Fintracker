@@ -35,8 +35,7 @@ public class GetCategoriesSortedRequestHandler : IRequestHandler<GetCategoriesSo
             });
 
         var categories =
-            await _unitOfWork.CategoryRepository.GetAllSortedAsync(request.UserId, request.Params.SortBy,
-                request.Params.IsDescending);
+            await _unitOfWork.CategoryRepository.GetAllSortedAsync(request.UserId, request.Params);
 
         return _mapper.Map<List<CategoryDTO>>(categories);
     }
