@@ -42,7 +42,7 @@ public class AccountController : ControllerBase
             UserId = response.UserId,
             PathToFile = Path.Combine(_environment.WebRootPath, "data", "categories.json")
         });
-        
+
         return Ok(response);
     }
 
@@ -96,9 +96,17 @@ public class AccountController : ControllerBase
             WalletId = walletId,
             Token = token
         });
-
-
         return Ok(response);
+    }
+
+    [HttpPost("invite/decline")]
+    public async Task<IActionResult> DeleteUserFromWallet([FromQuery] string token)
+    {
+        await _mediator.Send(new RemoveUserFromWallet()
+        {
+            Token = token,
+        });
+        return Redirect("/");
     }
 
 
@@ -113,7 +121,7 @@ public class AccountController : ControllerBase
 
         return Ok();
     }
-    
+
     [HttpGet("reset-email")]
     public async Task<IActionResult> ResetEmailRequest([FromBody] ResetEmailRequest reset)
     {
@@ -135,7 +143,7 @@ public class AccountController : ControllerBase
             return BadRequest("Something gone wrong. Check your email or password again");
         return Ok();
     }
-    
+
     [HttpPost("reset-email")]
     public async Task<IActionResult> ResetEmail([FromBody] ResetEmailModel model)
     {

@@ -69,3 +69,51 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
         return response;
     }
 }
+
+public class RemoveUserFromWalletHandler : IRequestHandler<RemoveUserFromWallet, Unit>
+{
+    private readonly IUserRepository _userRepository;
+    private readonly ITokenService _tokenService;
+
+    public RemoveUserFromWalletHandler(IUserRepository userRepository, ITokenService tokenService)
+    {
+        _userRepository = userRepository;
+        _tokenService = tokenService;
+    }
+
+    public async Task<Unit> Handle(RemoveUserFromWallet request, CancellationToken cancellationToken)
+    {
+        var validatedTokenResult = await _tokenService.ValidateToken(request.Token);
+
+        if (!validatedTokenResult)
+        {
+            throw new BadRequestException(new ExceptionDetails
+            {
+                ErrorMessage = "Provided token is not valid",
+                PropertyName = nameof(request.Token)
+            });
+        }
+
+        var userId = _tokenService.GetUidClaimValue(request.Token);
+
+        if (!userId.HasValue)
+            throw new BadRequestException(new ExceptionDetails
+            {
+                ErrorMessage = "Invalid token format",
+                PropertyName = nameof(request.Token)
+            });
+
+        var user = await _userRepository.GetAsync(userId.Value);
+
+        if (user is null)
+            throw new LoginException(new ExceptionDetails
+            {
+                ErrorMessage = "Invalid credentials",
+                PropertyName = nameof(Domain.Entities.User)
+            });
+
+        await _userRepository.DeleteAsync(user);
+
+        return Unit.Value;
+    }
+}

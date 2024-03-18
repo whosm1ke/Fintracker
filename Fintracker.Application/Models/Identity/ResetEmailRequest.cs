@@ -2,5 +2,5 @@
 
 public class ResetEmailRequest : ResetRequestBase
 {
-    public string NewEmail { get; set; }
+    public string NewEmail { get; set; } = default!;
 }

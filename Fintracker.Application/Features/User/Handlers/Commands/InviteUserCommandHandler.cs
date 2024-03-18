@@ -48,6 +48,7 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
             var token = await _tokenService.CreateToken(user);
             inviteEmailModel.Ref =
                 $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
+            inviteEmailModel.DeclineRef = $"{_appSettings.BaseUrl}/api/account/invite/decline?token={token}";
             
             await _mediator.Send(new PopulateUserWithCategoriesCommand()
             {
@@ -63,6 +64,7 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
 
             inviteEmailModel.Ref =
                 $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
+            inviteEmailModel.DeclineRef = $"{_appSettings.BaseUrl}";
         }
 
         var isEmailSent = await _emailSender.SendEmail(new EmailModel

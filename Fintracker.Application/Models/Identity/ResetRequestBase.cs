@@ -2,5 +2,5 @@
 
 public class ResetRequestBase
 {
-    public string UrlCallback { get; set; }
+    public string UrlCallback { get; set; } = default!;
 }
