@@ -11,11 +11,13 @@ public class User: IdentityUser<Guid>, IEntity<Guid>
         OwnedWallets = new HashSet<Wallet>();
         MemberWallets = new HashSet<Wallet>();
         Budgets = new HashSet<Budget>();
+        Categories = new HashSet<Category>();
     }
 
     public ICollection<Wallet> OwnedWallets { get; set; }
     public ICollection<Wallet> MemberWallets { get; set; }
     
+    public ICollection<Category> Categories { get; set; }
     public ICollection<Budget> Budgets { get; set; }
 
     public UserDetails? UserDetails { get; set; }

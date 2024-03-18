@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
-using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Monobank.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;

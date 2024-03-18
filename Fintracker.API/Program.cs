@@ -4,7 +4,6 @@ using Fintracker.Identity;
 using Fintracker.Infrastructure;
 using Fintracker.Persistence;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.OpenApi.Models;
 using Serilog;
 

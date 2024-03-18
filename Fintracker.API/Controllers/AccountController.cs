@@ -2,6 +2,7 @@
 using Fintracker.Application.BusinessRuleConstraints;
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.DTO.Invite;
+using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Identity;
 using Fintracker.Application.Responses.API_Responses;
@@ -18,11 +19,13 @@ public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
     private readonly IMediator _mediator;
+    private readonly IWebHostEnvironment _environment;
 
-    public AccountController(IAccountService accountService, IMediator mediator)
+    public AccountController(IAccountService accountService, IMediator mediator, IWebHostEnvironment environment)
     {
         _accountService = accountService;
         _mediator = mediator;
+        _environment = environment;
     }
 
     [HttpPost("register")]
@@ -33,6 +36,13 @@ public class AccountController : ControllerBase
     public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest register)
     {
         var response = await _accountService.Register(register);
+
+        await _mediator.Send(new PopulateUserWithCategoriesCommand()
+        {
+            UserId = response.UserId,
+            PathToFile = Path.Combine(_environment.WebRootPath, "data", "categories.json")
+        });
+        
         return Ok(response);
     }
 
@@ -68,7 +78,8 @@ public class AccountController : ControllerBase
             UserEmail = invite.Email,
             WalletId = invite.WalletId,
             WhoInvited = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-            UrlCallback = invite.UrlCallback
+            UrlCallback = invite.UrlCallback,
+            PathToCategories = Path.Combine(_environment.WebRootPath, "data", "categories.json")
         };
         await _mediator.Send(inviteCommand);
 

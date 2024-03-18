@@ -20,6 +20,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(x => x.User)
             .HasForeignKey(x => x.UserId);
 
+        builder.HasMany(x => x.Categories)
+            .WithOne()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.OwnsOne(x => x.UserDetails, ba =>
         {
             ba.ToTable("UserDetails", ba =>

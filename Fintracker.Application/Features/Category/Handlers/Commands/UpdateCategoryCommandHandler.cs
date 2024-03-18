@@ -33,7 +33,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
                 PropertyName = nameof(request.Category.Id)
             }, nameof(Domain.Entities.Category));
 
-        if (category.UserId == null || request.Category.UserId != category.UserId)
+        if (request.Category.UserId != category.UserId)
         {
             throw new ForbiddenException(new ExceptionDetails
             {

@@ -26,7 +26,8 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
 
         var budgetEntity = _mapper.Map<Domain.Entities.Budget>(request.Budget);
 
-        var categories = await _unitOfWork.CategoryRepository.GetAllWithIds(request.Budget.CategoryIds);
+        var categories = await _unitOfWork.CategoryRepository
+            .GetAllWithIds(request.Budget.CategoryIds, request.Budget.UserId);
         foreach (var category in categories)
         {
             budgetEntity.Categories.Add(category);

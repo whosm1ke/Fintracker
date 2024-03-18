@@ -45,7 +45,8 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         _mapper.Map(request.Budget, budget);
 
 
-        var categories = await _unitOfWork.CategoryRepository.GetAllWithIds(request.Budget.CategoryIds);
+        var categories = await _unitOfWork.CategoryRepository
+            .GetAllWithIds(request.Budget.CategoryIds, budget.UserId);
         budget.Categories = new HashSet<Domain.Entities.Category>();
         foreach (var category in categories)
         {

@@ -24,10 +24,10 @@ public static class CategoryExtensions
 
         // Apply the sorting to the query
         var query = isDescending
-            ? categories.Where(c => c.UserId == null || c.UserId == userId)
+            ? categories.Where(c => c.UserId == userId)
                 .OrderByDescending(lambda)
             : categories
-                .Where(c => c.UserId == null || c.UserId == userId)
+                .Where(c => c.UserId == userId)
                 .OrderBy(lambda);
 
         return await query.ToListAsync();

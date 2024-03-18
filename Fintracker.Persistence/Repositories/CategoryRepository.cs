@@ -19,14 +19,14 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
     public async Task<IReadOnlyList<Category>> GetAllAsync(Guid userId)
     {
         return await _db.Categories
-            .Where(c => c.UserId == null || c.UserId == userId)
+            .Where(c => c.UserId == userId)
             .ToListAsync();
     }
 
     public async Task<Guid> GetDefaultBankIncomeCategoryId()
     {
         var incomeCategory = await _db.Categories
-            .Where(x => x.UserId == null &&
+            .Where(x => x.IsSystemCategory &&
                         x.Name == "Income" && x.Type == CategoryType.INCOME)
             .FirstOrDefaultAsync();
 
@@ -43,7 +43,7 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
     public async Task<Guid> GetDefaultBankExpenseCategoryId()
     {
         var expenseCategory = await _db.Categories
-            .Where(x => x.UserId == null &&
+            .Where(x => x.IsSystemCategory &&
                         x.Name == "Expense" && x.Type == CategoryType.EXPENSE)
             .FirstOrDefaultAsync();
 
@@ -60,7 +60,7 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
     public async Task<IReadOnlyList<Category>> GetByTypeAsync(Guid userId, CategoryType type)
     {
         return await _db.Categories
-            .Where(c => c.UserId == null || c.UserId == userId)
+            .Where(c => c.UserId == userId)
             .Where(x => x.Type == type)
             .ToListAsync();
     }
@@ -70,10 +70,10 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
         return await _db.Categories.GetAllSortedAsync(userId, sortBy, isDescending);
     }
 
-    public async Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids)
+    public async Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids, Guid userId)
     {
         return await _db.Categories
-            .Where(c => ids.Contains(c.Id))
+            .Where(c => c.UserId == userId && ids.Contains(c.Id))
             .ToListAsync();
     }
 }

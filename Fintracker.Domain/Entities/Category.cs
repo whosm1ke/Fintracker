@@ -23,5 +23,7 @@ public class Category : IEntity<Guid>
 
     public string IconColour { get; set; } = default!;
 
-    public Guid? UserId { get; set; }
+    public Guid UserId { get; set; }
+
+    public bool IsSystemCategory { get; set; }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Infrastructure;
-using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.Exceptions;
+using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Mail;
 using MediatR;
@@ -13,19 +13,19 @@ namespace Fintracker.Application.Features.User.Handlers.Commands;
 public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
 {
     private readonly IEmailSender _emailSender;
+    private readonly IMediator _mediator;
     private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
     private readonly AppSettings _appSettings;
     private readonly string _tempPass;
 
-    public InviteUserCommandHandler(IEmailSender emailSender, IUserRepository userRepository, IUnitOfWork unitOfWork,
-        ITokenService tokenService, IOptions<AppSettings> options)
+    public InviteUserCommandHandler(IEmailSender emailSender, IUserRepository userRepository,
+        ITokenService tokenService, IOptions<AppSettings> options, IMediator mediator)
     {
         _emailSender = emailSender;
         _userRepository = userRepository;
-        _unitOfWork = unitOfWork;
         _tokenService = tokenService;
+        _mediator = mediator;
         _appSettings = options.Value;
         _tempPass = GenerateTempPassword();
     }
@@ -48,6 +48,12 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
             var token = await _tokenService.CreateToken(user);
             inviteEmailModel.Ref =
                 $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
+            
+            await _mediator.Send(new PopulateUserWithCategoriesCommand()
+            {
+                UserId = user.Id,
+                PathToFile = request.PathToCategories!
+            });
         }
         else
         {

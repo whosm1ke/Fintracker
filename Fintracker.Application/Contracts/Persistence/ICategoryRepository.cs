@@ -9,7 +9,7 @@ public interface ICategoryRepository : IGenericRepository<Category>
 
     Task<IReadOnlyList<Category>> GetAllSortedAsync(Guid userId, string sortBy, bool isDescending);
 
-    Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids);
+    Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids, Guid userId);
 
     Task<IReadOnlyList<Category>> GetAllAsync(Guid userId);
 
