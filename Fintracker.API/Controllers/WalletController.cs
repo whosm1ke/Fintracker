@@ -134,6 +134,16 @@ public class WalletController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPut("transfer")]
+    [ProducesResponseType(typeof(BaseCommandResponse), StatusCodes.Status200OK)]
+    public async Task<ActionResult<BaseCommandResponse>> Transfer([FromBody] TransferMoneyFromWalletToWalletCommand command)
+    {
+        var response = await _mediator.Send(command);
+
+        return Ok(response);
+    }
+    
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(DeleteCommandResponse<WalletBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
