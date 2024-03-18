@@ -39,7 +39,8 @@ public class CategoryRequestTests
                 Type = CategoryTypeEnum.INCOME,
                 Name = "Category 1",
                 Image = "Glory",
-                IconColour = "pink"
+                IconColour = "pink",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             },
             new()
             {
@@ -47,13 +48,15 @@ public class CategoryRequestTests
                 Type = CategoryTypeEnum.INCOME,
                 Name = "Category 3",
                 Image = "Image 1",
-                IconColour = "yellow"
+                IconColour = "yellow",
+                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
             }
         };
 
         var actualResult = await handler.Handle(new GetCategoriesByTypeRequest
         {
-            Type = CategoryType.INCOME
+            Type = CategoryType.INCOME,
+            UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
         }, default);
 
         actualResult.Should().NotBeNull();

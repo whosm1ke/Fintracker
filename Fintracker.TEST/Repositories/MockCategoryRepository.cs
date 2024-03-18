@@ -1,5 +1,6 @@
 ﻿using System.Linq.Dynamic.Core;
 using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Fintracker.Domain.Enums;
 using Moq;
@@ -114,11 +115,11 @@ public class MockCategoryRepository
                 return Task.FromResult(cats);
             });
 
-        mock.Setup(x => x.GetAllSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
-            .Returns((Guid userId, string sortBy, bool isDescending) => Task.FromResult(
+        mock.Setup(x => x.GetAllSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>()))
+            .Returns((Guid userId, QueryParams query) => Task.FromResult(
                 (IReadOnlyList<Category>)categories
                     .AsQueryable()
-                    .OrderBy(sortBy)
+                    .OrderBy(query.SortBy)
                     .ToList()));
         return mock;
     }

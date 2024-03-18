@@ -1,5 +1,6 @@
 ﻿using System.Linq.Dynamic.Core;
 using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Moq;
 
@@ -178,22 +179,22 @@ public class MockBudgetRepository
         mock.Setup(x => x.GetByUserIdAsync(It.IsAny<Guid>(),It.IsAny<bool>()))
             .Returns((Guid id, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.UserId == id).ToList()));
 
-        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>(),It.IsAny<bool>()))
-            .Returns((Guid id, string sortBy, bool isDescending, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets
+        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>(),It.IsAny<bool>()))
+            .Returns((Guid id, QueryParams query, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets
                 .Where(x => x.UserId == id)
                 .AsQueryable()
-                .OrderBy(sortBy)
+                .OrderBy(query.SortBy)
                 .ToList()));
 
         mock.Setup(x => x.GetByWalletIdAsync(It.IsAny<Guid>(),It.IsAny<bool>()))
             .Returns((Guid id, bool isPublic) =>
                 Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.WalletId == id).ToList()));
 
-        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>(),It.IsAny<bool>()))
-            .Returns((Guid id, string sortBy, bool isDescending, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets
+        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>(), It.IsAny<bool>()))
+            .Returns((Guid id, QueryParams query, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets
                 .Where(x => x.WalletId == id)
                 .AsQueryable()
-                .OrderBy(sortBy)
+                .OrderBy(query.SortBy)
                 .ToList()));
 
         mock.Setup(x => x.GetBudgetsByCategoryId(It.IsAny<Guid>()))

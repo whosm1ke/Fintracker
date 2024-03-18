@@ -1,5 +1,6 @@
 ﻿using System.Linq.Dynamic.Core;
 using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Moq;
 
@@ -161,12 +162,12 @@ public class MockWalletRepository
             .Returns((Guid id) =>
                 Task.FromResult((IReadOnlyList<Wallet>)wallets.Where(x => x.OwnerId == id).ToList()));
 
-        mock.Setup(x => x.GetByOwnerIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
-            .Returns((Guid id, string sortBy, bool isDescending) =>
+        mock.Setup(x => x.GetByOwnerIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>()))
+            .Returns((Guid id, QueryParams query) =>
                 Task.FromResult((IReadOnlyList<Wallet>)wallets
                     .Where(x => x.OwnerId == id)
                     .AsQueryable()
-                    .OrderBy(sortBy)
+                    .OrderBy(query.SortBy)
                     .ToList()));
 
         return mock;

@@ -1,5 +1,6 @@
 using System.Linq.Dynamic.Core;
 using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Moq;
 
@@ -122,10 +123,10 @@ public class MockTransactionRepository
             .Returns((Guid id) => { return Task.FromResult(transactions.Find(x => x.Id == id)); });
 
         mock.Setup(x => x.GetAllAsync())
-            .Returns(() => { return Task.FromResult<IReadOnlyList<Transaction>>(transactions); });
+            .Returns(() => { return Task.FromResult<IReadOnlyList<Transaction>>(transactions)!; });
 
         mock.Setup(x => x.GetAllAsyncNoTracking())
-            .Returns(() => { return Task.FromResult<IReadOnlyList<Transaction>>(transactions); });
+            .Returns(() => { return Task.FromResult<IReadOnlyList<Transaction>>(transactions)!; });
 
         mock.Setup(x => x.Delete(It.IsAny<Transaction>()))
             .Callback((Transaction b) =>
@@ -146,11 +147,11 @@ public class MockTransactionRepository
             .Returns((Guid id) =>
                 Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.CategoryId == id).ToList()));
 
-        mock.Setup(x => x.GetByCategoryIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
-            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult(
+        mock.Setup(x => x.GetByCategoryIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>()))
+            .Returns((Guid id, QueryParams query) => Task.FromResult(
                 (IReadOnlyList<Transaction>)transactions.Where(x => x.CategoryId == id)
                     .AsQueryable()
-                    .OrderBy(sortBy)
+                    .OrderBy(query.SortBy)
                     .ToList()
             ));
 
@@ -158,11 +159,11 @@ public class MockTransactionRepository
             .Returns((Guid id) =>
                 Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.UserId == id).ToList()));
 
-        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
-            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult(
+        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>()))
+            .Returns((Guid id, QueryParams query) => Task.FromResult(
                 (IReadOnlyList<Transaction>)transactions.Where(x => x.UserId == id)
                     .AsQueryable()
-                    .OrderBy(sortBy)
+                    .OrderBy(query.SortBy)
                     .ToList()
             ));
 
@@ -170,11 +171,11 @@ public class MockTransactionRepository
             .Returns((Guid id) =>
                 Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.WalletId == id).ToList()));
 
-        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<bool>()))
-            .Returns((Guid id, string sortBy, bool isDescending) => Task.FromResult(
+        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>()))
+            .Returns((Guid id, QueryParams query ) => Task.FromResult(
                 (IReadOnlyList<Transaction>)transactions.Where(x => x.WalletId == id)
                     .AsQueryable()
-                    .OrderBy(sortBy)
+                    .OrderBy(query.SortBy)
                     .ToList()
             ));
 

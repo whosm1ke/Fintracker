@@ -1,5 +1,6 @@
 ﻿using System.Linq.Dynamic.Core;
 using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 using Moq;
 
@@ -41,10 +42,10 @@ public class MockCurrencyRepository
         mock.Setup(x => x.GetAllAsync())
             .Returns(() => Task.FromResult<IReadOnlyList<Currency?>>(currencies));
         
-        mock.Setup(x => x.GetCurrenciesSorted(It.IsAny<string>(), It.IsAny<bool>()))
-            .Returns((string sortBy, bool isDescending) => Task.FromResult((IReadOnlyList<Currency>)currencies
+        mock.Setup(x => x.GetCurrenciesSorted(It.IsAny<QueryParams>()))
+            .Returns((QueryParams query) => Task.FromResult((IReadOnlyList<Currency>)currencies
             .AsQueryable()
-            .OrderBy(sortBy)
+            .OrderBy(query.SortBy)
             .ToList()));
         
         return mock;

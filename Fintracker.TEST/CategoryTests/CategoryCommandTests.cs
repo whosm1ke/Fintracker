@@ -61,22 +61,22 @@ public class CategoryCommandTests
             .With(x => x.Image, "New Icon")
             .With(x => x.Id, new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6"))
             .With(x => x.IconColour, "red")
+            .With(x => x.UserId,new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A") )
             .Create();
 
 
-        Func<Task<UpdateCommandResponse<CategoryDTO>>> result = async () =>
-        {
-            return await handler.Handle(new UpdateCategoryCommand
+       
+           var result = await handler.Handle(new UpdateCategoryCommand
             {
                 Category = categoryToUpdate
             }, default);
-        };
 
-        await result.Should().ThrowAsync<ForbiddenException>();
+
+            result.Success.Should().BeTrue();
     }
 
     [Fact]
-    public async Task DeleteAsync_Should_Return_Forbidden_Exception()
+    public async Task DeleteAsync_Should_Return_True()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new DeleteCategoryCommandHandler(mockUnitOfWork, _mapper);
@@ -84,7 +84,8 @@ public class CategoryCommandTests
 
         var result = await handler.Handle(new DeleteCategoryCommand
         {
-            Id = new Guid("77326B96-DF2B-4CC8-93A3-D11A276433D6")
+            Id = new Guid("D670263B-92CF-48C8-923A-EB09188F6077"),
+            UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
         }, default);
 
 
