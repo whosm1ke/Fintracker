@@ -7,23 +7,23 @@ using Microsoft.Extensions.Options;
 
 namespace Fintracker.Application.Features.User.Handlers.Commands;
 
-public class SentResetPasswordCommandHandler : IRequestHandler<SentResetPasswordCommand, Unit>
+public class SentResetEmailCommandHandler : IRequestHandler<SentResetEmailCommand, Unit>
 {
     private readonly IAccountService _accountService;
     private readonly IEmailSender _emailSender;
     private readonly IUserRepository _userRepository;
     private readonly AppSettings _appSettings;
 
-    public SentResetPasswordCommandHandler(IAccountService accountService,
-        IUserRepository userRepository, IEmailSender emailSender, IOptions<AppSettings> appSettings)
+    public SentResetEmailCommandHandler(IAccountService accountService, IEmailSender emailSender,
+        IUserRepository userRepository, IOptions<AppSettings> appSettings)
     {
         _accountService = accountService;
-        _userRepository = userRepository;
         _emailSender = emailSender;
+        _userRepository = userRepository;
         _appSettings = appSettings.Value;
     }
 
-    public async Task<Unit> Handle(SentResetPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SentResetEmailCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.FindByEmailAsync(request.Email);
 
@@ -34,13 +34,13 @@ public class SentResetPasswordCommandHandler : IRequestHandler<SentResetPassword
                 ErrorMessage = "Invalid email. Check spelling."
             });
 
-        var token = await _accountService.GenerateResetPasswordToken(user);
+        var token = await _accountService.GenerateResetEmailToken(user, request.NewEmail);
 
         await _emailSender.SendEmail(new()
         {
-            Email = request.Email,
-            Subject = "Reset Password Confirmation",
-            HtmlPath = "resetPassword.html"
+            Email = request.NewEmail,
+            Subject = "Reset Email Confirmation",
+            HtmlPath = "resetEmail.html"
         }, new { Ref = $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}" });
 
         return Unit.Value;

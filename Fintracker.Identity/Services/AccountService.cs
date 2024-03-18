@@ -102,23 +102,46 @@ public class AccountService : IAccountService
     public async Task<bool> ResetPassword(ResetPasswordModel model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
-
+        
+        if (user is null)
+            throw new BadRequestException(new ExceptionDetails
+            {
+                ErrorMessage = "Invalid email. Check spelling",
+                PropertyName = nameof(model.Email)
+            });
+        
         var restPasswordResult = await _userManager.ResetPasswordAsync(user!, model.Token, model.Password);
 
         return restPasswordResult.Succeeded;
     }
 
-    public async Task<string> GenerateResetPasswordToken(string email)
+    public async Task<bool> ResetEmail(ResetEmailModel model)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByEmailAsync(model.Email);
 
         if (user is null)
-            throw new NotFoundException(new ExceptionDetails
+            throw new BadRequestException(new ExceptionDetails
             {
-                ErrorMessage = $"Was not found [{email}]",
-                PropertyName = nameof(User.Email)
-            }, nameof(User));
+                ErrorMessage = "Invalid email. Check spelling",
+                PropertyName = nameof(model.Email)
+            });
+        
+        var restPasswordResult = await _userManager.ChangeEmailAsync(user!, model.NewEmail, model.Token);
+
+        return restPasswordResult.Succeeded;
+    }
+
+    public async Task<string> GenerateResetPasswordToken(User user)
+    {
+     
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        return token;
+    }
+    
+    public async Task<string> GenerateResetEmailToken(User user,string newEmail)
+    {
+       var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
 
         return token;
     }

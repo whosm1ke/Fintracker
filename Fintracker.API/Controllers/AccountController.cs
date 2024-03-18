@@ -91,24 +91,46 @@ public class AccountController : ControllerBase
     }
 
 
-    [HttpPost("reset-pass-request")]
-    public async Task<IActionResult> ResetPasswordRequest([FromBody] string urlCallback)
+    [HttpGet("reset-password")]
+    public async Task<IActionResult> ResetPasswordRequest([FromBody] ResetRequestBase reset)
     {
         await _mediator.Send(new SentResetPasswordCommand
         {
             Email = HttpContext.User.FindFirst(ClaimTypeConstants.Email)?.Value ?? "no",
-            UrlCallback = urlCallback
+            UrlCallback = reset.UrlCallback
+        });
+
+        return Ok();
+    }
+    
+    [HttpGet("reset-email")]
+    public async Task<IActionResult> ResetEmailRequest([FromBody] ResetEmailRequest reset)
+    {
+        await _mediator.Send(new SentResetEmailCommand
+        {
+            Email = HttpContext.User.FindFirst(ClaimTypeConstants.Email)?.Value ?? "no",
+            UrlCallback = reset.UrlCallback,
+            NewEmail = reset.NewEmail
         });
 
         return Ok();
     }
 
     [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordModel model)
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
     {
         var res = await _accountService.ResetPassword(model);
         if (!res)
             return BadRequest("Something gone wrong. Check your email or password again");
+        return Ok();
+    }
+    
+    [HttpPost("reset-email")]
+    public async Task<IActionResult> ResetEmail([FromBody] ResetEmailModel model)
+    {
+        var res = await _accountService.ResetEmail(model);
+        if (!res)
+            return BadRequest("Something gone wrong. Check your email");
         return Ok();
     }
 }
