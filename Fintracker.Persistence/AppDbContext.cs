@@ -1,4 +1,5 @@
-﻿using Fintracker.Domain.Common;
+﻿using Fintracker.Application.BusinessRuleConstraints;
+using Fintracker.Domain.Common;
 using Fintracker.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -43,13 +44,13 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
-        var username = _httpContextAccessor.HttpContext!.User.FindFirst("Uid")?.Value;
+        var userEmail = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypeConstants.Email)?.Value;
         
         foreach (var entry in base.ChangeTracker.Entries<IEntity<Guid>>()
                      .Where(q => q.State == EntityState.Added || q.State == EntityState.Modified))
         {
             entry.Entity.ModifiedAt = DateTime.Now;
-            entry.Entity.ModifiedBy = username ?? "SYSTEM";
+            entry.Entity.ModifiedBy = userEmail ?? "SYSTEM";
 
             if (entry.Entity is Transaction transaction && transaction.IsBankTransaction)
             {
@@ -58,7 +59,7 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
             else
             {
                 entry.Entity.CreatedAt = DateTime.Now;
-                entry.Entity.CreatedBy = username ?? "SYSTEM";
+                entry.Entity.CreatedBy = userEmail ?? "SYSTEM";
             }
         }
 
