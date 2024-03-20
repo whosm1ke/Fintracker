@@ -38,7 +38,7 @@ public class AddInitialTransactionToNewBankWalletCommandHandler : IRequestHandle
         var xToken = await _monobankService.GetMonobankTokenAsync(request.Payload.Email);
         var accountBalance = await _monobankService.GetAccountBalance(xToken!, request.Payload.AccountId);
 
-        var bankWalletDto = new CreateWalletDTO
+        var bankWallet = new Domain.Entities.Wallet
         {
             Balance = accountBalance / 100m,
             IsBanking = true,
@@ -47,7 +47,6 @@ public class AddInitialTransactionToNewBankWalletCommandHandler : IRequestHandle
             CurrencyId = defaultCurrency!.Id
         };
 
-        var bankWallet = _mapper.Map<Domain.Entities.Wallet>(bankWalletDto);
         bankWallet.BankAccountId = request.Payload.AccountId;
 
         foreach (var transaction in transactions)

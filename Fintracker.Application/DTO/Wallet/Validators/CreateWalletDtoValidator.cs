@@ -20,9 +20,5 @@ public class CreateWalletDtoValidator : AbstractValidator<CreateWalletCommand>
             .MustAsync(async (id, _) => await userRepository.ExistsAsync(id))
             .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.Wallet.OwnerId}]");
 
-        RuleFor(x => x.Wallet.IsBanking)
-            .ApplyCommonRules()
-            .OverridePropertyName(nameof(CreateWalletCommand.Wallet.IsBanking));
-
     }
 }

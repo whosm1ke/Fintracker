@@ -62,6 +62,7 @@ public class
     private void IncreaseWalletBalance(Domain.Entities.Wallet wallet, decimal amount)
     {
         wallet.Balance += amount;
+        wallet.TotalSpent -= amount;
     }
 
     private async Task IncreaseBudgetBalance(Guid categoryId, decimal amount, Guid userId)
@@ -71,7 +72,10 @@ public class
         foreach (var budget in budgets)
         {
             if (budget.IsPublic || budget.UserId == userId)
+            {
                 budget.Balance += amount;
+                budget.TotalSpent -= amount;
+            }
         }
     }
 }

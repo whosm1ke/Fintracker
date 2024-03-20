@@ -41,17 +41,16 @@ public class
                 ErrorMessage = "Can not change bank transaction amount",
                 PropertyName = nameof(request.Transaction.Amount)
             });
-        
+
         var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
         _mapper.Map(request.Transaction, transaction);
-        
-        if (!transaction.IsBankTransaction)
-        {
-            await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount,
-                oldObject.UserId);
-            UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
-            _unitOfWork.TransactionRepository.Update(transaction);
-        }
+
+
+        await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount,
+            oldObject.UserId);
+        UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
+        _unitOfWork.TransactionRepository.Update(transaction);
+
 
         await _unitOfWork.SaveAsync();
         var newObject = _mapper.Map<TransactionBaseDTO>(transaction);
@@ -71,9 +70,15 @@ public class
         decimal difference = newAmount - oldAmount;
 
         if (difference > 0)
-            wallet.Balance += difference;
-        else
+        {
             wallet.Balance -= difference;
+            wallet.TotalSpent = newAmount;
+        }
+        else
+        {
+            wallet.Balance += difference * -1;
+            wallet.TotalSpent = newAmount;
+        }
     }
 
     private async Task UpdateBudgetBalance(Guid categoryId, decimal newAmount, decimal oldAmount, Guid userId)
@@ -86,9 +91,15 @@ public class
             if (budget.IsPublic || budget.UserId == userId)
             {
                 if (difference > 0)
-                    budget.Balance += difference;
-                else
+                {
                     budget.Balance -= difference;
+                    budget.TotalSpent = newAmount;
+                }
+                else
+                {
+                    budget.Balance += difference * -1;
+                    budget.TotalSpent = newAmount;
+                }
             }
         }
     }

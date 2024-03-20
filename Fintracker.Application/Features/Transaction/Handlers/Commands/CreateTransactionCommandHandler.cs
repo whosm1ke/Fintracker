@@ -56,6 +56,7 @@ public class
             if (budget.IsPublic || budget.UserId == userId)
             {
                 budget.Balance -= amount;
+                budget.TotalSpent += amount;
             }
         }
     }
@@ -65,5 +66,6 @@ public class
         var wallet = await _unitOfWork.WalletRepository.GetAsync(walletId);
 
         wallet!.Balance -= amount;
+        wallet.TotalSpent += amount;
     }
 }
