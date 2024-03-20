@@ -29,6 +29,11 @@ public class BudgetConfiguration : IEntityTypeConfiguration<Budget>
             .IsRequired()
             .HasColumnType("decimal")
             .HasPrecision(12, 2);
+        
+        builder.Property(x => x.TotalSpent)
+            .IsRequired()
+            .HasColumnType("decimal")
+            .HasPrecision(12, 2);
 
         builder.HasOne(x => x.User)
             .WithMany(x => x.Budgets)

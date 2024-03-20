@@ -46,7 +46,12 @@ public class WalletConfiguration : IEntityTypeConfiguration<Wallet>
 
         builder.Property(x => x.Balance)
             .HasColumnType("decimal")
-            .HasPrecision(12, 5)
+            .HasPrecision(12, 2)
+            .IsRequired();
+        
+        builder.Property(x => x.TotalSpent)
+            .HasColumnType("decimal")
+            .HasPrecision(12, 2)
             .IsRequired();
 
         builder.ToTable("Wallets",
