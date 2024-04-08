@@ -45,14 +45,22 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+builder.Services.AddCors(x =>
+{
+    x.AddPolicy("UI", cors =>
+    {
+        cors.WithOrigins("https://localhost:1337")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 builder.Services.ConfigureApplicationServices(builder.Configuration, builder.Environment.WebRootPath);
 builder.Services.ConfigurePresistenceServices(builder.Configuration);
 builder.Services.ConfigureIdentityServices(builder.Configuration);
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
-builder.Services.AddControllers(x =>
-{
-    x.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-});
+builder.Services.AddControllers(x => { x.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true; });
 builder.Services.AddMemoryCache();
 var app = builder.Build();
 
@@ -61,7 +69,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-} else
+}
+else
 {
     app.UseExceptionHandler(errorApp =>
     {
@@ -81,6 +90,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("UI");
 app.UseUnauthorizedMiddleware();
 app.UseExceptionMiddleware();
 app.UseStaticFiles();
