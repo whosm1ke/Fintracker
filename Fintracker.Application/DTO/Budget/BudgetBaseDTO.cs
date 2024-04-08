@@ -1,6 +1,5 @@
 ﻿using Fintracker.Application.DTO.Category;
 using Fintracker.Application.DTO.Common;
-using Fintracker.Application.DTO.Currency;
 
 namespace Fintracker.Application.DTO.Budget;
 

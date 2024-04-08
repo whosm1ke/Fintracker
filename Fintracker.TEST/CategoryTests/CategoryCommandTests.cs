@@ -1,11 +1,9 @@
 ﻿using AutoFixture;
 using AutoMapper;
 using Fintracker.Application.DTO.Category;
-using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Category.Handlers.Commands;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.MapProfiles;
-using Fintracker.Application.Responses.Commands_Responses;
 using Fintracker.TEST.Repositories;
 using FluentAssertions;
 using Xunit.Abstractions;
