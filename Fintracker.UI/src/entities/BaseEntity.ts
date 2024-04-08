@@ -1,0 +1,3 @@
+﻿interface BaseEntity {
+    id: string
+}
