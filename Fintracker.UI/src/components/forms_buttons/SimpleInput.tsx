@@ -11,7 +11,7 @@ type SimpleInputProps = {
 const SimpleInput = ({id, autoComplete, placeholder, register, error, showError}: SimpleInputProps) => {
     return (
         <div>
-            <label htmlFor={id} className="text-[13px] text-gray-500">{placeholder}</label>
+            <label htmlFor={id} className="text-[1.25rem] sm:text-[1rem] text-gray-500">{placeholder}</label>
             <input id={id} type="text" autoComplete={autoComplete} required
                    className="register-input"
                    placeholder={placeholder} {...register} />

@@ -15,7 +15,7 @@ const PasswordInput = ({id, placeholder, register, error, showError}: PasswordIn
 
     return (
         <div>
-            <label htmlFor={id} className="text-[13px] text-gray-500">{placeholder}</label>
+            <label htmlFor={id} className="text-[1.25rem] sm:text-[1rem] text-gray-500">{placeholder}</label>
             <div className="relative">
                 <input id={id} type={showPassword ? 'text' : 'password'}
                        required

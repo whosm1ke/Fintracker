@@ -32,9 +32,9 @@ export default function RegisterForm() {
             <div
                 className="flex flex-col min-h-screen bg-gray-50 p-4">
                 <Title/>
-                <div className="max-w-md w-2/3 mx-auto my-auto">
+                <div className="max-w-md w-2/3 mx-auto my-auto order-1">
                     <SubTitle h1={'Sign up'} h4={'Already registered?'} linkTo={'login'} linkText={'Sign in'}/>
-                    <form className="mt-8 space-y-6 border-2 p-16 rounded bg-white shadow-xl"
+                    <form className="mt-8 space-y-6 border-2 p-8 rounded bg-white shadow-xl sm:p-12"
                           onSubmit={handleSubmit(onSubmit)} method={'post'}>
                         <div className="flex flex-col gap-y-6 rounded-md shadow-sm -space-y-px">
                             <SimpleInput id={'userName'} autoComplete={'userName'} placeholder={'Username'}
