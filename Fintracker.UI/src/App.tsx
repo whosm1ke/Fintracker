@@ -1,20 +1,15 @@
 import './index.css'
-import { useEffect } from 'react';
-import ApiClient from "./services/ApiClient.ts";
+import useUserStore from "./stores/userStore.ts";
 
-async function fetchData() {
-    const apiClient = new ApiClient<Currency, Currency>('currency');
-    const response = await apiClient.getById("8");
-    console.log('response: ', response);
-}
+
 
 function App() {
-    useEffect(() => {
-        fetchData();
-    }, []);
-
+const user = useUserStore(x => x.user);
+console.log(user);
     return (
-        <div className={"text-6xl font-bold"}>Hi there!</div>
+        <div>
+            
+        </div>
     );
 }
 
