@@ -3,12 +3,14 @@ using Fintracker.Application;
 using Fintracker.Identity;
 using Fintracker.Infrastructure;
 using Fintracker.Persistence;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
+builder.Services.Configure<RouteHandlerOptions>(options =>
+{
+    options.ThrowOnBadRequest = true;
+});
 
 using var log = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -70,25 +72,25 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else
-{
-    app.UseExceptionHandler(errorApp =>
-    {
-        errorApp.Run(async context =>
-        {
-            context.Response.StatusCode = 500; // or another Status accordingly to Exception Type
-            context.Response.ContentType = "application/json";
-
-            var error = context.Features.Get<IExceptionHandlerFeature>();
-            if (error != null)
-            {
-                var ex = error.Error;
-
-                await context.Response.WriteAsync(ex.Message); // or your custom message
-            }
-        });
-    });
-}
+// else
+// {
+//     app.UseExceptionHandler(errorApp =>
+//     {
+//         errorApp.Run(async context =>
+//         {
+//             context.Response.StatusCode = 500; // or another Status accordingly to Exception Type
+//             context.Response.ContentType = "application/json";
+//
+//             var error = context.Features.Get<IExceptionHandlerFeature>();
+//             if (error != null)
+//             {
+//                 var ex = error.Error;
+//
+//                 await context.Response.WriteAsync(ex.Message); // or your custom message
+//             }
+//         });
+//     });
+// }
 
 app.UseCors("UI");
 app.UseUnauthorizedMiddleware();

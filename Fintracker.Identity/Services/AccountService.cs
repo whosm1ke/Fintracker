@@ -1,4 +1,5 @@
-﻿using Fintracker.Application.Contracts.Identity;
+﻿using System.Reflection;
+using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Models.Identity;
 using Fintracker.Domain.Entities;
@@ -55,12 +56,20 @@ public class AccountService : IAccountService
             throw new RegisterAccountException(createdUser.Errors.Select(x => new ExceptionDetails
             {
                 ErrorMessage = x.Description,
-                PropertyName = null
+                PropertyName = ExtractPropertyNameFromCode(x, typeof(RegisterRequest).GetProperties())
             }).ToList());
         }
 
         throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
             { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
+    }
+
+    private string ExtractPropertyNameFromCode(IdentityError error, PropertyInfo[] props)
+    {
+        var prop = props.FirstOrDefault(p => error.Code.Contains(p.Name));
+        if (prop != null)
+            return prop.Name;
+        return null;
     }
 
     public async Task<LoginResponse> Login(LoginRequest login)
@@ -102,14 +111,14 @@ public class AccountService : IAccountService
     public async Task<bool> ResetPassword(ResetPasswordModel model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
-        
+
         if (user is null)
             throw new BadRequestException(new ExceptionDetails
             {
                 ErrorMessage = "Invalid email. Check spelling",
                 PropertyName = nameof(model.Email)
             });
-        
+
         var restPasswordResult = await _userManager.ResetPasswordAsync(user!, model.Token, model.Password);
 
         return restPasswordResult.Succeeded;
@@ -125,7 +134,7 @@ public class AccountService : IAccountService
                 ErrorMessage = "Invalid email. Check spelling",
                 PropertyName = nameof(model.Email)
             });
-        
+
         var restPasswordResult = await _userManager.ChangeEmailAsync(user!, model.NewEmail, model.Token);
 
         return restPasswordResult.Succeeded;
@@ -133,15 +142,14 @@ public class AccountService : IAccountService
 
     public async Task<string> GenerateResetPasswordToken(User user)
     {
-     
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         return token;
     }
-    
-    public async Task<string> GenerateResetEmailToken(User user,string newEmail)
+
+    public async Task<string> GenerateResetEmailToken(User user, string newEmail)
     {
-       var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+        var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
 
         return token;
     }

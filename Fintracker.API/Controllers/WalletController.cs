@@ -119,7 +119,7 @@ public class WalletController : ControllerBase
     }
     
     [HttpPut]
-    [ProducesResponseType(typeof(DeleteCommandResponse<WalletBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UpdateCommandResponse<WalletBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]

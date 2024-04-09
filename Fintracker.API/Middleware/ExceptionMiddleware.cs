@@ -77,7 +77,7 @@ public class ExceptionMiddleware
                 await context.Response.WriteAsJsonAsync(logResponse);
                 break;
             case RegisterAccountException reg:
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.StatusCode = StatusCodes.Status409Conflict;
                 var regResponse = new UnauthorizedResponse
                 {
                     TraceId = Guid.NewGuid(),
