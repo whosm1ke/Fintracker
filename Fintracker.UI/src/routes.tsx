@@ -1,9 +1,10 @@
 ﻿import {createBrowserRouter} from "react-router-dom";
-import ErrorPage from "./pages/ErrorPage.tsx";
+import ErrorPage, {Error} from "./pages/ErrorPage.tsx";
 import RegisterForm from "./components/forms_buttons/RegisterForm.tsx";
 import LoginForm from "./components/forms_buttons/LoginForm.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import Layout from "./pages/Layout.tsx";
+import AboutPage from "./pages/AboutPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,12 @@ const router = createBrowserRouter([
                 id: 'home',
                 index: true,
                 element: <HomePage/>
+            },
+            {
+                id:'about',
+                path:'about',
+                element: <AboutPage/>,
+                errorElement: <Error/>
             }
         ],
         

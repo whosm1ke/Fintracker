@@ -1,6 +1,5 @@
-﻿import {advantages, textFiller} from "../helpers/textFiller.tsx";
+﻿import {advantages, textFiller} from "../helpers/textFiller.ts";
 import {AnimatePresence, motion} from "framer-motion";
-import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {FiChevronDown} from "react-icons/fi";
 
@@ -17,24 +16,7 @@ export default function HomePage() {
                            imagePath={textFiller[1].imagePath} imageFirst={window.innerWidth > 500}/>
                 <CardContainer/>
             </main>
-            <footer className="flex-shrink-0 border-t-2 p-6 mt-6">
-                <div className={'flex justify-center items-center gap-x-4'}>
-                    <Link to="/about" className="underline hover:no-underline">
-                        About us
-                    </Link>
-                    <Link to="/bank" className="underline hover:no-underline">
-                        Bank Connect
-                    </Link>
-                    <a href="#" className="underline hover:no-underline"
-                       onClick={(e) => {
-                           e.preventDefault();
-                           window.scrollTo({top: 0, behavior: 'smooth'});
-                       }}>
-                        Go up
-                    </a>
-                </div>
-                <p className="text-sm text-center">Цей сайт був розроблений мною у 2024 році</p>
-            </footer>
+          
         </>
     )
 }
@@ -100,9 +82,7 @@ const TextImage = ({title, content, imagePath, imageFirst}: TextImageBlockProps)
             }}
             transition={{
                 type: 'spring',
-                mass: 1,
-                stiffness: 300,
-                duration: 1,
+                duration: 1.5,
                 when: 'beforeChildren'
             }}
             className={'w-full mx-auto p-4'}>
@@ -122,23 +102,12 @@ const TextImage = ({title, content, imagePath, imageFirst}: TextImageBlockProps)
                     <AnimatePresence>
                         {!isCollapsed && (
                             <motion.div
-                                animate={isCollapsed ? 'collapsed' : 'open'}
-                                variants={{
-                                    'collapsed': {
-                                        opacity: 0,
-                                        height: 0,
-                                        marginTop: 0
-                                    },
-                                    'open': {
-                                        opacity: 1,
-                                        height: 'auto',
-                                        marginTop: '2.5rem'
-                                    }
-                                }}
-                                initial={'collapsed'}
-                                exit={'collapsed'}
+                                initial={{opacity: 0, height: 0, marginTop: 0}}
+                                animate={{opacity: 1, height: 'auto', marginTop: '2.5rem'}}
+                                exit={{opacity: 0, height: 0, marginTop: 0}}
                                 transition={{
-                                    duration: 1
+                                    duration: 1,
+                                    type: 'tween'
                                 }}
                                 className={'mt-10 w-full font-serif'}>
                                 <p className={'min-w-full leading-relaxed transform transition-all duration-500 ease-out mb-3 sm:mb-0'}>{content}</p>

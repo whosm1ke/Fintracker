@@ -23,3 +23,34 @@ export const advantages = [
     { title: "Financial Independence", description: "Effective financial management can lead to financial independence, allowing you to live comfortably without the constant need to earn more money." },
     { title: "Stress Reduction", description: "Financial problems are a leading cause of stress. By providing financial stability, managing your finances can help alleviate this stress." },
 ];
+
+export const about =[
+    {
+        title: 'Your financial assistant',
+        content: 'We are a new startup that aims to help people manage their finances effectively. Our mission is to provide you with the tools to monitor your expenses and plan budgets so you can focus on what really matters.'
+    },
+    {
+        title: 'Our story',
+        content: 'Although our company is new to the market, we are working to become your trusted partner in financial planning. Our story begins with one student who dreamed of making financial management easier and more accessible to everyone.'
+    },
+    {
+        title: 'Meet the developer',
+        content: 'Our product was developed by one person - a 21-year-old KPI student. He dedicates his time and efforts to making financial management easier and more accessible for everyone.'
+    },
+    {
+        title: 'Our values',
+        content: 'We strive for security, flexibility and customer focus in everything we do. We believe these values are the key to providing you with the best possible service.'
+    },
+    {
+        title: 'Our services',
+        content: 'We specialise in financial management and bank statement monitoring. Our tools will help you better understand your expenses and plan your budget.'
+    },
+    {
+        title: 'Contact us',
+        content: 'If you have any questions or would like to know more, please email us at kazimirka1234@gmail.com.'
+    },
+    {
+        title: 'Join us',
+        content: 'Start your journey to better financial management today. Join us and find out how we can help you better control your spending and plan your budget.'
+    }
+]

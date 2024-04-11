@@ -13,3 +13,14 @@ export default function ErrorPage() {
         </>
     )
 }
+
+export function Error() {
+    return (
+        <>
+            <h1>Oops</h1>
+            <div>
+                AKSDSJAJSDLnexpected error occured"
+            </div>
+        </>
+    )
+}
