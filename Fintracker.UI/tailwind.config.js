@@ -1062,6 +1062,6 @@ export default {
       50: '50',
     },
   },
-  plugins: [],
+  plugins: ['@tailwindcss/forms'],
 }
 

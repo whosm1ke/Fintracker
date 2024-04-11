@@ -10,10 +10,15 @@ interface AppUserStore {
     getUserId: () => string | null;
     setUserEmail: (email: string) => void;
     getUserEmail: () => string | null;
+    isSignedIn: () => boolean;
 }
 
 const useUserStore = createWithEqualityFn<AppUserStore>((set, get) => ({
     user: {} as AppUser,
+    isSignedIn: () => {
+      const userToken = get().getUserToken();
+      return userToken !== null;
+    },
     setUserToken: (token: string) => {
         localStorage.setItem('userToken', token);
         set(store => ({user: {...store.user, token: token}}));

@@ -32,7 +32,7 @@ export default function RegisterForm() {
             <div
                 className="flex flex-col min-h-screen bg-gray-50 p-4">
                 <Title/>
-                <div className="max-w-md w-2/3 mx-auto my-auto order-1">
+                <div className="max-w-md w-2/3 mx-auto my-auto order-1 sm:order-2">
                     <SubTitle h1={'Sign up'} h4={'Already registered?'} linkTo={'login'} linkText={'Sign in'}/>
                     <form className="mt-8 space-y-6 border-2 p-8 rounded bg-white shadow-xl sm:p-12"
                           onSubmit={handleSubmit(onSubmit)} method={'post'}>
@@ -43,7 +43,7 @@ export default function RegisterForm() {
                                          register={register('email')} error={errors.email} showError={true}/>
                             <PasswordInput id={'password'} placeholder={'Password'} register={register('password')}
                                            error={errors.password} showError={true}/>
-                            <PasswordInput id={'confirmPassword'} placeholder={'Conform password'}
+                            <PasswordInput id={'confirmPassword'} placeholder={'Confirm password'}
                                            register={register('confirmPassword')} error={errors.confirmPassword}
                                            showError={true}/>
                         </div>
