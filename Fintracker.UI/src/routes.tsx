@@ -1,10 +1,13 @@
 ﻿import {createBrowserRouter} from "react-router-dom";
-import ErrorPage, {Error} from "./pages/ErrorPage.tsx";
+import ErrorPage from "./pages/ErrorPage.tsx";
 import RegisterForm from "./components/forms_buttons/RegisterForm.tsx";
 import LoginForm from "./components/forms_buttons/LoginForm.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import Layout from "./pages/Layout.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
+import Motion from "./pages/Motion.tsx";
+import BankPage from "./pages/BankPage.tsx";
+import FintrackerPage from "./pages/FintrackerPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -19,13 +22,23 @@ const router = createBrowserRouter([
                 element: <HomePage/>
             },
             {
-                id:'about',
-                path:'about',
+                id: 'about',
+                path: 'about',
                 element: <AboutPage/>,
-                errorElement: <Error/>
-            }
+                errorElement: <div>DASDASD</div>
+            },
+            {
+                id: 'bank',
+                path: '/bank',
+                element: <BankPage/>
+            },
         ],
-        
+
+    },
+    {
+        id: 'fintracker',
+        path: 'manager',
+        element: <FintrackerPage/>
     },
     {
         id: 'registration',
@@ -37,7 +50,14 @@ const router = createBrowserRouter([
         path: 'login',
         element: <LoginForm/>
     },
-   
+
+    {
+        id: 'motion',
+        path: 'mo',
+        element: <Motion/>
+    },
+
 ])
+
 
 export default router; 

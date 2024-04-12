@@ -1,4 +1,4 @@
-﻿import {advantages, textFiller} from "../helpers/textFiller.ts";
+﻿import {advantages, textFiller} from "../helpers/textFiller.tsx";
 import {AnimatePresence, motion} from "framer-motion";
 import {useEffect, useState} from "react";
 import {FiChevronDown} from "react-icons/fi";
@@ -90,13 +90,14 @@ const TextImage = ({title, content, imagePath, imageFirst}: TextImageBlockProps)
                 {imageFirst && !isCollapsed && <RenderImage imagePath={imagePath}/>}
                 <div className={'w-full md:w-1/2 mr-10'}>
                     <header className={'flex justify-center items-center sm:block'}
-                            onClick={() => setIsCollapsed(!isCollapsed)}>
+                            >
                         <p className={'text-xl sm:text-3xl font-bold '}>{title}</p>
                         {window.innerWidth < 500 &&
                             <motion.span className={'text-3xl'}
+                                         onClick={() => setIsCollapsed(!isCollapsed)}
                                          animate={isCollapsed ? {rotate: 0} : {rotate: 180}}
                             >
-                                <FiChevronDown/>
+                                <FiChevronDown size={'3rem'}/>
                             </motion.span>}
                     </header>
                     <AnimatePresence>

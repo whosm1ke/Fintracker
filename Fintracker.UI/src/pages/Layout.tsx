@@ -1,5 +1,5 @@
-﻿import {Link, NavLink, Outlet, useNavigate} from "react-router-dom";
-import {motion} from "framer-motion";
+﻿import {Link, NavLink, Outlet, useLocation, useNavigate} from "react-router-dom";
+import { motion} from "framer-motion";
 import {useEffect, useState} from "react";
 import useUserStore from "../stores/userStore.ts";
 import useLogout from "../hooks/useLogout.ts";
@@ -8,17 +8,17 @@ export default function Layout() {
 
 
     return (
-        <div className={'flex flex-col min-h-screen overflow-hidden bg-stone-200'}>
-            <NavBar/>
-            <Outlet/>
-            <Footer/>
-        </div>
+            <div className={'flex flex-col min-h-screen overflow-hidden bg-stone-100'}>
+                <NavBar/>
+                <Outlet/>
+                <Footer/>
+            </div>
     )
 }
 
 const Footer = () => {
     return (
-        <footer className="flex-shrink-0 border-t-2 p-6 mt-6">
+        <footer className="flex-shrink-0 border-t-2 border-t-gray-300 p-6 mt-6">
             <div className={'flex justify-center items-center gap-x-4'}>
                 <Link to="/about" className="underline hover:no-underline">
                     About us
@@ -205,7 +205,10 @@ const MobileNavigationLink = ({to, text, motionNav, isLogin}: NavigationLinkProp
     isLogin?: boolean
 }) => {
     const navigate = useNavigate();
-    const [isActiveLink, setActiveLink] = useState(false);
+    const location = useLocation();
+    const isActiveLink = location.pathname === to;
+    
+    
     const handleLogout = () => {
         useLogout();
         window.location.reload();
@@ -228,10 +231,7 @@ const MobileNavigationLink = ({to, text, motionNav, isLogin}: NavigationLinkProp
                 className={isActiveLink ? 'text-center p-2 border rounded-2xl shadow-md shadow-gray-900 bg-lime-500/85 h-10 line-clamp-2' :
                     'text-center p-2 border rounded-2xl shadow-md hover:shadow-lg shadow-gray-700 bg-lime-400/35 h-10 line-clamp-2'}>
                 <NavLink
-                    className={({isActive}) => {
-                        setActiveLink(isActive);
-                        return ''
-                    }}
+                   
                     to={to}
                     onClick={(e) => {
                         if (isLogin) {
@@ -255,7 +255,8 @@ interface NavigationLinkProps {
 const NavigationLink = ({to, text, isLogin}: NavigationLinkProps & { isLogin?: boolean }) => {
     const [isHovered, setHovered] = useState(false);
     const navigate = useNavigate();
-    const [isActiveLink, setActiveLink] = useState(false);
+    const location = useLocation();
+    const isActiveLink = location.pathname === to;
     const handleLogout = () => {
         useLogout();
         window.location.reload();
@@ -270,7 +271,6 @@ const NavigationLink = ({to, text, isLogin}: NavigationLinkProps & { isLogin?: b
         >
             <NavLink
                 className={({isActive}) => {
-                    setActiveLink(isActive);
                     return isActive ? 'relative text-center text-xl p-2 bg-green-300 border-2 border-blue-500 rounded-lg' :
                         'relative text-center text-2xl sm:mx-2 md:mx-4 xl:mx-8'
                 }}

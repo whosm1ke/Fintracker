@@ -1,4 +1,7 @@
-﻿export const textFiller = [
+﻿import {GrShieldSecurity} from "react-icons/gr";
+import { SiSecurityscorecard } from "react-icons/si";
+
+export const textFiller = [
     {
         title: 'Why should you use Fintracker?',
         content: "Fintracker is a tool you don\'t want to miss. It helps you stay in control of your expenses, income and savings, making it easy to track where your money is going and plan your budget. With automatic synchronisation with your bank accounts and credit cards, " +
@@ -17,14 +20,29 @@
 ]
 
 export const advantages = [
-    { title: "Budgeting", description: "Managing finances allows you to create a budget, giving you a clear understanding of your income and expenses. This can help you identify areas where you can save money." },
-    { title: "Future Planning", description: "Financial management enables you to plan for the future, whether it's saving for a house, your children's education, or retirement." },
-    { title: "Debt Avoidance", description: "By controlling your spending and living within your means, financial management can help you avoid falling into debt." },
-    { title: "Financial Independence", description: "Effective financial management can lead to financial independence, allowing you to live comfortably without the constant need to earn more money." },
-    { title: "Stress Reduction", description: "Financial problems are a leading cause of stress. By providing financial stability, managing your finances can help alleviate this stress." },
+    {
+        title: "Budgeting",
+        description: "Managing finances allows you to create a budget, giving you a clear understanding of your income and expenses. This can help you identify areas where you can save money."
+    },
+    {
+        title: "Future Planning",
+        description: "Financial management enables you to plan for the future, whether it's saving for a house, your children's education, or retirement."
+    },
+    {
+        title: "Debt Avoidance",
+        description: "By controlling your spending and living within your means, financial management can help you avoid falling into debt."
+    },
+    {
+        title: "Financial Independence",
+        description: "Effective financial management can lead to financial independence, allowing you to live comfortably without the constant need to earn more money."
+    },
+    {
+        title: "Stress Reduction",
+        description: "Financial problems are a leading cause of stress. By providing financial stability, managing your finances can help alleviate this stress."
+    },
 ];
 
-export const about =[
+export const about = [
     {
         title: 'Your financial assistant',
         content: 'We are a new startup that aims to help people manage their finances effectively. Our mission is to provide you with the tools to monitor your expenses and plan budgets so you can focus on what really matters.'
@@ -53,4 +71,18 @@ export const about =[
         title: 'Join us',
         content: 'Start your journey to better financial management today. Join us and find out how we can help you better control your spending and plan your budget.'
     }
+]
+
+export const bank = [
+    {
+        title: 'Secured infrastructure',
+        content: 'As security is our highest priority, all communication is encrypted. Whenever your data travels between our server and your phone, or we download your transactions from your bank, it’s done only through encrypted channels so nobody can see the data on the way. Once your data gets to our server, it’s stored and also encrypted so only authorized users can access it. We only use reliable providers to host our servers. Right now, we use the Google Cloud Platform which meets the strictest security compliance policies.',
+        icon: <GrShieldSecurity size={'3rem'} color={'yellow'}/>
+    },
+    {
+        title: 'Secured bank connection',
+        content: 'We work with all financial account information in a read-only mode to be able to check your account balance and download lists of transactions. However, we are not able to initiate payments or manipulate your account in any other way. The only minimum required amount of sensitive data (login credentials) is stored, only if you opt in to do so. For some banks, you have to give us your password, to be able to access the bank data. In this case, the password is stored only in safe, encrypted storage. For directly connected banks we don’t even see your password. You login directly in your bank and we receive just an authorization token with limited life-time.',
+        icon: <SiSecurityscorecard size={'3rem'} color={'green'}/>
+    }
+
 ]
