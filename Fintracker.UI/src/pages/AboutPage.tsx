@@ -7,16 +7,10 @@ const container: Variants = {
     show: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.2
+            staggerChildren: 0.5,
         }
     }
 }
-
-let item = {
-    hidden: {x: '-100vw'},
-    show: {x: 0}
-}
-
 
 
 export default function AboutPage() {
@@ -35,11 +29,11 @@ export default function AboutPage() {
                     <Card title={about[1].title} content={about[1].content} fromLeft/>
                 </div>
                 <div className="relative col-start-2 row-start-2 order-3" ref={arrowContainerRef}>
-                    <Arrow fromLeft={false} dir={'ltr'} parentRef={arrowContainerRef}/>
+                    <Arrow dir={'ltr'} delayFromPrevious={1} parentRef={arrowContainerRef}/>
                 </div>
 
                 <div className="relative col-start-1 row-start-3 order-5 text-center">
-                    <Arrow fromLeft={true} dir={'rtl'} parentRef={arrowContainerRef}/>
+                    <Arrow dir={'rtl'} delayFromPrevious={2} parentRef={arrowContainerRef}/>
 
                 </div>
                 <div className="col-start-2 row-start-3 order-4 text-center z-10">
@@ -50,11 +44,11 @@ export default function AboutPage() {
                     <Card title={about[3].title} content={about[3].content} fromLeft/>
                 </div>
                 <div className="relative col-start-2 row-start-4 order-7 text-center">
-                    <Arrow fromLeft={false} dir={'ltr'} parentRef={arrowContainerRef}/>
+                    <Arrow dir={'ltr'} delayFromPrevious={3} parentRef={arrowContainerRef}/>
                 </div>
 
                 <div className="relative col-start-1 row-start-5 order-9 text-center">
-                    <Arrow fromLeft={true} dir={'rtl'} parentRef={arrowContainerRef}/>
+                    <Arrow dir={'rtl'} delayFromPrevious={4} parentRef={arrowContainerRef}/>
                 </div>
                 <div className="col-start-2 row-start-5 order-8 text-center z-10">
                     <Card title={about[4].title} content={about[4].content} fromLeft={false}/>
@@ -64,7 +58,7 @@ export default function AboutPage() {
                     <Card title={about[5].title} content={about[5].content} fromLeft/>
                 </div>
                 <div className="relative col-start-2 row-start-6 order-11 text-center">
-                    <Arrow fromLeft={false} dir={'ltr'} parentRef={arrowContainerRef}/>
+                    <Arrow dir={'ltr'} delayFromPrevious={5} parentRef={arrowContainerRef}/>
                 </div>
                 <div className="col-start-2 row-start-7 order-12 text-center z-10">
                     <Card title={about[6].title} content={about[6].content} fromLeft={false}/>
@@ -81,13 +75,22 @@ interface CardProps {
     duration?: number;
 }
 
-const Card = ({title, content, fromLeft = false, duration = 0.5}: CardProps) => {
-    item.hidden.x = fromLeft ? '-100vw' : '100vw';
+const Card = ({title, content, fromLeft = false, duration = 0.8}: CardProps) => {
+    const item: Variants = {
+        hidden: {x: fromLeft ? '-100vw' : '100vw', scale: 1.05, rotateZ: fromLeft ? -15 : 15},
+        show: {
+            scale: 1,
+            rotateZ: 0,
+            x: 0,
+            transition: {
+                duration: duration
+            }
+        }
+    }
     return (
         <motion.div
             variants={item}
             whileHover={{scale: 1.05, rotateZ: 2}}
-            transition={{duration: duration}}
         >
             <div
                 className="bg-blue-300 p-4 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-500">
@@ -114,11 +117,12 @@ function getHalfHeight(parentRef: RefObject<HTMLElement>): number {
     return parentRef.current.offsetHeight / 2;
 }
 
-const Arrow = ({fromLeft = false, dir, parentRef}: {
-    fromLeft: boolean,
+const Arrow = ({dir, parentRef, delayFromPrevious}: {
     dir: 'ltr' | 'rtl',
+    delayFromPrevious: number,
     parentRef: RefObject<HTMLElement>
 }) => {
+
     const [halfGabarites, setHalfWidth] = useState({
         width: 0,
         height: 0
@@ -139,65 +143,76 @@ const Arrow = ({fromLeft = false, dir, parentRef}: {
         };
     }, [window.innerWidth]);
 
-    console.log(halfGabarites);
-    item.hidden.x = fromLeft ? '-100vw' : '100vw';
-    
 
-    const groupVariants: Variants = {
-        hidden: {opacity: 0},
-        show: {opacity: 1}
+    const svgVariants: Variants = {
+        hidden: {
+            scaleX: dir === 'rtl' ? -1 : 1
+        },
+        visible: custom => {
+            return {
+                transition: {
+                    delayChildren: custom * 0.5 + 0.7,
+                    staggerChildren: 0.3
+                }
+            }
+        }
     }
 
-    const svgVariants = {
-        hidden: { scale: 0, x: 100, opacity: 0 },
-        show: (custom: number) => ({
-            scale: 1,
-            x: 0,
-            opacity: 1,
+    const lineVariants: Variants = {
+        hidden: {
+            pathLength: 0,
+            fillOpacity: 0
+        },
+        visible: {
+            fillOpacity: 1,
+            pathLength: 1,
             transition: {
-                delay: custom * 0.5
+                duration: 0.5
             }
-        })
+        }
     }
 
 
     return (
+
         <motion.svg
-            initial={{opacity: 0, scaleX: dir === 'rtl' ? -1 : 1}}
-            animate={{opacity: 1}}
+            custom={delayFromPrevious}
+            variants={svgVariants}
+            animate={'visible'}
+            initial={'hidden'}
             className={`absolute top-0 ${dir === 'rtl' ? 'left-6' : '-left-6'} z-0 h-[150%] w-full`}
         >
-            <motion.g id="svg_10" variants={groupVariants}>
-                <motion.line
-                    custom={1}
-                    variants={svgVariants}
-                    id="svg_7" y2={halfGabarites.height} x2={halfGabarites.width} y1={halfGabarites.height} x1="0"
-                    strokeWidth="3" stroke="#000000" fill="none"/>
-                <motion.line
-                    custom={2} 
-                    variants={svgVariants}
-                    id="svg_8"
-                    y2={halfGabarites.height * 2}
-                    x2={halfGabarites.width - 2}
-                    y1={halfGabarites.height}
-                    x1={halfGabarites.width - 2}
-                    strokeWidth="3"
-                    stroke="#000000"
-                    fill="none"
-                />
-                <motion.path
-                    custom={3}
-                    variants={svgVariants}
-                    stroke="#000000"
-                    id="svg_11"
-                    d={`M${halfGabarites.width - 25},${halfGabarites.height * 2 - 10}
+            <motion.line
+                variants={lineVariants}
+                id="svg_7"
+                y2={halfGabarites.height}
+                x2={halfGabarites.width}
+                y1={halfGabarites.height}
+                x1="0"
+                strokeWidth="3" stroke="#000000" fill="none"/>
+            <motion.line
+                variants={lineVariants}
+                id="svg_8"
+                y2={halfGabarites.height * 2 - 10}
+                x2={halfGabarites.width - 2}
+                y1={halfGabarites.height}
+                x1={halfGabarites.width - 2}
+                strokeWidth="3"
+                stroke="#000000"
+                fill="none"
+            />
+            <motion.path
+                variants={lineVariants}
+                stroke="#000000"
+                id="svg_11"
+                d={`M${halfGabarites.width - 25},${halfGabarites.height * 2 - 10}
             l48,0
-            l-24,32
+            l-24,33
+            l-25,-33
             z`}
-                    strokeWidth="3"
-                    fill="#396849"
-                />
-            </motion.g>
+                strokeWidth="3"
+                fill="#396849"
+            />
         </motion.svg>
     );
 };
