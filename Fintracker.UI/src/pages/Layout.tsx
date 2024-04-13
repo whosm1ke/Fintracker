@@ -3,6 +3,8 @@ import { motion} from "framer-motion";
 import {useEffect, useState} from "react";
 import useUserStore from "../stores/userStore.ts";
 import useLogout from "../hooks/useLogout.ts";
+// @ts-ignore
+import logo from "../../src/assets/logo.png"
 
 export default function Layout() {
 
@@ -41,7 +43,7 @@ const Footer = () => {
 const NavBarHeader = () => (
     <Link to={'/'}>
         <div className={'flex mt-1.5 space-x-3 items-center mr-7'}>
-            <img src="../../public/logo.png" alt="logo" className={'max-w-16 max-h-16 hidden sm:inline'}/>
+            <img src={logo} alt="logo" className={'max-w-16 max-h-16 hidden sm:inline'}/>
             <h1 className={'text-2xl sm:text-3xl font-bold'}>Fintracker</h1>
         </div>
     </Link>

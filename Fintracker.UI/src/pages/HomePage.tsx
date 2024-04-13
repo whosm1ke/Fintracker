@@ -16,7 +16,7 @@ export default function HomePage() {
                            imagePath={textFiller[1].imagePath} imageFirst={window.innerWidth > 500}/>
                 <CardContainer/>
             </main>
-          
+
         </>
     )
 }
@@ -90,8 +90,8 @@ const TextImage = ({title, content, imagePath, imageFirst}: TextImageBlockProps)
                 {imageFirst && !isCollapsed && <RenderImage imagePath={imagePath}/>}
                 <div className={'w-full md:w-1/2 mr-10'}>
                     <header className={'flex justify-center items-center sm:block'}
-                            >
-                        <p className={'text-xl sm:text-3xl font-bold '}>{title}</p>
+                    >
+                        <p className={'px-4 text-xl sm:text-3xl font-bold '}>{title}</p>
                         {window.innerWidth < 500 &&
                             <motion.span className={'text-3xl'}
                                          onClick={() => setIsCollapsed(!isCollapsed)}
@@ -111,7 +111,7 @@ const TextImage = ({title, content, imagePath, imageFirst}: TextImageBlockProps)
                                     type: 'tween'
                                 }}
                                 className={'mt-10 w-full font-serif'}>
-                                <p className={'min-w-full leading-relaxed transform transition-all duration-500 ease-out mb-3 sm:mb-0'}>{content}</p>
+                                <p className={'mb-8 sm:mb-0 px-4 min-w-full leading-relaxed text-lg sm:text-xl transform transition-all duration-500 ease-out'}>{content}</p>
                             </motion.div>
                         )}
                     </AnimatePresence>
