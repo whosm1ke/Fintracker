@@ -5,7 +5,7 @@ import {FiChevronDown} from "react-icons/fi";
 
 export default function BankPage() {
     return (
-        <main className={'flex-grow'}>
+        <div>
             <div className={'container mx-auto px-4 py-10'}>
                 <div className={'grid grid-cols-1 md:grid-cols-2 gap-10'}>
                     <section className={'col'}>
@@ -30,7 +30,7 @@ export default function BankPage() {
                     </section>
                 </div>
             </div>
-        </main>
+        </div>
     );
 };
 

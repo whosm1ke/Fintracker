@@ -16,7 +16,7 @@ const container: Variants = {
 export default function AboutPage() {
     const arrowContainerRef = useRef<HTMLDivElement>(null);
     return (
-        <motion.main className="flex-grow container mx-auto px-4"
+        <motion.div className="container mx-auto px-4"
                      variants={container}
                      initial="hidden"
                      animate="show">
@@ -64,7 +64,7 @@ export default function AboutPage() {
                     <Card title={about[6].title} content={about[6].content} fromLeft={false}/>
                 </div>
             </div>
-        </motion.main>
+        </motion.div>
     );
 }
 

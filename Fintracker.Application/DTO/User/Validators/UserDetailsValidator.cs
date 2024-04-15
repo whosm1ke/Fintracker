@@ -22,12 +22,6 @@ public class UserDetailsValidator : AbstractValidator<UserDetailsDTO>
             .When(x => x.DateOfBirth.HasValue)
             .WithMessage("Must be greater than 1915-01-01");
 
-        RuleFor(x => x.FName)
-            .ApplyLength(UserDetailsConstraints.MaxNameLength);
-
-        RuleFor(x => x.LName)
-            .ApplyLength(UserDetailsConstraints.MaxNameLength);
-
         RuleFor(x => x.Language)
             .IsInEnum()
             .When(x => x.Language.HasValue)

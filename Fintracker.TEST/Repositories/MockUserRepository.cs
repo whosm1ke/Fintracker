@@ -25,8 +25,6 @@ public class MockUserRepository
                 UserDetails = new()
                 {
                     Avatar = "avatar",
-                    LName = "name",
-                    FName = "user"
                 }
             },
             //GetUsersAccessedToWalled, GetUserWithMemberWallets

@@ -1,7 +1,6 @@
 ﻿import ApiClient from "../services/ApiClient.ts";
 import {useMutation} from "@tanstack/react-query";
 import {LoginResponse, LoginSchema} from "../models/LoginSchema.ts";
-import {axiosInstance} from "../logic/axiosInstance.ts";
 import useUserStore from "../stores/userStore.ts";
 import {UseFormSetError} from "react-hook-form";
 
@@ -14,7 +13,6 @@ const useLogin = (setError : UseFormSetError<LoginSchema>) => {
             setId(data.response!.userId);
             setEmail(data.response!.userEmail);
             setToken(data.response!.token);
-            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${data.response!.token}`;
         },
         onError: () => {
             setError('root', {

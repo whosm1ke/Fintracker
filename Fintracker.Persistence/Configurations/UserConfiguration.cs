@@ -38,12 +38,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
             ba.Property(x => x.Avatar)
                 .HasMaxLength(UserDetailsConstraints.MaxAvatarLength);
-            
-            ba.Property(x => x.FName)
-                .HasMaxLength(UserDetailsConstraints.MaxNameLength);
-
-            ba.Property(x => x.LName)
-                .HasMaxLength(UserDetailsConstraints.MaxNameLength);
                 
             ba.Property(x => x.Sex)
                 .HasMaxLength(UserDetailsConstraints.MaxSexLength);

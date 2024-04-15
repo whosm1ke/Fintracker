@@ -7,7 +7,7 @@ export default function HomePage() {
 
     return (
         <>
-            <main className={'container w-3/4 mx-auto'}>
+            <div className={'container w-3/4 mx-auto'}>
                 <TextImage title={textFiller[0].title}
                            content={textFiller[0].content}
                            imagePath={textFiller[0].imagePath}/>
@@ -15,7 +15,7 @@ export default function HomePage() {
                            content={textFiller[1].content}
                            imagePath={textFiller[1].imagePath} imageFirst={window.innerWidth > 500}/>
                 <CardContainer/>
-            </main>
+            </div>
 
         </>
     )

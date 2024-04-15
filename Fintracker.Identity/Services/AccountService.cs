@@ -38,6 +38,7 @@ public class AccountService : IAccountService
             if (createdUser.Succeeded)
             {
                 response.UserId = appUser.Id;
+                response.Email = register.Email;
 
                 var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
                 if (roleResult.Succeeded)

@@ -8,6 +8,7 @@ import AboutPage from "./pages/AboutPage.tsx";
 import Motion from "./pages/Motion.tsx";
 import BankPage from "./pages/BankPage.tsx";
 import FintrackerPage from "./pages/FintrackerPage.tsx";
+import DashboardLayout from "./pages/DashboardLayout.tsx";
 
 const router = createBrowserRouter([
     {
@@ -36,8 +37,19 @@ const router = createBrowserRouter([
 
     },
     {
-        id: 'fintracker',
-        path: 'manager',
+        id: 'dashboard',
+        path: 'dashboard',
+        element: <DashboardLayout/>,
+        children: [
+            {
+                index: true,
+                element: <FintrackerPage/>
+            }
+        ]
+    },
+    {
+        id: 'budgets',
+        path: 'budgets',
         element: <FintrackerPage/>
     },
     {

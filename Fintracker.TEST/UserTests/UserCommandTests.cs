@@ -60,7 +60,6 @@ public class UserCommandTests
                 Avatar = "avatar", 
                 Language = LanguageTypeEnum.Ukrainian,
                 Sex = "Male",
-                FName = "Misha"
             }
         };
         var formFileMock = new Mock<IFormFile>();
@@ -76,7 +75,6 @@ public class UserCommandTests
                     Avatar = "avatar",
                     Language = LanguageTypeEnum.Ukrainian,
                     Sex = "Male",
-                    FName = "Misha"
                 },
                 Avatar = formFileMock.Object
                 

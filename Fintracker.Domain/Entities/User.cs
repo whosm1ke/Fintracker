@@ -29,10 +29,6 @@ public class User: IdentityUser<Guid>, IEntity<Guid>
 
 public class UserDetails
 {
-    public string? FName { get; set; }
-    
-    public string? LName { get; set; }
-
     public string? Sex { get; set; }
 
     public DateTime? DateOfBirth { get; set; }

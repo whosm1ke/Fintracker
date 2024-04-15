@@ -1,5 +1,6 @@
 ﻿interface User extends BaseEntity {
     email: string;
+    userName: string;
     userDetails?: UserDetails;
     budgets: Budget[];
     memberWallets: Wallet[];

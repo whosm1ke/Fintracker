@@ -1,12 +1,12 @@
 ﻿import {SubmitHandler, useForm,} from "react-hook-form";
 import {zodResolver} from '@hookform/resolvers/zod'
-import {useNavigate} from "react-router-dom";
 import PasswordInput from "./PasswordInput.tsx";
 import SimpleInput from "./SimpleInput.tsx";
-import useRegister from "../../hooks/useRegistration.ts";
+import useRegister from "../../hooks/useRegister.ts";
 import Title from "./Title.tsx";
 import SubTitle from "./SubTitle.tsx";
 import {registerSchema, RegisterSchema} from "../../models/RegisterSchema.ts";
+import {useNavigate} from "react-router-dom";
 
 
 export default function RegisterForm() {
@@ -17,14 +17,14 @@ export default function RegisterForm() {
         mode: 'onBlur'
     });
 
-    const navigate = useNavigate();
     const registerMutation = useRegister(setError);
-    const onSubmit: SubmitHandler<RegisterSchema> = (model) => {
-        registerMutation.mutate(model, {
+    const navigate = useNavigate();
+    const onSubmit: SubmitHandler<RegisterSchema> = async (model: RegisterSchema) => {
+        await registerMutation.mutateAsync(model, {
             onSuccess: () => {
-                navigate('/', {replace: true})
+                navigate('/', {replace: true});
             }
-        })
+        });
     };
 
     return (

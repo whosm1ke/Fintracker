@@ -18,5 +18,6 @@ export const registerSchema = z.object({
 export type RegisterSchema = z.infer<typeof registerSchema>;
 
 export interface RegisterResponse {
-    userId: string
+    userId: string;
+    email: string;
 }

@@ -1,7 +1,12 @@
-﻿
-export default function FintrackerPage(){
-  
+﻿// @ts-ignore
+import logo from '../../src/assets/logo.png'
+
+export default function FintrackerPage() {
+
     return (
-        <div>FintrackerPage</div>
+        <div>
+            sdfsdfsdf
+        </div>
     )
 }
+

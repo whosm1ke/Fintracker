@@ -24,7 +24,7 @@ export default function LoginForm() {
     const onSubmit: SubmitHandler<LoginSchema> = (model: LoginSchema) => {
         loginMutation.mutate(model, {
             onSuccess: () => {
-                navigate('/manager', {replace: true});
+                navigate('/dashboard', {replace: true});
             }
         });
     };

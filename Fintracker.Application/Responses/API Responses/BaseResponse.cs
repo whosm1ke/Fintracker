@@ -4,6 +4,10 @@ namespace Fintracker.Application.Responses.API_Responses;
 
 public class BaseResponse
 {
+    public BaseResponse()
+    {
+        _details = new List<ExceptionDetails>();
+    }
     public Guid TraceId { get; set; }
 
     public DateTime When { get; set; }

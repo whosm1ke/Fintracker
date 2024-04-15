@@ -1,26 +1,33 @@
 ﻿import {Link, NavLink, Outlet, useLocation, useNavigate} from "react-router-dom";
-import { motion} from "framer-motion";
+import {motion} from "framer-motion";
 import {useEffect, useState} from "react";
 import useUserStore from "../stores/userStore.ts";
 import useLogout from "../hooks/useLogout.ts";
 // @ts-ignore
 import logo from "../../src/assets/logo.png"
+import NavigationLink, {NavigationLinkProps} from "../components/NavigationLink.tsx";
 
 export default function Layout() {
 
 
     return (
-            <div className={'flex flex-col min-h-screen overflow-hidden bg-stone-100'}>
+        <div className={'flex flex-col min-h-screen overflow-hidden bg-stone-100'}>
+            <header>
                 <NavBar/>
+            </header>
+            <main className={'flex-grow'}>
                 <Outlet/>
+            </main>
+            <footer className={'flex-shrink-0'}>
                 <Footer/>
-            </div>
+            </footer>
+        </div>
     )
 }
 
 const Footer = () => {
     return (
-        <footer className="flex-shrink-0 border-t-2 border-t-gray-300 p-6 mt-6">
+        <footer className="border-t-2 border-t-gray-300 p-6 mt-6">
             <div className={'flex justify-center items-center gap-x-4'}>
                 <Link to="/about" className="underline hover:no-underline">
                     About us
@@ -182,7 +189,7 @@ const NavBar = () => {
                 show: {height: '7rem'},
                 hide: {height: window.innerWidth > 640 ? '6rem' : '3rem'}
             }}
-            className={'bg-green-400 px-6 overflow-hidden flex flex-col justify-between sm:justify-center'}
+            className={'bg-green-400 px-2 overflow-hidden flex flex-col justify-between sm:justify-center'}
         >
             <div className={'flex items-center sm:justify-between'}>
                 <NavBarHeader/>
@@ -209,8 +216,8 @@ const MobileNavigationLink = ({to, text, motionNav, isLogin}: NavigationLinkProp
     const navigate = useNavigate();
     const location = useLocation();
     const isActiveLink = location.pathname === to;
-    
-    
+
+
     const handleLogout = () => {
         useLogout();
         window.location.reload();
@@ -233,7 +240,7 @@ const MobileNavigationLink = ({to, text, motionNav, isLogin}: NavigationLinkProp
                 className={isActiveLink ? 'text-center p-2 border rounded-2xl shadow-md shadow-gray-900 bg-lime-500/85 h-10 line-clamp-2' :
                     'text-center p-2 border rounded-2xl shadow-md hover:shadow-lg shadow-gray-700 bg-lime-400/35 h-10 line-clamp-2'}>
                 <NavLink
-                   
+
                     to={to}
                     onClick={(e) => {
                         if (isLogin) {
@@ -249,63 +256,6 @@ const MobileNavigationLink = ({to, text, motionNav, isLogin}: NavigationLinkProp
 }
 
 
-interface NavigationLinkProps {
-    to: string;
-    text: string;
-}
-
-const NavigationLink = ({to, text, isLogin}: NavigationLinkProps & { isLogin?: boolean }) => {
-    const [isHovered, setHovered] = useState(false);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const isActiveLink = location.pathname === to;
-    const handleLogout = () => {
-        useLogout();
-        window.location.reload();
-        navigate('/');
-    }
-    return (
-        <motion.div
-            onHoverStart={() => setHovered(true)}
-            onHoverEnd={() => setHovered(false)}
-            whileHover={{scale: 1.1}}
-            whileTap={{scale: 0.9}}
-        >
-            <NavLink
-                className={({isActive}) => {
-                    return isActive ? 'relative text-center text-xl p-2 bg-green-300 border-2 border-blue-500 rounded-lg' :
-                        'relative text-center text-2xl sm:mx-2 md:mx-4 xl:mx-8'
-                }}
-                to={to}
-                onClick={(e) => {
-                    if (isLogin) {
-                        e.preventDefault();
-                        handleLogout();
-                    }
-                }}
-            >
-                {text}
-                {!isActiveLink && <motion.span
-                    initial={{
-                        backgroundColor: 'gray',
-                        width: '100%',
-                        height: '2px',
-                        opacity: 0,
-                        translateY: 5,
-                        scaleX: '50%'
-                    }}
-                    animate={{
-                        opacity: isHovered ? 1 : 0,
-                        translateY: isHovered ? -2 : 5,
-                        scaleX: isHovered ? '100%' : '50%'
-                    }}
-                    transition={{duration: .2, stiffness: 500}}
-                    className="absolute bottom-0 left-0"
-                />}
-            </NavLink>
-        </motion.div>
-    );
-};
 const RenderLoginLogoutLinks = ({isMobile, motionNav}: {
     isMobile: boolean,
     motionNav: boolean | null
@@ -317,9 +267,9 @@ const RenderLoginLogoutLinks = ({isMobile, motionNav}: {
                               text={isUserSignedIn ? 'Log out' : 'Log in'} to={'/login'}/> :
         <NavigationLink isLogin={isUserSignedIn} text={isUserSignedIn ? 'Log out' : 'Log in'} to={'/login'}/>
 
-    const startLink = isMobile ? <MobileNavigationLink to={'/manager'} text={'Start'}
+    const startLink = isMobile ? <MobileNavigationLink to={'/dashboard'} text={'Start'}
                                                        motionNav={motionNav ? motionNav : false}/> :
-        <NavigationLink to={'/manager'} text={'Start'}/>
+        <NavigationLink to={'/dashboard'} text={'Start'}/>
 
     if (isUserSignedIn) {
         return (
