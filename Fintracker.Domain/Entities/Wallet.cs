@@ -13,7 +13,6 @@ public class Wallet : FinancialEntity
 
     public User Owner { get; set; } = default!;
     public Guid OwnerId { get; set; }
-
     public ICollection<User> Users { get; set; }
 
     public ICollection<Transaction> Transactions { get; set; }

@@ -91,6 +91,21 @@ public class ExceptionMiddleware
                     regResponse.Reason, reg.Errors, regResponse.StatusCode);
                 await context.Response.WriteAsJsonAsync(regResponse);
                 break;
+            case ForbiddenException forb:
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                var forbiddenResponse = new BaseResponse()
+                {
+                    TraceId = Guid.NewGuid(),
+                    When = DateTime.UtcNow,
+                    Reason = "Unauthorized",
+                    Details = forb.Errors,
+                    StatusCode = StatusCodes.Status409Conflict
+                };
+                Log.Error("{ErrorName} [{TraceId}] [{When}]:\n{Reason}\n{@Details} [{StatusCode}]",
+                    nameof(RegisterAccountException), forbiddenResponse.TraceId, forbiddenResponse.When,
+                    forbiddenResponse.Reason, forbiddenResponse.Details, forbiddenResponse.StatusCode);
+                await context.Response.WriteAsJsonAsync(forbiddenResponse);
+                break;
             default:
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 var response = new BaseResponse

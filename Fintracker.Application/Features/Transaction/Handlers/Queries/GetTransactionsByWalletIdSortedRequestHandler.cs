@@ -21,6 +21,7 @@ public class GetTransactionsByWalletIdSortedRequestHandler : IRequestHandler<Get
         _allowedSortColumns = new()
         {
             nameof(Domain.Entities.Transaction.Label).ToLowerInvariant(),
+            nameof(Domain.Entities.Transaction.CreatedAt).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Note).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant()
         };

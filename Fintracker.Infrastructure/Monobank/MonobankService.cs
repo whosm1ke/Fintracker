@@ -55,7 +55,7 @@ public class MonobankService : IMonobankService
             "Access_Token");
     }
 
-    public async Task<MonobankUserInfoDTO?> GetUserFullInfo(string token)
+    public async Task<MonobankUserInfoDTO?> GetUserFullInfo(string xToken)
     {
         using (var client = _httpClientFactory.CreateClient("MonobankClient"))
         {
@@ -64,7 +64,7 @@ public class MonobankService : IMonobankService
                 Method = HttpMethod.Get,
                 RequestUri = new Uri(client.BaseAddress!, "personal/client-info")
             };
-            requestMessage.Headers.Add("X-Token", token);
+            requestMessage.Headers.Add("X-Token", xToken);
 
             HttpResponseMessage responseMessage = await client.SendAsync(requestMessage);
 
@@ -72,7 +72,7 @@ public class MonobankService : IMonobankService
                 throw new ForbiddenException(new ExceptionDetails
                 {
                     ErrorMessage = "Unknown 'X-Token'",
-                    PropertyName = nameof(token)
+                    PropertyName = nameof(xToken)
                 });
 
             if (responseMessage.StatusCode == HttpStatusCode.TooManyRequests)
@@ -88,20 +88,13 @@ public class MonobankService : IMonobankService
         }
     }
 
-    public async Task<IReadOnlyList<JarDTO>> GetUserJars(string token)
-    {
-        MonobankUserInfoDTO? userInfo = await GetUserFullInfo(token);
-
-
-        return userInfo!.Jars.ToList();
-    }
+ 
 
     public async Task<decimal> GetAccountBalance(string token, string accountId)
     {
         var accounts = new List<IAccountBaseDto>();
         var allAccounts = accounts
-            .Union(await GetUserAccounts(token))
-            .Union(await GetUserJars(token));
+            .Union(await GetUserAccounts(token));
 
         var accountToInspect = allAccounts
             .FirstOrDefault(x => x.Id == accountId);

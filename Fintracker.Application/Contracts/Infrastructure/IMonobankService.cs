@@ -6,8 +6,7 @@ public interface IMonobankService
 {
     Task SetMonobankTokenAsync(string email, string token);
     Task<string?> GetMonobankTokenAsync(string email);
-    Task<MonobankUserInfoDTO?> GetUserFullInfo(string token);
-    Task<IReadOnlyList<JarDTO>> GetUserJars(string token);
+    Task<MonobankUserInfoDTO?> GetUserFullInfo(string xToken);
 
     Task<decimal> GetAccountBalance(string token, string accountId);
     Task<IReadOnlyList<AccountDTO>> GetUserAccounts(string token); 

@@ -1,7 +1,7 @@
 ﻿import {createWithEqualityFn} from "zustand/traditional";
 import {shallow} from "zustand/shallow";
 
-interface QueryParams {
+export interface QueryParams {
     pageNumber?: number;
     pageSize?: number;
     sortBy?: string;

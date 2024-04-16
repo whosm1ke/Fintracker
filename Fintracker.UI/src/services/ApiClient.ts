@@ -1,16 +1,22 @@
 ﻿import axios, {AxiosRequestConfig, CancelTokenSource} from "axios";
-import {AuthApiClient, CommandApiClient} from "../logic/CommandApiClient.ts";
+import {AuthApiClient, CommandApiClient, MonobankClient} from "../logic/CommandApiClient.ts";
 import {RequestApiClient} from "../logic/RequestApiClient.ts";
 import {handleError} from "../helpers/handleError.ts";
 import {RegisterResponse, RegisterSchema} from "../models/RegisterSchema.ts";
 import {LoginResponse, LoginSchema} from "../models/LoginSchema.ts";
 import axiosInstance from "../logic/axiosInstance.ts";
+import {Wallet} from "../entities/Wallet.ts";
+import {MonoWalletToken} from "../hooks/useCreateMonoWallet.ts";
 
 
-export default class ApiClient<TRequest, TResponse> implements CommandApiClient<TRequest>, RequestApiClient<TResponse>, AuthApiClient {
+export default class ApiClient<TRequest, TResponse> implements CommandApiClient<TRequest>,
+    RequestApiClient<TResponse>,
+    AuthApiClient,
+    MonobankClient {
 
     constructor(private endpoint: string) {
     }
+
 
     private cancelToken: CancelTokenSource | undefined;
 
@@ -113,6 +119,7 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
         }
     }
 
+
     async getByKey(key: number): Promise<ClientWrapper<TResponse>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
@@ -145,5 +152,50 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
             cancelToken: this.cancelToken.token
         })
             .then(res => res.data);
+    }
+
+    async getMonobankUserInfo(xToken: MonoWalletToken): Promise<ClientWrapper<MonobankUserInfo>> {
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+console.log(xToken)
+        try {
+            const data = await axiosInstance.get<MonobankUserInfo>(this.endpoint, {
+                headers: {
+                    xToken: xToken.xToken
+                },
+                cancelToken: this.cancelToken.token
+            });
+
+            return {response: data.data, hasError: false};
+        } catch (error) {
+            return {hasError: true, error: handleError(error)};
+        }
+    }
+
+    async addInitialMonobankTransaction(config: MonobankConfiguration): Promise<ClientWrapper<CreateCommandResponse<Wallet>>> {
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+        try {
+            const data = await axiosInstance.post<CreateCommandResponse<Wallet>>(this.endpoint, config, {
+                cancelToken: this.cancelToken.token
+            });
+
+            return {response: data.data, hasError: false}
+        } catch (error) {
+            return {hasError: true, error: handleError(error)};
+        }
+    }
+
+    async addNewMonobankTransaction(accId: string): Promise<void> {
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+        try {
+            await axiosInstance.post(this.endpoint, accId, {
+                cancelToken: this.cancelToken.token
+            });
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
