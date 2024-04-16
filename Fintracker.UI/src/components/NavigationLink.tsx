@@ -33,6 +33,7 @@ const NavigationLink = ({to, text, isLogin}: NavigationLinkProps & { isLogin?: b
                 to={to}
                 onClick={(e) => {
                     if (isLogin) {
+                        
                         e.preventDefault();
                         handleLogout();
                     }

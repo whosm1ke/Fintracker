@@ -1,14 +1,20 @@
-﻿import {createBrowserRouter} from "react-router-dom";
+﻿import {createBrowserRouter, Navigate} from "react-router-dom";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import RegisterForm from "./components/forms_buttons/RegisterForm.tsx";
 import LoginForm from "./components/forms_buttons/LoginForm.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import Layout from "./pages/Layout.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
-import Motion from "./pages/Motion.tsx";
 import BankPage from "./pages/BankPage.tsx";
 import FintrackerPage from "./pages/FintrackerPage.tsx";
 import DashboardLayout from "./pages/DashboardLayout.tsx";
+import WalletLayout from "./pages/WalletLayout.tsx";
+import WalletOverviewPage from "./pages/WalletOverviewPage.tsx";
+import WalletSettingsPage from "./pages/WalletSettingsPage.tsx";
+import WalletSettingsCategoriesPage from "./pages/WalletSettingsCategoriesPage.tsx";
+import WalletTransactionsPage from "./pages/WalletTransactionsPage.tsx";
+import BudgetsPage from "./pages/BudgetsPage.tsx";
+import BudgetDetailsPage from "./pages/BudgetDetailsPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -30,7 +36,7 @@ const router = createBrowserRouter([
             },
             {
                 id: 'bank',
-                path: '/bank',
+                path: 'bank',
                 element: <BankPage/>
             },
         ],
@@ -44,13 +50,63 @@ const router = createBrowserRouter([
             {
                 index: true,
                 element: <FintrackerPage/>
-            }
+            },
+            {
+                id: 'budgets',
+                path: 'budgets',
+                element: <BudgetsPage/>,
+                children: [
+                    {
+                        id: 'budgetDetails',
+                        path: ':id',
+                        element: <BudgetDetailsPage/>
+                    }
+                ]
+            },
         ]
     },
     {
-        id: 'budgets',
-        path: 'budgets',
-        element: <FintrackerPage/>
+        id: 'wallet',
+        path: "wallet",
+        element: <WalletLayout/>,
+        children: [
+            {
+                index: true,
+                element: <Navigate to={"/dashboard"} replace={true}/>
+            },
+            {
+                id: 'walletTransactions',
+                path: ":id/trans",
+                element: <WalletTransactionsPage/>
+            },
+            {
+                id: 'walletOverview',
+                path: ":id/overview",
+                element: <WalletOverviewPage/>
+            },
+            {
+                id: 'walletBudgets',
+                path: ':id/budgets',
+                element: <BudgetsPage/>,
+                children: [
+                    {
+                        id: 'walletBudgetDetails',
+                        path: ':id',
+                        element: <BudgetDetailsPage/>
+                    }
+                ]
+            },
+            {
+                id: 'walletSettingsGeneral',
+                path: ":id/settings/general",
+                element: <WalletSettingsPage/>
+            },
+            {
+                id: 'walletSettingsCategories',
+                path: ":id/settings/categories",
+                element: <WalletSettingsCategoriesPage/>
+            }
+        ]
     },
     {
         id: 'registration',
@@ -61,14 +117,7 @@ const router = createBrowserRouter([
         id: 'login',
         path: 'login',
         element: <LoginForm/>
-    },
-
-    {
-        id: 'motion',
-        path: 'mo',
-        element: <Motion/>
-    },
-
+    }
 ])
 
 

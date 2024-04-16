@@ -5,28 +5,27 @@ import useUserStore from "../stores/userStore.ts";
 import {IoWalletSharp} from "react-icons/io5";
 import {NavLink} from "react-router-dom";
 import {useState} from "react";
-import {motion} from 'framer-motion';
 import currencies from "../data/currencies.ts";
 import {SubmitHandler, useForm} from "react-hook-form";
 import useCreateCashWallet from "../hooks/useCreateWallet.ts";
 import {HiX} from "react-icons/hi";
-import {balanceRegisterOptions, nameRegisterOptions, Wallet} from "../entities/Wallet.ts";
+import {balanceRegisterOptionsForWallet, nameRegisterOptionsForWallet, Wallet} from "../entities/Wallet.ts";
 import UseCreateMonoWallet, {MonoWalletToken} from "../hooks/useCreateMonoWallet.ts";
 import {useMonoUserInfo} from "../hooks/useMonoUserInfo.ts";
+import {ActionButton} from "../components/ActionButton.tsx";
 
 
-function calculateTotalBalance(wallets: Wallet[]): number {
-    let totalBalance = 0;
-    wallets.forEach(wallet => {
-        totalBalance += wallet.balance;
-    });
-    return totalBalance;
-}
+// function calculateTotalBalance(wallets: Wallet[]): number {
+//     let totalBalance = 0;
+//     wallets.forEach(wallet => {
+//         totalBalance += wallet.balance;
+//     });
+//     return totalBalance;
+// }
 
 export default function FintrackerPage() {
     const userId = useUserStore(x => x.getUserId());
     const {data: wallets} = useWallets(userId || 'no-user');
-    const totalBalance = calculateTotalBalance(wallets || []);
     return (
         <div className={'container mx-auto p-4 overflow-hidden'}>
             <section className={'space-y-5 mt-10'}>
@@ -69,7 +68,7 @@ const WalletCard = ({name, balance, isBanking, currencySymbol, walletId}: Wallet
         `- ${formatedBalance} ${currencySymbol}`;
 
     return (
-        <NavLink to={`/wallet/${walletId}`}
+        <NavLink to={`/wallet/${walletId}/trans`}
                  className={'flex flex-col sm:flex-row space-y-3 sm:space-y-0 space-x-0 sm:space-x-3 ' +
                      'p-4 bg-slate-100 rounded-lg shadow w-full'}>
     <span className={'self-center'}>
@@ -85,23 +84,6 @@ const WalletCard = ({name, balance, isBanking, currencySymbol, walletId}: Wallet
     )
 }
 
-interface ActionButtonProps {
-    text: string,
-    onModalOpen: () => void
-}
-
-const ActionButton = ({text, onModalOpen}: ActionButtonProps) => {
-    return (
-        <>
-            <motion.button
-                onClick={() => onModalOpen()}
-                whileHover={{scale: 1.1}}
-                whileTap={{scale: 0.9}}
-                className={'text-xl bg-green-400 px-4 py-2 text-white rounded-lg shadow-lg'}>{text}
-            </motion.button>
-        </>
-    )
-}
 
 interface CashWalletModalProps {
     userId: string,
@@ -154,7 +136,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="Name"
                                 type="text"
-                                {...register("name", nameRegisterOptions)}
+                                {...register("name", nameRegisterOptionsForWallet)}
                             />
                             {errors.name && <p className={'text-red-400 italic'}>{errors.name.message}</p>}
                         </div>
@@ -167,7 +149,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
                                 id="Balance"
                                 min={1}
                                 type="number"
-                                {...register("balance", balanceRegisterOptions)}
+                                {...register("balance", balanceRegisterOptionsForWallet)}
                             />
                             {errors.balance && <p className={'text-red-400 italic'}>{errors.balance.message}</p>}
                         </div>
@@ -395,24 +377,24 @@ const MonobankModalStep2 = ({userInfo, handleOpenModal}: MonobankModalStep2Props
     );
 };
 
-interface OverviewCardProps {
-    text: string;
-    balance: number;
-    currencySymbol: string
-}
-
-const OverviewCard = ({balance, text, currencySymbol}: OverviewCardProps) => {
-    const isPositiveBalance = balance > 0;
-    const formatedBalance: string = Math.abs(balance).toLocaleString();
-    const balanceText: string = isPositiveBalance ? `+ ${formatedBalance} ${currencySymbol}` :
-        `- ${formatedBalance} ${currencySymbol}`;
-
-
-    return (
-        <div className={'flex flex-col gap-y-3'}>
-            <p className={'text-neutral-900 text-lg'}>{text}</p>
-            <p className={`text-lg ${isPositiveBalance ? "text-green-400" : 'text-red-500'}`}>{balanceText}</p>
-        </div>
-    )
-}
+// interface OverviewCardProps {
+//     text: string;
+//     balance: number;
+//     currencySymbol: string
+// }
+//
+// const OverviewCard = ({balance, text, currencySymbol}: OverviewCardProps) => {
+//     const isPositiveBalance = balance > 0;
+//     const formatedBalance: string = Math.abs(balance).toLocaleString();
+//     const balanceText: string = isPositiveBalance ? `+ ${formatedBalance} ${currencySymbol}` :
+//         `- ${formatedBalance} ${currencySymbol}`;
+//
+//
+//     return (
+//         <div className={'flex flex-col gap-y-3'}>
+//             <p className={'text-neutral-900 text-lg'}>{text}</p>
+//             <p className={`text-lg ${isPositiveBalance ? "text-green-400" : 'text-red-500'}`}>{balanceText}</p>
+//         </div>
+//     )
+// }
 

@@ -1,19 +1,18 @@
-﻿import {NavLink, Outlet, useNavigate} from "react-router-dom";
+﻿import {NavLink, Outlet, useNavigate, useParams} from "react-router-dom";
 import useUserStore from "../stores/userStore.ts";
 import {useGetUser} from "../hooks/useUser.ts";
 // @ts-ignore
 import logo from "../assets/logo.png";
-import {AnimatePresence, motion} from "framer-motion";
 import {ReactNode, useState} from "react";
-import useLogout from "../hooks/useLogout.ts";
+import {AnimatePresence, motion} from "framer-motion";
 import {FiChevronDown} from "react-icons/fi";
+import useLogout from "../hooks/useLogout.ts";
 
-export default function DashboardLayout() {
-
+export default function WalletLayout() {
     return (
         <div className={'flex flex-col min-h-screen overflow-hidden bg-stone-100'}>
             <header>
-                <DashboardNavBar/>
+                <WalletNavBar/>
             </header>
             <main className={'flex-grow'}>
                 <Outlet/>
@@ -28,28 +27,43 @@ export default function DashboardLayout() {
 const Footer = () => {
     return (
         <div className="block md:hidden border-t-2 border-t-gray-300 p-6 mt-6">
-            <div className={'flex justify-around items-center gap-x-4'}>
+            <div className={'flex justify-around items-center gap-x-2 w-full text-sm'}>
                 <div>
-                    <NavLink to={'/dashboard'}
-                             end
+                    <NavLink to={'/transactions'}
                              className={({isActive}) =>
-                                 isActive ? 'text-green-400 text-xl font-bold' : 'text-xl p-5'
+                                 isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
-                    >Dashboard</NavLink>
+                    >Transactions</NavLink>
                 </div>
                 <div>
-                    <NavLink to={'/dashboard/budgets'}
+                    <NavLink to={'/overview'}
                              className={({isActive}) =>
-                                 isActive ? 'text-green-400 text-xl font-bold' : 'text-xl p-5'
+                                 isActive ? 'text-green-400 font-bold' : 'p-2'
+                             }
+                    >Overview</NavLink>
+                </div>
+                <div>
+                    <NavLink to={'/budgets'}
+                             className={({isActive}) =>
+                                 isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
                     >Budgets</NavLink>
                 </div>
+                <div>
+                    <NavLink to={'/settings/general'}
+                             className={({isActive}) =>
+                                 isActive ? 'text-green-400 font-bold' : 'p-2'
+                             }
+                    >Settings</NavLink>
+                </div>
             </div>
         </div>
+
     )
 }
 
-const DashboardNavBar = () => {
+const WalletNavBar = () => {
+    const params = useParams();
     const [userId] = useUserStore(x => [x.getUserId()]);
     const {data} = useGetUser(userId || 'no-user');
     const userName = data?.response?.userName || 'New user';
@@ -66,22 +80,38 @@ const DashboardNavBar = () => {
             </div>
             <div className="hidden md:block">
                 <NavLink
-                    end
-                    to="/dashboard"
+                    to={`./${params.id}/trans`}
                     className={({isActive}) =>
                         isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
                     }
                 >
-                    Dashboard
+                    Transactions
                 </NavLink>
                 <NavLink
-                    to="/dashboard/budgets"
+                    to={`./${params.id}/overview`}
+                    className={({isActive}) =>
+                        isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
+                    }
+                >
+                    Overview
+                </NavLink>
+                <NavLink
+                    to={`./${params.id}/budgets`}
                     className={({isActive}) =>
                         isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
                     }
                 >
                     Budgets
                 </NavLink>
+                <NavLink
+                    to={`./${params.id}/settings/general`}
+                    className={({isActive}) =>
+                        isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
+                    }
+                >
+                    Settings
+                </NavLink>
+
             </div>
             <motion.div
                 className={'relative'}
@@ -144,9 +174,9 @@ const FlyoutLink = ({children, FlyoutContent, open}: FlyoutLinkProps) => {
 const NavigationContent = () => {
 
     const navigate = useNavigate();
-    const handleLogout = () => {
-        navigate('/');
-        useLogout();
+    const handleLogout = async () => {
+        await useLogout();
+        navigate('/login');
         window.location.reload();
     }
 
@@ -168,7 +198,7 @@ const NavigationContent = () => {
                 <li className="mb-3">
                     <span
                         onClick={handleLogout}
-                        className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md cursor-pointer">Logout</span>
+                        className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md">Logout</span>
                 </li>
             </ul>
         </div>
