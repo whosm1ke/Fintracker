@@ -63,7 +63,7 @@ const Footer = () => {
 }
 
 const WalletNavBar = () => {
-    const params = useParams();
+    const {walletId} = useParams();
     const [userId] = useUserStore(x => [x.getUserId()]);
     const {data} = useGetUser(userId || 'no-user');
     const userName = data?.response?.userName || 'New user';
@@ -80,7 +80,7 @@ const WalletNavBar = () => {
             </div>
             <div className="hidden md:block">
                 <NavLink
-                    to={`./${params.id}/trans`}
+                    to={`./${walletId}/trans`}
                     className={({isActive}) =>
                         isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
                     }
@@ -88,7 +88,7 @@ const WalletNavBar = () => {
                     Transactions
                 </NavLink>
                 <NavLink
-                    to={`./${params.id}/overview`}
+                    to={`./${walletId}/overview`}
                     className={({isActive}) =>
                         isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
                     }
@@ -96,7 +96,7 @@ const WalletNavBar = () => {
                     Overview
                 </NavLink>
                 <NavLink
-                    to={`./${params.id}/budgets`}
+                    to={`./${walletId}/budgets`}
                     className={({isActive}) =>
                         isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
                     }
@@ -104,7 +104,7 @@ const WalletNavBar = () => {
                     Budgets
                 </NavLink>
                 <NavLink
-                    to={`./${params.id}/settings/general`}
+                    to={`./${walletId}/settings/general`}
                     className={({isActive}) =>
                         isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
                     }

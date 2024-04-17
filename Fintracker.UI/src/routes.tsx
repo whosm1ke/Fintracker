@@ -13,8 +13,8 @@ import WalletOverviewPage from "./pages/WalletOverviewPage.tsx";
 import WalletSettingsPage from "./pages/WalletSettingsPage.tsx";
 import WalletSettingsCategoriesPage from "./pages/WalletSettingsCategoriesPage.tsx";
 import WalletTransactionsPage from "./pages/WalletTransactionsPage.tsx";
-import BudgetsPage from "./pages/BudgetsPage.tsx";
 import BudgetDetailsPage from "./pages/BudgetDetailsPage.tsx";
+import BudgetsPage from "./pages/BudgetsPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -54,15 +54,13 @@ const router = createBrowserRouter([
             {
                 id: 'budgets',
                 path: 'budgets',
-                element: <BudgetsPage/>,
-                children: [
-                    {
-                        id: 'budgetDetails',
-                        path: ':id',
-                        element: <BudgetDetailsPage/>
-                    }
-                ]
+                element: <BudgetsPage/>
             },
+            {
+                id: 'budgetDetails',
+                path: 'budgets/:budgetId',
+                element: <BudgetDetailsPage/>
+            }
         ]
     },
     {
@@ -76,34 +74,32 @@ const router = createBrowserRouter([
             },
             {
                 id: 'walletTransactions',
-                path: ":id/trans",
+                path: ":walletId/trans",
                 element: <WalletTransactionsPage/>
             },
             {
                 id: 'walletOverview',
-                path: ":id/overview",
+                path: ":walletId/overview",
                 element: <WalletOverviewPage/>
             },
             {
                 id: 'walletBudgets',
-                path: ':id/budgets',
-                element: <BudgetsPage/>,
-                children: [
-                    {
-                        id: 'walletBudgetDetails',
-                        path: ':id',
-                        element: <BudgetDetailsPage/>
-                    }
-                ]
+                path: ':walletId/budgets',
+                element: <BudgetsPage/>
+            },
+            {
+                id: 'walletBudgetDetails',
+                path: ':walletId/budgets/:budgetId',
+                element: <BudgetDetailsPage/>
             },
             {
                 id: 'walletSettingsGeneral',
-                path: ":id/settings/general",
+                path: ":walletId/settings/general",
                 element: <WalletSettingsPage/>
             },
             {
                 id: 'walletSettingsCategories',
-                path: ":id/settings/categories",
+                path: ":walletId/settings/categories",
                 element: <WalletSettingsCategoriesPage/>
             }
         ]

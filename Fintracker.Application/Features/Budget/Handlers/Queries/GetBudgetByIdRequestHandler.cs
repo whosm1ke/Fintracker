@@ -27,8 +27,30 @@ public class GetBudgetByIdRequestHandler : IRequestHandler<GetBudgetByIdRequest,
             {
                 ErrorMessage = $"Was not found by id [{request.Id}]",
                 PropertyName = nameof(request.Id)
-            },nameof(Domain.Entities.Budget));
+            }, nameof(Domain.Entities.Budget));
 
         return _mapper.Map<BudgetBaseDTO>(budget);
+    }
+}
+
+public class
+    GetBudgetsWithWalletsRequestHandler : IRequestHandler<GetBudgetsWithWalletsRequest, List<BudgetWithWalletDTO>>
+{
+    
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+
+    public GetBudgetsWithWalletsRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
+    public async Task<List<BudgetWithWalletDTO>> Handle(GetBudgetsWithWalletsRequest request, CancellationToken cancellationToken)
+    {
+        var budget = await _unitOfWork.BudgetRepository.GetBudgetsWithWalletsAsync();
+
+      
+
+        return _mapper.Map<List<BudgetWithWalletDTO>>(budget);
     }
 }

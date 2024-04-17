@@ -45,6 +45,16 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<IReadOnlyList<Budget>> GetBudgetsWithWalletsAsync()
+    {
+        return await _db.Budgets
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Categories)
+            .Include(x => x.Currency)
+            .ToListAsync();
+    }
+
     public async Task<IReadOnlyList<Budget>> GetBudgetsByCategoryId(Guid categoryId)
     {
         return await _db.Budgets
@@ -55,30 +65,44 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId, bool isPublic)
+    public async Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId, bool? isPublic)
     {
-        return await _db.Budgets
+        var query = _db.Budgets
             .Include(x => x.Categories)
             .Include(x => x.Currency)
-            .Where(x => x.UserId == userId && x.IsPublic == isPublic)
-            .ToListAsync();
+            .Where(x => x.UserId == userId);
+
+        if (isPublic.HasValue)
+        {
+            query = query.Where(x => x.IsPublic == isPublic);
+        }
+
+        return await query.ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId, bool isPublic)
+    public async Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId, bool? isPublic)
     {
-        return await _db.Budgets
+        var query = _db.Budgets
             .Include(x => x.Categories)
             .Include(x => x.Currency)
-            .Where(x => x.WalletId == walletId && x.IsPublic == isPublic)
-            .ToListAsync();
+            .Where(x => x.WalletId == walletId);
+
+        if (isPublic.HasValue)
+        {
+            query = query.Where(x => x.IsPublic == isPublic);
+        }
+
+        return await query.ToListAsync();
     }
+
 
     public async Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, QueryParams queryParams, bool isPublic)
     {
         return await _db.Budgets.GetByUserIdSortedAsync(userId, queryParams, isPublic);
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, QueryParams queryParams, bool isPublic)
+    public async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, QueryParams queryParams,
+        bool isPublic)
     {
         return await _db.Budgets.GetByWalletIdSortedAsync(walletId, queryParams, isPublic);
     }

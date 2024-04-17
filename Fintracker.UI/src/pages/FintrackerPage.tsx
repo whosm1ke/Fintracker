@@ -3,7 +3,7 @@ import logo from '../../src/assets/logo.png'
 import useWallets from "../hooks/useWallets.ts";
 import useUserStore from "../stores/userStore.ts";
 import {IoWalletSharp} from "react-icons/io5";
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {useState} from "react";
 import currencies from "../data/currencies.ts";
 import {SubmitHandler, useForm} from "react-hook-form";
@@ -68,7 +68,7 @@ const WalletCard = ({name, balance, isBanking, currencySymbol, walletId}: Wallet
         `- ${formatedBalance} ${currencySymbol}`;
 
     return (
-        <NavLink to={`/wallet/${walletId}/trans`}
+        <Link to={`/wallet/${walletId}/trans`}
                  className={'flex flex-col sm:flex-row space-y-3 sm:space-y-0 space-x-0 sm:space-x-3 ' +
                      'p-4 bg-slate-100 rounded-lg shadow w-full'}>
     <span className={'self-center'}>
@@ -79,7 +79,7 @@ const WalletCard = ({name, balance, isBanking, currencySymbol, walletId}: Wallet
                 <span>{isBanking ? 'Monobank' : 'Cash'}</span>
                 <p className={isPositiveBalance ? "text-green-400 text-xl" : 'text-red-500 text-xl'}>{balanceText}</p>
             </div>
-        </NavLink>
+        </Link>
 
     )
 }

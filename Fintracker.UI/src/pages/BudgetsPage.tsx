@@ -1,28 +1,42 @@
-﻿import {useParams} from "react-router-dom";
-import useUserStore from "../stores/userStore.ts";
+﻿import { useParams} from "react-router-dom";
+import {useBudgets, useBudgetsWithWallets} from "../hooks/useBudgets.ts";
+import useWallet from "../hooks/useWallet.ts";
+import {BudgetCard} from "../components/BudgetCard.tsx";
+import {CreateBudgetModal} from "../components/CreateBudgetModal.tsx";
+import BudgetOverview from "../components/BudgetOverview.tsx";
 
 export default function BudgetsPage() {
-    const {id: walletId} = useParams();
-    const userId = useUserStore(x => x.getUserId());
+    const {walletId} = useParams();
+    const {data: budgets, isFetching, isLoading, isError} = walletId ? useBudgets(walletId, "wallet", null) : useBudgetsWithWallets();
+    const data = walletId ? useWallet(walletId) : null;
+
+    if(isFetching || isLoading || isError)
+        return null;
+
     return (
         <div className={'container mx-auto p-4 overflow-hidden'}>
             <section className={'space-y-5 mt-10'}>
                 <div className={'flex flex-col gap-y-5 items-start sm:flex-row sm:items-center gap-x-10'}>
                     <h2 className={'text-2xl font-[500]'}>Budgets</h2>
-                    {walletId && <button>Create</button>}
+                    {walletId && <CreateBudgetModal/>}
                 </div>
                 <div className={'grid gap-x-10 gap-y-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}>
-                    Show all budgets
+                    {budgets && budgets.map(b =>
+                        <BudgetCard walletName={walletId ? data?.data?.response?.name! : b.wallet.name}
+                                    balance={b.balance} currencySymbol={b.currency.symbol}
+                                    endDate={b.endDate} startDate={b.startDate} name={b.name}
+                                    totalSpent={b.totalSpent} budgetId={b.id} isPublic={b.isPublic}
+                                    key={b.id}/>
+                    )}
                 </div>
             </section>
-            <section className={'space-y-5 mt-10'}>
-                <div className={'flex flex-col gap-y-5 items-start sm:flex-row sm:items-center gap-x-10'}>
-                    <h2 className={'text-2xl font-[500]'}>Overview</h2>
-                </div>
-                <div className={'grid gap-x-10 gap-y-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}>
-                </div>
-            </section>
+            <BudgetOverview/>
         </div>
     )
 }
+
+
+
+
+
 

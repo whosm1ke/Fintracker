@@ -50,6 +50,21 @@ public class BudgetController : ControllerBase
 
         return Ok(response);
     }
+    
+    
+    [HttpGet("with-wallet")]
+    [ProducesResponseType(typeof(List<BudgetWithWalletDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<List<BudgetWithWalletDTO>>> GetBudgetsWithWallet(Guid id)
+    {
+        var response = await _mediator.Send(new GetBudgetsWithWalletsRequest());
+
+        return Ok(response);
+    }
+    
+    
+    
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(BudgetBaseDTO),StatusCodes.Status200OK)]
@@ -84,13 +99,13 @@ public class BudgetController : ControllerBase
             budgets = await _mediator.Send(new GetBudgetsByUserIdRequest
             {
                 UserId = id,
-                IsPublic = isPublic.HasValue && isPublic.Value
+                IsPublic = isPublic
             });
         else
             budgets = await _mediator.Send(new GetBudgetsByWalletIdRequest
             {
                 WalletId = id,
-                IsPublic = isPublic.HasValue && isPublic.Value
+                IsPublic = isPublic
             });
 
         return Ok(budgets);

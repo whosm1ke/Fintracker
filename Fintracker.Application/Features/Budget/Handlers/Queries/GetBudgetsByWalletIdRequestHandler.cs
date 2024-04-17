@@ -24,7 +24,6 @@ public class
         var budgets = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(request.WalletId,
             request.IsPublic);
 
-        //TODO: may be there should be some validation logic to ensure that list is not empty
 
         return _mapper.Map<List<BudgetBaseDTO>>(budgets);
     }
