@@ -1,10 +1,12 @@
-﻿interface Transaction extends BaseEntity {
+﻿import {Wallet} from "./Wallet.ts";
+
+export interface Transaction extends BaseEntity {
     walletId: string;
     userId: string;
     amount: number;
     note?: string;
     label?: string;
-    createdAt: Date;
+    date: Date;
     isBankTransaction: boolean;
     category: Category;
     currency: Currency;

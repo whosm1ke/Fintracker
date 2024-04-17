@@ -13,7 +13,6 @@ const useCreateWallet = () => {
         mutationKey: ['wallets'],
         mutationFn: async (model: Wallet) => await apiClient.create(model),
         onMutate: async (newWallet: Wallet) => {
-            console.log("wallet: ", newWallet)
             await queryClient.cancelQueries({queryKey: ['wallets']});
 
             const prevData = queryClient.getQueryData<Wallet[]>(['wallets']) || [];

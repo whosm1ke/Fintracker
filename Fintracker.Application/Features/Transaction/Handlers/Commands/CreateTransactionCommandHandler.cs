@@ -33,7 +33,7 @@ public class
 
 
         await DecreaseBalanceInWallet(transaction.WalletId, transaction.Amount);
-        await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount, transaction.UserId);
+        await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount, transaction.UserId, transaction.WalletId);
 
 
         response.Success = true;
@@ -47,13 +47,13 @@ public class
         return response;
     }
 
-    private async Task DecreaseBalanceInBudgets(Guid categoryId, decimal amount, Guid userId)
+    private async Task DecreaseBalanceInBudgets(Guid categoryId, decimal amount, Guid userId, Guid walletId)
     {
         var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
 
         foreach (var budget in budgets)
         {
-            if (budget.IsPublic || budget.UserId == userId)
+            if ((budget.IsPublic || budget.UserId == userId) && budget.WalletId == walletId)
             {
                 budget.Balance -= amount;
                 budget.TotalSpent += amount;

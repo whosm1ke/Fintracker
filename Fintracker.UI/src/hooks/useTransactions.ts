@@ -1,12 +1,13 @@
 ﻿import ApiClient from "../services/ApiClient.ts";
 import {useQuery} from "@tanstack/react-query";
 import useQueryStore from "../stores/queryStore.ts";
+import {Transaction} from "../entities/Transaction.ts";
 
-const useTransactions = (userId: string) => {
-    const apiClient = new ApiClient<Transaction, Transaction[]>(`transaction/user/${userId}/all`);
+const useTransactions = (walletId: string) => {
+    const apiClient = new ApiClient<Transaction, Transaction[]>(`transaction/wallet/${walletId}`);
     const queryStore = useQueryStore(x => x.query);
     return useQuery({
-        queryKey: ['transaction', 'user', userId, 'all'],
+        queryKey: ['transaction', 'wallet', walletId],
         queryFn: async () => await apiClient.getAllSorted({
             params: {
                 pageNumber: queryStore.pageNumber || 1,

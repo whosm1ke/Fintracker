@@ -47,7 +47,7 @@ public class
 
 
         await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount,
-            oldObject.UserId);
+            oldObject.UserId, transaction.WalletId);
         UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
         _unitOfWork.TransactionRepository.Update(transaction);
 
@@ -81,14 +81,14 @@ public class
         }
     }
 
-    private async Task UpdateBudgetBalance(Guid categoryId, decimal newAmount, decimal oldAmount, Guid userId)
+    private async Task UpdateBudgetBalance(Guid categoryId, decimal newAmount, decimal oldAmount, Guid userId, Guid walletId)
     {
         var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
         decimal difference = newAmount - oldAmount;
 
         foreach (var budget in budgets)
         {
-            if (budget.IsPublic || budget.UserId == userId)
+            if ((budget.IsPublic || budget.UserId == userId) && budget.WalletId == walletId)
             {
                 if (difference > 0)
                 {

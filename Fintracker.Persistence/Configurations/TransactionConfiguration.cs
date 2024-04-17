@@ -16,6 +16,7 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.Property(x => x.CreatedBy).HasMaxLength(50);
         builder.Property(x => x.ModifiedBy).HasMaxLength(50);
 
+        builder.Property(x => x.Date).HasColumnType("date");
 
         builder.HasOne(x => x.User)
             .WithMany()

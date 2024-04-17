@@ -46,7 +46,7 @@ public class
 
         
         IncreaseWalletBalance(transaction.Wallet, transaction.Amount);
-        await IncreaseBudgetBalance(transaction.CategoryId, transaction.Amount, transaction.UserId);
+        await IncreaseBudgetBalance(transaction.CategoryId, transaction.Amount, transaction.UserId, transaction.WalletId);
 
         _unitOfWork.TransactionRepository.Delete(transaction);
 
@@ -65,13 +65,13 @@ public class
         wallet.TotalSpent -= amount;
     }
 
-    private async Task IncreaseBudgetBalance(Guid categoryId, decimal amount, Guid userId)
+    private async Task IncreaseBudgetBalance(Guid categoryId, decimal amount, Guid userId, Guid walletId)
     {
         var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
 
         foreach (var budget in budgets)
         {
-            if (budget.IsPublic || budget.UserId == userId)
+            if ((budget.IsPublic || budget.UserId == userId) && budget.WalletId == walletId)
             {
                 budget.Balance += amount;
                 budget.TotalSpent -= amount;

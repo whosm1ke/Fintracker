@@ -154,6 +154,14 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
             .then(res => res.data);
     }
 
+    async get(cfg: AxiosRequestConfig): Promise<TResponse> {
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+        cfg.cancelToken = this.cancelToken.token
+        return await axiosInstance.get<TResponse>(this.endpoint, cfg)
+            .then(res => res.data);
+    }
+
     async getMonobankUserInfo(xToken: MonoWalletToken): Promise<ClientWrapper<MonobankUserInfo>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();

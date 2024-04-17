@@ -16,5 +16,5 @@ public class CreateTransactionDTO : ITransactionDto
     
     public string? Label { get; set; }
 
-    public DateTime CreatedAt { get => DateTime.Now; }
+    public DateTime Date { get; set; }
 }

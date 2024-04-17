@@ -15,4 +15,6 @@ public class UpdateTransactionDTO : IBaseDto, ITransactionDto
     public string? Note { get; set; }
     
     public string? Label { get; set; }
+    
+    public DateTime Date { get; set; }
 }
