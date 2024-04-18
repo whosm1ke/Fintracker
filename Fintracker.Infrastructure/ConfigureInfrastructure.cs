@@ -1,6 +1,5 @@
 ﻿using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Models.Mail;
-using Fintracker.Infrastructure.CurrenciesAPI;
 using Fintracker.Infrastructure.Mail;
 using Fintracker.Infrastructure.Monobank;
 using Microsoft.Extensions.Configuration;
@@ -18,12 +17,7 @@ public static class ConfigureInfrastructure
         {
             x.BaseAddress = new Uri("https://api.monobank.ua");
         });
-        services.AddHttpClient("CurrencyBeacon", x =>
-        {
-            x.BaseAddress = new Uri($"https://api.currencybeacon.com");
-        });
         services.AddTransient<IMonobankService, MonobankService>();
-        services.AddTransient<ICurrencyConverter, CurrencyConverter>();
         return services;
     }
 }

@@ -127,6 +127,19 @@ public class TransactionController : ControllerBase
 
         return Ok(response);
     }
+    
+    [HttpGet("wallet/{walletId:guid}/grouped")]
+    [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<GroupedTransactionByDateDTO>>> GetGroupedTransactionsByWalletId(Guid walletId)
+    {
+        var response = await _mediator.Send(new GetGroupedTransactionsByWalletIdRequest
+        {
+            WalletId = walletId
+        });
+
+        return Ok(response);
+    }
 
     [HttpGet("{id:guid}/with-wallet")]
     [ProducesResponseType(typeof(TransactionWithWalletDTO),StatusCodes.Status200OK)]

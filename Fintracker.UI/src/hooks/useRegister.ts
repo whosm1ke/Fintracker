@@ -18,7 +18,6 @@ const useRegister = (setError : UseFormSetError<RegisterSchema>) => {
             if (error && 'details' in error) {
                 const serverErrors = error.details;
                 serverErrors.forEach((errorDetail: any) => {
-                    console.log(errorDetail.propertyName);
                     if (errorDetail.propertyName) {
                         setError(errorDetail.propertyName as keyof RegisterSchema, {
                             type: 'server',

@@ -2,10 +2,10 @@
 import {motion} from "framer-motion";
 import {useEffect, useState} from "react";
 import useUserStore from "../stores/userStore.ts";
-import useLogout from "../hooks/useLogout.ts";
 // @ts-ignore
 import logo from "../../src/assets/logo.png"
 import NavigationLink, {NavigationLinkProps} from "../components/NavigationLink.tsx";
+import useLogoutMutation from "../hooks/useLogoutMutation.ts";
 
 export default function Layout() {
 
@@ -217,11 +217,12 @@ const MobileNavigationLink = ({to, text, motionNav, isLogin}: NavigationLinkProp
     const location = useLocation();
     const isActiveLink = location.pathname === to;
 
+    const logout = useLogoutMutation();
 
-    const handleLogout = () => {
-        useLogout();
-        window.location.reload();
+    const handleLogout = async () => {
+        await logout.mutateAsync(null);
         navigate('/');
+        window.location.reload();
     }
 
     return (

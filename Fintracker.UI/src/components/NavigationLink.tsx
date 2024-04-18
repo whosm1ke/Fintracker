@@ -1,7 +1,7 @@
 ﻿import {useState} from "react";
 import {NavLink, useLocation, useNavigate} from "react-router-dom";
-import useLogout from "../hooks/useLogout.ts";
 import {motion} from "framer-motion";
+import useLogoutMutation from "../hooks/useLogoutMutation.ts";
 
 export interface NavigationLinkProps {
     to: string;
@@ -13,10 +13,11 @@ const NavigationLink = ({to, text, isLogin}: NavigationLinkProps & { isLogin?: b
     const navigate = useNavigate();
     const location = useLocation();
     const isActiveLink = location.pathname === to;
-    const handleLogout = () => {
-        useLogout();
-        window.location.reload();
+    const logout = useLogoutMutation();
+    const handleLogout = async () => {
+        await logout.mutateAsync(null);
         navigate('/');
+        window.location.reload();
     }
     return (
         <motion.div

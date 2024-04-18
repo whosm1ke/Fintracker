@@ -17,7 +17,12 @@ interface QueryStore {
 }
 
 const useQueryStore = createWithEqualityFn<QueryStore>((set) => ({
-    query: {},
+    query: {
+        pageNumber: 1,
+        pageSize: 10,
+        sortBy: 'name',
+        isDescending: false
+    },
     setPageNumber: (num: number) => set(store => ({query: {...store.query, genreId: num}})),
     setPageSize: (num: number) => set(store => ({query: {...store.query, page_size: num}})),
     setIsDescending: (isDescending: boolean) => set(store => ({query: {...store.query, isDescending: isDescending}})),

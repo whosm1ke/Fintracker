@@ -5,20 +5,20 @@ import {useGetUser} from "../hooks/useUser.ts";
 import logo from "../assets/logo.png";
 import {AnimatePresence, motion} from "framer-motion";
 import {ReactNode, useState} from "react";
-import useLogout from "../hooks/useLogout.ts";
 import {FiChevronDown} from "react-icons/fi";
+import useLogoutMutation from "../hooks/useLogoutMutation.ts";
 
 export default function DashboardLayout() {
 
     return (
-        <div className={'flex flex-col min-h-screen overflow-hidden bg-stone-100'}>
+        <div className={'relative flex flex-col min-h-screen overflow-hidden bg-stone-100'}>
             <header>
                 <DashboardNavBar/>
             </header>
-            <main className={'flex-grow'}>
+            <main className={'flex-grow mb-24'}>
                 <Outlet/>
             </main>
-            <footer className={'flex-shrink-0'}>
+            <footer>
                 <Footer/>
             </footer>
         </div>
@@ -27,7 +27,7 @@ export default function DashboardLayout() {
 
 const Footer = () => {
     return (
-        <div className="block md:hidden border-t-2 border-t-gray-300 p-6 mt-6">
+        <div className="block md:hidden border-t-2 bg-white border-t-gray-300 p-6 fixed bottom-0 w-full">
             <div className={'flex justify-around items-center gap-x-4'}>
                 <div>
                     <NavLink to={'/dashboard'}
@@ -48,6 +48,7 @@ const Footer = () => {
         </div>
     )
 }
+
 
 const DashboardNavBar = () => {
     const [userId] = useUserStore(x => [x.getUserId()]);
@@ -144,9 +145,10 @@ const FlyoutLink = ({children, FlyoutContent, open}: FlyoutLinkProps) => {
 const NavigationContent = () => {
 
     const navigate = useNavigate();
-    const handleLogout = () => {
+    const logout = useLogoutMutation();
+    const handleLogout = async () => {
+        await logout.mutateAsync(null);
         navigate('/');
-        useLogout();
         window.location.reload();
     }
 

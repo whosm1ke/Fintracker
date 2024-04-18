@@ -6,7 +6,7 @@ import logo from "../assets/logo.png";
 import {ReactNode, useState} from "react";
 import {AnimatePresence, motion} from "framer-motion";
 import {FiChevronDown} from "react-icons/fi";
-import useLogout from "../hooks/useLogout.ts";
+import useLogoutMutation from "../hooks/useLogoutMutation.ts";
 
 export default function WalletLayout() {
     return (
@@ -14,10 +14,10 @@ export default function WalletLayout() {
             <header>
                 <WalletNavBar/>
             </header>
-            <main className={'flex-grow'}>
+            <main className={'flex-grow mb-24'}>
                 <Outlet/>
             </main>
-            <footer className={'flex-shrink-0'}>
+            <footer className={'block lg:hidden flex-shrink-0'}>
                 <Footer/>
             </footer>
         </div>
@@ -26,7 +26,7 @@ export default function WalletLayout() {
 
 const Footer = () => {
     return (
-        <div className="block md:hidden border-t-2 border-t-gray-300 p-6 mt-6">
+        <div className="border-t-2 border-t-gray-300 p-6 mt-6 w-full fixed bottom-0 bg-white">
             <div className={'flex justify-around items-center gap-x-2 w-full text-sm'}>
                 <div>
                     <NavLink to={'/transactions'}
@@ -78,7 +78,7 @@ const WalletNavBar = () => {
                     <p className={'text-2xl font-bold'}>Fintracker</p>
                 </NavLink>
             </div>
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
                 <NavLink
                     to={`./${walletId}/trans`}
                     className={({isActive}) =>
@@ -174,9 +174,10 @@ const FlyoutLink = ({children, FlyoutContent, open}: FlyoutLinkProps) => {
 const NavigationContent = () => {
 
     const navigate = useNavigate();
+    const logout = useLogoutMutation();
     const handleLogout = async () => {
-        await useLogout();
-        navigate('/login');
+        await logout.mutateAsync(null);
+        navigate('/');
         window.location.reload();
     }
 

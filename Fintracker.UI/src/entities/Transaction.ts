@@ -13,3 +13,8 @@ export interface Transaction extends BaseEntity {
     wallet: Wallet;
     user: User;
 }
+
+export interface GroupedTransactionByDate {
+    date: Date;
+    transactions: Transaction[];
+}

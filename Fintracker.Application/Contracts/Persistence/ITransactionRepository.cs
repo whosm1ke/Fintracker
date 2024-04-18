@@ -16,4 +16,5 @@ public interface ITransactionRepository : IGenericRepository<Transaction>
     Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId, QueryParams queryParams);
     Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId, QueryParams queryParams);
     Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, QueryParams queryParams);
+    Task<IReadOnlyList<GroupedTransactionByDate>> GetGroupedTransactionsByDate(Guid walletId);
 }

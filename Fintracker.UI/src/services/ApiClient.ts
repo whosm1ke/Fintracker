@@ -1,10 +1,10 @@
 ﻿import axios, {AxiosRequestConfig, CancelTokenSource} from "axios";
-import {AuthApiClient, CommandApiClient, MonobankClient} from "../logic/CommandApiClient.ts";
+import {AuthApiClient, CommandApiClient, ConvertClient, MonobankClient} from "../logic/CommandApiClient.ts";
 import {RequestApiClient} from "../logic/RequestApiClient.ts";
 import {handleError} from "../helpers/handleError.ts";
 import {RegisterResponse, RegisterSchema} from "../models/RegisterSchema.ts";
 import {LoginResponse, LoginSchema} from "../models/LoginSchema.ts";
-import axiosInstance from "../logic/axiosInstance.ts";
+import axiosInstance, {axiosInstanceCurrencyConverter} from "../logic/axiosInstance.ts";
 import {Wallet} from "../entities/Wallet.ts";
 import {MonoWalletToken} from "../hooks/useCreateMonoWallet.ts";
 
@@ -12,7 +12,8 @@ import {MonoWalletToken} from "../hooks/useCreateMonoWallet.ts";
 export default class ApiClient<TRequest, TResponse> implements CommandApiClient<TRequest>,
     RequestApiClient<TResponse>,
     AuthApiClient,
-    MonobankClient {
+    MonobankClient,
+    ConvertClient {
 
     constructor(private endpoint: string) {
     }
@@ -25,6 +26,47 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
             this.cancelToken.cancel('Request canceled');
         }
     }
+
+    async convert(from: string, to: string, amount: number): Promise<ConvertCurrency | null> {
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+
+        try {
+            const data = await axiosInstanceCurrencyConverter.get<ConvertCurrency>(this.endpoint, {
+                params: {
+                    from: from,
+                    to: to,
+                    amount: amount,
+                    cancelToken: this.cancelToken.token
+                }
+            })
+
+            return data.data;
+        } catch (error) {
+            console.log(error)
+            return null;
+        }
+    }
+
+    async convertAll(data: { from: string[]; to: string; amount: number[]; }): Promise<ConvertCurrency[]> {
+      
+
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+
+        try {
+            const promises = data.from.map((fromCurrency, index) => {
+                return this.convert(fromCurrency, data.to, data.amount[index] | 1);
+            });
+
+            const results = await Promise.all(promises);
+            return results.filter(result => result !== null) as ConvertCurrency[];
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
+
 
     async register(registerModel: RegisterSchema): Promise<ClientWrapper<RegisterResponse>> {
         this.cancelCurrentRequest();
@@ -54,12 +96,13 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
         }
     }
 
-    async logout(): Promise<void> {
+    async logout(): Promise<null> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         await axiosInstance.post(this.endpoint, {
             cancelToken: this.cancelToken.token
         });
+        return null;
 
     }
 
@@ -165,7 +208,6 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
     async getMonobankUserInfo(xToken: MonoWalletToken): Promise<ClientWrapper<MonobankUserInfo>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
-console.log(xToken)
         try {
             const data = await axiosInstance.get<MonobankUserInfo>(this.endpoint, {
                 headers: {

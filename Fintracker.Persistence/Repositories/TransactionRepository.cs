@@ -92,6 +92,23 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
         return await _db.Transactions.GetByCategoryIdSortedAsync(categoryId, queryParams);
     }
 
+    public async Task<IReadOnlyList<GroupedTransactionByDate>> GetGroupedTransactionsByDate(Guid walletId)
+    {
+        var transactions = await GetByWalletIdAsync(walletId);
+
+        var groupedTransactions = transactions
+            .GroupBy(t => t.Date.Date)
+            .Select(g => new GroupedTransactionByDate
+            {
+                Date = g.Key,
+                Transactions = g.ToList()
+            })
+            .ToList();
+
+        return groupedTransactions;
+    }
+
+
     public new async Task<IReadOnlyList<Transaction?>> GetAllAsync()
     {
         return await _db.Transactions

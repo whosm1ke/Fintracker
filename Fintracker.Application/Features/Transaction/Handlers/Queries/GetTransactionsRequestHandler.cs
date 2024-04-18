@@ -26,3 +26,23 @@ public class GetTransactionsRequestHandler : IRequestHandler<GetTransactionsRequ
         return _mapper.Map<List<TransactionBaseDTO>>(transaction);
     }
 }
+
+public class GetGroupedTransactionsByWalletIdRequestHandler : IRequestHandler<GetGroupedTransactionsByWalletIdRequest,
+    IReadOnlyList<GroupedTransactionByDateDTO>>
+{
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public GetGroupedTransactionsByWalletIdRequestHandler(IMapper mapper, IUnitOfWork unitOfWork)
+    {
+        _mapper = mapper;
+        _unitOfWork = unitOfWork;
+    }
+    public async Task<IReadOnlyList<GroupedTransactionByDateDTO>> Handle(GetGroupedTransactionsByWalletIdRequest request, CancellationToken cancellationToken)
+    {
+        var transaction = await _unitOfWork.TransactionRepository.GetGroupedTransactionsByDate(request.WalletId);
+
+
+        return _mapper.Map<List<GroupedTransactionByDateDTO>>(transaction);
+    }
+}

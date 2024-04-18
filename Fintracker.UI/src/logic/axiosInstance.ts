@@ -11,6 +11,13 @@ axiosInstance.interceptors.request.use(cfg => {
     return Promise.reject(error);
 })
 
+export const axiosInstanceCurrencyConverter = axios.create({
+    baseURL: 'https://api.currencybeacon.com/v1/',
+    params: {
+        api_key: 'b8IMjBLpaZDJFBnu40jAOc6EWjin0IQg'
+    }
+})
+
 export default axiosInstance;
 
 

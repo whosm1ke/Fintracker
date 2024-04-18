@@ -1,5 +1,4 @@
 ﻿using Fintracker.Application.DTO.Currency;
-using Fintracker.Application.Features.Currency.Requests.Commands;
 using Fintracker.Application.Features.Currency.Requests.Queries;
 using Fintracker.Application.Models;
 using Fintracker.Application.Responses.API_Responses;
@@ -53,19 +52,5 @@ public class CurrencyController : ControllerBase
             response = await _mediator.Send(simpleRequest);
 
         return Ok(response);
-    }
-
-    [HttpGet("convert")]
-    public async Task<ActionResult<ConvertCurrencyDTO>> Convert([FromQuery] string from, [FromQuery] string to,
-        [FromQuery] decimal amount = 1m)
-    {
-        var response = await _mediator.Send(new ConvertCurrenciesCommand
-        {
-            Amount = amount,
-            From = from,
-            To = to
-        });
-
-        return response;
     }
 }
