@@ -39,12 +39,12 @@ public class WalletController : ControllerBase
     [HttpGet("owner/{ownerId:guid}")]
     [ProducesResponseType(typeof(List<WalletBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<WalletBaseDTO>>> Get(Guid ownerId,[FromQuery] QueryParams query)
+    public async Task<ActionResult<List<WalletBaseDTO>>> Get(Guid ownerId,[FromQuery] QueryParams? query)
     {
         var sortRequest = new GetWalletsByOwnerIdSortedRequest
         {
             OwnerId = ownerId,
-            Params = query
+            Params = query!
         };
 
         var simpleRequest = new GetWalletsByOwnerIdRequest
@@ -54,55 +54,14 @@ public class WalletController : ControllerBase
 
         IReadOnlyList<WalletBaseDTO> response;
 
-        if (!string.IsNullOrEmpty(query.SortBy))
+        if (query is not null)
             response = await _mediator.Send(sortRequest);
         else
             response = await _mediator.Send(simpleRequest);
 
         return Ok(response);
     }
-
-    [HttpGet("{id:guid}/with-budget")]
-    [ProducesResponseType(typeof(WalletWithBudgetsDTO),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<WalletWithBudgetsDTO>> GetWithBudget(Guid id)
-    {
-        var response = await _mediator.Send(new GetWalletWithBudgetsByIdRequest
-        {
-            Id = id
-        });
-
-        return Ok(response);
-    }
     
-    [HttpGet("{id:guid}/with-members")]
-    [ProducesResponseType(typeof(WalletWithMembersDTO),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<WalletWithMembersDTO>> GetWithMembers(Guid id)
-    {
-        var response = await _mediator.Send(new GetWalletWithMembersByIdRequest
-        {
-            Id = id
-        });
-
-        return Ok(response);
-    }
-    
-    [HttpGet("{id:guid}/with-transactions")]
-    [ProducesResponseType(typeof(WalletWithTransactionsDTO),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<WalletWithTransactionsDTO>> GetWithTransactions(Guid id)
-    {
-        var response = await _mediator.Send(new GetWalletWithTransactionsByIdRequest
-        {
-            Id = id
-        });
-
-        return Ok(response);
-    }
 
     [HttpPost]
     [ProducesResponseType(typeof(DeleteCommandResponse<WalletBaseDTO>),StatusCodes.Status201Created)]

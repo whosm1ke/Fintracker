@@ -11,10 +11,8 @@ public static class BudgetExtensions
         this DbSet<Budget> budgets,
         Guid userId,
         QueryParams queryParams,
-        bool isPublic)
+        bool? isPublic)
     {
-      
-
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Budget), "x");
 
@@ -26,21 +24,26 @@ public static class BudgetExtensions
         var lambda = Expression.Lambda<Func<Budget, object>>(converted, parameter);
 
         // Apply the sorting to the query
-        var query = queryParams.IsDescending
-            ? budgets
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Categories)
-                .Include(x => x.Currency)
-                .Where(x => x.IsPublic == isPublic && x.UserId == userId)
-                .OrderByDescending(lambda)
-            : budgets
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Categories)
-                .Include(x => x.Currency)
-                .Where(x => x.IsPublic == isPublic && x.UserId == userId)
-                .OrderBy(lambda);
+        var query = budgets
+            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+            .Take(queryParams.PageSize)
+            .Include(x => x.Categories)
+            .Include(x => x.Currency)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Owner)
+            .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
+            .AsSplitQuery()
+            .Where(x => x.UserId == userId);
+
+        if (isPublic.HasValue)
+        {
+            query = query.Where(x => x.IsPublic == isPublic.Value);
+        }
+
+        query = queryParams.IsDescending
+            ? query.OrderByDescending(lambda)
+            : query.OrderBy(lambda);
 
         return await query.ToListAsync();
     }
@@ -49,7 +52,7 @@ public static class BudgetExtensions
         this DbSet<Budget> budgets,
         Guid walletId,
         QueryParams queryParams,
-        bool isPublic)
+        bool? isPublic)
     {
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Budget), "x");
@@ -62,21 +65,26 @@ public static class BudgetExtensions
         var lambda = Expression.Lambda<Func<Budget, object>>(converted, parameter);
 
         // Apply the sorting to the query
-        var query = queryParams.IsDescending
-            ? budgets
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Categories)
-                .Include(x => x.Currency)
-                .Where(x => x.IsPublic == isPublic && x.WalletId == walletId)
-                .OrderByDescending(lambda)
-            : budgets
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Categories)
-                .Include(x => x.Currency)
-                .Where(x => x.IsPublic == isPublic && x.WalletId == walletId)
-                .OrderBy(lambda);
+        var query = budgets
+            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+            .Take(queryParams.PageSize)
+            .Include(x => x.Categories)
+            .Include(x => x.Currency)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Owner)
+            .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
+            .AsSplitQuery()
+            .Where(x => x.WalletId == walletId);
+
+        if (isPublic.HasValue)
+        {
+            query = query.Where(x => x.IsPublic == isPublic.Value);
+        }
+
+        query = queryParams.IsDescending
+            ? query.OrderByDescending(lambda)
+            : query.OrderBy(lambda);
 
         return await query.ToListAsync();
     }

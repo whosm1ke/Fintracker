@@ -1,14 +1,14 @@
-﻿using Fintracker.Application.DTO.Common;
+﻿using Fintracker.Application.DTO.Budget;
+using Fintracker.Application.DTO.Wallet;
 
 namespace Fintracker.Application.DTO.User;
 
-public class UserBaseDTO : IBaseDto
+public class UserBaseDTO : UserPureDTO
 {
-    public Guid Id { get; set; }
-
-    public string UserName { get; set; }
+    public ICollection<WalletPureDTO> OwnedWallets { get; set; } = default!;
     
-    public string Email { get; set; } = default!;
-
-    public UserDetailsDTO? UserDetails { get; set; } = default!;
+    public ICollection<WalletPureDTO> MemberWallets { get; set; } = default!;
+    
+    public ICollection<BudgetPureDTO> Budgets { get; set; } = default!;
+    
 }

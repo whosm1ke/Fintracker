@@ -24,7 +24,7 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
     {
         var response = new UpdateCommandResponse<BudgetBaseDTO>();
 
-        var budget = await _unitOfWork.BudgetRepository.GetBudgetAsync(request.Budget.Id);
+        var budget = await _unitOfWork.BudgetRepository.GetBudgetByIdAsync(request.Budget.Id);
 
         if (budget is null)
             throw new NotFoundException(new ExceptionDetails

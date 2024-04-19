@@ -1,5 +1,6 @@
 ﻿import {createWithEqualityFn} from "zustand/traditional";
 import {shallow} from "zustand/shallow";
+import { AppUser } from "../entities/AppUser";
 
 
 interface AppUserStore {

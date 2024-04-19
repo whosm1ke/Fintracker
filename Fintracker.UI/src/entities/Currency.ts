@@ -1,10 +1,10 @@
-﻿interface Currency extends BaseEntity {
+﻿export interface Currency extends BaseEntity {
     name: string;
     symbol: string;
     code: number;
 }
 
-interface ConvertCurrency {
+export interface ConvertCurrency {
     from: string;
     to: string;
     amount: number;

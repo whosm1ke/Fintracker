@@ -3,7 +3,6 @@
 export interface RequestApiClient<TResponse> {
     getById:(id: string) => Promise<ClientWrapper<TResponse>>;
     getByKey:(key: number) => Promise<ClientWrapper<TResponse>>;
-    getAll:() => Promise<TResponse>;
-    getAllSorted:(config?: AxiosRequestConfig) => Promise<TResponse>;
+    getAll:(config?: AxiosRequestConfig) => Promise<TResponse>;
 }
 

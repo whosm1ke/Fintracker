@@ -23,6 +23,7 @@ public class
         {
             nameof(Domain.Entities.Budget.Name).ToLowerInvariant(),
             nameof(Domain.Entities.Budget.StartDate).ToLowerInvariant(),
+            nameof(Domain.Entities.Budget.Id).ToLowerInvariant(),
             nameof(Domain.Entities.Budget.EndDate).ToLowerInvariant(),
             nameof(Domain.Entities.Budget.Balance).ToLowerInvariant()
         };

@@ -23,6 +23,7 @@ public class GetTransactionsByWalletIdSortedRequestHandler : IRequestHandler<Get
             nameof(Domain.Entities.Transaction.Label).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.CreatedAt).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Note).ToLowerInvariant(),
+            nameof(Domain.Entities.Transaction.Id).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Date).ToLowerInvariant()
         };
@@ -41,11 +42,10 @@ public class GetTransactionsByWalletIdSortedRequestHandler : IRequestHandler<Get
         var transactions =
             await _unitOfWork.TransactionRepository.GetByWalletIdSortedAsync(request.WalletId, request.Params);
 
-        int transactionsPerDate = request.Params.TransactionsPerDate ?? transactions.Count;
-        
         var groupedTransactions = transactions
             .GroupBy(t => t.Date.Date)
-            .Select(g => g.OrderByDescending(t => t.Date).Take(transactionsPerDate))
+            .Select(g => g.OrderByDescending(t => t.Date)
+                                                    .Take(request.Params.TransactionsPerDate))
             .SelectMany(g => g)
             .ToList();
 

@@ -27,7 +27,7 @@ public class GetCurrenciesSortedRequestHandler : IRequestHandler<GetCurrenciesSo
     public async Task<IReadOnlyList<CurrencyDTO>> Handle(GetCurrenciesSortedRequest request,
         CancellationToken cancellationToken)
     {
-        if (!_allowedSortColumns.Contains(request.Params.SortBy))
+        if (request.Params.SortBy == "Id" || !_allowedSortColumns.Contains(request.Params.SortBy))
             throw new BadRequestException(
                 new ExceptionDetails
                 {

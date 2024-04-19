@@ -12,9 +12,5 @@ public class WalletProfile : Profile
         CreateMap<Wallet, WalletPureDTO>().ReverseMap();
         CreateMap<Wallet, CreateWalletDTO>().ReverseMap();
         CreateMap<Wallet, UpdateWalletDTO>().ReverseMap();
-        CreateMap<Wallet, WalletWithBudgetsDTO>().ReverseMap();
-        CreateMap<Wallet, WalletWithMembersDTO>().ReverseMap();
-        CreateMap<Wallet, WalletWithTransactionsDTO>().ReverseMap();
-        
     }
 }

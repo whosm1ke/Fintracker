@@ -23,6 +23,7 @@ public class GetTransactionsByCategoryIdSortedRequestHandler : IRequestHandler<G
         {
             nameof(Domain.Entities.Transaction.Label).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Note).ToLowerInvariant(),
+            nameof(Domain.Entities.Transaction.Id).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant()
         };
     }

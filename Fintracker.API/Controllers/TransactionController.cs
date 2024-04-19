@@ -23,9 +23,9 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(typeof(TransactionBaseDTO),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(TransactionBaseDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TransactionBaseDTO>> Get(Guid id)
     {
         var response = await _mediator.Send(new GetTransactionByIdRequest
@@ -37,15 +37,15 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("category/{categoryId:guid}")]
-    [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(List<TransactionBaseDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<TransactionBaseDTO>>> GetByCategoryId(Guid categoryId,
-        [FromQuery] QueryParams query)
+        [FromQuery] TransactionQueryParams? query)
     {
         var sortRequest = new GetTransactionsByCategoryIdSortedRequest
         {
             CategoryId = categoryId,
-            Params = query
+            Params = query!
         };
 
         var simpleRequest = new GetTransactionsByCategoryIdRequest
@@ -55,7 +55,7 @@ public class TransactionController : ControllerBase
 
         IReadOnlyList<TransactionBaseDTO> response;
 
-        if (!string.IsNullOrEmpty(query.SortBy))
+        if (query is not null)
             response = await _mediator.Send(sortRequest);
         else
             response = await _mediator.Send(simpleRequest);
@@ -64,14 +64,14 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("user/{userId:guid}")]
-    [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByUserId(Guid userId,[FromQuery] QueryParams query)
+    [ProducesResponseType(typeof(List<TransactionBaseDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByUserId(Guid userId, [FromQuery] TransactionQueryParams? query)
     {
         var sortRequest = new GetTransactionsByUserIdSortedRequest
         {
             UserId = userId,
-            Params = query
+            Params = query!
         };
 
         var simpleRequest = new GetTransactionsByUserIdRequest
@@ -81,7 +81,7 @@ public class TransactionController : ControllerBase
 
         IReadOnlyList<TransactionBaseDTO> response;
 
-        if (!string.IsNullOrEmpty(query.SortBy))
+        if (query is not null)
             response = await _mediator.Send(sortRequest);
         else
             response = await _mediator.Send(simpleRequest);
@@ -90,9 +90,10 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("wallet/{walletId:guid}")]
-    [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByWalletId(Guid walletId, [FromQuery] TransactionQueryParams? query)
+    [ProducesResponseType(typeof(List<TransactionBaseDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByWalletId(Guid walletId,
+        [FromQuery] TransactionQueryParams? query)
     {
         var sortRequest = new GetTransactionsByWalletIdSortedRequest
         {
@@ -116,8 +117,8 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("user/{userId:guid}/all")]
-    [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(List<TransactionBaseDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<TransactionBaseDTO>>> GetAllForUser(Guid userId)
     {
         var response = await _mediator.Send(new GetTransactionsRequest
@@ -128,38 +129,11 @@ public class TransactionController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("{id:guid}/with-wallet")]
-    [ProducesResponseType(typeof(TransactionWithWalletDTO),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<TransactionWithWalletDTO>> GetWithWallet(Guid id)
-    {
-        var response = await _mediator.Send(new GetTransactionWithWalletByIdRequest
-        {
-            Id = id
-        });
-
-        return Ok(response);
-    }
-
-    [HttpGet("{id:guid}/with-user")]
-    [ProducesResponseType(typeof(TransactionWithUserDTO),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<TransactionWithUserDTO>> GetWithUser(Guid id)
-    {
-        var response = await _mediator.Send(new GetTransactionWithUserByIdRequest
-        {
-            Id = id
-        });
-
-        return Ok(response);
-    }
 
     [HttpPost]
-    [ProducesResponseType(typeof(CreateCommandResponse<TransactionBaseDTO>),StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(CreateCommandResponse<TransactionBaseDTO>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CreateCommandResponse<TransactionBaseDTO>>> Post(
         [FromBody] CreateTransactionDTO transaction)
     {
@@ -170,12 +144,12 @@ public class TransactionController : ControllerBase
 
         return Ok(response);
     }
-    
+
     [HttpPut]
-    [ProducesResponseType(typeof(UpdateCommandResponse<TransactionBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(UpdateCommandResponse<TransactionBaseDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<TransactionBaseDTO>>> Put(
         [FromBody] UpdateTransactionDTO transaction)
     {
@@ -188,9 +162,9 @@ public class TransactionController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [ProducesResponseType(typeof(DeleteCommandResponse<TransactionBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(DeleteCommandResponse<TransactionBaseDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<TransactionBaseDTO>>> Delete(Guid id)
     {
         var response = await _mediator.Send(new DeleteTransactionCommand

@@ -10,7 +10,7 @@ public static class TransactionExtensions
     public static async Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(
         this DbSet<Transaction> transactions,
         Guid userId,
-        QueryParams queryParams)
+        TransactionQueryParams queryParams)
     {
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Transaction), "x");
@@ -23,29 +23,32 @@ public static class TransactionExtensions
         var lambda = Expression.Lambda<Func<Transaction, object>>(converted, parameter);
 
         // Apply the sorting to the query
-        var query = queryParams.IsDescending
-            ? transactions
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Category)
-                .Include(x => x.Currency)
-                .Where(x => x.UserId == userId)
-                .OrderByDescending(lambda)
-            : transactions
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Category)
-                .Include(x => x.Currency)
-                .Where(x => x.UserId == userId)
-                .OrderBy(lambda);
+        // Common query parts
+        var baseQuery = transactions
+            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+            .Take(queryParams.PageSize)
+            .Include(x => x.Category)
+            .Include(x => x.Currency)
+            .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Currency)
+            .AsSplitQuery()
+            .Where(x => x.UserId == userId && (x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate));
 
-        return await query.ToListAsync();
+// Apply ordering
+        var orderedQuery = queryParams.IsDescending
+            ? baseQuery.OrderByDescending(lambda)
+            : baseQuery.OrderBy(lambda);
+
+        return await orderedQuery.ToListAsync();
+
     }
 
     public static async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(
         this DbSet<Transaction> transactions,
         Guid walletId,
-        QueryParams queryParams)
+        TransactionQueryParams queryParams)
     {
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Transaction), "x");
@@ -58,29 +61,30 @@ public static class TransactionExtensions
         var lambda = Expression.Lambda<Func<Transaction, object>>(converted, parameter);
 
         // Apply the sorting to the query
-        var query = queryParams.IsDescending
-            ? transactions
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Category)
-                .Include(x => x.Currency)
-                .Where(x => x.WalletId == walletId)
-                .OrderByDescending(lambda)
-            : transactions
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Category)
-                .Include(x => x.Currency)
-                .Where(x => x.WalletId == walletId)
-                .OrderBy(lambda);
+        var baseQuery = transactions
+            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+            .Take(queryParams.PageSize)
+            .Include(x => x.Category)
+            .Include(x => x.Currency)
+            .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Currency)
+            .AsSplitQuery()
+            .Where(x => x.WalletId == walletId && (x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate));
 
-        return await query.ToListAsync();
+// Apply ordering
+        var orderedQuery = queryParams.IsDescending
+            ? baseQuery.OrderByDescending(lambda)
+            : baseQuery.OrderBy(lambda);
+
+        return await orderedQuery.ToListAsync();
     }
 
     public static async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(
         this DbSet<Transaction> transactions,
         Guid categoryId,
-        QueryParams queryParams)
+        TransactionQueryParams queryParams)
     {
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Transaction), "x");
@@ -93,22 +97,23 @@ public static class TransactionExtensions
         var lambda = Expression.Lambda<Func<Transaction, object>>(converted, parameter);
 
         // Apply the sorting to the query
-        var query = queryParams.IsDescending
-            ? transactions
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Category)
-                .Include(x => x.Currency)
-                .Where(x => x.CategoryId == categoryId)
-                .OrderByDescending(lambda)
-            : transactions
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Category)
-                .Include(x => x.Currency)
-                .Where(x => x.CategoryId == categoryId)
-                .OrderBy(lambda);
+        var baseQuery = transactions
+            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+            .Take(queryParams.PageSize)
+            .Include(x => x.Category)
+            .Include(x => x.Currency)
+            .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Currency)
+            .AsSplitQuery()
+            .Where(x => x.CategoryId == categoryId && (x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate));
 
-        return await query.ToListAsync();
+// Apply ordering
+        var orderedQuery = queryParams.IsDescending
+            ? baseQuery.OrderByDescending(lambda)
+            : baseQuery.OrderBy(lambda);
+
+        return await orderedQuery.ToListAsync();
     }
 }

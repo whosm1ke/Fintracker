@@ -1,25 +1,25 @@
 ﻿import ApiClient from "../services/ApiClient.ts";
 import {Budget} from "../entities/Budget.ts";
 import {useQuery} from "@tanstack/react-query";
+import useUserStore from "../stores/userStore.ts";
 
-export const useBudgets = (id: string, type: "wallet" | "user", isPublic: boolean | null) => {
-const apiClient = new ApiClient<Budget,Budget[]>(`budget/${id}/list`)
+export const useBudgets = (id: string | undefined, isPublic: boolean | null) => {
+    
+    let apiClient;
+    if (id === undefined) {
+        const userId = useUserStore(x => x.getUserId());
+        apiClient = new ApiClient<Budget, Budget[]>(`budget/user/${userId}/sorted`)
+    }else{
+        apiClient = new ApiClient<Budget, Budget[]>(`budget/wallet/${id}/sorted`)
+    }
     return useQuery({
         queryKey: ['budgets'],
-        queryFn: async () => await apiClient.getAllSorted({
+        queryFn: async () => await apiClient.getAll({
             params: {
-                type: type,
-                isPublic: isPublic
+                isPublic: isPublic,
+
             }
         })
-    })
-}
-
-export const useBudgetsWithWallets = () => {
-    const apiClient = new ApiClient<Budget,Budget[]>(`budget/with-wallet`)
-    return useQuery({
-        queryKey: ['budgets-with-wallets'],
-        queryFn: async () => await apiClient.getAll()
     })
 }
 

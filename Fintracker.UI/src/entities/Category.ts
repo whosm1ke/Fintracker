@@ -1,4 +1,4 @@
-﻿interface Category extends BaseEntity {
+﻿export interface Category extends BaseEntity {
     name: string;
     type: CategoryType;
     image: string;

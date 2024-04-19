@@ -103,74 +103,7 @@ public class WalletRequestTests
         actualResult.Should().BeEquivalentTo(expectedResult);
     }
 
-    [Fact]
-    public async Task GetWalletWithBudgetsById_Should_Return_8D6E_Test()
-    {
-        var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new GetWalletWithBudgetsByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new WalletWithBudgetsDTO
-        {
-            Id = new Guid("32A22A34-F772-4F65-B806-51B2E8528D6E"),
-            Name = "With Budgets",
-            Budgets = new List<BudgetBaseDTO>
-            {
-                new()
-                {
-                    Id = new Guid("438A3485-E4F0-4C79-971C-DC07FB92BAD8"),
-                    Name = "Budget 1",
-                    Categories = new List<CategoryDTO>()
-                },
-                new()
-                {
-                    Id = new Guid("B036C34F-FD3F-484C-9CA2-7E603E5E076A"),
-                    Name = "Budget 2",
-                    Categories = new List<CategoryDTO>()
-                }
-            }
-        };
-
-        var actualResult = await handler.Handle(new GetWalletWithBudgetsByIdRequest
-        {
-            Id = new Guid("32A22A34-F772-4F65-B806-51B2E8528D6E"),
-        }, default);
-
-        actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
-    }
-
-    [Fact]
-    public async Task GetWalletWithMembersById_Should_Return_D528_Test()
-    {
-        var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new GetWalletWithMembersByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new WalletWithMembersDTO
-        {
-            Id = new Guid("83D7946B-3CCD-401E-8EF4-62BCA04FD528"),
-            Balance = 2000,
-            Name = "With Members",
-            Users = new List<UserBaseDTO>
-            {
-                new()
-                {
-                    Id = new Guid("2045DCCE-ED9E-4880-ABF8-1710C678BA3F"),
-                    Email = "member1@gmail.com"
-                },
-                new()
-                {
-                    Id = new Guid("99E84605-35FB-491A-ADC5-523516612B41"),
-                    Email = "member2@gmail.com"
-                }
-            }
-        };
-
-        var actualResult = await handler.Handle(new GetWalletWithMembersByIdRequest
-        {
-            Id = new Guid("83D7946B-3CCD-401E-8EF4-62BCA04FD528"),
-        }, default);
-
-        actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
-    }
+    
 
     [Fact]
     public async Task GetWalletWithOwnerById_Should_Return_66B5_Test()
@@ -193,37 +126,5 @@ public class WalletRequestTests
         actualResult.Should().NotBeNull();
         actualResult.Should().BeEquivalentTo(expectedResult);
     }
-
-    [Fact]
-    public async Task GetWalletWithTransactionsById_Should_Return_E6A7_Test()
-    {
-        var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new GetWalletWithTransactionsByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new WalletWithTransactionsDTO
-        {
-            Id = new Guid("8ED1883D-1833-47CB-8E12-27AC26F5E6A7"),
-            Name = "With Transactions",
-            Transactions = new List<TransactionBaseDTO>
-            {
-                new()
-                {
-                    Id = new Guid("0F47F18E-5DE9-429B-9EF9-4CF74F338EE3"),
-                    Note = "transaction 1"
-                },
-                new()
-                {
-                    Id = new Guid("DABB1876-F428-4C8C-B04A-52F94582DFCF"),
-                    Note = "transaction 2"
-                }
-            }
-        };
-
-        var actualResult = await handler.Handle(new GetWalletWithTransactionsByIdRequest
-        {
-            Id = new Guid("8ED1883D-1833-47CB-8E12-27AC26F5E6A7"),
-        }, default);
-
-        actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
-    }
+    
 }

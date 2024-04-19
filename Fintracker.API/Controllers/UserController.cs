@@ -35,6 +35,7 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
+    //TODO PUTANYA
     [HttpGet("accessed-wallets/{walletId:guid}")]
     [ProducesResponseType(typeof(List<UserBaseDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
@@ -47,48 +48,7 @@ public class UserController : ControllerBase
 
         return Ok(response);
     }
-
-    [HttpGet("{id:guid}/with-budgets")]
-    [ProducesResponseType(typeof(UserWithBudgetsDTO), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserWithBudgetsDTO>> GetWithBudgets(Guid id)
-    {
-        var response = await _mediator.Send(new GetUserWithBudgetsByIdRequest
-        {
-            Id = id
-        });
-
-        return Ok(response);
-    }
-
-    [HttpGet("{id:guid}/with-own-wallets")]
-    [ProducesResponseType(typeof(UserWithOwnedWalletsDTO), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserWithOwnedWalletsDTO>> GetWithOwnWallets(Guid id)
-    {
-        var response = await _mediator.Send(new GetUserWithOwnedWalletsByIdRequest
-        {
-            Id = id
-        });
-
-        return Ok(response);
-    }
-
-    [HttpGet("{id:guid}/with-member-wallets")]
-    [ProducesResponseType(typeof(UserWithMemberWalletsDTO), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserWithMemberWalletsDTO>> GetWithMemberWallets(Guid id)
-    {
-        var response = await _mediator.Send(new GetUserWithMemberWalletsByIdRequest
-        {
-            Id = id
-        });
-
-        return Ok(response);
-    }
+    
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(DeleteCommandResponse<UserBaseDTO>), StatusCodes.Status200OK)]

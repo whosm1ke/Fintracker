@@ -13,6 +13,8 @@ import {balanceRegisterOptionsForWallet, nameRegisterOptionsForWallet, Wallet} f
 import UseCreateMonoWallet, {MonoWalletToken} from "../hooks/useCreateMonoWallet.ts";
 import {useMonoUserInfo} from "../hooks/useMonoUserInfo.ts";
 import {ActionButton} from "../components/ActionButton.tsx";
+import { Currency } from '../entities/Currency.ts';
+import {MonobankConfiguration, MonobankUserInfo } from '../entities/MonobankUserInfo.ts';
 
 
 

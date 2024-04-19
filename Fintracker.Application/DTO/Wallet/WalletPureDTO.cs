@@ -1,4 +1,5 @@
 ﻿using Fintracker.Application.DTO.Common;
+using Fintracker.Application.DTO.User;
 
 namespace Fintracker.Application.DTO.Wallet;
 

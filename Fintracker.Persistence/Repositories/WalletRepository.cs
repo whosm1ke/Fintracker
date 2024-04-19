@@ -19,49 +19,40 @@ public class WalletRepository : GenericRepository<Wallet>, IWalletRepository
     {
         return await _db.Wallets
             .Include(x => x.Owner)
-            .Include(x => x.Currency)
-            .Where(x => x.Id == id)
-            .FirstOrDefaultAsync();
-    }
-
-
-    public async Task<Wallet?> GetWalletWithMembersAsync(Guid id)
-    {
-        return await _db.Wallets
-            .Include(x => x.Owner)
-            .Include(x => x.Currency)
-            .Include(x => x.Users)
             .ThenInclude(x => x.UserDetails)
-            .Where(x => x.Id == id)
-            .FirstOrDefaultAsync();
-    }
-
-    public async Task<Wallet?> GetWalletWithTransactionsAsync(Guid id)
-    {
-        return await _db.Wallets
-            .Include(x => x.Owner)
-            .Include(x => x.Currency)
-            .Include(x => x.Transactions)
-            .Where(x => x.Id == id)
-            .FirstOrDefaultAsync();
-    }
-
-    public async Task<Wallet?> GetWalletWithBudgetsAsync(Guid id)
-    {
-        return await _db.Wallets
-            // .Include(x => x.Owner)
             .Include(x => x.Currency)
             .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
             .ThenInclude(x => x.Categories)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Category)
+            .AsSplitQuery()
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
+
+
+
+   
 
     public async Task<IReadOnlyList<Wallet>> GetByOwnerIdAsync(Guid ownerId)
     {
         return await _db.Wallets
             .Include(x => x.Owner)
+            .ThenInclude(x => x.UserDetails)
             .Include(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Category)
+            .AsSplitQuery()
             .Where(x => x.OwnerId == ownerId)
             .ToListAsync();
     }

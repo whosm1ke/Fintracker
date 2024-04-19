@@ -28,15 +28,7 @@ public class UserRepository : IUserRepository
             .Where(x => x.Id == _currentUserId && x.MemberWallets.Any(w => w.Id == walletId))
             .ToListAsync();
     }
-
-    public async Task<User?> GetUserWithOwnedWalletsByIdAsync(Guid id)
-    {
-        return await _userManager.Users
-            .Include(x => x.OwnedWallets)
-            .Where(x => x.Id == id)
-            .FirstOrDefaultAsync();
-    }
-
+    
     public async Task<User?> GetUserWithMemberWalletsByIdAsync(Guid id)
     {
         return await _userManager.Users
@@ -44,14 +36,7 @@ public class UserRepository : IUserRepository
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
-
-    public async Task<User?> GetUserWithBudgetsByIdAsync(Guid id)
-    {
-        return await _userManager.Users
-            .Include(x => x.Budgets)
-            .Where(x => x.Id == id)
-            .FirstOrDefaultAsync();
-    }
+    
 
     public async Task<bool> HasMemberWallet(Guid walletId, string userEmail)
     {

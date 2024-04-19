@@ -1,4 +1,7 @@
-﻿import {Wallet} from "./Wallet.ts";
+﻿import { Category } from "./Category.ts";
+import { FinancialEntity } from "./FinancialEntity.ts";
+import { User } from "./User.ts";
+import {Wallet} from "./Wallet.ts";
 import {RegisterOptions} from "react-hook-form";
 
 export interface Budget extends FinancialEntity {

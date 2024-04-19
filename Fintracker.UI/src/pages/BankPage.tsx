@@ -54,7 +54,7 @@ const Card = ({title, content, icon}: CardProps) => {
             className={'border-2 rounded-2xl flex flex-col justify-center shadow-md overflow-hidden p-4'}
         >
             <motion.h1 layout className={'flex items-center justify-between'}>
-                <motion.div 
+                <motion.div
                     className={'flex items-center gap-x-5'}
                 >
                     <p>{icon}</p>

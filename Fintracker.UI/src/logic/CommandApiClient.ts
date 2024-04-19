@@ -2,6 +2,8 @@
 import {LoginResponse, LoginSchema} from "../models/LoginSchema.ts";
 import {Wallet} from "../entities/Wallet.ts";
 import {MonoWalletToken} from "../hooks/useCreateMonoWallet.ts";
+import { MonobankConfiguration, MonobankUserInfo } from "../entities/MonobankUserInfo.ts";
+import { ConvertCurrency } from "../entities/Currency.ts";
 
 export interface CommandApiClient<TRequest> {
     create: (newEntity: TRequest) => Promise<ClientWrapper<CreateCommandResponse<TRequest>>>;

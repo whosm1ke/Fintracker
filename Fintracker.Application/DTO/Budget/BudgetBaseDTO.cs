@@ -1,20 +1,13 @@
-﻿using Fintracker.Application.DTO.Category;
-using Fintracker.Application.DTO.Common;
+﻿using Fintracker.Application.DTO.User;
+using Fintracker.Application.DTO.Wallet;
 
 namespace Fintracker.Application.DTO.Budget;
 
-public class BudgetBaseDTO : FinancialEntityDTO
+public class BudgetBaseDTO : BudgetPureDTO
 {
-
-    public ICollection<CategoryDTO> Categories { get; set; } = default!;
     
     
-    public DateTime StartDate { get; set; }
+    public WalletPureDTO Wallet { get; set; } = default!;
     
-    public DateTime EndDate { get; set; }
-
-    public Guid UserId { get; set; }
-
-    public bool IsPublic { get; set; }
-
+    public UserPureDTO User { get; set; } = default!;
 }
