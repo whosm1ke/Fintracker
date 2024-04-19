@@ -2,6 +2,7 @@
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Transaction;
+using Fintracker.Application.DTO.Transaction.Validators;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
@@ -10,7 +11,7 @@ namespace Fintracker.Application.Features.Transaction.Handlers.Commands;
 
 public class
     CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand,
-    CreateCommandResponse<TransactionPureDTO>>
+    CreateCommandResponse<TransactionBaseDTO>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -21,16 +22,17 @@ public class
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<CreateCommandResponse<TransactionPureDTO>> Handle(CreateTransactionCommand request,
+    public async Task<CreateCommandResponse<TransactionBaseDTO>> Handle(CreateTransactionCommand request,
         CancellationToken cancellationToken)
     {
-        var response = new CreateCommandResponse<TransactionPureDTO>();
+        var response = new CreateCommandResponse<TransactionBaseDTO>();
 
         var transaction = _mapper.Map<Domain.Entities.Transaction>(request.Transaction);
+        transaction.Currency = await _unitOfWork.CurrencyRepository.GetAsync(request.Transaction.CurrencyId) ?? default!;
+        transaction.Category = await _unitOfWork.CategoryRepository.GetAsync(request.Transaction.CategoryId) ?? default!;
         await _unitOfWork.TransactionRepository.AddAsync(transaction);
 
-        var createdObj = _mapper.Map<TransactionPureDTO>(transaction);
-
+        var createdObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
         await DecreaseBalanceInWallet(transaction.WalletId, transaction.Amount);
         await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount, transaction.UserId, transaction.WalletId);

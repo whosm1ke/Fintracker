@@ -8,5 +8,5 @@ public class GetTransactionsByWalletIdSortedRequest : IRequest<IReadOnlyList<Tra
 {
     public Guid WalletId { get; set; }
 
-    public QueryParams Params { get; set; } = default!;
+    public TransactionQueryParams Params { get; set; } = default!;
 }

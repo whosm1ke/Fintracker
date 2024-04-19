@@ -317,16 +317,4 @@ public class TransactionRequestTests
         actualResult.Should().BeEquivalentTo(expectedResult);
     }
 
-    [Fact]
-    public async Task GetAllTransactions_Should_Return_9_Transa_Test()
-    {
-        var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new GetTransactionsRequestHandler(_mapper, mockUnitOfWork);
-        int expectedResultCount = 9;
-
-        var actualResultCount = (await handler.Handle(new GetTransactionsRequest()
-            ,default)).Count;
-
-        actualResultCount.Should().Be(expectedResultCount);
-    }
 }

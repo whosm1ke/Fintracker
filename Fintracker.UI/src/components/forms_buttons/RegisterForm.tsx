@@ -28,8 +28,7 @@ export default function RegisterForm() {
     };
 
     return (
-        <section>
-            <div
+            <section
                 className="flex flex-col min-h-screen bg-gray-50 p-4">
                 <Title/>
                 <div className="max-w-md w-2/3 mx-auto my-auto order-1 sm:order-2">
@@ -55,8 +54,7 @@ export default function RegisterForm() {
                         </div>
                     </form>
                 </div>
-            </div>
-        </section>
+            </section>
     )
 }
 

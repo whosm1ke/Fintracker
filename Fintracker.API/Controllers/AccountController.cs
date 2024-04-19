@@ -53,6 +53,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest login)
     {
+        
         var response = await _accountService.Login(login);
 
         return Ok(response);

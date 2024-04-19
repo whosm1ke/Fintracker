@@ -28,8 +28,6 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
     }
 
     async convert(from: string, to: string, amount: number): Promise<ConvertCurrency | null> {
-        this.cancelCurrentRequest();
-        this.cancelToken = axios.CancelToken.source();
 
         try {
             const data = await axiosInstanceCurrencyConverter.get<ConvertCurrency>(this.endpoint, {
@@ -37,8 +35,7 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
                     from: from,
                     to: to,
                     amount: amount,
-                    cancelToken: this.cancelToken.token
-                }
+                },
             })
 
             return data.data;
@@ -49,10 +46,7 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
     }
 
     async convertAll(data: { from: string[]; to: string; amount: number[]; }): Promise<ConvertCurrency[]> {
-      
 
-        this.cancelCurrentRequest();
-        this.cancelToken = axios.CancelToken.source();
 
         try {
             const promises = data.from.map((fromCurrency, index) => {
@@ -62,7 +56,7 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
             const results = await Promise.all(promises);
             return results.filter(result => result !== null) as ConvertCurrency[];
         } catch (error) {
-            console.log(error);
+            console.log("error: ", error);
             return [];
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Security.Claims;
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Models.Identity;
@@ -88,7 +89,7 @@ public class AccountService : IAccountService
                         PropertyName = x.PropertyName,
                         ErrorMessage = x.ErrorMessage
                     }).ToList());
-
+            
             var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
 
             if (!checkPasswordResult.Succeeded)

@@ -15,13 +15,6 @@ import {useMonoUserInfo} from "../hooks/useMonoUserInfo.ts";
 import {ActionButton} from "../components/ActionButton.tsx";
 
 
-// function calculateTotalBalance(wallets: Wallet[]): number {
-//     let totalBalance = 0;
-//     wallets.forEach(wallet => {
-//         totalBalance += wallet.balance;
-//     });
-//     return totalBalance;
-// }
 
 export default function FintrackerPage() {
     const userId = useUserStore(x => x.getUserId());

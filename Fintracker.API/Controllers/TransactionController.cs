@@ -92,12 +92,12 @@ public class TransactionController : ControllerBase
     [HttpGet("wallet/{walletId:guid}")]
     [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByWalletId(Guid walletId, [FromQuery] QueryParams query)
+    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByWalletId(Guid walletId, [FromQuery] TransactionQueryParams? query)
     {
         var sortRequest = new GetTransactionsByWalletIdSortedRequest
         {
             WalletId = walletId,
-            Params = query
+            Params = query!
         };
 
         var simpleRequest = new GetTransactionsByWalletIdRequest
@@ -107,7 +107,7 @@ public class TransactionController : ControllerBase
 
         IReadOnlyList<TransactionBaseDTO> response;
 
-        if (!string.IsNullOrEmpty(query.SortBy))
+        if (query is not null)
             response = await _mediator.Send(sortRequest);
         else
             response = await _mediator.Send(simpleRequest);
@@ -123,19 +123,6 @@ public class TransactionController : ControllerBase
         var response = await _mediator.Send(new GetTransactionsRequest
         {
             UserId = userId
-        });
-
-        return Ok(response);
-    }
-    
-    [HttpGet("wallet/{walletId:guid}/grouped")]
-    [ProducesResponseType(typeof(List<TransactionBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<GroupedTransactionByDateDTO>>> GetGroupedTransactionsByWalletId(Guid walletId)
-    {
-        var response = await _mediator.Send(new GetGroupedTransactionsByWalletIdRequest
-        {
-            WalletId = walletId
         });
 
         return Ok(response);

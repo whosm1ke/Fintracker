@@ -40,7 +40,7 @@ export const BudgetCard = ({
             <p className="text-lg font-bold text-black">{balance} {currencySymbol} left</p>
             <p className="text-sm text-gray-500">of {balance + totalSpent} {currencySymbol}</p>
             <div className="h-7 w-full bg-gray-200 mt-2 rounded">
-                <div style={{width: `${spentPercentage}%`}}
+                <div style={{width: `${spentPercentage}%`, maxWidth: '100%'}}
                      className={`h-full ${spentBgColor} rounded`}></div>
             </div>
             <div className="flex justify-between text-sm text-gray-500 mt-2">
