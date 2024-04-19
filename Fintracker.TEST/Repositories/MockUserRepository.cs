@@ -122,15 +122,7 @@ public class MockUserRepository
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => { return Task.FromResult(users.Find(c => c.Id == id)); });
 
-        mock.Setup(x => x.GetUserWithBudgetsByIdAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => Task.FromResult(
-                users.Find(x => x.Id == id)
-            ));
-
-        mock.Setup(x => x.GetUserWithOwnedWalletsByIdAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => Task.FromResult(
-                users.Find(x => x.Id == id)
-            ));
+       
 
         mock.Setup(x => x.GetUserWithMemberWalletsByIdAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => Task.FromResult(

@@ -7,6 +7,8 @@ import {LoginResponse, LoginSchema} from "../models/LoginSchema.ts";
 import axiosInstance, {axiosInstanceCurrencyConverter} from "../logic/axiosInstance.ts";
 import {Wallet} from "../entities/Wallet.ts";
 import {MonoWalletToken} from "../hooks/useCreateMonoWallet.ts";
+import { ConvertCurrency } from "../entities/Currency.ts";
+import {MonobankConfiguration, MonobankUserInfo } from "../entities/MonobankUserInfo.ts";
 
 
 export default class ApiClient<TRequest, TResponse> implements CommandApiClient<TRequest>,
@@ -171,25 +173,17 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
         }
     }
 
-    async getAll(): Promise<TResponse> {
+    async getAll(config?: AxiosRequestConfig): Promise<TResponse> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
-        return await axiosInstance.get<TResponse>(this.endpoint, {
-            cancelToken: this.cancelToken.token
-        })
-            .then(res => res.data);
-    }
-
-    async getAllSorted(config?: AxiosRequestConfig): Promise<TResponse> {
-        this.cancelCurrentRequest();
-        this.cancelToken = axios.CancelToken.source();
-        if (config)
+        if(config)
             config.cancelToken = this.cancelToken.token;
         return await axiosInstance.get<TResponse>(this.endpoint, config || {
             cancelToken: this.cancelToken.token
         })
             .then(res => res.data);
     }
+    
 
     async get(cfg: AxiosRequestConfig): Promise<TResponse> {
         this.cancelCurrentRequest();

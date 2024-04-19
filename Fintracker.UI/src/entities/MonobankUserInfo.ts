@@ -1,16 +1,16 @@
-﻿interface MonobankUserInfo {
+﻿export interface MonobankUserInfo {
     name: string;
     accounts: Account[];
 }
 
-interface Account {
+export interface Account {
     maskedPan: string[];
     iban: string;
     id: string;
     balance: number;
 }
 
-interface MonobankConfiguration {
+export interface MonobankConfiguration {
     accountId: string;
     from: number;
     to?: number;

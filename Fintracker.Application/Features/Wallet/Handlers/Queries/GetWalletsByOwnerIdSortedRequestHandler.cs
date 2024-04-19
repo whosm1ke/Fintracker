@@ -22,6 +22,7 @@ public class
         _allowedSortColumns = new()
         {
             nameof(Domain.Entities.Wallet.Name).ToLowerInvariant(),
+            nameof(Domain.Entities.Wallet.Id).ToLowerInvariant(),
             nameof(Domain.Entities.Wallet.Balance).ToLowerInvariant()
         };
     }

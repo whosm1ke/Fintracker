@@ -9,8 +9,7 @@ public class BudgetProfile : Profile
     public BudgetProfile()
     {
         CreateMap<Budget, BudgetBaseDTO>().ReverseMap();
-        CreateMap<Budget, BudgetWithUserDTO>().ReverseMap();
-        CreateMap<Budget, BudgetWithWalletDTO>().ReverseMap();
+        CreateMap<Budget, BudgetPureDTO>().ReverseMap();
         CreateMap<Budget, CreateBudgetDTO>().ReverseMap();
         CreateMap<Budget, UpdateBudgetDTO>().ReverseMap();
     }

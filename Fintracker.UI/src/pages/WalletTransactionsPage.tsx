@@ -17,23 +17,34 @@ import useCategories from "../hooks/useCategories.ts";
 import useCreateTransaction from "../hooks/useCreateTransaction.ts";
 import useUserStore from "../stores/userStore.ts";
 import useTransactions from "../hooks/useTransactions.ts";
+import {Currency} from "../entities/Currency.ts";
+import {Category} from "../entities/Category.ts";
+import useTransactionQueryStore from "../stores/transactionQueryStore.ts";
+import Spinner from "../components/Spinner.tsx";
 
 export default function WalletTransactionsPage() {
     const {walletId} = useParams();
     const userId = useUserStore(x => x.getUserId());
-    const {data: transactions} = useTransactions(walletId!)
+    const [
+        transPerDate, startDate, endDate,
+        setTransPerDay, setStartDate, setEndDate
+    ] = useTransactionQueryStore(x =>
+        [x.query.transactionsPerDate, x.query.startDate, x.query.endDate,
+            x.setTransactionsPerDate, x.setStartDate, x.setEndDate]);
+    const {data: transactions, isPlaceholderData} = useTransactions(walletId!)
     const {data: wallet} = useWallet(walletId!);
-    const [filterDate, setFilterDate] = useState({
-        startDate: new Date(new Date().setDate(new Date().getDate() - 7)),
-        endDate: new Date()
-    })
 
-    if (!transactions || !wallet || !wallet.response) return <p>Loading...</p>
+    if(isPlaceholderData) console.log("PLACEHOLDER")
+    if (!transactions || !wallet || !wallet.response) return <Spinner/>
 
 
     const handleDateFilterChange = (date: Date, isStartDate: boolean) => {
-        if (isStartDate) setFilterDate(p => ({...p, startDate: date}))
-        if (!isStartDate) setFilterDate(p => ({...p, endDate: date}))
+        if (isStartDate) setStartDate(date)
+        if (!isStartDate) setEndDate(date)
+    }
+
+    const handleTransactionPerDateChange = (num: number) => {
+        setTransPerDay(num);
     }
 
     return (
@@ -42,15 +53,17 @@ export default function WalletTransactionsPage() {
                 <div className={'grid grid-cols-2 grid-rows-2'}>
                     <AddTransactionModal userId={userId!} walletId={wallet.response.id}/>
                 </div>
-                <div className={'grid grid-cols-2 grid-rows-2'}>
-                    <TransactionFilters dateFilter={filterDate} handleDateFilterChange={handleDateFilterChange}/>
+                <div className={'grid grid-cols-3 grid-rows-2 gap-x-4'}>
+                    <TransactionFilters startDate={startDate!} endDate={endDate!} handleDateFilterChange={handleDateFilterChange}
+                                        transPerPage={transPerDate || 10}
+                                        handleTransPerDateChangle={handleTransactionPerDateChange}
+                    />
                 </div>
 
             </div>
 
-            <div className={''}>
-                <TransactionList endDate={filterDate.endDate} startDate={filterDate.startDate}
-                                 transactions={transactions} walletSymbol={wallet.response.currency.symbol}/>
+            <div className={'sm:h-[800px] overflow-y-auto'}>
+                <TransactionList transactions={transactions} walletSymbol={wallet.response.currency.symbol}/>
             </div>
         </div>
     )
@@ -58,24 +71,43 @@ export default function WalletTransactionsPage() {
 
 
 interface TransactionFiltersProps {
-    dateFilter: { startDate: Date, endDate: Date };
+    startDate: Date;
+    endDate: Date;
     handleDateFilterChange: (date: Date, isStartDate: boolean) => void;
+    transPerPage: number;
+    handleTransPerDateChangle: (num: number) => void;
 }
 
-const TransactionFilters = ({dateFilter, handleDateFilterChange}: TransactionFiltersProps) => {
+const TransactionFilters = ({
+                                startDate,
+                                endDate,
+                                handleDateFilterChange,
+                                handleTransPerDateChangle,
+                                transPerPage
+                            }: TransactionFiltersProps) => {
+    
+    const startDateFilter = new Date(startDate).toLocaleDateString('en-CA');
+    const endDateFilter = new Date(endDate).toLocaleDateString('en-CA');
     return (
         <>
             <div className={''}>
                 <label className="text-sm lg:text-lg font-semibold flex flex-col">Start date
-                    <input type="date" value={dateFilter.startDate.toLocaleDateString('en-CA')}
+                    <input type="date" value={startDateFilter}
                            onChange={e => handleDateFilterChange(e.target.valueAsDate ?? new Date, true)}
                            className="p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"/>
                 </label>
             </div>
             <div className={''}>
                 <label className="text-sm lg:text-lg font-semibold flex flex-col">End date
-                    <input type="date" value={dateFilter.endDate.toLocaleDateString('en-CA')}
+                    <input type="date" value={endDateFilter}
                            onChange={e => handleDateFilterChange(e.target.valueAsDate ?? new Date, false)}
+                           className="p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"/>
+                </label>
+            </div>
+            <div className={''}>
+                <label className="text-sm lg:text-lg font-semibold flex flex-col">Transactions per days
+                    <input type="number" value={transPerPage}
+                           onChange={e => handleTransPerDateChangle(e.target.valueAsNumber)}
                            className="p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"/>
                 </label>
             </div>

@@ -22,6 +22,7 @@ public class GetTransactionsByUserIdSortedRequestHandler : IRequestHandler<GetTr
         {
             nameof(Domain.Entities.Transaction.Label).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Note).ToLowerInvariant(),
+            nameof(Domain.Entities.Transaction.Id).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant()
         };
     }

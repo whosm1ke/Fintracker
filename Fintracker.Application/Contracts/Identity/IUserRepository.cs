@@ -6,9 +6,7 @@ public interface IUserRepository
 {
     Task<IReadOnlyList<User>> GetAllAccessedToWalletAsync(Guid walletId);
 
-    Task<User?> GetUserWithOwnedWalletsByIdAsync(Guid id);
     Task<User?> GetUserWithMemberWalletsByIdAsync(Guid id);
-    Task<User?> GetUserWithBudgetsByIdAsync(Guid id);
 
     Task<bool> HasMemberWallet(Guid walletId, string userEmail);
 

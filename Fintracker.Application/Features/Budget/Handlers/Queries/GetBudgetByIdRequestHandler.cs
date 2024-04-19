@@ -20,7 +20,7 @@ public class GetBudgetByIdRequestHandler : IRequestHandler<GetBudgetByIdRequest,
 
     public async Task<BudgetBaseDTO> Handle(GetBudgetByIdRequest request, CancellationToken cancellationToken)
     {
-        var budget = await _unitOfWork.BudgetRepository.GetBudgetAsync(request.Id);
+        var budget = await _unitOfWork.BudgetRepository.GetBudgetByIdAsync(request.Id);
 
         if (budget is null)
             throw new NotFoundException(new ExceptionDetails
@@ -30,27 +30,5 @@ public class GetBudgetByIdRequestHandler : IRequestHandler<GetBudgetByIdRequest,
             }, nameof(Domain.Entities.Budget));
 
         return _mapper.Map<BudgetBaseDTO>(budget);
-    }
-}
-
-public class
-    GetBudgetsWithWalletsRequestHandler : IRequestHandler<GetBudgetsWithWalletsRequest, List<BudgetWithWalletDTO>>
-{
-    
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-
-    public GetBudgetsWithWalletsRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-    }
-    public async Task<List<BudgetWithWalletDTO>> Handle(GetBudgetsWithWalletsRequest request, CancellationToken cancellationToken)
-    {
-        var budget = await _unitOfWork.BudgetRepository.GetBudgetsWithWalletsAsync();
-
-      
-
-        return _mapper.Map<List<BudgetWithWalletDTO>>(budget);
     }
 }

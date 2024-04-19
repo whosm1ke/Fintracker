@@ -23,6 +23,7 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
             .ThenInclude(x => x.UserDetails)
             .Include(x => x.Wallet)
             .ThenInclude(x => x.Currency)
+            .AsSplitQuery()
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
@@ -30,26 +31,28 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     public async Task<Transaction?> GetTransactionWithWalletAsync(Guid id)
     {
         return await _db.Transactions
-            .Include(x => x.Wallet)
             .Include(x => x.Category)
             .Include(x => x.Currency)
+            .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Currency)
+            .AsSplitQuery()
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
+    
 
-    public async Task<Transaction?> GetTransactionWithUserAsync(Guid id)
+    public async Task<IReadOnlyList<Transaction>> GetAllAsync(Guid userId)
     {
         return await _db.Transactions
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)
-            .Where(x => x.Id == id)
-            .FirstOrDefaultAsync();
-    }
-
-    public async Task<IReadOnlyList<Transaction>> GetAllAsync(Guid userId)
-    {
-        return await _db.Transactions
+            .ThenInclude(x => x.UserDetails)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Currency)
+            .AsSplitQuery()
             .Where(t => t.UserId == userId)
             .ToListAsync();
     }
@@ -59,6 +62,11 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
         return await _db.Transactions
             .Include(x => x.Category)
             .Include(x => x.Currency)
+            .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Currency)
+            .AsSplitQuery()
             .Where(x => x.UserId == userId)
             .ToListAsync();
     }
@@ -68,6 +76,11 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
         return await _db.Transactions
             .Include(x => x.Category)
             .Include(x => x.Currency)
+            .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Currency)
+            .AsSplitQuery()
             .Where(x => x.WalletId == walletId)
             .ToListAsync();
     }
@@ -77,22 +90,27 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
         return await _db.Transactions
             .Include(x => x.Category)
             .Include(x => x.Currency)
+            .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Currency)
+            .AsSplitQuery()
             .Where(x => x.CategoryId == categoryId)
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId, QueryParams queryParams)
+    public async Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId, TransactionQueryParams queryParams)
     {
         return await _db.Transactions.GetByUserIdSortedAsync(userId, queryParams);
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId, QueryParams queryParams)
+    public async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId, TransactionQueryParams queryParams)
     {
         
         return await _db.Transactions.GetByWalletIdSortedAsync(walletId, queryParams);
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, QueryParams queryParams)
+    public async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, TransactionQueryParams queryParams)
     {
         return await _db.Transactions.GetByCategoryIdSortedAsync(categoryId, queryParams);
     }
@@ -104,6 +122,10 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
         return await _db.Transactions
             .Include(x => x.Category)
             .Include(x => x.Currency)
+            .Include(x => x.User)
+            .ThenInclude(x => x.UserDetails)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Currency)
             .ToListAsync();
     }
 }

@@ -8,5 +8,5 @@ public class GetTransactionsByUserIdSortedRequest : IRequest<IReadOnlyList<Trans
 {
     public Guid UserId { get; set; }
 
-    public QueryParams Params { get; set; } = default!;
+    public TransactionQueryParams Params { get; set; } = default!;
 }

@@ -1,4 +1,4 @@
-﻿interface UserDetails {
+﻿export interface UserDetails {
     sex?: string,
     dateOfBirth?: Date,
     avatar?: string,

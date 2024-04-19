@@ -1,6 +1,8 @@
 ﻿import {RegisterOptions} from "react-hook-form";
 import {Budget} from "./Budget.ts";
 import { Transaction } from "./Transaction.ts";
+import { FinancialEntity } from "./FinancialEntity.ts";
+import { User } from "./User.ts";
 
 export interface Wallet extends FinancialEntity {
     ownerId: string,

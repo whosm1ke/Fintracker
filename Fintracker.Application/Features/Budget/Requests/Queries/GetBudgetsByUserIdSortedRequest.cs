@@ -9,5 +9,5 @@ public class GetBudgetsByUserIdSortedRequest : IRequest<IReadOnlyList<BudgetBase
     public Guid UserId { get; set; }
 
     public QueryParams Params { get; set; } = default!;
-    public bool IsPublic { get; set; }
+    public bool? IsPublic { get; set; }
 }

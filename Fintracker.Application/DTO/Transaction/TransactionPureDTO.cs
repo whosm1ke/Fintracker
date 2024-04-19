@@ -1,4 +1,6 @@
-﻿using Fintracker.Application.DTO.Common;
+﻿using Fintracker.Application.DTO.Category;
+using Fintracker.Application.DTO.Common;
+using Fintracker.Application.DTO.Currency;
 
 namespace Fintracker.Application.DTO.Transaction;
 
@@ -19,4 +21,8 @@ public class TransactionPureDTO : IBaseDto
     public DateTime Date { get; set; }
 
     public bool IsBankTransaction { get; set; }
+    
+    public CategoryDTO Category { get; set; } = default!;
+    
+    public CurrencyDTO Currency { get; set; } = default!;
 }

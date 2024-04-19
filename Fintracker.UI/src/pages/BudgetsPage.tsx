@@ -1,14 +1,12 @@
 ﻿import { useParams} from "react-router-dom";
-import {useBudgets, useBudgetsWithWallets} from "../hooks/useBudgets.ts";
-import useWallet from "../hooks/useWallet.ts";
+import {useBudgets} from "../hooks/useBudgets.ts";
 import {BudgetCard} from "../components/BudgetCard.tsx";
 import {CreateBudgetModal} from "../components/CreateBudgetModal.tsx";
 import BudgetOverview from "../components/BudgetOverview.tsx";
 
 export default function BudgetsPage() {
     const {walletId} = useParams();
-    const {data: budgets, isFetching, isLoading, isError} = walletId ? useBudgets(walletId, "wallet", null) : useBudgetsWithWallets();
-    const data = walletId ? useWallet(walletId) : null;
+    const {data: budgets, isFetching, isLoading, isError} = useBudgets(walletId!, null);
 
     if(isFetching || isLoading || isError)
         return null;
@@ -22,7 +20,7 @@ export default function BudgetsPage() {
                 </div>
                 <div className={'grid gap-x-10 gap-y-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}>
                     {budgets && budgets.map(b =>
-                        <BudgetCard walletName={walletId ? data?.data?.response?.name! : b.wallet.name}
+                        <BudgetCard walletName={b.wallet.name}
                                     balance={b.balance} currencySymbol={b.currency.symbol}
                                     endDate={b.endDate} startDate={b.startDate} name={b.name}
                                     totalSpent={b.totalSpent} budgetId={b.id} isPublic={b.isPublic}

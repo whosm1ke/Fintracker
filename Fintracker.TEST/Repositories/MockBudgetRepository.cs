@@ -166,14 +166,7 @@ public class MockBudgetRepository
             .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id) != null); });
 
         //BudgetRepository
-        mock.Setup(x => x.GetBudgetAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id)); });
-
-
-        mock.Setup(x => x.GetBudgetWithWalletAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id)); });
-
-        mock.Setup(x => x.GetBudgetWithUserAsync(It.IsAny<Guid>()))
+        mock.Setup(x => x.GetBudgetByIdAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id)); });
 
         mock.Setup(x => x.GetByUserIdAsync(It.IsAny<Guid>(),It.IsAny<bool>()))

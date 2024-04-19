@@ -1,4 +1,7 @@
-﻿import {Wallet} from "./Wallet.ts";
+﻿import { Category } from "./Category.ts";
+import { Currency } from "./Currency.ts";
+import { User } from "./User.ts";
+import {Wallet} from "./Wallet.ts";
 import {RegisterOptions} from "react-hook-form";
 
 export interface Transaction extends BaseEntity {

@@ -2,6 +2,7 @@
 import ms from "ms";
 import {MonoWalletToken} from "./useCreateMonoWallet.ts";
 import ApiClient from "../services/ApiClient.ts";
+import { MonobankUserInfo } from "../entities/MonobankUserInfo.ts";
 
 const apiClient = new ApiClient<MonoWalletToken, MonobankUserInfo>('bank/monobank')
 export const useMonoUserInfo = () => {

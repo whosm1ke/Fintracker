@@ -27,7 +27,7 @@ public class GetCategoriesSortedRequestHandler : IRequestHandler<GetCategoriesSo
     public async Task<IReadOnlyList<CategoryDTO>> Handle(GetCategoriesSortedRequest request,
         CancellationToken cancellationToken)
     {
-        if (!_allowedSortColumns.Contains(request.Params.SortBy))
+        if (request.Params.SortBy == "Id" || !_allowedSortColumns.Contains(request.Params.SortBy))
             throw new BadRequestException(new ExceptionDetails
             {
                 PropertyName = nameof(request.Params.SortBy),

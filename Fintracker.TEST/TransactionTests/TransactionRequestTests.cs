@@ -271,50 +271,6 @@ public class TransactionRequestTests
         actualResult.Should().BeEquivalentTo(expectedResult);
     }
 
-    [Fact]
-    public async Task GetTransactionWithWalletById_Should_Return_TransWithWallet_Test()
-    {
-        var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new GetTransactionWithWalletByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new TransactionWithWalletDTO
-        {
-            Id = new Guid("D2E41134-B415-4450-B47A-D48A96EA9226"),
-            Amount = 220,
-            Label = "Trans Wallet",
-            Note = "Trans Wallet",
-            Wallet = new() { Id = new Guid("9B2EAEC4-DD3B-4572-9A69-48FBC50C8506"), Name = "Wallet 1" },
-        };
-
-        var actualResult = await handler.Handle(new GetTransactionWithWalletByIdRequest
-        {
-            Id = new Guid("D2E41134-B415-4450-B47A-D48A96EA9226")
-        }, default);
-
-        actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
-    }
-
-    [Fact]
-    public async Task GetTransactionWithUserById_Should_Return_TransWithUser_Test()
-    {
-        var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new GetTransactionWithUserByIdRequestHandler(_mapper, mockUnitOfWork);
-        var expectedResult = new TransactionWithUserDTO
-        {
-            Id = new Guid("89748830-B290-4ED2-AB51-B2853D91B785"),
-            Amount = 220,
-            Label = "Trans User",
-            Note = "Trans User",
-            User = new() { Id = new Guid("3DCF7BFC-C7A1-48F2-A56D-B33740E4B3FF"), Email = "transUser@mail.com" },
-        };
-
-        var actualResult = await handler.Handle(new GetTransactionWithUserByIdRequest
-        {
-            Id = new Guid("89748830-B290-4ED2-AB51-B2853D91B785")
-        }, default);
-
-        actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
-    }
+   
 
 }

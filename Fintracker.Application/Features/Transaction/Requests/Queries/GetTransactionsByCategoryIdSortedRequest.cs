@@ -8,5 +8,5 @@ public class GetTransactionsByCategoryIdSortedRequest : IRequest<IReadOnlyList<T
 {
     public Guid CategoryId { get; set; }
 
-    public QueryParams Params { get; set; } = default!;
+    public TransactionQueryParams Params { get; set; } = default!;
 }

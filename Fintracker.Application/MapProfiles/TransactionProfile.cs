@@ -14,10 +14,6 @@ public class TransactionProfile : Profile
         CreateMap<Transaction, TransactionPureDTO>().ReverseMap();
         CreateMap<Transaction, CreateTransactionDTO>().ReverseMap();
         CreateMap<Transaction, UpdateTransactionDTO>().ReverseMap();
-        CreateMap<Transaction, TransactionWithUserDTO>().ReverseMap();
-        CreateMap<Transaction, TransactionWithWalletAndUserDTO>().ReverseMap();
-        CreateMap<GroupedTransactionByDate, GroupedTransactionByDateDTO>().ReverseMap();
-        CreateMap<Transaction, TransactionWithWalletDTO>().ReverseMap();
         CreateMap<MonoTransactionDTO, Transaction>()
             .ConvertUsing<MonoTransactionDTOToTransactionConverter>();
     }

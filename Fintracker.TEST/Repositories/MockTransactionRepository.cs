@@ -147,8 +147,8 @@ public class MockTransactionRepository
             .Returns((Guid id) =>
                 Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.CategoryId == id).ToList()));
 
-        mock.Setup(x => x.GetByCategoryIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>()))
-            .Returns((Guid id, QueryParams query) => Task.FromResult(
+        mock.Setup(x => x.GetByCategoryIdSortedAsync(It.IsAny<Guid>(), It.IsAny<TransactionQueryParams>()))
+            .Returns((Guid id, TransactionQueryParams query) => Task.FromResult(
                 (IReadOnlyList<Transaction>)transactions.Where(x => x.CategoryId == id)
                     .AsQueryable()
                     .OrderBy(query.SortBy)
@@ -159,8 +159,8 @@ public class MockTransactionRepository
             .Returns((Guid id) =>
                 Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.UserId == id).ToList()));
 
-        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>()))
-            .Returns((Guid id, QueryParams query) => Task.FromResult(
+        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<TransactionQueryParams>()))
+            .Returns((Guid id, TransactionQueryParams query) => Task.FromResult(
                 (IReadOnlyList<Transaction>)transactions.Where(x => x.UserId == id)
                     .AsQueryable()
                     .OrderBy(query.SortBy)
@@ -171,8 +171,8 @@ public class MockTransactionRepository
             .Returns((Guid id) =>
                 Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.WalletId == id).ToList()));
 
-        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>()))
-            .Returns((Guid id, QueryParams query ) => Task.FromResult(
+        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<TransactionQueryParams>()))
+            .Returns((Guid id, TransactionQueryParams query ) => Task.FromResult(
                 (IReadOnlyList<Transaction>)transactions.Where(x => x.WalletId == id)
                     .AsQueryable()
                     .OrderBy(query.SortBy)
@@ -186,8 +186,6 @@ public class MockTransactionRepository
                 return res;
             });
         
-        mock.Setup(x => x.GetTransactionWithUserAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => Task.FromResult(transactions.FirstOrDefault(x => x.Id == id)));
         
         mock.Setup(x => x.GetTransactionAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => { return Task.FromResult(transactions.Find(x => x.Id == id)); });
