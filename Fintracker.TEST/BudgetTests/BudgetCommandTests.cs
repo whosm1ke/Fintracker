@@ -21,6 +21,8 @@ public class BudgetCommandTests
             c.AddProfile<BudgetProfile>();
             c.AddProfile<CurrencyProfile>();
             c.AddProfile<CategoryProfile>();
+            c.AddProfile<UserProfile>();
+            c.AddProfile<WalletProfile>();
         });
 
         _mapper = mapperCfg.CreateMapper();

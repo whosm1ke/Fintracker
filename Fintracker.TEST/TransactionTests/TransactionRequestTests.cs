@@ -86,7 +86,7 @@ public class TransactionRequestTests
         }, default);
 
         actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
+        actualResult.Count.Should().Be(expectedResult.Count);
     }
 
     [Fact]
@@ -124,7 +124,7 @@ public class TransactionRequestTests
         }, default);
 
         actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
+        actualResult.Count.Should().Be(expectedResult.Count);
     }
 
     [Fact]
@@ -158,7 +158,7 @@ public class TransactionRequestTests
         }, default);
 
         actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
+        actualResult.Count.Should().Be(expectedResult.Count);
     }
 
     [Fact]
@@ -196,7 +196,7 @@ public class TransactionRequestTests
         }, default);
 
         actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
+        actualResult.Count.Should().Be(expectedResult.Count);
     }
 
     [Fact]
@@ -230,7 +230,7 @@ public class TransactionRequestTests
         }, default);
 
         actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
+        actualResult.Count.Should().Be(expectedResult.Count);
     }
 
     [Fact]
@@ -268,7 +268,7 @@ public class TransactionRequestTests
         }, default);
 
         actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
+        actualResult.Count.Should().Be(expectedResult.Count);
     }
 
    

@@ -45,14 +45,20 @@ public class WalletRequestTests
                 Id = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
                 Balance = 1000,
                 Name = "Wallet 1",
-                OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9")
+                OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"),
+                Budgets = new List<BudgetPureDTO>(),
+                Users = new List<UserPureDTO>(),
+                Transactions = new List<TransactionPureDTO>()
             },
             new()
             {
                 Id = new Guid("16E4E7F0-48EE-46E6-9543-ABA7975FBE71"),
                 Balance = 2000,
                 Name = "Wallet 2",
-                OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9")
+                OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"),
+                Budgets = new List<BudgetPureDTO>(),
+                Users = new List<UserPureDTO>(),
+                Transactions = new List<TransactionPureDTO>()
             }
         };
 
@@ -78,14 +84,20 @@ public class WalletRequestTests
                 Id = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
                 Balance = 1000,
                 Name = "Wallet 1",
-                OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9")
+                OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"),
+                Budgets = new List<BudgetPureDTO>(),
+                Users = new List<UserPureDTO>(),
+                Transactions = new List<TransactionPureDTO>()
             },
             new()
             {
                 Id = new Guid("16E4E7F0-48EE-46E6-9543-ABA7975FBE71"),
                 Balance = 2000,
                 Name = "Wallet 2",
-                OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9")
+                OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"),
+                Budgets = new List<BudgetPureDTO>(),
+                Users = new List<UserPureDTO>(),
+                Transactions = new List<TransactionPureDTO>()
             }
         };
 
@@ -115,7 +127,16 @@ public class WalletRequestTests
             Id = new Guid("95E0ECF9-0647-450B-9495-B2A709D166B5"),
             Balance = 500,
             Name = "With Owner",
-            Owner = new UserBaseDTO { Id = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"), Email = "owner@gmail.com" }
+            Owner = new UserBaseDTO
+            {
+                Id = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"), Email = "owner@gmail.com",
+                OwnedWallets = new List<WalletPureDTO>(),
+                MemberWallets = new List<WalletPureDTO>(),
+                Budgets = new List<BudgetPureDTO>()
+            },
+            Budgets = new List<BudgetPureDTO>(),
+            Users = new List<UserPureDTO>(),
+            Transactions = new List<TransactionPureDTO>()
         };
 
         var actualResult = await handler.Handle(new GetWalletByIdRequest

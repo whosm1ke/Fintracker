@@ -14,7 +14,7 @@ public class MockUserRepository
             {
                 Id = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
                 Email = "user1@gmail.com",
-                UserName = "username1"
+                UserName = "username1",
             },
             //GetUserById
             new()

@@ -23,6 +23,9 @@ public class TransactionsCommandTests
         var mapperCfg = new MapperConfiguration(c =>
         {
             c.AddProfile<TransactionProfile>();
+            c.AddProfile<WalletProfile>();
+            c.AddProfile<CurrencyProfile>();
+            c.AddProfile<UserProfile>();
             c.AddProfile<CategoryProfile>();
         });
 
@@ -56,7 +59,7 @@ public class TransactionsCommandTests
         walletBalance.Should().Be(500);
         result.Success.Should().BeTrue();
         result.CreatedObject.Should().NotBeNull();
-        result.CreatedObject.Should().BeOfType<TransactionPureDTO>();
+        result.CreatedObject.Should().BeOfType<TransactionBaseDTO>();
         transactionsCount.Should().Be(10);
     }
     
@@ -84,7 +87,7 @@ public class TransactionsCommandTests
         var budgetsCount = (await mockUnitOfWork.TransactionRepository.GetAllAsync()).Count;
         result.Success.Should().BeTrue();
         result.CreatedObject.Should().NotBeNull();
-        result.CreatedObject.Should().BeOfType<TransactionPureDTO>();
+        result.CreatedObject.Should().BeOfType<TransactionBaseDTO>();
         budgetsCount.Should().Be(10);
     }
     

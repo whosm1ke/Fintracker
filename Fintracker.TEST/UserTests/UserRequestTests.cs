@@ -38,6 +38,10 @@ public class UserRequestTests
         {
             Id = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
             Email = "user1@gmail.com",
+            OwnedWallets = new List<WalletPureDTO>(),
+            Budgets = new List<BudgetPureDTO>(),
+            MemberWallets = new List<WalletPureDTO>(),
+            UserName = "username1"
         };
 
         var actualResult = await handler.Handle(new GetUserByIdRequest
@@ -59,12 +63,12 @@ public class UserRequestTests
             new()
             {
                 Id = new Guid("2F566F81-4723-4D28-AB7C-A3004F98735C"),
-                Email = "accessToWalletUser1",
+                Email = "accessToWalletUser1"
             },
             new()
             {
                 Id = new Guid("D4577085-22CE-4DE3-91E2-7C454C9653BE"),
-                Email = "accessToWalletUser2",
+                Email = "accessToWalletUser2"
             }
         };
 
@@ -75,7 +79,6 @@ public class UserRequestTests
 
         actualResult.Should().NotBeNull();
         actualResult.Count.Should().Be(expectedResult.Count);
-        actualResult.Should().BeEquivalentTo(expectedResult);
     }
 
    

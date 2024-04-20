@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.DTO.User;
+using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.Features.User.Handlers.Commands;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.MapProfiles;
@@ -60,7 +62,11 @@ public class UserCommandTests
                 Avatar = "avatar", 
                 Language = LanguageTypeEnum.Ukrainian,
                 Sex = "Male",
-            }
+            },
+            OwnedWallets = new List<WalletPureDTO>(),
+            MemberWallets = new List<WalletPureDTO>(),
+            Budgets = new List<BudgetPureDTO>(),
+            UserName = "username1"
         };
         var formFileMock = new Mock<IFormFile>();
         formFileMock.SetupGet(x => x.FileName).Returns("avatar");
@@ -76,7 +82,7 @@ public class UserCommandTests
                     Language = LanguageTypeEnum.Ukrainian,
                     Sex = "Male",
                 },
-                Avatar = formFileMock.Object
+                Avatar = formFileMock.Object,
                 
             },
             WWWRoot = "fake root"
