@@ -1,24 +1,23 @@
-﻿import {NavLink, Outlet, useNavigate} from "react-router-dom";
-import useUserStore from "../stores/userStore.ts";
-import {useGetUser} from "../hooks/useUser.ts";
+﻿import {NavLink, Outlet, useNavigate, useParams} from "react-router-dom";
+import useUserStore from "../../stores/userStore.ts";
+import {useGetUser} from "../../hooks/auth/useUser.ts";
 // @ts-ignore
-import logo from "../assets/logo.png";
-import {AnimatePresence, motion} from "framer-motion";
+import logo from "../../assets/logo.png";
 import {ReactNode, useState} from "react";
+import {AnimatePresence, motion} from "framer-motion";
 import {FiChevronDown} from "react-icons/fi";
-import useLogoutMutation from "../hooks/useLogoutMutation.ts";
+import useLogoutMutation from "../../hooks/auth/useLogoutMutation.ts";
 
-export default function DashboardLayout() {
-
+export default function WalletLayout() {
     return (
-        <div className={'relative flex flex-col min-h-screen overflow-hidden bg-stone-100'}>
+        <div className={'flex flex-col min-h-screen overflow-hidden bg-stone-100'}>
             <header>
-                <DashboardNavBar/>
+                <WalletNavBar/>
             </header>
             <main className={'flex-grow mb-24'}>
                 <Outlet/>
             </main>
-            <footer>
+            <footer className={'block lg:hidden flex-shrink-0'}>
                 <Footer/>
             </footer>
         </div>
@@ -27,30 +26,44 @@ export default function DashboardLayout() {
 
 const Footer = () => {
     return (
-        <div className="block md:hidden border-t-2 bg-white border-t-gray-300 p-6 fixed bottom-0 w-full">
-            <div className={'flex justify-around items-center gap-x-4'}>
+        <div className="border-t-2 border-t-gray-300 p-6 mt-6 w-full fixed bottom-0 bg-white">
+            <div className={'flex justify-around items-center gap-x-2 w-full text-sm'}>
                 <div>
-                    <NavLink to={'/dashboard'}
-                             end
+                    <NavLink to={'/transactions'}
                              className={({isActive}) =>
-                                 isActive ? 'text-green-400 text-xl font-bold' : 'text-xl p-5'
+                                 isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
-                    >Dashboard</NavLink>
+                    >Transactions</NavLink>
                 </div>
                 <div>
-                    <NavLink to={'/dashboard/budgets'}
+                    <NavLink to={'/overview'}
                              className={({isActive}) =>
-                                 isActive ? 'text-green-400 text-xl font-bold' : 'text-xl p-5'
+                                 isActive ? 'text-green-400 font-bold' : 'p-2'
+                             }
+                    >Overview</NavLink>
+                </div>
+                <div>
+                    <NavLink to={'/budgets'}
+                             className={({isActive}) =>
+                                 isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
                     >Budgets</NavLink>
                 </div>
+                <div>
+                    <NavLink to={'/settings/general'}
+                             className={({isActive}) =>
+                                 isActive ? 'text-green-400 font-bold' : 'p-2'
+                             }
+                    >Settings</NavLink>
+                </div>
             </div>
         </div>
+
     )
 }
 
-
-const DashboardNavBar = () => {
+const WalletNavBar = () => {
+    const {walletId} = useParams();
     const [userId] = useUserStore(x => [x.getUserId()]);
     const {data} = useGetUser(userId || 'no-user');
     const userName = data?.response?.userName || 'New user';
@@ -65,24 +78,40 @@ const DashboardNavBar = () => {
                     <p className={'text-2xl font-bold'}>Fintracker</p>
                 </NavLink>
             </div>
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
                 <NavLink
-                    end
-                    to="/dashboard"
+                    to={`./${walletId}/trans`}
                     className={({isActive}) =>
                         isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
                     }
                 >
-                    Dashboard
+                    Transactions
                 </NavLink>
                 <NavLink
-                    to="/dashboard/budgets"
+                    to={`./${walletId}/overview`}
+                    className={({isActive}) =>
+                        isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
+                    }
+                >
+                    Overview
+                </NavLink>
+                <NavLink
+                    to={`./${walletId}/budgets`}
                     className={({isActive}) =>
                         isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
                     }
                 >
                     Budgets
                 </NavLink>
+                <NavLink
+                    to={`./${walletId}/settings/general`}
+                    className={({isActive}) =>
+                        isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
+                    }
+                >
+                    Settings
+                </NavLink>
+
             </div>
             <motion.div
                 className={'relative'}
@@ -170,7 +199,7 @@ const NavigationContent = () => {
                 <li className="mb-3">
                     <span
                         onClick={handleLogout}
-                        className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md cursor-pointer">Logout</span>
+                        className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md">Logout</span>
                 </li>
             </ul>
         </div>

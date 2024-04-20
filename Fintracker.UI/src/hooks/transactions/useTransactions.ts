@@ -1,8 +1,7 @@
-﻿import ApiClient from "../services/ApiClient.ts";
-import {useQuery} from "@tanstack/react-query";
-import {Transaction} from "../entities/Transaction.ts";
-import useTransactionQueryStore from "../stores/transactionQueryStore.ts";
-
+﻿import { useQuery } from "@tanstack/react-query";
+import { Transaction } from "../../entities/Transaction";
+import ApiClient from "../../services/ApiClient";
+import useTransactionQueryStore from "../../stores/transactionQueryStore";
 
 const useTransactions = (walletId: string) => {
     const apiClient = new ApiClient<Transaction, Transaction[]>(`transaction/wallet/${walletId}`);

@@ -1,7 +1,7 @@
-﻿import ApiClient from "../services/ApiClient.ts";
-import {Budget} from "../entities/Budget.ts";
+﻿import ApiClient from "../../services/ApiClient.ts";
+import {Budget} from "../../entities/Budget.ts";
 import {useQuery} from "@tanstack/react-query";
-import useUserStore from "../stores/userStore.ts";
+import useUserStore from "../../stores/userStore.ts";
 
 export const useBudgets = (id: string | undefined, isPublic: boolean | null) => {
     

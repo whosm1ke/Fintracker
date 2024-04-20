@@ -1,5 +1,5 @@
-﻿import ApiClient from "../services/ApiClient.ts";
-import {Transaction} from "../entities/Transaction.ts";
+﻿import ApiClient from "../../services/ApiClient.ts";
+import {Transaction} from "../../entities/Transaction.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 
 type Context = {

@@ -1,11 +1,11 @@
 ﻿import {Link, NavLink, Outlet, useLocation, useNavigate} from "react-router-dom";
 import {motion} from "framer-motion";
 import {useEffect, useState} from "react";
-import useUserStore from "../stores/userStore.ts";
 // @ts-ignore
-import logo from "../../src/assets/logo.png"
-import NavigationLink, {NavigationLinkProps} from "../components/NavigationLink.tsx";
-import useLogoutMutation from "../hooks/useLogoutMutation.ts";
+import logo from "../../../src/assets/logo.png"
+import NavigationLink, { NavigationLinkProps } from "../../components/NavigationLink.tsx";
+import useLogoutMutation from "../../hooks/auth/useLogoutMutation.ts";
+import useUserStore from "../../stores/userStore.ts";
 
 export default function Layout() {
 

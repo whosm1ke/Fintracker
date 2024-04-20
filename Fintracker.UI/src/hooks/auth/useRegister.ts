@@ -1,7 +1,7 @@
-﻿import ApiClient from "../services/ApiClient.ts";
+﻿import ApiClient from "../../services/ApiClient.ts";
 import {useMutation} from "@tanstack/react-query";
-import {RegisterResponse, RegisterSchema} from "../models/RegisterSchema.ts";
-import useUserStore from "../stores/userStore.ts";
+import {RegisterResponse, RegisterSchema} from "../../models/RegisterSchema.ts";
+import useUserStore from "../../stores/userStore.ts";
 import {UseFormSetError} from "react-hook-form";
 
 const apiClient = new ApiClient<RegisterSchema, RegisterResponse>('account/register');

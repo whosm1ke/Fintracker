@@ -1,5 +1,5 @@
 ﻿import {motion, Variants} from "framer-motion";
-import {about} from "../helpers/textFiller.tsx";
+import {about} from "../../helpers/textFiller.tsx";
 import {RefObject, useEffect, useRef, useState} from "react";
 
 const container: Variants = {

@@ -1,4 +1,4 @@
-﻿import ApiClient from "../services/ApiClient.ts";
+﻿import ApiClient from "../../services/ApiClient.ts";
 import {useMutation} from "@tanstack/react-query";
 
 const apiClient = new ApiClient<void, void>('account/logout');

@@ -1,4 +1,4 @@
-﻿import {security, bankConnect} from "../helpers/textFiller.tsx";
+﻿import {security, bankConnect} from "../../helpers/textFiller.tsx";
 import {ReactElement, useState} from "react";
 import {motion} from "framer-motion";
 import {FiChevronDown} from "react-icons/fi";

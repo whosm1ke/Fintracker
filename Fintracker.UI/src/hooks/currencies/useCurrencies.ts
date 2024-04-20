@@ -1,5 +1,5 @@
 ﻿import {useQuery} from "@tanstack/react-query";
-import currencies from "../data/currencies.ts";
+import currencies from "../../data/currencies.ts";
 
 const useCurrencies = () => {
     return useQuery({

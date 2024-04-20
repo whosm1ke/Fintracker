@@ -1,7 +1,7 @@
-﻿import ApiClient from "../services/ApiClient.ts";
+﻿import ApiClient from "../../services/ApiClient.ts";
 import {useMutation} from "@tanstack/react-query";
-import {Wallet} from "../entities/Wallet.ts";
-import { MonobankConfiguration, MonobankUserInfo } from "../entities/MonobankUserInfo.ts";
+import {Wallet} from "../../entities/Wallet.ts";
+import { MonobankConfiguration, MonobankUserInfo } from "../../entities/MonobankUserInfo.ts";
 
 export interface MonoWalletToken {
     xToken: string

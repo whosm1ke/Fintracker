@@ -1,20 +1,20 @@
 ﻿import {createBrowserRouter, Navigate} from "react-router-dom";
-import ErrorPage from "./pages/ErrorPage.tsx";
+import Layout from "./pages/Layout/Layout";
+import ErrorPage from "./pages/ErrorPage";
+import HomePage from "./pages/start/HomePage.tsx";
+import AboutPage from "./pages/start/AboutPage.tsx";
+import BankPage from "./pages/start/BankPage.tsx";
+import DashboardLayout from "./pages/Layout/DashboardLayout.tsx";
+import FintrackerPage from "./pages/start/FintrackerPage.tsx";
+import BudgetsPage from "./pages/budget/BudgetsPage.tsx";
+import BudgetDetailsPage from "./pages/budget/BudgetDetailsPage.tsx";
+import WalletLayout from "./pages/wallet/WalletLayout.tsx";
+import WalletTransactionsPage from "./pages/wallet/WalletTransactionsPage.tsx";
+import WalletOverviewPage from "./pages/wallet/WalletOverviewPage.tsx";
+import WalletSettingsPage from "./pages/wallet/WalletSettingsPage.tsx";
+import WalletSettingsCategoriesPage from "./pages/wallet/WalletSettingsCategoriesPage.tsx";
 import RegisterForm from "./components/forms_buttons/RegisterForm.tsx";
 import LoginForm from "./components/forms_buttons/LoginForm.tsx";
-import HomePage from "./pages/HomePage.tsx";
-import Layout from "./pages/Layout.tsx";
-import AboutPage from "./pages/AboutPage.tsx";
-import BankPage from "./pages/BankPage.tsx";
-import FintrackerPage from "./pages/FintrackerPage.tsx";
-import DashboardLayout from "./pages/DashboardLayout.tsx";
-import WalletLayout from "./pages/WalletLayout.tsx";
-import WalletOverviewPage from "./pages/WalletOverviewPage.tsx";
-import WalletSettingsPage from "./pages/WalletSettingsPage.tsx";
-import WalletSettingsCategoriesPage from "./pages/WalletSettingsCategoriesPage.tsx";
-import WalletTransactionsPage from "./pages/WalletTransactionsPage.tsx";
-import BudgetDetailsPage from "./pages/BudgetDetailsPage.tsx";
-import BudgetsPage from "./pages/BudgetsPage.tsx";
 
 const router = createBrowserRouter([
     {

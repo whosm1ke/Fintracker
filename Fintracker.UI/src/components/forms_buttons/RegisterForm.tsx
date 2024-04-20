@@ -2,7 +2,7 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import PasswordInput from "./PasswordInput.tsx";
 import SimpleInput from "./SimpleInput.tsx";
-import useRegister from "../../hooks/useRegister.ts";
+import useRegister from "../../hooks/auth/useRegister.ts";
 import Title from "./Title.tsx";
 import SubTitle from "./SubTitle.tsx";
 import {registerSchema, RegisterSchema} from "../../models/RegisterSchema.ts";

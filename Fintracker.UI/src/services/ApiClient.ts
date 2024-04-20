@@ -6,7 +6,7 @@ import {RegisterResponse, RegisterSchema} from "../models/RegisterSchema.ts";
 import {LoginResponse, LoginSchema} from "../models/LoginSchema.ts";
 import axiosInstance, {axiosInstanceCurrencyConverter} from "../logic/axiosInstance.ts";
 import {Wallet} from "../entities/Wallet.ts";
-import {MonoWalletToken} from "../hooks/useCreateMonoWallet.ts";
+import {MonoWalletToken} from "../hooks/wallet/useCreateMonoWallet.ts";
 import { ConvertCurrency } from "../entities/Currency.ts";
 import {MonobankConfiguration, MonobankUserInfo } from "../entities/MonobankUserInfo.ts";
 

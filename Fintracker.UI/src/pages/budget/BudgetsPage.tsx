@@ -1,8 +1,8 @@
 ﻿import { useParams} from "react-router-dom";
-import {useBudgets} from "../hooks/useBudgets.ts";
-import {BudgetCard} from "../components/BudgetCard.tsx";
-import {CreateBudgetModal} from "../components/CreateBudgetModal.tsx";
-import BudgetOverview from "../components/BudgetOverview.tsx";
+import { useBudgets } from "../../hooks/budgets/useBudgets";
+import {CreateBudgetModal} from "../../components/CreateBudgetModal.tsx";
+import {BudgetCard} from "../../components/BudgetCard.tsx";
+import BudgetOverview from "../../components/BudgetOverview.tsx";
 
 export default function BudgetsPage() {
     const {walletId} = useParams();

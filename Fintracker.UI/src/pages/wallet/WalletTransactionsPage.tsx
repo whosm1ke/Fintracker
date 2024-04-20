@@ -1,10 +1,10 @@
 ﻿import {useParams} from "react-router-dom";
-import useWallet from "../hooks/useWallet.ts";
-import TransactionList from "../components/TransactionList.tsx";
+import useWallet from "../../hooks/wallet/useWallet.ts";
+import TransactionList from "../../components/TransactionList.tsx";
 import {useEffect, useState} from "react";
-import {ActionButton} from "../components/ActionButton.tsx";
+import {ActionButton} from "../../components/ActionButton.tsx";
 import {SubmitHandler, useForm} from "react-hook-form";
-import currencies from "../data/currencies.ts";
+import currencies from "../../data/currencies.ts";
 import {HiX} from "react-icons/hi";
 import {
     amountRegisterForTransaction,
@@ -12,15 +12,15 @@ import {
     labelRegisterForTransaction,
     noteRegisterForTransaction,
     Transaction
-} from "../entities/Transaction.ts";
-import useCategories from "../hooks/useCategories.ts";
-import useCreateTransaction from "../hooks/useCreateTransaction.ts";
-import useUserStore from "../stores/userStore.ts";
-import useTransactions from "../hooks/useTransactions.ts";
-import {Currency} from "../entities/Currency.ts";
-import {Category} from "../entities/Category.ts";
-import useTransactionQueryStore from "../stores/transactionQueryStore.ts";
-import Spinner from "../components/Spinner.tsx";
+} from "../../entities/Transaction.ts";
+import useCategories from "../../hooks/categories/useCategories.ts";
+import useCreateTransaction from "../../hooks/transactions/useCreateTransaction.ts";
+import useUserStore from "../../stores/userStore.ts";
+import useTransactions from "../../hooks/transactions/useTransactions.ts";
+import {Currency} from "../../entities/Currency.ts";
+import {Category} from "../../entities/Category.ts";
+import useTransactionQueryStore from "../../stores/transactionQueryStore.ts";
+import Spinner from "../../components/Spinner.tsx";
 
 export default function WalletTransactionsPage() {
     const {walletId} = useParams();
@@ -126,13 +126,14 @@ const AddTransactionModal = ({userId, walletId}: AddTransactionModalProps) => {
     const {data: categories} = useCategories();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState<Currency>(currencies[0]);
-    const [selectedCategory, setSelectedCategory] = useState<Category>({
+    const categoryFiller: Category = {
         iconColour: 'transparent',
         image: 'MdAdd',
         name: "",
         type: 1,
         id: ""
-    })
+    }
+    const [selectedCategory, setSelectedCategory] = useState<Category>(categoryFiller)
 
     useEffect(() => {
         if (isOpen) {
@@ -148,7 +149,7 @@ const AddTransactionModal = ({userId, walletId}: AddTransactionModalProps) => {
 
 
     if (!categories)
-        return <p>Loadind...</p>
+        return <Spinner/>
 
     const handleSelectedCurrency = (currencyId: string) => {
         const currency = currencies.find(currency => currency.id === currencyId)
@@ -162,6 +163,8 @@ const AddTransactionModal = ({userId, walletId}: AddTransactionModalProps) => {
 
     function handleOpenModal() {
         setIsOpen(p => !p);
+        reset();
+        clearErrors();
     }
 
 
@@ -186,11 +189,9 @@ const AddTransactionModal = ({userId, walletId}: AddTransactionModalProps) => {
                         ${isOpen ? 'visible bg-black/20' : 'invisible'}`}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto mt-4">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add transaction
-                        <HiX size={'2rem'} color={'red'} onClick={handleOpenModal}/>
+                        <HiX size={'2rem'} color={'red'} onClick={() => {handleOpenModal()}}/>
                     </h2>
-                    <form
-
-                        onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                         <div className={'flex gap-x-10'}>
 
                             <div className="mb-4">
@@ -252,6 +253,7 @@ const AddTransactionModal = ({userId, walletId}: AddTransactionModalProps) => {
                                     id="CurrencyId"
                                     {...register("currencyId", {
                                         required: "Currency is required for transaction",
+                                        value: currencies[0].id
                                     })}
                                     onChange={(e) => handleSelectedCurrency(e.target.value)}
                                 >
@@ -273,6 +275,7 @@ const AddTransactionModal = ({userId, walletId}: AddTransactionModalProps) => {
                                     id="CategoryId"
                                     {...register("categoryId", {
                                         required: "Category is required for transaction",
+                                        value: categories[0].id
                                     })}
                                     onChange={(e) => handleSelectedCategory(e.target.value)}
                                 >

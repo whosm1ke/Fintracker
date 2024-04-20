@@ -1,7 +1,7 @@
-﻿import ApiClient from "../services/ApiClient.ts";
+﻿import ApiClient from "../../services/ApiClient.ts";
 import {useQuery} from "@tanstack/react-query";
 import ms from "ms";
-import { User } from "../entities/User.ts";
+import { User } from "../../entities/User.ts";
 
 const apiClient = new ApiClient<void, User>('user');
 

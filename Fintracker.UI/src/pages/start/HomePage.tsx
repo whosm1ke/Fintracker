@@ -1,4 +1,4 @@
-﻿import {advantages, textFiller} from "../helpers/textFiller.tsx";
+﻿import {advantages, textFiller} from "../../helpers/textFiller.tsx";
 import {AnimatePresence, motion} from "framer-motion";
 import {useEffect, useState} from "react";
 import {FiChevronDown} from "react-icons/fi";

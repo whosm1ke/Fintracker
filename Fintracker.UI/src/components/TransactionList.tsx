@@ -1,6 +1,6 @@
 ﻿import {GroupedTransactionByDate, Transaction} from "../entities/Transaction.ts";
 import {TransactionItem} from "./TransactionItem.tsx";
-import {useCurrencyConvertAll} from "../hooks/useCurrenctConvertAll.tsx";
+import {useCurrencyConvertAll} from "../hooks/currencies/useCurrenctConvertAll.tsx";
 import {useId} from "react";
 
 interface TransactionListProps {
@@ -43,14 +43,15 @@ const groupTransactionsByDate = (transactions: Transaction[]) => {
     return transactionContainer;
 }
 
-
+type uniqueCurrency = { [key: string]: number }
 export default function TransactionList({transactions, walletSymbol}: TransactionListProps) {
 
+    
     const groupedTransactions = groupTransactionsByDate(transactions);
     const allTransactions = groupedTransactions.flatMap(group => group.transactions);
     const uniqueSymbols = getUniqueCurrencySymbols(allTransactions);
     const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
-    const currencyRates: { [key: string]: number } = {};
+    const currencyRates: uniqueCurrency = {};
     if (convertedCurrencies) {
         convertedCurrencies.forEach((rate, i) => {
             currencyRates[uniqueSymbols[i]] = rate.value;
@@ -88,7 +89,7 @@ export function TransactionBlock({
                                  }: TransactionBlockProps) {
     const uniqueSymbols = getUniqueCurrencySymbols(transactions);
     const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
-    const currencyRates: { [key: string]: number } = {};
+    const currencyRates: uniqueCurrency = {};
     if (convertedCurrencies) {
         convertedCurrencies.forEach((rate, i) => {
             currencyRates[uniqueSymbols[i]] = rate.value;

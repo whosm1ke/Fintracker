@@ -1,7 +1,7 @@
-﻿import ApiClient from "../services/ApiClient.ts";
+﻿import ApiClient from "../../services/ApiClient.ts";
 import {useMutation} from "@tanstack/react-query";
-import {LoginResponse, LoginSchema} from "../models/LoginSchema.ts";
-import useUserStore from "../stores/userStore.ts";
+import {LoginResponse, LoginSchema} from "../../models/LoginSchema.ts";
+import useUserStore from "../../stores/userStore.ts";
 import {UseFormSetError} from "react-hook-form";
 
 const apiClient = new ApiClient<LoginSchema, LoginResponse>('account/login');

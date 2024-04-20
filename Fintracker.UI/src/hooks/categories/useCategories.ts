@@ -1,7 +1,7 @@
-﻿import ApiClient from "../services/ApiClient.ts";
+﻿import ApiClient from "../../services/ApiClient.ts";
 import {useQuery} from "@tanstack/react-query";
-import useCategoryQueryStore from "../stores/categoryQueryStore.ts";
-import { Category } from "../entities/Category.ts";
+import useCategoryQueryStore from "../../stores/categoryQueryStore.ts";
+import { Category } from "../../entities/Category.ts";
 
 const apiClient = new ApiClient<Category, Category[]>('category')
 const useCategories = () => {

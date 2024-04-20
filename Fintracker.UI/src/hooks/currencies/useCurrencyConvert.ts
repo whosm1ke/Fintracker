@@ -1,7 +1,7 @@
 ﻿import {useQuery} from "@tanstack/react-query";
-import ApiClient from "../services/ApiClient.ts";
+import ApiClient from "../../services/ApiClient.ts";
 import ms from "ms";
-import { ConvertCurrency } from "../entities/Currency.ts";
+import { ConvertCurrency } from "../../entities/Currency.ts";
 
 const apiClient = new ApiClient<ConvertCurrency, ConvertCurrency>('convert')
 const useCurrencyConvert = (from: string, to: string, amount: number = 1) => {

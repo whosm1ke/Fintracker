@@ -1,20 +1,20 @@
 ﻿// @ts-ignore
 import logo from '../../src/assets/logo.png'
-import useWallets from "../hooks/useWallets.ts";
-import useUserStore from "../stores/userStore.ts";
+import useWallets from "../../hooks/wallet/useWallets.ts";
+import useUserStore from "../../stores/userStore.ts";
 import {IoWalletSharp} from "react-icons/io5";
 import {Link} from "react-router-dom";
 import {useState} from "react";
-import currencies from "../data/currencies.ts";
+import currencies from "../../data/currencies.ts";
 import {SubmitHandler, useForm} from "react-hook-form";
-import useCreateCashWallet from "../hooks/useCreateWallet.ts";
+import useCreateCashWallet from "../../hooks/wallet/useCreateWallet.ts";
 import {HiX} from "react-icons/hi";
-import {balanceRegisterOptionsForWallet, nameRegisterOptionsForWallet, Wallet} from "../entities/Wallet.ts";
-import UseCreateMonoWallet, {MonoWalletToken} from "../hooks/useCreateMonoWallet.ts";
-import {useMonoUserInfo} from "../hooks/useMonoUserInfo.ts";
-import {ActionButton} from "../components/ActionButton.tsx";
-import { Currency } from '../entities/Currency.ts';
-import {MonobankConfiguration, MonobankUserInfo } from '../entities/MonobankUserInfo.ts';
+import {balanceRegisterOptionsForWallet, nameRegisterOptionsForWallet, Wallet} from "../../entities/Wallet.ts";
+import UseCreateMonoWallet, {MonoWalletToken} from "../../hooks/wallet/useCreateMonoWallet.ts";
+import {useMonoUserInfo} from "../../hooks/wallet/useMonoUserInfo.ts";
+import {ActionButton} from "../../components/ActionButton.tsx";
+import { Currency } from '../../entities/Currency.ts';
+import {MonobankConfiguration, MonobankUserInfo } from '../../entities/MonobankUserInfo.ts';
 
 
 

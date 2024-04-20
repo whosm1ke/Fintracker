@@ -6,7 +6,7 @@ import SubTitle from "./SubTitle.tsx";
 import Title from "./Title.tsx";
 import {loginSchema, LoginSchema} from "../../models/LoginSchema.ts";
 import {useNavigate} from "react-router-dom";
-import useLogin from "../../hooks/useLogin.ts";
+import useLogin from "../../hooks/auth/useLogin.ts";
 
 
 export default function LoginForm() {

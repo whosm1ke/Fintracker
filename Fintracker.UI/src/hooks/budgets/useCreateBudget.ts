@@ -1,5 +1,5 @@
-﻿import ApiClient from "../services/ApiClient.ts";
-import {Budget} from "../entities/Budget.ts";
+﻿import ApiClient from "../../services/ApiClient.ts";
+import {Budget} from "../../entities/Budget.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 
 const apiClient = new ApiClient<Budget, Budget>('budget')
