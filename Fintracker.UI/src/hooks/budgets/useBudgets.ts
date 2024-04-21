@@ -2,24 +2,31 @@
 import {Budget} from "../../entities/Budget.ts";
 import {useQuery} from "@tanstack/react-query";
 import useUserStore from "../../stores/userStore.ts";
+import useBudgetQueryStore from "../../stores/budgetQueryStore.ts";
 
-export const useBudgets = (id: string | undefined, isPublic: boolean | null) => {
+export const useBudgets = (walletId: string | undefined) => {
     
     let apiClient;
-    if (id === undefined) {
+    if (walletId === undefined) {
         const userId = useUserStore(x => x.getUserId());
-        apiClient = new ApiClient<Budget, Budget[]>(`budget/user/${userId}/sorted`)
+        apiClient = new ApiClient<Budget, Budget[]>(`budget/user/${userId}`)
     }else{
-        apiClient = new ApiClient<Budget, Budget[]>(`budget/wallet/${id}/sorted`)
+        apiClient = new ApiClient<Budget, Budget[]>(`budget/wallet/${walletId}`)
     }
+    
+    const query = useBudgetQueryStore(x => x.query);
     return useQuery({
-        queryKey: ['budgets'],
+        queryKey: ['budgets',],
         queryFn: async () => await apiClient.getAll({
             params: {
-                isPublic: isPublic,
-
+                isPublic: query.isPublic || null,
+                sortBy: query.sortBy || "name",
+                isDescending: query.isDescending || true,
+                pageSize: query.pageSize || 50,
+                pageNumber: query.pageNumber || 1,
             }
-        })
+        }),
+        placeholderData: (prevData) => prevData
     })
 }
 

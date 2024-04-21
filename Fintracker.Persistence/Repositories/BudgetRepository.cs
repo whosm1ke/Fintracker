@@ -81,15 +81,13 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
     }
 
 
-    public async Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, QueryParams queryParams,
-        bool? isPublic)
+    public async Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, BudgetQueryParams queryParams)
     {
-        return await _db.Budgets.GetByUserIdSortedAsync(userId, queryParams, isPublic);
+        return await _db.Budgets.GetByUserIdSortedAsync(userId, queryParams);
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, QueryParams queryParams,
-        bool? isPublic)
+    public async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, BudgetQueryParams queryParams)
     {
-        return await _db.Budgets.GetByWalletIdSortedAsync(walletId, queryParams, isPublic);
+        return await _db.Budgets.GetByWalletIdSortedAsync(walletId, queryParams);
     }
 }

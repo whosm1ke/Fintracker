@@ -1,7 +1,7 @@
 ﻿import {useState} from "react";
 import {NavLink, useLocation, useNavigate} from "react-router-dom";
 import {motion} from "framer-motion";
-import useLogoutMutation from "../hooks/auth/useLogoutMutation.ts";
+import useLogoutMutation from "../../hooks/auth/useLogoutMutation";
 
 export interface NavigationLinkProps {
     to: string;

@@ -10,8 +10,7 @@ public static class BudgetExtensions
     public static async Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(
         this DbSet<Budget> budgets,
         Guid userId,
-        QueryParams queryParams,
-        bool? isPublic)
+        BudgetQueryParams queryParams)
     {
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Budget), "x");
@@ -36,9 +35,9 @@ public static class BudgetExtensions
             .AsSplitQuery()
             .Where(x => x.UserId == userId);
 
-        if (isPublic.HasValue)
+        if (queryParams.IsPublic.HasValue)
         {
-            query = query.Where(x => x.IsPublic == isPublic.Value);
+            query = query.Where(x => x.IsPublic == queryParams.IsPublic.Value);
         }
 
         query = queryParams.IsDescending
@@ -51,8 +50,7 @@ public static class BudgetExtensions
     public static async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(
         this DbSet<Budget> budgets,
         Guid walletId,
-        QueryParams queryParams,
-        bool? isPublic)
+        BudgetQueryParams queryParams)
     {
         // Create a parameter expression for the entity type
         var parameter = Expression.Parameter(typeof(Budget), "x");
@@ -77,9 +75,9 @@ public static class BudgetExtensions
             .AsSplitQuery()
             .Where(x => x.WalletId == walletId);
 
-        if (isPublic.HasValue)
+        if (queryParams.IsPublic.HasValue)
         {
-            query = query.Where(x => x.IsPublic == isPublic.Value);
+            query = query.Where(x => x.IsPublic == queryParams.IsPublic.Value);
         }
 
         query = queryParams.IsDescending

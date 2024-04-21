@@ -13,8 +13,8 @@ import WalletTransactionsPage from "./pages/wallet/WalletTransactionsPage.tsx";
 import WalletOverviewPage from "./pages/wallet/WalletOverviewPage.tsx";
 import WalletSettingsPage from "./pages/wallet/WalletSettingsPage.tsx";
 import WalletSettingsCategoriesPage from "./pages/wallet/WalletSettingsCategoriesPage.tsx";
-import RegisterForm from "./components/forms_buttons/RegisterForm.tsx";
-import LoginForm from "./components/forms_buttons/LoginForm.tsx";
+import RegisterForm from "./components/auth/RegisterForm.tsx";
+import LoginForm from "./components/auth/LoginForm.tsx";
 
 const router = createBrowserRouter([
     {

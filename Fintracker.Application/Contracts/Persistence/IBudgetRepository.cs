@@ -11,6 +11,6 @@ public interface IBudgetRepository : IGenericRepository<Budget>
     Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId, bool? isPublic);
     Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId, bool? isPublic);
 
-    Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, QueryParams queryParams, bool? isPublic);
-    Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, QueryParams queryParams, bool? isPublic);
+    Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, BudgetQueryParams queryParams);
+    Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, BudgetQueryParams queryParams);
 }

@@ -1,0 +1,33 @@
+﻿import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {Transaction} from "../../entities/Transaction.ts";
+import ApiClient from "../../services/ApiClient.ts";
+
+const apiClient = new ApiClient<Transaction, Transaction>('transaction')
+
+type Context = {
+    previousTransactions: Transaction[]
+}
+const useUpdateTransaction = () => {
+    const queryClient = useQueryClient();
+    return useMutation<ClientWrapper<UpdateCommandResponse<Transaction>>, Error, Transaction, Context>({
+        mutationFn: async (model) => await apiClient.update(model),
+        onMutate: async (newTransaction: Transaction) => {
+            await queryClient.cancelQueries({queryKey: ['transactions',newTransaction.walletId]});
+
+            const prevData = queryClient.getQueryData<Transaction[]>(['transactions', newTransaction.walletId]) || [];
+
+            queryClient.setQueryData(['transactions',  newTransaction.walletId], (oldQueryData: Transaction[]) => [...oldQueryData || [], newTransaction]);
+            return {previousTransactions: prevData};
+        },
+        // @ts-ignore
+        onError: (err, newTransaction, context) => {
+            queryClient.setQueryData(['transactions',  newTransaction.walletId], context?.previousTransactions)
+            return err;
+        },
+        onSettled: async (_resp, _error, newTransaction) => {
+            await queryClient.invalidateQueries({queryKey: ['transactions', newTransaction.walletId]})
+        },
+    });
+}
+
+export default useUpdateTransaction;

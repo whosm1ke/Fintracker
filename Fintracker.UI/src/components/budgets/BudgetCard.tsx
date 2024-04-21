@@ -21,8 +21,10 @@ export const BudgetCard = ({
                         currencySymbol,
                         endDate,
                         startDate,
-                        totalSpent,
+                        totalSpent = 0,
                     }: BudgetCardProps) => {
+    
+    
     const start = new Date(startDate).toLocaleDateString()
     const end = new Date(endDate).toLocaleDateString()
     const spentPercentage = (totalSpent * 100) / (totalSpent + balance);

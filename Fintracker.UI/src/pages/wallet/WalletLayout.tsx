@@ -25,32 +25,33 @@ export default function WalletLayout() {
 }
 
 const Footer = () => {
+    const {walletId} = useParams();
     return (
         <div className="border-t-2 border-t-gray-300 p-6 mt-6 w-full fixed bottom-0 bg-white">
             <div className={'flex justify-around items-center gap-x-2 w-full text-sm'}>
                 <div>
-                    <NavLink to={'/transactions'}
+                    <NavLink  to={`./${walletId}/trans`}
                              className={({isActive}) =>
                                  isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
                     >Transactions</NavLink>
                 </div>
                 <div>
-                    <NavLink to={'/overview'}
+                    <NavLink  to={`./${walletId}/overview`}
                              className={({isActive}) =>
                                  isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
                     >Overview</NavLink>
                 </div>
                 <div>
-                    <NavLink to={'/budgets'}
+                    <NavLink  to={`./${walletId}/budgets`}
                              className={({isActive}) =>
                                  isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
                     >Budgets</NavLink>
                 </div>
                 <div>
-                    <NavLink to={'/settings/general'}
+                    <NavLink  to={`./${walletId}/settings/general`}
                              className={({isActive}) =>
                                  isActive ? 'text-green-400 font-bold' : 'p-2'
                              }

@@ -172,8 +172,8 @@ public class MockBudgetRepository
         mock.Setup(x => x.GetByUserIdAsync(It.IsAny<Guid>(),It.IsAny<bool>()))
             .Returns((Guid id, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.UserId == id).ToList()));
 
-        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>(),It.IsAny<bool>()))
-            .Returns((Guid id, QueryParams query, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets
+        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<BudgetQueryParams>()))
+            .Returns((Guid id, BudgetQueryParams query) => Task.FromResult((IReadOnlyList<Budget>)budgets
                 .Where(x => x.UserId == id)
                 .AsQueryable()
                 .OrderBy(query.SortBy)
@@ -183,8 +183,8 @@ public class MockBudgetRepository
             .Returns((Guid id, bool isPublic) =>
                 Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.WalletId == id).ToList()));
 
-        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>(), It.IsAny<bool>()))
-            .Returns((Guid id, QueryParams query, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets
+        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<BudgetQueryParams>()))
+            .Returns((Guid id, BudgetQueryParams query) => Task.FromResult((IReadOnlyList<Budget>)budgets
                 .Where(x => x.WalletId == id)
                 .AsQueryable()
                 .OrderBy(query.SortBy)

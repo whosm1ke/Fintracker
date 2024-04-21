@@ -1,7 +1,10 @@
-﻿import {GroupedTransactionByDate, Transaction} from "../entities/Transaction.ts";
+﻿import { useId } from "react";
+import { ConvertCurrency } from "../../entities/Currency";
+import {GroupedTransactionByDate, Transaction } from "../../entities/Transaction";
+import { useCurrencyConvertAll } from "../../hooks/currencies/useCurrenctConvertAll";
+import Spinner from "../other/Spinner.tsx";
 import {TransactionItem} from "./TransactionItem.tsx";
-import {useCurrencyConvertAll} from "../hooks/currencies/useCurrenctConvertAll.tsx";
-import {useId} from "react";
+
 
 interface TransactionListProps {
     transactions: Transaction[];
@@ -44,21 +47,32 @@ const groupTransactionsByDate = (transactions: Transaction[]) => {
 }
 
 type uniqueCurrency = { [key: string]: number }
-export default function TransactionList({transactions, walletSymbol}: TransactionListProps) {
 
-    
-    const groupedTransactions = groupTransactionsByDate(transactions);
-    const allTransactions = groupedTransactions.flatMap(group => group.transactions);
-    const uniqueSymbols = getUniqueCurrencySymbols(allTransactions);
-    const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
+const getCurrencyRates = (convertedCurrencies: ConvertCurrency[] | undefined, uniqueSymbols: string[]) => {
     const currencyRates: uniqueCurrency = {};
     if (convertedCurrencies) {
         convertedCurrencies.forEach((rate, i) => {
             currencyRates[uniqueSymbols[i]] = rate.value;
         });
+
+        return currencyRates;
     }
+
+    return null;
+}
+export default function TransactionList({transactions, walletSymbol}: TransactionListProps) {
+
+
+    const groupedTransactions = groupTransactionsByDate(transactions);
+    const allTransactions = groupedTransactions.flatMap(group => group.transactions);
+    const uniqueSymbols = getUniqueCurrencySymbols(allTransactions);
+    const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
+    const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
+
+    if (!currencyRates) return <Spinner/>
+    
     return (
-        <div className={'flex flex-col gap-y-7'}>
+        <div className={'flex flex-col gap-y-2'}>
             {groupedTransactions.map((group, i) =>
                 <div className={''} key={i}>
                     <TransactionBlock transactions={group.transactions} date={group.date}
@@ -76,7 +90,7 @@ interface TransactionBlockProps {
     transactions: Transaction[],
     walletSymbol: string;
     date: Date,
-    totalSpent:string;
+    totalSpent: string;
     totalTransactions: number;
 }
 
@@ -89,19 +103,17 @@ export function TransactionBlock({
                                  }: TransactionBlockProps) {
     const uniqueSymbols = getUniqueCurrencySymbols(transactions);
     const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
-    const currencyRates: uniqueCurrency = {};
-    if (convertedCurrencies) {
-        convertedCurrencies.forEach((rate, i) => {
-            currencyRates[uniqueSymbols[i]] = rate.value;
-        });
-    }
+    const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
+
+    if (!currencyRates) return <Spinner/>
+    
     const id = useId()
 
     return (
-        <div className={'flex flex-col rounded-xl'}>
+        <div className={'flex flex-col  border-b-2 border-b-blue-300'}>
             <TransactionBlockHeader date={date} totalSpent={totalSpent} totalTransactions={totalTransactions}
                                     walletSymbol={walletSymbol}/>
-            <div className={'flex flex-col gap-y-2 mb-5'}>
+            <div className={'flex flex-col'}>
                 {
                     transactions.map(tran =>
                         <TransactionItem key={tran.id + id} transaction={tran} walletCurrencySymbol={walletSymbol}
@@ -126,13 +138,11 @@ const TransactionBlockHeader = ({date, totalTransactions, totalSpent, walletSymb
 
 
     return (
-        <div className={'flex justify-between mb-1 p-4 text-sm sm:text-[15px]'}>
+        <div className={'flex justify-between items-center text-sm sm:text-[15px] px-2 py-4'}>
             <div>
-                <h1 className={'font-bold'}>Date</h1>
                 <p className={'font-bold text-left'}>{datePeriod}</p>
             </div>
             <div className={'hidden sm:block'}>
-                <h1 className={'font-bold'}>Total transactions</h1>
                 <p className={'font-bold text-center'}>{totalTransactions}</p>
             </div>
             <div className={'hidden sm:flex gap-x-2'}>
@@ -142,8 +152,7 @@ const TransactionBlockHeader = ({date, totalTransactions, totalSpent, walletSymb
                         <option key={s} value={s.toLowerCase()}>{s}</option>)}
                 </select>
             </div>
-            <div className={'grid grid-rows-2'}>
-                <h1 className={'font-bold '}>Total spent</h1>
+            <div className={''}>
                 <p className={'text-red-400 font-bold text-right'}>- {totalSpent} {walletSymbol}</p>
             </div>
         </div>
