@@ -3,7 +3,6 @@
 } from "../../entities/Transaction.ts";
 import * as Icons from 'react-icons/md'
 import {IconType} from "react-icons";
-import { useState } from "react";
 
 interface TransactionItemProps {
     transaction: Transaction,
@@ -14,11 +13,9 @@ interface TransactionItemProps {
 export function TransactionItem({transaction, conversionRate, walletCurrencySymbol}: TransactionItemProps) {
     const Icon = (Icons as any)[transaction.category.image] as IconType;
     const convertedAmount = transaction.amount * conversionRate;
-    const [isEditing, setIsEditing] = useState(false);
-    const toggleIsEditing = () => setIsEditing(p => !p);
     return (
         <div className={'relative'}>
-            <div onClick={toggleIsEditing}
+            <div
                 className="flex justify-between items-center px-2 bg-neutral-100 border rounded shadow  hover:bg-neutral-200">
                 <div className="flex items-center gap-x-2">
                     <Icon size="2rem" color={transaction.category.iconColour}/>

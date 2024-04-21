@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Wallet.Handlers.Commands;
 
-public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, CreateCommandResponse<WalletBaseDTO>>
+public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, CreateCommandResponse<CreateWalletDTO>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -18,20 +18,18 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
         _mapper = mapper;
     }
 
-    public async Task<CreateCommandResponse<WalletBaseDTO>> Handle(CreateWalletCommand request,
+    public async Task<CreateCommandResponse<CreateWalletDTO>> Handle(CreateWalletCommand request,
         CancellationToken cancellationToken)
     {
-        var response = new CreateCommandResponse<WalletBaseDTO>();
+        var response = new CreateCommandResponse<CreateWalletDTO>();
 
 
         var wallet = _mapper.Map<Domain.Entities.Wallet>(request.Wallet);
-        wallet.Currency = await _unitOfWork.CurrencyRepository.GetAsync(request.Wallet.CurrencyId) ?? default!;
         await _unitOfWork.WalletRepository.AddAsync(wallet);
-        var createdObject = _mapper.Map<WalletBaseDTO>(wallet);
         
         response.Success = true;
         response.Message = "Created successfully";
-        response.CreatedObject = createdObject;
+        response.CreatedObject = request.Wallet;
         response.Id = wallet.Id;
         await _unitOfWork.SaveAsync();
 

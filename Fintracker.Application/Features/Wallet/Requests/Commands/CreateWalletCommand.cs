@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Wallet.Requests.Commands;
 
-public class CreateWalletCommand : IRequest<CreateCommandResponse<WalletBaseDTO>>, INotGetRequest
+public class CreateWalletCommand : IRequest<CreateCommandResponse<CreateWalletDTO>>, INotGetRequest
 {
     public CreateWalletDTO Wallet { get; set; } = default!;
 }

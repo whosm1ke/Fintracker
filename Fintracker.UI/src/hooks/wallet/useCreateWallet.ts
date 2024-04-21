@@ -27,7 +27,7 @@ const useCreateWallet = () => {
         },
         onSettled: async () => {
             await queryClient.invalidateQueries({queryKey: ['wallets']})
-        },
+        }
     })
 }
 

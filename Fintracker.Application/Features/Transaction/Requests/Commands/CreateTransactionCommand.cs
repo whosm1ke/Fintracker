@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Requests.Commands;
 
-public class CreateTransactionCommand : IRequest<CreateCommandResponse<TransactionBaseDTO>>, INotGetRequest
+public class CreateTransactionCommand : IRequest<CreateCommandResponse<CreateTransactionDTO>>, INotGetRequest
 {
     public CreateTransactionDTO Transaction { get; set; } = default!;
 }

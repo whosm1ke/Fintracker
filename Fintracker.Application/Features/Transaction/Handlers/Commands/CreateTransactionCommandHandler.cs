@@ -11,28 +11,25 @@ namespace Fintracker.Application.Features.Transaction.Handlers.Commands;
 
 public class
     CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand,
-    CreateCommandResponse<TransactionBaseDTO>>
+    CreateCommandResponse<CreateTransactionDTO>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public CreateTransactionCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IUserRepository userRepository)
+    public CreateTransactionCommandHandler(IMapper mapper, IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<CreateCommandResponse<TransactionBaseDTO>> Handle(CreateTransactionCommand request,
+    public async Task<CreateCommandResponse<CreateTransactionDTO>> Handle(CreateTransactionCommand request,
         CancellationToken cancellationToken)
     {
-        var response = new CreateCommandResponse<TransactionBaseDTO>();
+        var response = new CreateCommandResponse<CreateTransactionDTO>();
 
         var transaction = _mapper.Map<Domain.Entities.Transaction>(request.Transaction);
-        transaction.Currency = await _unitOfWork.CurrencyRepository.GetAsync(request.Transaction.CurrencyId) ?? default!;
-        transaction.Category = await _unitOfWork.CategoryRepository.GetAsync(request.Transaction.CategoryId) ?? default!;
         await _unitOfWork.TransactionRepository.AddAsync(transaction);
 
-        var createdObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
         await DecreaseBalanceInWallet(transaction.WalletId, transaction.Amount);
         await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount, transaction.UserId, transaction.WalletId);
@@ -41,7 +38,7 @@ public class
         response.Success = true;
         response.Message = "Created successfully";
         response.Id = transaction.Id;
-        response.CreatedObject = createdObj;
+        response.CreatedObject = request.Transaction;
 
         await _unitOfWork.SaveAsync();
 

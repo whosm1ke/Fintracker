@@ -77,8 +77,7 @@ export default function TransactionList({transactions, walletSymbol}: Transactio
                 <div className={''} key={i}>
                     <TransactionBlock transactions={group.transactions} date={group.date}
                                       walletSymbol={walletSymbol}
-                                      totalSpent={calculateTotalExpenseByDate(group.transactions, currencyRates)}
-                                      totalTransactions={group.transactions.length}/>
+                                      totalSpent={calculateTotalExpenseByDate(group.transactions, currencyRates)}/>
                 </div>
             )}
         </div>
@@ -91,7 +90,6 @@ interface TransactionBlockProps {
     walletSymbol: string;
     date: Date,
     totalSpent: string;
-    totalTransactions: number;
 }
 
 export function TransactionBlock({
@@ -99,7 +97,6 @@ export function TransactionBlock({
                                      walletSymbol,
                                      date,
                                      totalSpent,
-                                     totalTransactions
                                  }: TransactionBlockProps) {
     const uniqueSymbols = getUniqueCurrencySymbols(transactions);
     const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
@@ -111,7 +108,7 @@ export function TransactionBlock({
 
     return (
         <div className={'flex flex-col  border-b-2 border-b-blue-300'}>
-            <TransactionBlockHeader date={date} totalSpent={totalSpent} totalTransactions={totalTransactions}
+            <TransactionBlockHeader date={date} totalSpent={totalSpent}
                                     walletSymbol={walletSymbol}/>
             <div className={'flex flex-col'}>
                 {
@@ -128,11 +125,10 @@ export function TransactionBlock({
 interface TransactionBlockHeaderProps {
     date: Date;
     totalSpent: string;
-    totalTransactions: number;
     walletSymbol: string;
 }
 
-const TransactionBlockHeader = ({date, totalTransactions, totalSpent, walletSymbol}: TransactionBlockHeaderProps) => {
+const TransactionBlockHeader = ({date, totalSpent, walletSymbol}: TransactionBlockHeaderProps) => {
     const datePeriod = new Date(date).toLocaleDateString();
     const sortOptions = ["Label", "Note", "Amount"];
 
@@ -141,9 +137,6 @@ const TransactionBlockHeader = ({date, totalTransactions, totalSpent, walletSymb
         <div className={'flex justify-between items-center text-sm sm:text-[15px] px-2 py-4'}>
             <div>
                 <p className={'font-bold text-left'}>{datePeriod}</p>
-            </div>
-            <div className={'hidden sm:block'}>
-                <p className={'font-bold text-center'}>{totalTransactions}</p>
             </div>
             <div className={'hidden sm:flex gap-x-2'}>
                 <h1 className={'font-bold'}>Sort by:</h1>

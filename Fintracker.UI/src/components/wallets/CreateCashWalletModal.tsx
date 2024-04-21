@@ -1,35 +1,44 @@
-﻿import {SubmitHandler, useForm } from "react-hook-form";
-import {Wallet, balanceRegisterOptionsForWallet, nameRegisterOptionsForWallet } from "../../entities/Wallet";
-import { useState } from "react";
-import { Currency } from "../../entities/Currency";
+﻿import {SubmitHandler, useForm} from "react-hook-form";
+import {Wallet, balanceRegisterOptionsForWallet, nameRegisterOptionsForWallet} from "../../entities/Wallet";
+import {useState} from "react";
+import {Currency} from "../../entities/Currency";
 import useCreateWallet from "../../hooks/wallet/useCreateWallet.ts";
 import {ActionButton} from "../other/ActionButton.tsx";
 import {HiX} from "react-icons/hi";
 import currencies from "../../data/currencies.ts";
+import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
+import CurrencyItem from "../currencies/CurrencyItem.tsx";
 
 interface CashWalletModalProps {
     userId: string,
 }
+
 const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
 
-    const {register, handleSubmit, clearErrors, reset, formState: {errors}} = useForm<Wallet>();
+    const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Wallet>();
     const walletMutation = useCreateWallet();
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedCurrency, setSelectedCurrency] = useState<Currency>(currencies[0])
+    const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
 
     function handleOpenModal() {
         setIsOpen(p => !p);
     }
 
-    function handleSelectedCurrency(currency: Currency | undefined) {
-        if (currency === undefined)
-            currency = currencies[0];
+    function handleSelectedCurrency(currency: Currency) {
         setSelectedCurrency(currency);
     }
 
     const onSubmit: SubmitHandler<Wallet> = async (model: Wallet) => {
-        model.ownerId = userId;
+
+        if (selectedCurrency === undefined) {
+            setError("currencyId", {message: "Currency not selected"})
+            return;
+        } else {
+            clearErrors("currencyId")
+            model.currencyId = selectedCurrency.id;
+        }
         model.currency = selectedCurrency;
+        model.ownerId = userId;
         await walletMutation.mutateAsync(model, {
             onSuccess: () => {
                 reset();
@@ -39,12 +48,13 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
         });
     };
 
+
     return (
         <>
             <ActionButton text={"Add new wallet"} onModalOpen={handleOpenModal}/>
             <div className={`absolute inset-0  flex justify-center items-center
                         ${isOpen ? 'visible bg-black/20' : 'invisible'}`}>
-                <div className="bg-white p-4 rounded-md shadow-lg max-w-md mx-auto mt-4">
+                <div className="bg-white p-4 rounded-md shadow-lg max-w-md mx-auto">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add Wallet
                         <HiX size={'2rem'} color={'red'} onClick={handleOpenModal}/>
                     </h2>
@@ -75,25 +85,17 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
                             {errors.balance && <p className={'text-red-400 italic'}>{errors.balance.message}</p>}
                         </div>
                         <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="CurrencyId">
-                                Currency
-                            </label>
-                            <select
-                                className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="CurrencyId"
-                                {...register("currencyId", {
-                                    required: "Currency is required for wallet",
-                                })}
-                                onChange={(e) => handleSelectedCurrency(currencies.find(currency => currency.id === e.target.value))}
-                            >
-                                {currencies.map((currency) => (
-                                    <option key={currency.id} value={currency.id}>
-                                        {currency.name} ({currency.symbol})
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.currencyId && <p className={'text-red-400 italic'}>{errors.currencyId.message}</p>}
+                            <label className="block text-gray-700 text-sm font-bold mb-2"
+                                   htmlFor="CurrencyId">Currency</label>
+                            <div {...register("currencyId")}>
+                                <SingleSelectDropDownMenu items={currencies} ItemComponent={CurrencyItem}
+                                                          defaultSelectedItem={selectedCurrency}
+                                                          heading={"Currency"} onItemSelected={handleSelectedCurrency}/>
+                                {errors.currencyId &&
+                                    <p className={'text-red-400 italic'}>{errors.currencyId.message}</p>}
+                            </div>
                         </div>
+
                         <div className="flex items-center justify-between">
                             <button
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

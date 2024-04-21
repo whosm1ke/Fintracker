@@ -46,10 +46,14 @@ export const noteRegisterForTransaction: RegisterOptions = {
 export const dateRegisterForTransaction: RegisterOptions = {
     required: "Date for transaction is required",
     validate: (_value, formValues) => {
-        const today = new Date().toLocaleString('en-CA');
-        const formDate = new Date(formValues.date).toLocaleString('en-CA');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set the time to the start of the day
+        const formDate = new Date(formValues.date);
+        formDate.setHours(0, 0, 0, 0); // Also set the time of formDate to the start of the day
         if(formDate > today)
             return "Date can not be in future";
         return true;
     }
 }
+
+

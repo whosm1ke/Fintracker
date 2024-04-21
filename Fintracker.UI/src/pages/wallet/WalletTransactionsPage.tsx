@@ -5,7 +5,7 @@ import useTransactions from "../../hooks/transactions/useTransactions.ts";
 import useTransactionQueryStore from "../../stores/transactionQueryStore.ts";
 import TransactionFilters from "../../components/transactions/TransactionFilters.tsx";
 import Spinner from "../../components/other/Spinner.tsx";
-import AddTransactionModal from "../../components/transactions/AddTransactionModal.tsx";
+import CreateTransactionModal from "../../components/transactions/CreateTransactionModal.tsx";
 import TransactionList from "../../components/transactions/TransactionList.tsx";
 
 export default function WalletTransactionsPage() {
@@ -36,11 +36,11 @@ export default function WalletTransactionsPage() {
         <div className={'container mx-auto p-4'}>
             <div className={'flex justify-between'}>
                 <div className={'grid grid-cols-2 grid-rows-2'}>
-                    <AddTransactionModal userId={userId!} walletId={wallet.response.id}/>
+                    <CreateTransactionModal userId={userId!} walletId={wallet.response.id}/>
                 </div>
                 <div className={'grid grid-cols-3 grid-rows-2 gap-x-4'}>
                     <TransactionFilters startDate={startDate!} endDate={endDate!} handleDateFilterChange={handleDateFilterChange}
-                                        transPerPage={transPerDate || 10}
+                                        transPerPage={transPerDate || 1}
                                         handleTransPerDateChangle={handleTransactionPerDateChange}
                     />
                 </div>

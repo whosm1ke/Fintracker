@@ -130,7 +130,7 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
         }
     }
 
-    async delete(id: number): Promise<ClientWrapper<DeleteCommandResponse<TRequest>>> {
+    async delete(id: string): Promise<ClientWrapper<DeleteCommandResponse<TRequest>>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {

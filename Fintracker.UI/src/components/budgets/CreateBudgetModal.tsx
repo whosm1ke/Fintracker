@@ -1,18 +1,26 @@
-﻿import {SubmitHandler, useForm } from "react-hook-form";
-import { Budget, balanceRegisterOptionsForBudget,
-    endDateRegisterOptionsForBudget, nameRegisterOptionsForBudget, startDateRegisterOptionsForBudget } from "../../entities/Budget";
-import { useParams } from "react-router-dom";
+﻿import {SubmitHandler, useForm} from "react-hook-form";
+import {
+    Budget, balanceRegisterOptionsForBudget,
+    endDateRegisterOptionsForBudget, nameRegisterOptionsForBudget, startDateRegisterOptionsForBudget
+} from "../../entities/Budget";
+import {useNavigate, useParams} from "react-router-dom";
 import useCreateBudget from "../../hooks/budgets/useCreateBudget";
 import useWallets from "../../hooks/wallet/useWallets";
 import Spinner from "../other/Spinner.tsx";
 import useCategories from "../../hooks/categories/useCategories.ts";
-import { useState } from "react";
-import { Currency } from "../../entities/Currency.ts";
+import {useState} from "react";
+import {Currency} from "../../entities/Currency.ts";
 import currencies from "../../data/currencies.ts";
 import useStopScrolling from "../../hooks/other/useStopScrolling.ts";
 import {ActionButton} from "../other/ActionButton.tsx";
 import {HiX} from "react-icons/hi";
-import CategoriesDropDownList from "../categories/CategoriesDropDownList.tsx";
+import MultiSelectDropDownMenu from "../other/MultiSelectDropDownList.tsx";
+import CategoryItem from "../categories/CategoryItem.tsx";
+import {Category} from "../../entities/Category.ts";
+import {Wallet} from "../../entities/Wallet.ts";
+import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
+import CurrencyItem from "../currencies/CurrencyItem.tsx";
+import WalletItem from "../wallets/WalletItem.tsx";
 
 
 interface CreateBudgetModalProps {
@@ -26,58 +34,72 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
     const {data: wallets} = useWallets(userId)
     const {data: categories} = useCategories();
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedCurrency, setSelectedCurrency] = useState<Currency>(currencies[0])
-    const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([])
+    const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined)
+    const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
+    const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
+    const navigate = useNavigate();
     useStopScrolling(isOpen)
     if (wallets === undefined || categories === undefined) return <Spinner/>
-
+    
     function handleOpenModal() {
+        handleSelectedCurrency(undefined);
+        setSelectedCategories([])
         setIsOpen(p => !p);
     }
 
-    function handleSelectedCurrency(currencyId: string) {
-        const currency = currencies.find(c => c.id === currencyId) || currencies[0];
+    const handleSelectedWallet = (wallet: Wallet) => setSelectedWallet(wallet);
+
+    function handleSelectedCurrency(currency: Currency | undefined) {
         setSelectedCurrency(currency);
     }
 
-    const handleToggleCategoryId = (categoryId: string) => {
-        if (selectedCategoryIds.includes(categoryId)) {
-            setSelectedCategoryIds(prev => prev.filter(id => id !== categoryId));
+    const handleToggleCategoryId = (category: Category) => {
+
+        if (selectedCategories.includes(category)) {
+            setSelectedCategories(prev => prev.filter(c => c.id !== category.id));
         } else {
-            setSelectedCategoryIds(prev => [...prev, categoryId]);
+            setSelectedCategories(prev => [...prev, category!]);
         }
     };
 
     const handleSelectAllCategories = () => {
-        if (selectedCategoryIds.length === categories.length) {
-            setSelectedCategoryIds([]);
+        if (selectedCategories.length === categories.length) {
+            setSelectedCategories([]);
         } else {
-            setSelectedCategoryIds(categories.map(c => c.id));
+            setSelectedCategories(categories);
         }
     }
 
     const onSubmit: SubmitHandler<Budget> = async (model: Budget) => {
-        if (selectedCategoryIds.length === 0) {
+        if (selectedCategories.length === 0) {
             setError("categoryIds", {message: "Budget must contain at least one category"})
-            return;
-        }
-        else{
+        } else {
             clearErrors("categoryIds")
+            model.categoryIds = selectedCategories.map(c => c.id);
         }
 
-        model.userId = userId;
-        model.currency = selectedCurrency;
+        if (!selectedCurrency) {
+            setError("currencyId", {message: "Currency is required"})
+        } else {
+            clearErrors("currencyId")
+            model.currencyId = selectedCurrency.id;
+        }
         
         if (walletId)
             model.walletId = walletId
-        model.categoryIds = selectedCategoryIds
-        console.log("model: ", model)
+        else
+            model.walletId = selectedWallet!.id
+
+        model.userId = userId;
+        model.currencyId = selectedCurrency!.id;
+        model.currency = selectedCurrency!;
+        model.categories = selectedCategories
+        model.wallet = selectedWallet || wallets.find(w => w.id === walletId)!;
         await budgetMutation.mutateAsync(model, {
             onSuccess: () => {
                 reset();
                 clearErrors();
                 handleOpenModal();
-                setSelectedCategoryIds([])
             }
         });
     };
@@ -94,7 +116,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                             reset()
                             clearErrors()
                             handleOpenModal()
-                            setSelectedCategoryIds([])
+                            setSelectedCategories([])
                         }}/>
                     </h2>
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -111,7 +133,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                 />
                                 {errors.name && <p className={'text-red-400 italic'}>{errors.name.message}</p>}
                             </div>
-                            
+
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="balance">
                                     Balance
@@ -147,7 +169,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="endDate"
                                     type="date"
-                                    defaultValue={(function() {
+                                    defaultValue={(function () {
                                         const tomorrow = new Date();
                                         tomorrow.setDate(tomorrow.getDate() + 1);
                                         return tomorrow.toLocaleDateString('en-CA');
@@ -158,52 +180,34 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
 
                                 {errors.endDate && <p className={'text-red-400 italic'}>{errors.endDate.message}</p>}
                             </div>
-                            <div className="mb-4 col-start-1 col-span-2 sm:col-start-0 sm:col-span-0">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="CurrencyId">
-                                    Currency
-                                </label>
-                                <select
-                                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="CurrencyId"
-                                    {...register("currencyId", {
-                                        required: "Currency is required for transaction",
-                                        value: currencies[0].id
-                                    })}
-                                    onChange={(e) => handleSelectedCurrency(e.target.value)}
-                                >
-                                    {currencies.map((currency) => (
-                                        <option key={currency.id} value={currency.id}>
-                                            {currency.name} ({currency.symbol})
-                                        </option>
-                                    ))}
-                                </select>
-                                {errors.currencyId &&
-                                    <p className={'text-red-400 italic'}>{errors.currencyId.message}</p>}
+                            <div className="mb-4 col-start-1 col-span-2">
+                                <label className="block text-gray-700 text-sm font-bold mb-2"
+                                       htmlFor="CurrencyId">Currency</label>
+                                <div {...register("currencyId")}>
+                                    <SingleSelectDropDownMenu items={currencies} ItemComponent={CurrencyItem}
+                                                              defaultSelectedItem={selectedCurrency}
+                                                              heading={"Currency"}
+                                                              onItemSelected={handleSelectedCurrency}/>
+                                    {errors.currencyId &&
+                                        <p className={'text-red-400 italic'}>{errors.currencyId.message}</p>}
+                                </div>
                             </div>
-                            {!walletId && <div className="mb-4">
+                            {!walletId && <div className="mb-4 col-start-1 col-span-2">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="walletId">
                                     Wallet
                                 </label>
-                                <select
-                                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="walletId"
-                                    {...register("walletId", {
-                                        required: "Wallet is required for budget",
-                                        value: wallets[0].id
-                                    })}
-                                    onChange={(e) => handleSelectedCurrency(e.target.value)}
-                                >
-                                    {wallets.map((wallet) => {
-                                            if (!wallet.isBanking) {
-                                                return (<option key={wallet.id} value={wallet.id}>
-                                                    {wallet.name} ({wallet.balance})
-                                                </option>)
-                                            }
-                                        }
-                                    )}
-                                </select>
-                                {errors.walletId &&
-                                    <p className={'text-red-400 italic'}>{errors.walletId.message}</p>}
+                                <div {...register("walletId")}>
+                                    <SingleSelectDropDownMenu items={wallets} ItemComponent={WalletItem}
+                                                              defaultSelectedItem={selectedWallet}
+                                                              heading={"Wallet"} onItemSelected={handleSelectedWallet}/>
+                                    {wallets.length === 0 ? (<div className={'px-4 py-2 mt-4 bg-green-400 w-1/3 text-center rounded-full font-semibold'}>
+                                        <button className={'text-white text-sm'}
+                                        onClick={() => navigate("/dashboard", {state: "showArrow"})}
+                                        >Add new Wallet</button>
+                                    </div>) : null}
+                                    {errors.walletId &&
+                                        <p className={'text-red-400 italic'}>{errors.walletId.message}</p>}
+                                </div>
                             </div>}
 
                             <div className={'mb-4 col-start-1 col-span-2 sm:col-start-0 sm:col-span-0'}
@@ -211,10 +215,11 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                 <span className="block text-gray-700 text-sm font-bold mb-2">
                                     Select categories
                                 </span>
-                                <CategoriesDropDownList categories={categories}
-                                                        selectedCategoryIds={selectedCategoryIds}
-                                                        handleSelectAllCategories={handleSelectAllCategories}
-                                                        handleToggleCategoryId={handleToggleCategoryId}/>
+                                <MultiSelectDropDownMenu items={categories} onItemSelected={handleToggleCategoryId}
+                                                         selectedItems={selectedCategories} heading={"Categories"}
+                                                         onAllItemsSelected={handleSelectAllCategories}
+                                                         ItemComponent={CategoryItem}/>
+
                                 {errors.categoryIds &&
                                     <p className={'text-red-400 italic'}>{errors.categoryIds.message}</p>}
                             </div>
@@ -247,4 +252,5 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
         </>
     );
 }
+
 
