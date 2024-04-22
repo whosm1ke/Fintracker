@@ -1,4 +1,4 @@
-﻿const enum CategoryType
+﻿export const enum CategoryType
 {
     INCOME,
     EXPENSE

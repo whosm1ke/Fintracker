@@ -108,8 +108,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
     return (
         <>
             <ActionButton text={"Add new budget"} onModalOpen={handleOpenModal}/>
-            <div className={`absolute inset-0 flex justify-center items-start px-4 lg:px-0
-                        ${isOpen ? 'visible bg-black/20' : 'invisible'}`}>
+            {isOpen && <div className={'absolute inset-0 flex justify-center items-start px-4 lg:px-0 visible bg-black/20'}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto mt-4">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add budget
                         <HiX size={'2rem'} color={'red'} onClick={() => {
@@ -200,10 +199,12 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                     <SingleSelectDropDownMenu items={wallets} ItemComponent={WalletItem}
                                                               defaultSelectedItem={selectedWallet}
                                                               heading={"Wallet"} onItemSelected={handleSelectedWallet}/>
-                                    {wallets.length === 0 ? (<div className={'px-4 py-2 mt-4 bg-green-400 w-1/3 text-center rounded-full font-semibold'}>
+                                    {wallets.length === 0 ? (<div
+                                        className={'px-4 py-2 mt-4 bg-green-400 w-1/3 text-center rounded-full font-semibold'}>
                                         <button className={'text-white text-sm'}
-                                        onClick={() => navigate("/dashboard", {state: "showArrow"})}
-                                        >Add new Wallet</button>
+                                                onClick={() => navigate("/dashboard", {state: "showArrow"})}
+                                        >Add new Wallet
+                                        </button>
                                     </div>) : null}
                                     {errors.walletId &&
                                         <p className={'text-red-400 italic'}>{errors.walletId.message}</p>}
@@ -248,7 +249,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                         </div>
                     </form>
                 </div>
-            </div>
+            </div>}
         </>
     );
 }

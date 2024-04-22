@@ -1,10 +1,13 @@
 ﻿import {useState} from "react";
-import {MonobankConfiguration, MonobankUserInfo} from "../../entities/MonobankUserInfo";
+import {Account, ExtendedMonobankConfiguration, MonobankUserInfo} from "../../entities/MonobankUserInfo";
 import {HiX} from "react-icons/hi";
 import {SubmitHandler, useForm} from "react-hook-form";
-import { ActionButton } from "../other/ActionButton";
-import { useMonoUserInfo } from "../../hooks/wallet/useMonoUserInfo";
-import useCreateMonoWallet, { MonoWalletToken } from "../../hooks/wallet/useCreateMonoWallet";
+import {ActionButton} from "../other/ActionButton";
+import {useMonoUserInfo} from "../../hooks/wallet/useMonoUserInfo";
+import useCreateMonoWallet, {MonoWalletToken} from "../../hooks/wallet/useCreateMonoWallet";
+import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
+import BankAccountItem from "../other/BankAccountItem.tsx";
+import currencies from "../../data/currencies.ts";
 
 const CreateMonobankWalletModal = () => {
 
@@ -62,7 +65,7 @@ const MonobankModalStep1 = ({handleOpenModal, handleNextStep, handleMonouserInfo
     };
 
     return (
-        <div className={`absolute inset-0  flex justify-center items-center visible bg-black/20`}>
+        <div className={`absolute inset-0  flex justify-center items-center visible bg-black/20 z-50`}>
             <div className="bg-white p-4 rounded-md shadow-lg max-w-md w-1/2 mx-auto mt-4">
                 <h2 className="text-2xl font-bold mb-4 flex justify-between">Add monobank
                     <HiX size={'2rem'} color={'red'} onClick={() => {
@@ -102,15 +105,19 @@ interface MonobankModalStep2Props {
 }
 
 const MonobankModalStep2 = ({userInfo, handleOpenModal}: MonobankModalStep2Props) => {
-    const {handleSubmit, register, reset, clearErrors, setError, formState: {errors}} = useForm<MonobankConfiguration>({
+    const {handleSubmit, register, reset, clearErrors, setError, formState: {errors}} = useForm<ExtendedMonobankConfiguration>({
         mode: 'onSubmit'
     });
 
     const monobankMutation = useCreateMonoWallet();
-    const onSubmit: SubmitHandler<MonobankConfiguration> = async (model: MonobankConfiguration) => {
+    const [selectedAcc, setSelectedAcc] = useState<Account>(userInfo.accounts[0])
+
+    const handleSelectedAccount = (acc: Account) => setSelectedAcc(acc);
+    const onSubmit: SubmitHandler<ExtendedMonobankConfiguration> = async (model: ExtendedMonobankConfiguration) => {
         const fromUnix = new Date(model.from).getTime() / 1000;
         const toUnix = model.to ? new Date(model.to).getTime() / 1000 : undefined;
-
+        model.accountId = selectedAcc.id;
+        model.currency = currencies.find(c => c.code === selectedAcc.currencyCode) || currencies.find(c => c.symbol === "UAN")! 
         const unixModel = {
             ...model,
             from: fromUnix,
@@ -123,12 +130,11 @@ const MonobankModalStep2 = ({userInfo, handleOpenModal}: MonobankModalStep2Props
             setError("root", {message: 'Something went wrong'})
         } else {
             handleOpenModal()
-            window.location.reload();
         }
     };
 
     return (
-        <div className={`absolute inset-0  flex justify-center items-center visible bg-black/20`}>
+        <div className={`absolute inset-0  flex justify-center items-center visible bg-black/20 z-50`}>
             <div className="bg-white p-4 rounded-md shadow-lg max-w-md w-1/2 mx-auto mt-4">
                 <h2 className="text-2xl font-bold mb-4 flex justify-between">{userInfo.name}
                     <HiX size={'2rem'} color={'red'} onClick={() => {
@@ -143,20 +149,13 @@ const MonobankModalStep2 = ({userInfo, handleOpenModal}: MonobankModalStep2Props
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="accounntId">
                             Your accounts
                         </label>
-                        <select
-                            className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="accounntId"
-                            {...register("accountId", {
-                                required: "Select the account",
-                            })}
-                        >
-                            {userInfo.accounts.map((acc) => (
-                                <option key={acc.id} value={acc.id}>
-                                    {`${acc.maskedPan} \t\t (${acc.balance / 100})`}
-                                </option>
-                            ))}
-
-                        </select>
+                        <div {...register("accountId")}>
+                            <SingleSelectDropDownMenu items={userInfo.accounts} ItemComponent={BankAccountItem}
+                                                      heading={"Accounts"}
+                                                      onItemSelected={handleSelectedAccount}
+                                                      defaultSelectedItem={selectedAcc}/>
+                            {errors.accountId && <p className={'text-red-400 italic'}>{errors.accountId.message}</p>}
+                        </div>
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="startDate">

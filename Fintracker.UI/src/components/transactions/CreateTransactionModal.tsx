@@ -3,7 +3,7 @@
     dateRegisterForTransaction, labelRegisterForTransaction, noteRegisterForTransaction
 } from "../../entities/Transaction";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Currency} from "../../entities/Currency";
 import currencies from "../../data/currencies";
 import {Category} from "../../entities/Category";
@@ -21,19 +21,27 @@ import CategoryItem from "../categories/CategoryItem.tsx";
 interface AddTransactionModalProps {
     userId: string;
     walletId: string;
+    walletCurrency: Currency
 }
 
-export const CreateTransactionModal = ({userId, walletId}: AddTransactionModalProps) => {
+export const CreateTransactionModal = ({userId, walletId, walletCurrency}: AddTransactionModalProps) => {
     const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Transaction>();
     const transactionMutation = useCreateTransaction();
     const {data: categories} = useCategories();
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined);
-
+    const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(walletCurrency);
     const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined)
     useStopScrolling(isOpen)
 
+    useEffect(() => {
+        if (isOpen) {
+            setSelectedCurrency(walletCurrency);
+        }
+    }, [isOpen]);
+
+
     if (!categories) return <Spinner/>
+    
 
     const handleSelectedCurrency = (currency: Currency | undefined) => {
         setSelectedCurrency(currency)
@@ -83,8 +91,7 @@ export const CreateTransactionModal = ({userId, walletId}: AddTransactionModalPr
     return (
         <>
             <ActionButton text={"Add new transaction"} onModalOpen={handleOpenModal}/>
-            <div className={`absolute inset-0 flex justify-center items-start p-4 sm:p-2 z-10
-                        ${isOpen ? 'visible bg-black/20' : 'invisible'}`}>
+            {isOpen && <div className={'absolute inset-0 flex justify-center items-start p-4 sm:p-2 z-10 visible bg-black/20'}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add transaction
                         <HiX size={'2rem'} color={'red'} onClick={() => {
@@ -178,7 +185,7 @@ export const CreateTransactionModal = ({userId, walletId}: AddTransactionModalPr
                         </div>
                     </form>
                 </div>
-            </div>
+            </div>}
         </>
     );
 }

@@ -9,4 +9,8 @@ public class AccountDTO : IAccountBaseDto
     public string[] MaskedPan { get; set; } = default!;
 
     public string Iban { get; set; } = default!;
+    
+    public int CurrencyCode { get; set; }
+
+    public string Type { get; set; }
 }

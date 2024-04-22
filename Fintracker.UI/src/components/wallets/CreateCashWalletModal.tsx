@@ -52,8 +52,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
     return (
         <>
             <ActionButton text={"Add new wallet"} onModalOpen={handleOpenModal}/>
-            <div className={`absolute inset-0  flex justify-center items-center
-                        ${isOpen ? 'visible bg-black/20' : 'invisible'}`}>
+            {isOpen && <div className={'absolute inset-0  flex justify-center items-center visible bg-black/20 z-50'}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-md mx-auto">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add Wallet
                         <HiX size={'2rem'} color={'red'} onClick={handleOpenModal}/>
@@ -106,7 +105,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
                         </div>
                     </form>
                 </div>
-            </div>
+            </div>}
         </>
     );
 }

@@ -42,7 +42,7 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
             .HasColumnType("decimal")
             .HasPrecision(12, 2)
             .IsRequired();
-
+        
         builder.Property(x => x.Note)
             .HasMaxLength(TransactionConstraints.MaximumNoteLength);
 

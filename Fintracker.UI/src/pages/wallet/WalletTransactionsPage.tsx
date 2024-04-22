@@ -36,10 +36,12 @@ export default function WalletTransactionsPage() {
         <div className={'container mx-auto p-4'}>
             <div className={'flex justify-between'}>
                 <div className={'grid grid-cols-2 grid-rows-2'}>
-                    <CreateTransactionModal userId={userId!} walletId={wallet.response.id}/>
+                    {!wallet.response.isBanking && <CreateTransactionModal userId={userId!} walletId={wallet.response.id}
+                                             walletCurrency={wallet.response.currency}/>}
                 </div>
                 <div className={'grid grid-cols-3 grid-rows-2 gap-x-4'}>
-                    <TransactionFilters startDate={startDate!} endDate={endDate!} handleDateFilterChange={handleDateFilterChange}
+                    <TransactionFilters startDate={startDate!} endDate={endDate!}
+                                        handleDateFilterChange={handleDateFilterChange}
                                         transPerPage={transPerDate || 1}
                                         handleTransPerDateChangle={handleTransactionPerDateChange}
                     />

@@ -1,8 +1,9 @@
-﻿import React, {useState, useEffect, useRef} from 'react';
+﻿import {useState, useEffect, useRef, FC} from 'react';
 
 interface DropdownProps<T extends { id: string }> {
     items: T[];
-    ItemComponent: React.FC<{ item: T }>;
+    ItemComponent: FC<{ item: T }>;
+    HeadingComponent?: FC<{ item: T }>
     heading: string;
     onItemSelected: (item: T) => void;
     defaultSelectedItem: T | undefined
@@ -11,12 +12,14 @@ interface DropdownProps<T extends { id: string }> {
 const SingleSelectDropDownMenu = <T extends { id: string }>({
                                                                 items,
                                                                 onItemSelected,
+                                                                HeadingComponent,
                                                                 ItemComponent,
                                                                 heading,
                                                                 defaultSelectedItem
                                                             }: DropdownProps<T>) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -40,7 +43,8 @@ const SingleSelectDropDownMenu = <T extends { id: string }>({
                     {defaultSelectedItem ? (
                         <div className="flex items-center space-x-2 overflow-hidden w-full">
                             <div className="flex-shrink-0 w-full">
-                                <ItemComponent item={defaultSelectedItem}/>
+                                {HeadingComponent ? <HeadingComponent item={defaultSelectedItem}/> : 
+                                <ItemComponent item={defaultSelectedItem}/>}
                             </div>
                         </div>
                     ) : (

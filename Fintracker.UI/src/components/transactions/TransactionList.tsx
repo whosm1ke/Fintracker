@@ -1,9 +1,10 @@
-﻿import { useId } from "react";
-import { ConvertCurrency } from "../../entities/Currency";
-import {GroupedTransactionByDate, Transaction } from "../../entities/Transaction";
-import { useCurrencyConvertAll } from "../../hooks/currencies/useCurrenctConvertAll";
+﻿import {useId} from "react";
+import {ConvertCurrency} from "../../entities/Currency";
+import {GroupedTransactionByDate, Transaction} from "../../entities/Transaction";
+import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAll";
 import Spinner from "../other/Spinner.tsx";
 import {TransactionItem} from "./TransactionItem.tsx";
+import {CategoryType} from "../../entities/CategoryType.ts";
 
 
 interface TransactionListProps {
@@ -14,9 +15,12 @@ interface TransactionListProps {
 const calculateTotalExpenseByDate = (transactions: Transaction[], convertionRate: { [key: string]: number }) => {
     let total = 0;
     transactions.forEach(t => {
-        total += t.amount * (convertionRate[t.currency.symbol] || 1)
+        if (t.category.type === CategoryType.EXPENSE)
+            total -= t.amount * (convertionRate[t.currency.symbol] || 1)
+        else
+            total += t.amount * (convertionRate[t.currency.symbol] || 1)
     });
-    return total.toFixed(2);
+    return Math.abs(total).toFixed(2);
 }
 
 const getUniqueCurrencySymbols = (trans: Transaction[]) => {
@@ -70,7 +74,7 @@ export default function TransactionList({transactions, walletSymbol}: Transactio
     const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
 
     if (!currencyRates) return <Spinner/>
-    
+
     return (
         <div className={'flex flex-col gap-y-2'}>
             {groupedTransactions.map((group, i) =>
@@ -101,10 +105,10 @@ export function TransactionBlock({
     const uniqueSymbols = getUniqueCurrencySymbols(transactions);
     const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
     const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
+    const id = useId()
 
     if (!currencyRates) return <Spinner/>
-    
-    const id = useId()
+
 
     return (
         <div className={'flex flex-col  border-b-2 border-b-blue-300'}>

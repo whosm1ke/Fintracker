@@ -28,7 +28,7 @@ export interface GroupedTransactionByDate {
 export const amountRegisterForTransaction: RegisterOptions = {
     max: {value: 100_000_000_000, message: "Maximum amount for transaction is 100 billions"},
     min: {value: 0.01, message: "Minimum amount for transaction is 0.01"},
-    required: "Name for wallet is required",
+    required: "Amount for transaction is required",
 }
 
 export const labelRegisterForTransaction: RegisterOptions = {

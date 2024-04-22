@@ -14,7 +14,8 @@ public class MonoTransactionDTOToTransactionConverter : ITypeConverter<MonoTrans
             Label = source.Comment,
             Note = source.Description,
             IsBankTransaction = true,
-            CreatedAt = DateTime.UnixEpoch.AddSeconds(source.Time)
+            Date = DateTime.UnixEpoch.AddSeconds(source.Time),
+            CreatedAt = DateTime.Now
         };
     }
 }
