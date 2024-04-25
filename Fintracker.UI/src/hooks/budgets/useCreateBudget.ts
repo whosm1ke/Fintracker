@@ -22,22 +22,20 @@ interface CreateBudget {
 const useCreateBudget = () => {
     const queryClient = useQueryClient();
     return useMutation<ClientWrapper<CreateCommandResponse<CreateBudget>>, Error, Budget, Context>({
-        mutationKey: ['budgets'],
         mutationFn: async (model: Budget) => await apiClient.create(model),
         onMutate: async (newBudget: Budget) => {
-            await queryClient.cancelQueries({queryKey: ['budgets']});
+            await queryClient.cancelQueries({queryKey: ['budgets',newBudget.walletId]});
 
-            const prevData = queryClient.getQueryData<Budget[]>(['budgets']) || [];
-            console.log("prevData: ", prevData)
-            queryClient.setQueryData(['budgets'], (oldQueryData: Budget[]) => [...oldQueryData || [], newBudget]);
+            const prevData = queryClient.getQueryData<Budget[]>(['budgets',newBudget.walletId]) || [];
+            queryClient.setQueryData(['budgets',newBudget.walletId], (oldQueryData: Budget[]) => [...oldQueryData || [], newBudget]);
             return {previousWallets: prevData};
         },
-        onError: (err, _newWallet, context) => {
-            queryClient.setQueryData(['budgets'], context?.previousWallets)
+        onError: (err, newBudget, context) => {
+            queryClient.setQueryData(['budgets',newBudget.walletId], context?.previousWallets)
             return err;
         },
-        onSettled: async () => {
-            await queryClient.invalidateQueries({queryKey: ['budgets']})
+        onSettled: async (_data, _error, newBudget, _context) => {
+            await queryClient.invalidateQueries({queryKey: ['budgets', newBudget.walletId]})
         },
     })
 }

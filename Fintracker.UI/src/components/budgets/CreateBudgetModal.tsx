@@ -13,7 +13,7 @@ import currencies from "../../data/currencies.ts";
 import useStopScrolling from "../../hooks/other/useStopScrolling.ts";
 import {ActionButton} from "../other/ActionButton.tsx";
 import {HiX} from "react-icons/hi";
-import MultiSelectDropDownMenu from "../other/MultiSelectDropDownList.tsx";
+import MultiSelectDropDownMenu from "../other/MultiSelectDropDownMenu.tsx";
 import CategoryItem from "../categories/CategoryItem.tsx";
 import {Category} from "../../entities/Category.ts";
 import {Wallet} from "../../entities/Wallet.ts";
@@ -107,7 +107,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
     return (
         <>
             <ActionButton text={"Add new budget"} onModalOpen={handleOpenModal}/>
-            {isOpen && <div className={'absolute inset-0 flex justify-center items-start px-4 lg:px-0 visible bg-black/20'}>
+            {isOpen && <div className={'absolute inset-0 flex justify-center items-start px-4 lg:px-0 visible bg-black/20 z-50'}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto mt-4">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add budget
                         <HiX size={'2rem'} color={'red'} onClick={() => {

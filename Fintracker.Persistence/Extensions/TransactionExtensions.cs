@@ -38,7 +38,8 @@ public static class TransactionExtensions
             .Include(x => x.Wallet)
             .ThenInclude(x => x.Currency)
             .AsSplitQuery()
-            .Where(x => x.UserId == userId && x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate);
+            .Where(x => x.UserId == userId && x.Date.Date >= queryParams.StartDate.Date &&
+                        x.Date.Date <= queryParams.EndDate.Date);
 
 // Apply ordering
         var orderedQuery = queryParams.IsDescending
@@ -46,7 +47,6 @@ public static class TransactionExtensions
             : baseQuery.OrderBy(lambda);
 
         return await orderedQuery.ToListAsync();
-
     }
 
     public static async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(
@@ -79,7 +79,8 @@ public static class TransactionExtensions
             .Include(x => x.Wallet)
             .ThenInclude(x => x.Currency)
             .AsSplitQuery()
-            .Where(x => x.WalletId == walletId && x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate);
+            .Where(x => x.WalletId == walletId && x.Date.Date >= queryParams.StartDate.Date &&
+                        x.Date.Date <= queryParams.EndDate.Date);
 
 // Apply ordering
         var orderedQuery = queryParams.IsDescending
@@ -119,7 +120,8 @@ public static class TransactionExtensions
             .Include(x => x.Wallet)
             .ThenInclude(x => x.Currency)
             .AsSplitQuery()
-            .Where(x => x.CategoryId == categoryId && x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate);
+            .Where(x => x.CategoryId == categoryId && x.Date.Date >= queryParams.StartDate.Date &&
+                        x.Date.Date <= queryParams.EndDate.Date);
 
 // Apply ordering
         var orderedQuery = queryParams.IsDescending

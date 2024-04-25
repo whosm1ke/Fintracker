@@ -1,4 +1,6 @@
-﻿using Fintracker.Application.DTO.User;
+﻿using System.Net.Mime;
+using Fintracker.Application;
+using Fintracker.Application.DTO.User;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Features.User.Requests.Queries;
 using Fintracker.Application.Responses.API_Responses;
@@ -6,6 +8,7 @@ using Fintracker.Application.Responses.Commands_Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Fintracker.API.Controllers;
 
@@ -15,10 +18,12 @@ namespace Fintracker.API.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly AppSettings _appSettings;
 
-    public UserController(IMediator mediator)
+    public UserController(IMediator mediator, IOptions<AppSettings> appSettings)
     {
         _mediator = mediator;
+        _appSettings = appSettings.Value;
     }
 
     [HttpGet("{id:guid}")]
@@ -48,7 +53,7 @@ public class UserController : ControllerBase
 
         return Ok(response);
     }
-    
+
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(DeleteCommandResponse<UserBaseDTO>), StatusCodes.Status200OK)]
@@ -76,15 +81,15 @@ public class UserController : ControllerBase
         {
             var avatar = user.Avatar;
             var fileName = Path.GetFileName(avatar.FileName);
-            var filePath = Path.Combine(env.WebRootPath,"images" ,fileName);
+            var filePath = Path.Combine(env.WebRootPath, "images", fileName);
             using (var stream = System.IO.File.Create(filePath))
             {
                 await avatar.CopyToAsync(stream);
             }
 
-            user.UserDetails.Avatar = filePath;
+            user.UserDetails.Avatar = $"{_appSettings.BaseUrl}/api/user/avatar/{fileName}";
         }
-        
+
         var response = await _mediator.Send(new UpdateUserCommand
         {
             User = user,
@@ -92,5 +97,40 @@ public class UserController : ControllerBase
         });
 
         return Ok(response);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("avatar/{filename}")]
+    public IActionResult GetAvatar(string fileName, [FromServices] IWebHostEnvironment env)
+    {
+        var imageDirectory = Path.Combine(env.WebRootPath, "images");
+        var imagePath = Path.Combine(imageDirectory, fileName);
+
+        if (!System.IO.File.Exists(imagePath))
+        {
+            return NotFound();
+        }
+
+        var imageBytes = System.IO.File.ReadAllBytes(imagePath);
+        var contentType = GetContentType(fileName);
+        return File(imageBytes, contentType);
+    }
+    
+    [NonAction]
+    private string GetContentType(string filename)
+    {
+        var extension = Path.GetExtension(filename).ToLowerInvariant();
+        switch (extension)
+        {
+            case ".png":
+                return "image/png";
+            case ".jpg":
+            case ".jpeg":
+                return "image/jpeg";
+            case ".gif":
+                return "image/gif";
+            default:
+                return "application/octet-stream";
+        }
     }
 }

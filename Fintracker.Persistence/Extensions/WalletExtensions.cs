@@ -23,42 +23,27 @@ public static class WalletExtensions
         var lambda = Expression.Lambda<Func<Wallet, object>>(converted, parameter);
 
         // Apply the sorting to the query
-        var query = queryParams.IsDescending
-            ? wallets
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Owner)
-                .ThenInclude(x => x.UserDetails)
-                .Include(x => x.Currency)
-                .Include(x => x.Budgets)
-                .ThenInclude(x => x.Currency)
-                .Include(x => x.Budgets)
-                .ThenInclude(x => x.Categories)
-                .Include(x => x.Transactions)
-                .ThenInclude(x => x.Currency)
-                .Include(x => x.Transactions)
-                .ThenInclude(x => x.Category)
-                .AsSplitQuery()
-                .Where(x => x.OwnerId == ownerId)
-                .OrderByDescending(lambda)
-            : wallets
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .Include(x => x.Owner)
-                .ThenInclude(x => x.UserDetails)
-                .Include(x => x.Currency)
-                .Include(x => x.Budgets)
-                .ThenInclude(x => x.Currency)
-                .Include(x => x.Budgets)
-                .ThenInclude(x => x.Categories)
-                .Include(x => x.Transactions)
-                .ThenInclude(x => x.Currency)
-                .Include(x => x.Transactions)
-                .ThenInclude(x => x.Category)
-                .AsSplitQuery()
-                .Where(x => x.OwnerId == ownerId)
-                .OrderBy(lambda);
+        var baseQuery = wallets
+            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+            .Take(queryParams.PageSize)
+            .Include(x => x.Owner)
+            .ThenInclude(x => x.UserDetails)
+            .Include(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Category)
+            .AsSplitQuery()
+            .Where(x => x.OwnerId == ownerId);
 
-        return await query.ToListAsync();
+        var orderedQuery = queryParams.IsDescending
+            ? baseQuery.OrderByDescending(lambda)
+            : baseQuery.OrderBy(lambda);
+
+        return await orderedQuery.ToListAsync();
     }
 }

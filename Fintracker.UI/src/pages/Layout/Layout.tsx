@@ -4,8 +4,8 @@ import {useEffect, useState} from "react";
 // @ts-ignore
 import logo from "../../../src/assets/logo.png"
 import useUserStore from "../../stores/userStore.ts";
-import MobileNavigationLink from "../../hooks/other/MobileNavigationLink.tsx";
 import NavigationLink from "../../components/other/NavigationLink.tsx";
+import MobileNavigationLink from "../../components/other/MobileNavigationLink.tsx";
 
 export default function Layout() {
 

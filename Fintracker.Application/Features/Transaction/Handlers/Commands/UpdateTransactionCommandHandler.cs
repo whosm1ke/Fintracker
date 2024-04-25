@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.DTO.Currency;
 using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
+using Fintracker.Domain.Enums;
 using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Handlers.Commands;
@@ -46,8 +48,9 @@ public class
             });
 
         var newCurrency = await _unitOfWork.CurrencyRepository.GetAsync(request.Transaction.CurrencyId);
+        var newCategory = await _unitOfWork.CategoryRepository.GetAsync(request.Transaction.CategoryId);
         await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, transaction.Amount,
-            newCurrency!.Symbol);
+            transaction.Currency.Symbol,newCurrency!.Symbol, transaction.Category.Type, newCategory!.Type);
 
         var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
         _unitOfWork.TransactionRepository.Update(transaction);
@@ -70,23 +73,48 @@ public class
 
 
     private async Task UpdateWalletBalance(Domain.Entities.Wallet wallet, decimal newAmount, decimal oldAmount,
-        string transCurrencySymbol)
+        string oldCurrencySymbol, string newCurrencySymbol, CategoryType oldTransType, CategoryType newTransType)
     {
-        var convertedCurrencyNewAmount =
-            await _currencyConverter.Convert(transCurrencySymbol, wallet.Currency.Symbol, newAmount);
+        ConvertCurrencyDTO? convertedCurrencyNewAmount = null;
+        ConvertCurrencyDTO? convertedCurrencyOldAmount = null;
 
-        var convertedCurrencyOldAmount =
-            await _currencyConverter.Convert(transCurrencySymbol, wallet.Currency.Symbol, oldAmount);
+        if (newCurrencySymbol != oldCurrencySymbol)
+        {
+            convertedCurrencyNewAmount =
+                await _currencyConverter.Convert(newCurrencySymbol, wallet.Currency.Symbol, newAmount);
+            convertedCurrencyOldAmount =
+                await _currencyConverter.Convert(oldCurrencySymbol, wallet.Currency.Symbol, oldAmount);
+        }
+        
+        if (oldTransType == CategoryType.EXPENSE && newTransType == CategoryType.EXPENSE)
+        {
+            wallet.Balance += convertedCurrencyOldAmount?.Value ?? oldAmount;
+            wallet.Balance -= convertedCurrencyNewAmount?.Value ?? newAmount;
+            wallet.TotalSpent -= convertedCurrencyOldAmount?.Value ?? oldAmount;
+            wallet.TotalSpent += convertedCurrencyNewAmount?.Value ?? newAmount;
+        }
 
-        // "Rollback" the old transaction
-        wallet.Balance += convertedCurrencyOldAmount?.Value ?? oldAmount;
+        if (oldTransType == CategoryType.EXPENSE && newTransType == CategoryType.INCOME)
+        {
+            wallet.Balance += convertedCurrencyOldAmount?.Value ?? oldAmount;
+            wallet.Balance += convertedCurrencyNewAmount?.Value ?? newAmount;
+            wallet.TotalSpent -= convertedCurrencyOldAmount?.Value ?? oldAmount;
+        }
 
-        // Apply the new transaction
-        wallet.Balance -= convertedCurrencyNewAmount?.Value ?? newAmount;
+        if (oldTransType == CategoryType.INCOME && newTransType == CategoryType.INCOME)
+        {
+            wallet.Balance -= convertedCurrencyOldAmount?.Value ?? oldAmount;
+            wallet.Balance += convertedCurrencyNewAmount?.Value ?? newAmount;
+        }
 
-        // Update total spent
-        wallet.TotalSpent -= convertedCurrencyOldAmount?.Value ?? oldAmount;
-        wallet.TotalSpent += convertedCurrencyNewAmount?.Value ?? newAmount;
+        if (oldTransType == CategoryType.INCOME && newTransType == CategoryType.EXPENSE)
+        {
+            wallet.Balance -= convertedCurrencyOldAmount?.Value ?? oldAmount;
+            wallet.Balance -= convertedCurrencyNewAmount?.Value ?? newAmount;
+            wallet.TotalSpent += convertedCurrencyNewAmount?.Value ?? newAmount;
+        }
+
+
     }
 
     private async Task UpdateBudgets(Guid walletId)
@@ -98,8 +126,11 @@ public class
                 await _unitOfWork.TransactionRepository.GetByWalletIdInRangeAsync(walletId, budget.StartDate,
                     budget.EndDate);
 
+            if (transactions.Count == 0) return;
             var filteredTransactions = transactions.Where(x => budget.Categories.Any(c => c.Id == x.CategoryId))
                 .ToList();
+
+            if (filteredTransactions.Count == 0) return;
             var transactionCurrencySymbols = filteredTransactions.Select(x => x.Currency.Symbol);
             var transactionAmounts = filteredTransactions.Select(x => x.Amount);
 

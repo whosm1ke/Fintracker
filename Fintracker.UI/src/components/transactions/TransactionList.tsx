@@ -20,7 +20,7 @@ const calculateTotalExpenseByDate = (transactions: Transaction[], convertionRate
         else
             total += t.amount * (convertionRate[t.currency.symbol] || 1)
     });
-    return Math.abs(total).toFixed(2);
+    return total;
 }
 
 const getUniqueCurrencySymbols = (trans: Transaction[]) => {
@@ -93,7 +93,7 @@ interface TransactionBlockProps {
     transactions: Transaction[],
     walletSymbol: string;
     date: Date,
-    totalSpent: string;
+    totalSpent: number;
 }
 
 export function TransactionBlock({
@@ -128,13 +128,16 @@ export function TransactionBlock({
 
 interface TransactionBlockHeaderProps {
     date: Date;
-    totalSpent: string;
+    totalSpent: number;
     walletSymbol: string;
 }
 
 const TransactionBlockHeader = ({date, totalSpent, walletSymbol}: TransactionBlockHeaderProps) => {
     const datePeriod = new Date(date).toLocaleDateString();
     const sortOptions = ["Label", "Note", "Amount"];
+    const totalSpentText = Math.abs(totalSpent).toFixed(2);
+    const isPositive = totalSpent > 0;
+    const classNameForTotalSpent = isPositive ? "text-green-400 font-bold text-right" : "text-red-400 font-bold text-right";
 
 
     return (
@@ -150,7 +153,7 @@ const TransactionBlockHeader = ({date, totalSpent, walletSymbol}: TransactionBlo
                 </select>
             </div>
             <div className={''}>
-                <p className={'text-red-400 font-bold text-right'}>- {totalSpent} {walletSymbol}</p>
+                <p className={classNameForTotalSpent}>{isPositive ? "" : "-"} {totalSpentText} {walletSymbol}</p>
             </div>
         </div>
 

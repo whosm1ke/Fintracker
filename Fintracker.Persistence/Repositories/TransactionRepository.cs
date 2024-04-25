@@ -9,7 +9,8 @@ namespace Fintracker.Persistence.Repositories;
 public class TransactionRepository : GenericRepository<Transaction>, ITransactionRepository
 {
     private readonly AppDbContext _db;
-    public TransactionRepository(AppDbContext context): base(context)
+
+    public TransactionRepository(AppDbContext context) : base(context)
     {
         _db = context;
     }
@@ -49,7 +50,7 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
-    
+
 
     public async Task<IReadOnlyList<Transaction>> GetAllAsync(Guid userId)
     {
@@ -123,18 +124,20 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId, TransactionQueryParams queryParams)
+    public async Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId,
+        TransactionQueryParams queryParams)
     {
         return await _db.Transactions.GetByUserIdSortedAsync(userId, queryParams);
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId, TransactionQueryParams queryParams)
+    public async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId,
+        TransactionQueryParams queryParams)
     {
-        
         return await _db.Transactions.GetByWalletIdSortedAsync(walletId, queryParams);
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByWalletIdInRangeAsync(Guid walletId, DateTime budgetStart, DateTime budgetEnd)
+    public async Task<IReadOnlyList<Transaction>> GetByWalletIdInRangeAsync(Guid walletId, DateTime budgetStart,
+        DateTime budgetEnd)
     {
         return await _db.Transactions
             .Include(x => x.Budgets)
@@ -143,15 +146,15 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
             .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
-            .Where(x => x.WalletId == walletId && x.Date >= budgetStart && x.Date <= budgetEnd)
+            .Where(x => x.WalletId == walletId && x.Date.Date >= budgetStart.Date && x.Date.Date <= budgetEnd.Date)
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, TransactionQueryParams queryParams)
+    public async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId,
+        TransactionQueryParams queryParams)
     {
         return await _db.Transactions.GetByCategoryIdSortedAsync(categoryId, queryParams);
     }
-    
 
 
     public new async Task<IReadOnlyList<Transaction?>> GetAllAsync()

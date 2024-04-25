@@ -17,7 +17,7 @@ export default function WalletLayout() {
             <main className={'flex-grow mb-24'}>
                 <Outlet/>
             </main>
-            <footer className={'block lg:hidden flex-shrink-0'}>
+            <footer className={'block lg:hidden flex-shrink-0 z-[100]'}>
                 <Footer/>
             </footer>
         </div>
@@ -115,11 +115,11 @@ const WalletNavBar = () => {
 
             </div>
             <motion.div
-                className={'relative'}
+                className={'relative z-50'}
             >
                 <FlyoutLink FlyoutContent={NavigationContent} open={isMenuOpen}>
                     <div className={'flex items-center space-x-2 text-neutral-900'}>
-                        <img src={avatar} alt="Logo" className={'w-12 h-12'}/>
+                        <img src={avatar} alt="Logo" className={'w-12 h-12 rounded-full'}/>
                         <p className={'text-2xl font-bold hidden md:inline'}>{userName}</p>
                         <motion.span
                             onClick={() => toggleMenuOpen(p => !p)}

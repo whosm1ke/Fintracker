@@ -25,6 +25,7 @@ public class CategoryController : ControllerBase
         
     }
 
+    [NonAction]
     private Guid GetCurrentUserId()
     {
         var uid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.Uid)?.Value;
@@ -87,6 +88,7 @@ public class CategoryController : ControllerBase
 
         return Ok(response);
     }
+    
 
     [HttpPost]
     [ProducesResponseType(typeof(CreateCommandResponse<CategoryDTO>), StatusCodes.Status201Created)]

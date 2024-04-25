@@ -107,7 +107,7 @@ public class TransactionController : ControllerBase
         };
 
         IReadOnlyList<TransactionBaseDTO> response;
-
+       
         if (query is not null)
             response = await _mediator.Send(sortRequest);
         else

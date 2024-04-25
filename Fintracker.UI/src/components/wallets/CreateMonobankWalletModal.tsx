@@ -117,7 +117,7 @@ const MonobankModalStep2 = ({userInfo, handleOpenModal}: MonobankModalStep2Props
         const fromUnix = new Date(model.from).getTime() / 1000;
         const toUnix = model.to ? new Date(model.to).getTime() / 1000 : undefined;
         model.accountId = selectedAcc.id;
-        model.currency = currencies.find(c => c.code === selectedAcc.currencyCode) || currencies.find(c => c.symbol === "UAN")! 
+        model.currency = currencies.find(c => c.code === selectedAcc.currencyCode) || currencies.find(c => c.symbol === "UAN")!
         const unixModel = {
             ...model,
             from: fromUnix,

@@ -1,7 +1,7 @@
 ﻿import {NavLink, useLocation, useNavigate} from "react-router-dom";
-import useLogoutMutation from "../auth/useLogoutMutation.ts";
 import {motion} from "framer-motion";
-import { NavigationLinkProps } from "../../components/other/NavigationLink.tsx";
+import { NavigationLinkProps } from "./NavigationLink.tsx";
+import useLogoutMutation from "../../hooks/auth/useLogoutMutation.ts";
 
 const MobileNavigationLink = ({to, text, motionNav, isLogin}: NavigationLinkProps & {
     motionNav: boolean,

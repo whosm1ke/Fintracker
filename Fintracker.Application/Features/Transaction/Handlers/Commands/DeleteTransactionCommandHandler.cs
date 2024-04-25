@@ -6,6 +6,7 @@ using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
+using Fintracker.Domain.Enums;
 using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Handlers.Commands;
@@ -51,7 +52,7 @@ public class
         var deletedObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
 
-        await IncreaseWalletBalance(transaction.Wallet, transaction.Amount, transCurrency!.Symbol);
+        await UpdateWallet(transaction.Wallet, transaction.Amount, transCurrency!.Symbol, transaction.Category.Type);
         await IncreaseBudgetBalance(transaction.WalletId);
 
 
@@ -67,16 +68,23 @@ public class
         return response;
     }
 
-    private async Task IncreaseWalletBalance(Domain.Entities.Wallet wallet, decimal amount,
-        string transactionCurrencySymbol)
+    private async Task UpdateWallet(Domain.Entities.Wallet wallet, decimal amount,
+        string transactionCurrencySymbol, CategoryType transType)
     {
         ConvertCurrencyDTO? convertedCurrency = null;
         if (wallet.Currency.Symbol != transactionCurrencySymbol)
             convertedCurrency =
                 await _currencyConverter.Convert(transactionCurrencySymbol, wallet.Currency.Symbol, amount);
 
-        wallet.Balance += convertedCurrency?.Value ?? amount;
-        wallet.TotalSpent -= convertedCurrency?.Value ?? amount;
+        if (transType == CategoryType.INCOME)
+        {
+            wallet.Balance -= convertedCurrency?.Value ?? amount;
+        }
+        else
+        {
+            wallet.Balance += convertedCurrency?.Value ?? amount;
+            wallet.TotalSpent -= convertedCurrency?.Value ?? amount;
+        }
     }
 
     private async Task IncreaseBudgetBalance(Guid walletId)
@@ -87,9 +95,12 @@ public class
             var transactions =
                 await _unitOfWork.TransactionRepository.GetByWalletIdInRangeAsync(walletId, budget.StartDate,
                     budget.EndDate);
-
+            
+            if (transactions.Count == 0) return;
             var filteredTransactions = transactions.Where(x => budget.Categories.Any(c => c.Id == x.CategoryId))
                 .ToList();
+            
+            if (filteredTransactions.Count == 0) return;
             var transactionCurrencySymbols = filteredTransactions.Select(x => x.Currency.Symbol);
             var transactionAmounts = filteredTransactions.Select(x => x.Amount);
 
@@ -99,6 +110,7 @@ public class
 
             decimal totalSpent = 0;
             convertedResult.ForEach(x => totalSpent += x.Value);
+            filteredTransactions.ForEach(x => budget.Transactions.Remove(x));
 
             budget.TotalSpent -= totalSpent;
             budget.Balance += totalSpent;

@@ -39,13 +39,14 @@ const TransactionEditingBlock = ({transaction, categories, handleIsEditing}: Tra
     const month = ('0' + (date.getMonth() + 1)).slice(-2); // add leading zero
     const day = ('0' + date.getDate()).slice(-2); // add leading zero
     const formattedDate = `${year}-${month}-${day}`;
+    const isBankTrans: boolean | undefined = transaction.isBankTransaction;
     const onSubmit: SubmitHandler<Transaction> = async (model: Transaction) => {
-        if(!selectedCategory)
+        if (!selectedCategory)
             setError("categoryId", {message: "Transaction must have a category"})
         else
             clearErrors("categoryId")
 
-        if(!selectedCurrency)
+        if (!selectedCurrency)
             setError("currencyId", {message: "Transaction must have a currency"})
         else
             clearErrors("currencyId")
@@ -61,22 +62,20 @@ const TransactionEditingBlock = ({transaction, categories, handleIsEditing}: Tra
 
         const res = await updateTransactionMutation.mutateAsync(model);
 
-        if(!res.hasError){
+        if (!res.hasError) {
             reset();
             clearErrors();
             handleIsEditing();
         }
     }
 
-    async function onDelete (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    async function onDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault();
         await deleteTransactionMutation.mutateAsync({
             id: transaction.id,
             walletId: transaction.walletId
         })
     }
-
-
 
     return (
         <motion.div
@@ -92,9 +91,11 @@ const TransactionEditingBlock = ({transaction, categories, handleIsEditing}: Tra
                             Date {errors.date && <p className={'text-red-400 italic'}>{errors.date.message}</p>}
                         </label>
                         <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className={isBankTrans === undefined || isBankTrans ? "shadow pointer-events-none appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight bg-gray-300" :
+                                "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"}
                             id="Date"
                             type="date"
+                            readOnly={isBankTrans === undefined || isBankTrans}
                             defaultValue={formattedDate}
                             {...register("date", dateRegisterForTransaction)}
                         />
@@ -128,9 +129,11 @@ const TransactionEditingBlock = ({transaction, categories, handleIsEditing}: Tra
                             Amount {errors.amount && <p className={'text-red-400 italic'}>{errors.amount.message}</p>}
                         </label>
                         <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className={isBankTrans === undefined || isBankTrans ? "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight bg-gray-300" :
+                                "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"}
                             id="Amount"
                             type="number"
+                            readOnly={isBankTrans === undefined || isBankTrans}
                             defaultValue={transaction.amount}
                             {...register("amount", amountRegisterForTransaction)}
                         />
@@ -157,23 +160,23 @@ const TransactionEditingBlock = ({transaction, categories, handleIsEditing}: Tra
                         <div {...register("currencyId")}>
                             <SingleSelectDropDownMenu items={currencies} ItemComponent={CurrencyItem}
                                                       defaultSelectedItem={selectedCurrency}
-                                                      heading={"Currency"}
+                                                      heading={"Currency"} canBeChanged={!isBankTrans}
                                                       onItemSelected={handleSelectedCurrency}/>
                         </div>
                     </div>
-                    <div className={'flex justify-center items-end'}>
+                    <div className={`flex justify-center items-end ${isBankTrans === undefined || isBankTrans ? "col-span-2" : ""}`}>
                         <button type={'submit'}
                                 className={'py-2 bg-green-400 h-full rounded w-full text-stone-50 font-semibold'}>Save
                             transaction
                         </button>
                     </div>
-                    <div className={'flex justify-center items-end'}>
+                    {isBankTrans === undefined || !isBankTrans && <div className={'flex justify-center items-end'}>
                         <button type={'button'}
                                 onClick={async (e) => await onDelete(e)}
                                 className={'py-2 bg-red-500 rounded w-full h-full text-stone-50 font-semibold'}>Delete
                             transaction
                         </button>
-                    </div>
+                    </div>}
                 </div>
             </form>
         </motion.div>

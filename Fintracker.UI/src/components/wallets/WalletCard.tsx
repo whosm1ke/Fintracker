@@ -12,7 +12,7 @@ interface WalletCardProps {
 
 const WalletCard = ({wallet}: WalletCardProps) => {
     const isPositiveBalance = wallet.balance > 0;
-    const formatedBalance: string = Math.abs(wallet.balance).toLocaleString();
+    const formatedBalance: string = Math.abs(wallet.balance || 0).toLocaleString();
     const balanceText: string = isPositiveBalance ? `+ ${formatedBalance} ${wallet.currency.symbol}` :
         `- ${formatedBalance} ${wallet.currency.symbol}`;
     const deleteWalletMutation = useDeleteWallet(wallet.id);

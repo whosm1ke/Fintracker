@@ -10,3 +10,4 @@ public class GetCategoriesByTypeRequest : IRequest<IReadOnlyList<CategoryDTO>>
 
     public Guid UserId { get; set; }
 }
+

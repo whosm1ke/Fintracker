@@ -5,6 +5,7 @@ using Fintracker.Application.DTO.Currency;
 using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
+using Fintracker.Domain.Enums;
 using MediatR;
 
 namespace Fintracker.Application.Features.Transaction.Handlers.Commands;
@@ -34,10 +35,11 @@ public class
 
         await _unitOfWork.TransactionRepository.AddAsync(transaction);
 
+        var transCategory = await _unitOfWork.CategoryRepository.GetAsync(request.Transaction.CategoryId);
 
-        await DecreaseBalanceInWallet(transaction.WalletId, transaction.Amount, transCurrency!.Symbol);
+        await UpdateWallet(transaction.WalletId, transaction.Amount, transCurrency!.Symbol, transCategory!.Type);
         await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount, transaction.UserId,
-            transaction.WalletId, transCurrency.Symbol);
+            transaction.WalletId, transCurrency.Symbol, transaction, request.Transaction.Date);
 
 
         response.Success = true;
@@ -52,7 +54,7 @@ public class
     }
 
     private async Task DecreaseBalanceInBudgets(Guid categoryId, decimal amount, Guid userId, Guid walletId,
-        string transactionCurrencySymbol)
+        string transactionCurrencySymbol, Domain.Entities.Transaction transaction, DateTime transDate)
     {
         var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
         var currencySymbols = budgets.Select(x => x.Currency.Symbol);
@@ -62,25 +64,34 @@ public class
 
         foreach (var budget in budgets)
         {
-            if ((budget.IsPublic || budget.UserId == userId) && budget.WalletId == walletId)
+            if ((budget.IsPublic || budget.UserId == userId) && budget.WalletId == walletId &&
+                transDate >= budget.StartDate && transDate <= budget.EndDate)
             {
                 var convertedCurrency = convertedCurrencies.Find(x => x?.To == budget.Currency.Symbol);
                 budget.Balance -= convertedCurrency?.Value ?? amount;
                 budget.TotalSpent += convertedCurrency?.Value ?? amount;
+                budget.Transactions.Add(transaction);
             }
         }
     }
 
-    private async Task DecreaseBalanceInWallet(Guid walletId, decimal amount, string transactionCurrencySymbol)
+    private async Task UpdateWallet(Guid walletId, decimal amount, string transactionCurrencySymbol,
+        CategoryType transType)
     {
         var wallet = await _unitOfWork.WalletRepository.GetWalletWithCurrency(walletId);
-
-
         ConvertCurrencyDTO? convertedCurrency = null;
         if (wallet!.Currency.Symbol != transactionCurrencySymbol)
-            convertedCurrency = await _currencyConverter.Convert(transactionCurrencySymbol, wallet.Currency.Symbol, amount);
+            convertedCurrency =
+                await _currencyConverter.Convert(transactionCurrencySymbol, wallet.Currency.Symbol, amount);
 
-        wallet.Balance -= convertedCurrency?.Value ?? amount;
-        wallet.TotalSpent += convertedCurrency?.Value ?? amount;
+        if (transType == CategoryType.EXPENSE)
+        {
+            wallet.Balance -= convertedCurrency?.Value ?? amount;
+            wallet.TotalSpent += convertedCurrency?.Value ?? amount;
+        }
+        else
+        {
+            wallet.Balance += convertedCurrency?.Value ?? amount;
+        }
     }
 }

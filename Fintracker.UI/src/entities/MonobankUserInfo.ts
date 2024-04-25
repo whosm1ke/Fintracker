@@ -21,5 +21,5 @@ export interface MonobankConfiguration {
 }
 
 export interface ExtendedMonobankConfiguration extends MonobankConfiguration {
-    currency: Currency
+    currency: Currency;
 }
