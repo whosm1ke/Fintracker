@@ -25,7 +25,7 @@ export default function BudgetsPage() {
                 <div className={'grid gap-x-10 gap-y-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}>
                     {budgets && budgets.map(b => {
                 
-                        return (<BudgetCard walletName={b.wallet.name}
+                        return (<BudgetCard walletName={b.wallet.name} walletId={b.walletId}
                                             balance={b.balance} currencySymbol={b.currency.symbol}
                                             endDate={b.endDate} startDate={b.startDate} name={b.name}
                                             totalSpent={b.totalSpent} budgetId={b.id} isPublic={b.isPublic}
