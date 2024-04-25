@@ -14,10 +14,14 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
     {
         _db = context;
     }
-
+    
     public async Task<Budget?> GetBudgetByIdAsync(Guid id)
     {
         return await _db.Budgets
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Category)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Currency)
             .Include(x => x.Categories)
             .Include(x => x.Currency)
             .Include(x => x.Wallet)
@@ -32,9 +36,12 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
     public async Task<IReadOnlyList<Budget>> GetBudgetsByCategoryId(Guid categoryId)
     {
         return await _db.Budgets
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Category)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Currency)
             .Include(x => x.Categories)
             .Include(x => x.Currency)
-            .AsSplitQuery()
             .Where(x => x.Categories
                 .Any(x => x.Id == categoryId))
             .ToListAsync();
@@ -43,6 +50,10 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
     public async Task<IReadOnlyList<Budget>> GetByUserIdAsync(Guid userId, bool? isPublic)
     {
         var query = _db.Budgets
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Category)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Currency)
             .Include(x => x.Categories)
             .Include(x => x.Currency)
             .Include(x => x.Wallet)
@@ -63,6 +74,10 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
     public async Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId, bool? isPublic)
     {
         var query = _db.Budgets
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Category)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Currency)
             .Include(x => x.Categories)
             .Include(x => x.Currency)
             .Include(x => x.Wallet)
@@ -90,4 +105,5 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
     {
         return await _db.Budgets.GetByWalletIdSortedAsync(walletId, queryParams);
     }
+    
 }

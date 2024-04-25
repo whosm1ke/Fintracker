@@ -8,13 +8,20 @@ import WalletCard from "../../components/wallets/WalletCard.tsx";
 import CreateMonobankWalletModal from "../../components/wallets/CreateMonobankWalletModal.tsx";
 import {useLocation} from "react-router-dom";
 import {motion} from "framer-motion";
+import {Transaction} from "../../entities/Transaction.ts";
 
+const getUniqueCurrencySymbols = (trans: Transaction[]) => {
+    const symbols = trans.map(t => t.currency.symbol);
+    return [...new Set(symbols)]
+}
 
 export default function FintrackerPage() {
     const userId = useUserStore(x => x.getUserId());
     const {data: wallets} = useWallets(userId || 'no-user');
     const location = useLocation();
     const shouldBounce = location.state !== null
+    
+    
     if (wallets === undefined) return <Spinner/>
 
     return (
@@ -32,9 +39,7 @@ export default function FintrackerPage() {
                 </div>
                 <div className={'grid gap-x-10 gap-y-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}>
                     {wallets.map((wallet, i) =>
-                        <WalletCard name={wallet.name} balance={wallet.balance} isBanking={wallet.isBanking}
-                                    currencySymbol={wallet.currency.symbol} walletId={wallet.id}
-                                    key={wallet.id ?? i}/>)}
+                        <WalletCard wallet={wallet} key={wallet.id ?? i}/>)}
                 </div>
             </section>
             <section className={'space-y-5 mt-10'}>

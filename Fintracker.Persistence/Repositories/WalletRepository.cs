@@ -57,6 +57,14 @@ public class WalletRepository : GenericRepository<Wallet>, IWalletRepository
             .ToListAsync();
     }
 
+    public async Task<Wallet?> GetWalletWithCurrency(Guid id)
+    {
+        return await _db.Wallets
+            .Include(x => x.Currency)
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<IReadOnlyList<Wallet>> GetByOwnerIdSortedAsync(Guid ownerId, QueryParams queryParams)
     {
         return await _db.Wallets.GetByOwnerIdSortedAsync(ownerId, queryParams);

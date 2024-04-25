@@ -36,7 +36,7 @@ public class TransactionsCommandTests
     public async Task AddAsync_No_Optional_Params_Should_Return_True()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new CreateTransactionCommandHandler(_mapper, mockUnitOfWork);
+        var handler = new CreateTransactionCommandHandler(_mapper, mockUnitOfWork, null);
         var transactionToAdd = _fixture.Build<CreateTransactionDTO>()
             .With(x => x.Amount, 500)
             .With(x => x.CategoryId, new Guid("D670263B-92CF-48C8-923A-EB09188F6077"))
@@ -66,7 +66,7 @@ public class TransactionsCommandTests
     public async Task AddAsync_Should_Return_True()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new CreateTransactionCommandHandler(_mapper, mockUnitOfWork);
+        var handler = new CreateTransactionCommandHandler(_mapper, mockUnitOfWork, null);
         var transactionToAdd = _fixture.Build<CreateTransactionDTO>()
             .With(x => x.Amount, 1000)
             .With(x => x.CategoryId, new Guid("D670263B-92CF-48C8-923A-EB09188F6077"))
@@ -93,7 +93,7 @@ public class TransactionsCommandTests
     public async Task UpdateAsync_Should_Return_True_And_Old_With_New_Objects()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new UpdateTransactionCommandHandler(_mapper, mockUnitOfWork);
+        var handler = new UpdateTransactionCommandHandler(_mapper, mockUnitOfWork, null);
         var transactionToUpdate = _fixture.Build<UpdateTransactionDTO>()
             .With(x => x.Amount, 1)
             .With(x => x.Label, "new label")
@@ -119,7 +119,7 @@ public class TransactionsCommandTests
     public async Task DeleteAsync_Should_Return_True_And_Deleted_Object()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new DeleteTransactionCommandHandler(_mapper, mockUnitOfWork);
+        var handler = new DeleteTransactionCommandHandler(_mapper, mockUnitOfWork, null);
         
         var result = await handler.Handle(new DeleteTransactionCommand
         {

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Fintracker.Application.DTO.Monobank;
 using Fintracker.Application.DTO.Transaction;
-using Fintracker.Application.Models;
 using Fintracker.Domain.Entities;
 
 namespace Fintracker.Application.MapProfiles;

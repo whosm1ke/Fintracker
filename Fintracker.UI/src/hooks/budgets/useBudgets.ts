@@ -8,8 +8,8 @@ import { Budget } from "../../entities/Budget.ts";
 export const useBudgets = (walletId: string | undefined) => {
 
     let apiClient;
-    if (walletId === undefined) {
         const userId = useUserStore(x => x.getUserId());
+    if (walletId === undefined) {
         apiClient = new ApiClient<Budget, Budget[]>(`budget/user/${userId}`)
     } else {
         apiClient = new ApiClient<Budget, Budget[]>(`budget/wallet/${walletId}`)
@@ -17,7 +17,7 @@ export const useBudgets = (walletId: string | undefined) => {
 
     const query = useBudgetQueryStore(x => x.query);
     return useQuery({
-        queryKey: ['budgets',],
+        queryKey: ['budgets', walletId ?  walletId : userId],
         queryFn: async () => await apiClient.getAll({
             params: {
                 isPublic: query.isPublic || null,

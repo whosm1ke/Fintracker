@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
+using Fintracker.Application.DTO.Currency;
 using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
@@ -14,11 +16,13 @@ public class
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ICurrencyConverter _currencyConverter;
 
-    public DeleteTransactionCommandHandler(IMapper mapper, IUnitOfWork unitOfWork)
+    public DeleteTransactionCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrencyConverter currencyConverter)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _currencyConverter = currencyConverter;
     }
 
     public async Task<DeleteCommandResponse<TransactionBaseDTO>> Handle(DeleteTransactionCommand request,
@@ -42,40 +46,64 @@ public class
                 PropertyName = nameof(transaction.IsBankTransaction)
             });
 
+        var transCurrency = await _unitOfWork.CurrencyRepository.GetAsync(transaction.CurrencyId);
+
         var deletedObj = _mapper.Map<TransactionBaseDTO>(transaction);
 
-        
-        IncreaseWalletBalance(transaction.Wallet, transaction.Amount);
-        await IncreaseBudgetBalance(transaction.CategoryId, transaction.Amount, transaction.UserId, transaction.WalletId);
+
+        await IncreaseWalletBalance(transaction.Wallet, transaction.Amount, transCurrency!.Symbol);
+        await IncreaseBudgetBalance(transaction.WalletId);
+
 
         _unitOfWork.TransactionRepository.Delete(transaction);
+        await _unitOfWork.SaveAsync();
+
 
         response.Success = true;
         response.Message = "Deleted successfully";
         response.DeletedObj = deletedObj;
         response.Id = deletedObj.Id;
-        await _unitOfWork.SaveAsync();
 
         return response;
     }
 
-    private void IncreaseWalletBalance(Domain.Entities.Wallet wallet, decimal amount)
+    private async Task IncreaseWalletBalance(Domain.Entities.Wallet wallet, decimal amount,
+        string transactionCurrencySymbol)
     {
-        wallet.Balance += amount;
-        wallet.TotalSpent -= amount;
+        ConvertCurrencyDTO? convertedCurrency = null;
+        if (wallet.Currency.Symbol != transactionCurrencySymbol)
+            convertedCurrency =
+                await _currencyConverter.Convert(transactionCurrencySymbol, wallet.Currency.Symbol, amount);
+
+        wallet.Balance += convertedCurrency?.Value ?? amount;
+        wallet.TotalSpent -= convertedCurrency?.Value ?? amount;
     }
 
-    private async Task IncreaseBudgetBalance(Guid categoryId, decimal amount, Guid userId, Guid walletId)
+    private async Task IncreaseBudgetBalance(Guid walletId)
     {
-        var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
-
-        foreach (var budget in budgets)
+        var budgetsByWalletId = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(walletId, null);
+        foreach (var budget in budgetsByWalletId)
         {
-            if ((budget.IsPublic || budget.UserId == userId) && budget.WalletId == walletId)
-            {
-                budget.Balance += amount;
-                budget.TotalSpent -= amount;
-            }
+            var transactions =
+                await _unitOfWork.TransactionRepository.GetByWalletIdInRangeAsync(walletId, budget.StartDate,
+                    budget.EndDate);
+
+            var filteredTransactions = transactions.Where(x => budget.Categories.Any(c => c.Id == x.CategoryId))
+                .ToList();
+            var transactionCurrencySymbols = filteredTransactions.Select(x => x.Currency.Symbol);
+            var transactionAmounts = filteredTransactions.Select(x => x.Amount);
+
+            var convertedResult =
+                await _currencyConverter.Convert(transactionCurrencySymbols, budget.Currency.Symbol,
+                    transactionAmounts);
+
+            decimal totalSpent = 0;
+            convertedResult.ForEach(x => totalSpent += x.Value);
+
+            budget.TotalSpent -= totalSpent;
+            budget.Balance += totalSpent;
+
+            await _unitOfWork.SaveAsync();
         }
     }
 }

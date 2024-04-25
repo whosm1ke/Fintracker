@@ -29,7 +29,7 @@ const useCreateBudget = () => {
 
             const prevData = queryClient.getQueryData<Budget[]>(['budgets']) || [];
             console.log("prevData: ", prevData)
-            queryClient.setQueryData(['budgets'], (oldQueryData: Budget[]) => [...oldQueryData, newBudget]);
+            queryClient.setQueryData(['budgets'], (oldQueryData: Budget[]) => [...oldQueryData || [], newBudget]);
             return {previousWallets: prevData};
         },
         onError: (err, _newWallet, context) => {

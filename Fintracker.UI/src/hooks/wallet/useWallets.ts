@@ -8,7 +8,7 @@ const useWallets = (ownerId: string) => {
     return useQuery({
         queryKey: ['wallets'],
         queryFn: async () => apiClient.getAll(),
-        staleTime: ms('24h'),
+        staleTime: ms('20m'),
         retryDelay: 60
     });
 }

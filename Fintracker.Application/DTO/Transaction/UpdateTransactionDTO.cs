@@ -7,7 +7,6 @@ public class UpdateTransactionDTO : IBaseDto, ITransactionDto
     public Guid Id { get; set; }
     
     public Guid CategoryId { get; set; }
-    
     public Guid CurrencyId { get; set; }
 
     public decimal Amount { get; set; }

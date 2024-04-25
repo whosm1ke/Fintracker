@@ -26,6 +26,10 @@ public static class BudgetExtensions
         var query = budgets
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
             .Take(queryParams.PageSize)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Category)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Currency)
             .Include(x => x.Categories)
             .Include(x => x.Currency)
             .Include(x => x.Wallet)
@@ -66,6 +70,10 @@ public static class BudgetExtensions
         var query = budgets
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
             .Take(queryParams.PageSize)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Category)
+            .Include(x => x.Transactions)
+            .ThenInclude(x => x.Currency)
             .Include(x => x.Categories)
             .Include(x => x.Currency)
             .Include(x => x.Wallet)

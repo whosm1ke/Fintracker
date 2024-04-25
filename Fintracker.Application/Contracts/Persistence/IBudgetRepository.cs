@@ -13,4 +13,6 @@ public interface IBudgetRepository : IGenericRepository<Budget>
 
     Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, BudgetQueryParams queryParams);
     Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, BudgetQueryParams queryParams);
+
+
 }

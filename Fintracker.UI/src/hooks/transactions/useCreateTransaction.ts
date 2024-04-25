@@ -26,6 +26,8 @@ const useCreateTransaction = () => {
         },
         onSettled: async (_resp, _error, newTransaction) => {
             await queryClient.invalidateQueries({queryKey: ['transactions', newTransaction.walletId]})
+            await queryClient.invalidateQueries({queryKey: ['wallets']})
+            await queryClient.invalidateQueries({queryKey: ['budgets']})
         },
     });
 }

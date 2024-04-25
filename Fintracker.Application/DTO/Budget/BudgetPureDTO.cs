@@ -14,4 +14,5 @@ public class BudgetPureDTO : FinancialEntityDTO
     public bool IsPublic { get; set; }
     
     public ICollection<CategoryDTO> Categories { get; set; } = default!;
+    
 }

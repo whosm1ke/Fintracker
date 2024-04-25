@@ -27,9 +27,9 @@ export default function BudgetsPage() {
                 
                         return (<BudgetCard walletName={b.wallet.name}
                                             balance={b.balance} currencySymbol={b.currency.symbol}
-                                            endDate={b.endDate} startDate={b.startDate} name={b.name || "Budget name"}
+                                            endDate={b.endDate} startDate={b.startDate} name={b.name}
                                             totalSpent={b.totalSpent} budgetId={b.id} isPublic={b.isPublic}
-                                            key={b.id}/>)
+                                            key={b.id || "Pipa"}/>)
 
                     })}
                 </div>

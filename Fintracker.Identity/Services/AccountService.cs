@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Security.Claims;
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Models.Identity;

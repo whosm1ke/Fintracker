@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Transaction;
 using Fintracker.Application.Exceptions;
@@ -14,11 +15,13 @@ public class
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ICurrencyConverter _currencyConverter;
 
-    public UpdateTransactionCommandHandler(IMapper mapper, IUnitOfWork unitOfWork)
+    public UpdateTransactionCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrencyConverter currencyConverter)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _currencyConverter = currencyConverter;
     }
 
     public async Task<UpdateCommandResponse<TransactionBaseDTO>> Handle(UpdateTransactionCommand request,
@@ -26,7 +29,7 @@ public class
     {
         var response = new UpdateCommandResponse<TransactionBaseDTO>();
 
-        var transaction = await _unitOfWork.TransactionRepository.GetTransactionWithWalletAsync(request.Transaction.Id);
+        var transaction = await _unitOfWork.TransactionRepository.GetTransactionAsync(request.Transaction.Id);
 
         if (transaction is null)
             throw new NotFoundException(new ExceptionDetails
@@ -42,19 +45,19 @@ public class
                 PropertyName = nameof(request.Transaction.Amount)
             });
 
+        var newCurrency = await _unitOfWork.CurrencyRepository.GetAsync(request.Transaction.CurrencyId);
+        await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, transaction.Amount,
+            newCurrency!.Symbol);
+
         var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
+        _unitOfWork.TransactionRepository.Update(transaction);
         _mapper.Map(request.Transaction, transaction);
 
 
-        await UpdateBudgetBalance(request.Transaction.CategoryId, request.Transaction.Amount, oldObject.Amount,
-            oldObject.UserId, transaction.WalletId);
-        UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, oldObject.Amount);
-        _unitOfWork.TransactionRepository.Update(transaction);
-
-
         await _unitOfWork.SaveAsync();
-        var newObject = _mapper.Map<TransactionBaseDTO>(transaction);
+        await UpdateBudgets(transaction.WalletId);
 
+        var newObject = _mapper.Map<TransactionBaseDTO>(transaction);
         response.Success = true;
         response.Message = "Updated successfully";
         response.Old = oldObject;
@@ -65,42 +68,52 @@ public class
         return response;
     }
 
-    private void UpdateWalletBalance(Domain.Entities.Wallet wallet, decimal newAmount, decimal oldAmount)
-    {
-        decimal difference = newAmount - oldAmount;
 
-        if (difference > 0)
-        {
-            wallet.Balance -= difference;
-            wallet.TotalSpent = newAmount;
-        }
-        else
-        {
-            wallet.Balance += difference * -1;
-            wallet.TotalSpent = newAmount;
-        }
+    private async Task UpdateWalletBalance(Domain.Entities.Wallet wallet, decimal newAmount, decimal oldAmount,
+        string transCurrencySymbol)
+    {
+        var convertedCurrencyNewAmount =
+            await _currencyConverter.Convert(transCurrencySymbol, wallet.Currency.Symbol, newAmount);
+
+        var convertedCurrencyOldAmount =
+            await _currencyConverter.Convert(transCurrencySymbol, wallet.Currency.Symbol, oldAmount);
+
+        // "Rollback" the old transaction
+        wallet.Balance += convertedCurrencyOldAmount?.Value ?? oldAmount;
+
+        // Apply the new transaction
+        wallet.Balance -= convertedCurrencyNewAmount?.Value ?? newAmount;
+
+        // Update total spent
+        wallet.TotalSpent -= convertedCurrencyOldAmount?.Value ?? oldAmount;
+        wallet.TotalSpent += convertedCurrencyNewAmount?.Value ?? newAmount;
     }
 
-    private async Task UpdateBudgetBalance(Guid categoryId, decimal newAmount, decimal oldAmount, Guid userId, Guid walletId)
+    private async Task UpdateBudgets(Guid walletId)
     {
-        var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
-        decimal difference = newAmount - oldAmount;
-
-        foreach (var budget in budgets)
+        var budgetsByWalletId = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(walletId, null);
+        foreach (var budget in budgetsByWalletId)
         {
-            if ((budget.IsPublic || budget.UserId == userId) && budget.WalletId == walletId)
-            {
-                if (difference > 0)
-                {
-                    budget.Balance -= difference;
-                    budget.TotalSpent = newAmount;
-                }
-                else
-                {
-                    budget.Balance += difference * -1;
-                    budget.TotalSpent = newAmount;
-                }
-            }
+            var transactions =
+                await _unitOfWork.TransactionRepository.GetByWalletIdInRangeAsync(walletId, budget.StartDate,
+                    budget.EndDate);
+
+            var filteredTransactions = transactions.Where(x => budget.Categories.Any(c => c.Id == x.CategoryId))
+                .ToList();
+            var transactionCurrencySymbols = filteredTransactions.Select(x => x.Currency.Symbol);
+            var transactionAmounts = filteredTransactions.Select(x => x.Amount);
+
+            var convertedResult =
+                await _currencyConverter.Convert(transactionCurrencySymbols, budget.Currency.Symbol,
+                    transactionAmounts);
+
+            decimal totalSpent = 0;
+            convertedResult.ForEach(x => totalSpent += x.Value);
+
+            budget.TotalSpent = totalSpent;
+            budget.Balance = budget.StartBalance - totalSpent;
+
+            await _unitOfWork.SaveAsync();
         }
     }
 }

@@ -15,7 +15,7 @@ const useDeleteTransaction = (id: string) => {
 
             const prevData = queryClient.getQueryData<Transaction[]>(['transactions', transToDelete.walletId]) || [];
 
-            queryClient.setQueryData(['transactions',  transToDelete.walletId], (oldQueryData: Transaction[]) => oldQueryData.filter(t => t.id !== id));
+            queryClient.setQueryData(['transactions',  transToDelete.walletId], (oldQueryData: Transaction[]) => oldQueryData?.filter(t => t.id !== id));
             return {prevTransactions: prevData};
         },
         // @ts-ignore
@@ -25,6 +25,8 @@ const useDeleteTransaction = (id: string) => {
         },
         onSettled: async (_resp, _error, transToDelete) => {
             await queryClient.invalidateQueries({queryKey: ['transactions', transToDelete.walletId]})
+            await queryClient.invalidateQueries({queryKey: ['wallets']})
+            await queryClient.invalidateQueries({queryKey: ['budgets']})
         },
     })
 }

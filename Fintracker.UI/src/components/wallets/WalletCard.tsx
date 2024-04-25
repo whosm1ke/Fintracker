@@ -3,26 +3,23 @@ import {IoWalletSharp} from "react-icons/io5";
 import useDeleteWallet from "../../hooks/wallet/useDeleteWallet.ts";
 import { motion, useMotionValue, PanInfo} from 'framer-motion';
 import {useState} from "react";
+import {Wallet} from "../../entities/Wallet.ts";
 
 interface WalletCardProps {
-    name: string,
-    balance: number,
-    isBanking: boolean,
-    currencySymbol: string,
-    walletId: string
+   wallet: Wallet
 }
 
 
-const WalletCard = ({name, balance, isBanking, currencySymbol, walletId}: WalletCardProps) => {
-    const isPositiveBalance = balance > 0;
-    const formatedBalance: string = Math.abs(balance).toLocaleString();
-    const balanceText: string = isPositiveBalance ? `+ ${formatedBalance} ${currencySymbol}` :
-        `- ${formatedBalance} ${currencySymbol}`;
-    const deleteWalletMutation = useDeleteWallet(walletId);
+const WalletCard = ({wallet}: WalletCardProps) => {
+    const isPositiveBalance = wallet.balance > 0;
+    const formatedBalance: string = Math.abs(wallet.balance).toLocaleString();
+    const balanceText: string = isPositiveBalance ? `+ ${formatedBalance} ${wallet.currency.symbol}` :
+        `- ${formatedBalance} ${wallet.currency.symbol}`;
+    const deleteWalletMutation = useDeleteWallet(wallet.id);
     const [showDeleteButton, setShowDeleteButton] = useState(false);
 
     const handleDeleteWallet = async () => {
-        await deleteWalletMutation.mutateAsync(walletId);
+        await deleteWalletMutation.mutateAsync(wallet.id);
     }
     const toggleDeleteButton = () => setShowDeleteButton(p => !p);
 
@@ -50,15 +47,15 @@ const WalletCard = ({name, balance, isBanking, currencySymbol, walletId}: Wallet
             style={{ x }}
         >
            
-            <Link to={`/wallet/${walletId}/trans`}
+            <Link to={`/wallet/${wallet.id}/trans`}
                   className={'flex flex-col sm:flex-row space-y-3 sm:space-y-0 space-x-0 sm:space-x-3 ' +
                       'p-4 bg-slate-100 rounded-lg shadow w-full'}>
                 <span className={'self-center'}>
-                    <IoWalletSharp color={isBanking ? 'orange' : 'green'} size={'2rem'}/>
+                    <IoWalletSharp color={wallet.isBanking ? 'orange' : 'green'} size={'2rem'}/>
                 </span>
                 <div className={'px-4 py-2'}>
-                    <h4 className={'text-lg'}>{name}</h4>
-                    <span>{isBanking ? 'Monobank' : 'Cash'}</span>
+                    <h4 className={'text-lg'}>{wallet.name}</h4>
+                    <span>{wallet.isBanking ? 'Monobank' : 'Cash'}</span>
                     <p className={isPositiveBalance ? "text-green-400 text-xl" : 'text-red-500 text-xl'}>{balanceText}</p>
                 </div>
             </Link>

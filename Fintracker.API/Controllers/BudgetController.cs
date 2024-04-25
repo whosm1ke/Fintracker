@@ -4,7 +4,6 @@ using Fintracker.Application.Features.Budget.Requests.Queries;
 using Fintracker.Application.Models;
 using Fintracker.Application.Responses.API_Responses;
 using Fintracker.Application.Responses.Commands_Responses;
-using Fintracker.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

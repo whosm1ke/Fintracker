@@ -13,7 +13,7 @@ public class TransactionPureDTO : IBaseDto
     public Guid UserId { get; set; }
     
     public decimal Amount { get; set; }
-
+    
     public string? Note { get; set; }
     
     public string? Label { get; set; }

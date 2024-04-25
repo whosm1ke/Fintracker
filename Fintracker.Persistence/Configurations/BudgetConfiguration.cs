@@ -20,12 +20,20 @@ public class BudgetConfiguration : IEntityTypeConfiguration<Budget>
             .WithMany()
             .UsingEntity(j => j.ToTable("BudgetCategory"));
 
+        builder.HasMany(x => x.Transactions)
+            .WithMany(x => x.Budgets);
 
         builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(BudgetConstraints.MaximumNameLength);
 
         builder.Property(x => x.Balance)
+            .IsRequired()
+            .HasColumnType("decimal")
+            .HasPrecision(12, 2);
+        
+        
+        builder.Property(x => x.StartBalance)
             .IsRequired()
             .HasColumnType("decimal")
             .HasPrecision(12, 2);

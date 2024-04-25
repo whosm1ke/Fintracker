@@ -17,6 +17,10 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     public async Task<Transaction?> GetTransactionAsync(Guid id)
     {
         return await _db.Transactions
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)
@@ -31,6 +35,10 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     public async Task<Transaction?> GetTransactionWithWalletAsync(Guid id)
     {
         return await _db.Transactions
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)
@@ -46,6 +54,10 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     public async Task<IReadOnlyList<Transaction>> GetAllAsync(Guid userId)
     {
         return await _db.Transactions
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)
@@ -60,6 +72,10 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     public async Task<IReadOnlyList<Transaction>> GetByUserIdAsync(Guid userId)
     {
         return await _db.Transactions
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)
@@ -74,6 +90,10 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     public async Task<IReadOnlyList<Transaction>> GetByWalletIdAsync(Guid walletId)
     {
         return await _db.Transactions
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)
@@ -88,6 +108,10 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     public async Task<IReadOnlyList<Transaction>> GetByCategoryIdAsync(Guid categoryId)
     {
         return await _db.Transactions
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)
@@ -110,6 +134,19 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
         return await _db.Transactions.GetByWalletIdSortedAsync(walletId, queryParams);
     }
 
+    public async Task<IReadOnlyList<Transaction>> GetByWalletIdInRangeAsync(Guid walletId, DateTime budgetStart, DateTime budgetEnd)
+    {
+        return await _db.Transactions
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
+            .Include(x => x.Category)
+            .Include(x => x.Currency)
+            .Where(x => x.WalletId == walletId && x.Date >= budgetStart && x.Date <= budgetEnd)
+            .ToListAsync();
+    }
+
     public async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, TransactionQueryParams queryParams)
     {
         return await _db.Transactions.GetByCategoryIdSortedAsync(categoryId, queryParams);
@@ -120,6 +157,10 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     public new async Task<IReadOnlyList<Transaction?>> GetAllAsync()
     {
         return await _db.Transactions
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)

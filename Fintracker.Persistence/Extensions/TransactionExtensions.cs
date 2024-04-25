@@ -27,6 +27,10 @@ public static class TransactionExtensions
         var baseQuery = transactions
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
             .Take(queryParams.PageSize)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)
@@ -34,7 +38,7 @@ public static class TransactionExtensions
             .Include(x => x.Wallet)
             .ThenInclude(x => x.Currency)
             .AsSplitQuery()
-            .Where(x => x.UserId == userId && (x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate));
+            .Where(x => x.UserId == userId && x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate);
 
 // Apply ordering
         var orderedQuery = queryParams.IsDescending
@@ -64,6 +68,10 @@ public static class TransactionExtensions
         var baseQuery = transactions
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
             .Take(queryParams.PageSize)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)
@@ -71,7 +79,7 @@ public static class TransactionExtensions
             .Include(x => x.Wallet)
             .ThenInclude(x => x.Currency)
             .AsSplitQuery()
-            .Where(x => x.WalletId == walletId && (x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate));
+            .Where(x => x.WalletId == walletId && x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate);
 
 // Apply ordering
         var orderedQuery = queryParams.IsDescending
@@ -100,6 +108,10 @@ public static class TransactionExtensions
         var baseQuery = transactions
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
             .Take(queryParams.PageSize)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Currency)
+            .Include(x => x.Budgets)
+            .ThenInclude(x => x.Categories)
             .Include(x => x.Category)
             .Include(x => x.Currency)
             .Include(x => x.User)
@@ -107,7 +119,7 @@ public static class TransactionExtensions
             .Include(x => x.Wallet)
             .ThenInclude(x => x.Currency)
             .AsSplitQuery()
-            .Where(x => x.CategoryId == categoryId && (x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate));
+            .Where(x => x.CategoryId == categoryId && x.Date >= queryParams.StartDate && x.Date <= queryParams.EndDate);
 
 // Apply ordering
         var orderedQuery = queryParams.IsDescending

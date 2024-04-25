@@ -3,12 +3,14 @@ import { Currency } from "./Currency.ts";
 import { User } from "./User.ts";
 import {Wallet} from "./Wallet.ts";
 import {RegisterOptions} from "react-hook-form";
+import {Budget} from "./Budget.ts";
 
 export interface Transaction extends BaseEntity {
     walletId: string;
     userId: string;
     currencyId?: string;
     categoryId?: string;
+    budgetId: string;
     amount: number;
     note?: string;
     label?: string;
@@ -18,6 +20,7 @@ export interface Transaction extends BaseEntity {
     currency: Currency;
     wallet: Wallet;
     user: User;
+    budgets: Budget[];
 }
 
 export interface GroupedTransactionByDate {

@@ -7,7 +7,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import useCreateBudget from "../../hooks/budgets/useCreateBudget";
 import useWallets from "../../hooks/wallet/useWallets";
 import Spinner from "../other/Spinner.tsx";
-import useCategories from "../../hooks/categories/useCategories.ts";
 import {useState} from "react";
 import {Currency} from "../../entities/Currency.ts";
 import currencies from "../../data/currencies.ts";
@@ -21,6 +20,7 @@ import {Wallet} from "../../entities/Wallet.ts";
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
 import CurrencyItem from "../currencies/CurrencyItem.tsx";
 import WalletItem from "../wallets/WalletItem.tsx";
+import useExpenseCategories from "../../hooks/categories/useExpenseCategories.ts";
 
 
 interface CreateBudgetModalProps {
@@ -32,7 +32,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
     const {walletId} = useParams();
     const budgetMutation = useCreateBudget();
     const {data: wallets} = useWallets(userId)
-    const {data: categories} = useCategories();
+    const {data: categories} = useExpenseCategories();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined)
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
@@ -40,7 +40,6 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
     const navigate = useNavigate();
     useStopScrolling(isOpen)
     if (wallets === undefined || categories === undefined) return <Spinner/>
-    
     function handleOpenModal() {
         handleSelectedCurrency(undefined);
         setSelectedCategories([])
@@ -243,6 +242,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                         id="isPublic"
                                         type="checkbox"
                                         defaultChecked={false}
+                                        {...register("isPublic")}
                                     />
                                 </div>
                             </div>

@@ -28,6 +28,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Fintracker.Application\Fintracker.Application.csproj" />
+      <ProjectReference Include="..\Fintracker.Infrastructure\Fintracker.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

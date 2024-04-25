@@ -67,6 +67,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency}: AddTr
             model.category = selectedCategory;
             clearErrors("categoryId")
         }
+        
 
         if (!selectedCurrency) {
             setError("currencyId", {message: "Currency is required"});

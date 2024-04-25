@@ -5,6 +5,7 @@ using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.Features.Budget.Handlers.Commands;
 using Fintracker.Application.Features.Budget.Requests.Commands;
 using Fintracker.Application.MapProfiles;
+using Fintracker.Infrastructure.CurrencyConvert;
 using Fintracker.TEST.Repositories;
 using FluentAssertions;
 
@@ -36,7 +37,7 @@ public class BudgetCommandTests
     public async Task AddAsync_Should_Return_True()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new CreateBudgetCommandHandler(mockUnitOfWork, _mapper);
+        var handler = new CreateBudgetCommandHandler(mockUnitOfWork, _mapper, null);
         var budgetToAdd = _fixture.Build<CreateBudgetDTO>()
             .With(c => c.Name, "New Budget")
             .With(c => c.Balance, 100)
