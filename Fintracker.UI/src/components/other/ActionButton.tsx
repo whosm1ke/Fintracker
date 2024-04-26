@@ -12,7 +12,7 @@ export const ActionButton = ({text, onModalOpen}: ActionButtonProps) => {
                 onClick={() => onModalOpen()}
                 whileHover={{scale: 1.1}}
                 whileTap={{scale: 0.9}}
-                className={'text-xl bg-green-400 px-4 py-2 text-white rounded-lg shadow-lg'}>{text}
+                className={'text-[18px] lg:text-xl bg-green-400 px-4 py-2 text-white rounded-lg shadow-lg'}>{text}
             </motion.button>
         </>
     )

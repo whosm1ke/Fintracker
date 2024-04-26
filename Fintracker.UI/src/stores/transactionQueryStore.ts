@@ -22,10 +22,11 @@ export type MinMaxRange = {
     max: number
 }
 
-interface TransactionFilters {
+export interface TransactionFilters {
     categories: Category[];
     users: User[];
-    minMaxRange: MinMaxRange
+    minMaxRange: MinMaxRange,
+    note: string
 }
 
 interface TransactionQueryStore {
@@ -42,6 +43,7 @@ interface TransactionQueryStore {
     setCategories: (categories: Category[]) => void;
     setUsers: (users: User[]) => void;
     setMinMaxRange: (minMax: MinMaxRange) => void;
+    setNote: (note: string) => void;
 }
 
 
@@ -49,12 +51,10 @@ const useTransactionQueryStore = createWithEqualityFn<TransactionQueryStore>((se
     // Set end date to today at 00:00:00
     let endDate = new Date();
     endDate.setHours(0, 0, 0, 0);
-    console.log(formatDate(endDate))
 
     // Set start date to one week before end date at 00:00:00
     let startDate = new Date(endDate);
     startDate.setDate(startDate.getDate() - 7);
-    console.log(formatDate(startDate))
 
     return {
         query: {
@@ -69,7 +69,8 @@ const useTransactionQueryStore = createWithEqualityFn<TransactionQueryStore>((se
         filters: {
             categories: [],
             minMaxRange: {min: 1, max: 1000},
-            users: []
+            users: [],
+            note: ""
         },
         setPageNumber: (num: number) => set(store => ({query: {...store.query, pageNumber: num}})),
         setPageSize: (num: number) => set(store => ({query: {...store.query, page_size: num}})),
@@ -90,7 +91,8 @@ const useTransactionQueryStore = createWithEqualityFn<TransactionQueryStore>((se
             }
         })),
         setUsers: (users: User[]) => set(store => ({filters: {...store.filters, users: users}})),
-        setMinMaxRange: (minMax: MinMaxRange) => set(store => ({filters: {...store.filters, minMaxRange: minMax}}))
+        setMinMaxRange: (minMax: MinMaxRange) => set(store => ({filters: {...store.filters, minMaxRange: minMax}})),
+        setNote: (note: string) => set(store => ({filters: {...store.filters, note: note}})),
     }
 }, shallow);
 

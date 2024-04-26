@@ -50,8 +50,8 @@ export function TransactionItem({transaction, conversionRate, walletCurrencySymb
                         <p className="">{transaction.user.userName}</p>
                     </div>
                     <div className="justify-self-center hidden md:flex-grow md:flex justify-between min-w-full gap-x-5">
-                        <p className="break-words">{transaction.note || "No note"}</p>
-                        <p className="">{transaction.label || "No note"}</p>
+                        <p className="break-words">{transaction.note || "---"}</p>
+                        <p className="">{transaction.label || "---"}</p>
                     </div>
                     <div className="justify-self-end flex flex-col">
                         <p className={`${transaction.category.type === CategoryType.EXPENSE ? "text-red-400" : 'text-green-400'} font-bold`}>

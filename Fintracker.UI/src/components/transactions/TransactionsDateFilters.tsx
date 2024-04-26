@@ -1,28 +1,22 @@
 ﻿import {FaChevronLeft, FaChevronRight} from "react-icons/fa6";
 import {useEffect, useRef, useState} from "react";
+import useTransactionQueryStore from "../../stores/transactionQueryStore.ts";
+import {formatDate} from "../../helpers/globalHelper.ts";
 
-interface TransactionsDateFiltersProps {
-    startDate: string;
-    endDate: string;
-    handleDateFilterChange: (date: Date, isStartDate: boolean) => void;
-}
+// interface TransactionsDateFiltersProps {}
 
 
-const TransactionsDateFilters = ({
-                                startDate,
-                                endDate,
-                                handleDateFilterChange
-                            }: TransactionsDateFiltersProps) => {
+const TransactionsDateFilters = () => {
+
+    const [
+        startDate, endDate, setStartDate, setEndDate
+    ] = useTransactionQueryStore(x =>
+        [x.query.startDate, x.query.endDate, x.setStartDate, x.setEndDate]);
 
     const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
     const [currentStep, setCurrentStep] = useState('This week');
     const closeDateFilter = () => setIsDateFilterOpen(false);
     const openDateFilter = () => setIsDateFilterOpen(true);
-    const startDateToShow = new Date(startDate).toDateString();
-    const endDateToShow = new Date(endDate).toDateString();
-
-    const startDateAsDefaultValue = new Date(startDate).toLocaleDateString('en-CA');
-    const endDateAsDefaultValue = new Date(endDate).toLocaleDateString('en-CA');
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -36,6 +30,12 @@ const TransactionsDateFilters = ({
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    const handleDateFilterChange = (date: Date, isStartDate: boolean) => {
+        if (isStartDate) setStartDate(formatDate(date))
+        if (!isStartDate) setEndDate(formatDate(date))
+    }
+
 
     const setDates = (period: string) => {
         let newStartDate = new Date();
@@ -86,9 +86,9 @@ const TransactionsDateFilters = ({
     }
 
     const shiftDates = (direction: 'left' | 'right') => {
-        let newStartDate = new Date(startDate);
+        let newStartDate = new Date(startDate!);
         newStartDate.setHours(0, 0, 0, 0)
-        let newEndDate = new Date(endDate);
+        let newEndDate = new Date(endDate!);
         newEndDate.setHours(0, 0, 0, 0)
 
         switch (currentStep) {
@@ -130,57 +130,64 @@ const TransactionsDateFilters = ({
     const buttonsLabels: string[] = [
         'This week', 'Previous week', 'This month', 'Previous month', 'This year', 'Previous year', 'All history'
     ]
+    
+    const isAllHistoryShowing = currentStep !== "All history"
     return (
-        <>
+        <div className={'w-full'}>
             <div
-                className={'flex  justify-between items-center gap-5 ' + `${isDateFilterOpen ? 'pointer-events-none' : 'pointer-events-auto'}`}>
-                <button
-                    onClick={() => shiftDates('left')}
-                    className={'hidden sm:block w-full md:w-auto px-4 py-2 bg-stone-200 rounded shadow'}>
-                    <FaChevronLeft size={'1.4rem'}/>
-                </button>
-                <div
-                    onClick={openDateFilter}
-                    className={'w-full md:w-auto flex justify-center md:justify-between gap-x-5 bg-stone-200 rounded shadow px-4 py-2'}>
-                    <p>{startDateToShow}</p>
-                    -
-                    <p>{endDateToShow}</p>
+                className={'flex justify-between items-center gap-x-3 sm:gap-x-5 text-sm md:text-lg ' + `${isDateFilterOpen ? 'pointer-events-none' : 'pointer-events-auto'}`}>
+                <div className={'bg-stone-200 rounded shadow px-4 py-2'}>
+                    <button onClick={() => shiftDates('left')}
+                            className={'text-center align-middle'}>
+                        <FaChevronLeft size={'1rem'}/>
+                    </button>
                 </div>
-                <button
-                    onClick={() => shiftDates('right')}
-                    className={'hidden sm:block w-full md:w-auto px-4 py-2 bg-stone-200 rounded shadow'}>
-                    <FaChevronRight size={'1.4rem'}/>
-                </button>
+                <div onClick={openDateFilter}
+                     className={'min-w-64 md:w-96 lg:w-128 xl:w-160 flex justify-center bg-stone-200 rounded shadow px-4 py-2'}>
+                    {isAllHistoryShowing ?
+                        <div className={'flex justify-around w-full'}>
+                            <p className={''}>{new Date(startDate!).toDateString()}</p>
+                            <p className={''}>{" - "}</p>
+                            <p className={''}>{new Date(endDate!).toDateString()}</p>
+                        </div>
+                        :
+                        <p className={''}>All history</p>
+                    }
+                </div>
+                <div className={'bg-stone-200 rounded shadow px-4 py-2'}>
+                    <button onClick={() => shiftDates('right')}
+                            className={'text-center align-middle'}>
+                        <FaChevronRight size={'1rem'}/>
+                    </button>
+                </div>
             </div>
             {isDateFilterOpen &&
                 <div ref={menuRef}
                      className={'relative inset-0 flex w-full justify-center items-center visible bg-black/20 z-10'}>
-                    <div
-                        className={'absolute top-1 w-full mt-1 bg-stone-200 px-4 py-2 rounded-lg shadow-lg'}>
+                    <div className={'absolute top-1 w-full mt-1 bg-stone-200 px-4 py-2 rounded-lg shadow-lg'}>
                         <div className={'grid grid-cols-1 sm:grid-cols-2 gap-3 w-full'}>
                             <label className="text-sm flex font-bold flex-col">Start date
-                                <input type="date" value={startDateAsDefaultValue}
+                                <input type="date" value={isAllHistoryShowing ? startDate : ""}
                                        onChange={e => handleDateFilterChange(e.target.valueAsDate || new Date(), true)}
                                        className="px-2 py-1 text-[18px] border-2 font-[100] border-gray-300 rounded-md focus:outline-none focus:border-blue-500"/>
                             </label>
                             <label className="text-sm font-bold flex flex-col">End date
-                                <input type="date" value={endDateAsDefaultValue}
+                                <input type="date" value={isAllHistoryShowing ? endDate : ""}
                                        onChange={e => handleDateFilterChange(e.target.valueAsDate || new Date(), false)}
                                        className="px-2 py-1 text-[18px] font-[100] border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"/>
                             </label>
                         </div>
                         <div className={'grid grid-cols-1 sm:grid-cols-2 mt-2 gap-2'}>
                             {buttonsLabels.map(b =>
-                                <button key={b}
-                                        onClick={(e) => setDates(e.currentTarget.innerText)}
-                                        className="w-full bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-700 transition-colors duration-300">{b}
-                                </button>
+                                <button key={b} onClick={(e) => setDates(e.currentTarget.innerText)}
+                                        className="w-full bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-700 transition-colors duration-300">{b}</button>
                             )}
                         </div>
                     </div>
                 </div>
             }
-        </>
+        </div>
+
     )
 }
 

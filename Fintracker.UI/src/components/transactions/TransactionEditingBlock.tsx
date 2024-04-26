@@ -107,7 +107,7 @@ const TransactionEditingBlock = ({transaction, categories, handleIsEditing}: Tra
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="Note"
-                            defaultValue={transaction.note || "---"}
+                            defaultValue={transaction.note || ""}
                             type="text"
                             {...register("note", noteRegisterForTransaction)}
                         />
@@ -119,7 +119,7 @@ const TransactionEditingBlock = ({transaction, categories, handleIsEditing}: Tra
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="Label"
-                            defaultValue={transaction.label || "---"}
+                            defaultValue={transaction.label || ""}
                             type="text"
                             {...register("label", labelRegisterForTransaction)}
                         />

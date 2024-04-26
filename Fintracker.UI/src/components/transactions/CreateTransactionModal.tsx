@@ -90,9 +90,9 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency}: AddTr
     };
 
     return (
-        <>
+        <div>
             <ActionButton text={"Add new transaction"} onModalOpen={handleOpenModal}/>
-            {isOpen && <div className={'absolute inset-0 flex justify-center items-start p-4 sm:p-2 z-10 visible bg-black/20'}>
+            {isOpen && <div className={'absolute inset-0 flex justify-center items-start p-4 sm:p-2 z-[200] visible bg-black/20'}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add transaction
                         <HiX size={'2rem'} color={'red'} onClick={() => {
@@ -187,7 +187,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency}: AddTr
                     </form>
                 </div>
             </div>}
-        </>
+        </div>
     );
 }
 

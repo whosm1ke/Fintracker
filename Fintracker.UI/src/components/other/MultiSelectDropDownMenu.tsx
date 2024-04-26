@@ -1,4 +1,5 @@
 ﻿import React, {useState, useEffect, useRef} from 'react';
+import {FaChevronDown} from "react-icons/fa6";
 
 interface DropdownProps<T extends { id: string }> {
     items: T[];
@@ -43,12 +44,7 @@ const MultiSelectDropDownMenu = <T extends { id: string }>({
                         <span
                             className="ml-2 bg-indigo-200 text-indigo-700 rounded-full px-2 py-1 text-xs font-bold">{selectedItems.length}</span>
                     </div>
-                    <svg className="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                         fill="currentColor" aria-hidden="true">
-                        <path fillRule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clipRule="evenodd"/>
-                    </svg>
+                    <FaChevronDown size={'1rem'}/>
                 </button>
             </div>
             {isOpen && (
@@ -58,7 +54,7 @@ const MultiSelectDropDownMenu = <T extends { id: string }>({
                         <div
                             className="flex items-center px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 hover:text-gray-900"
                             role="menuitem" onClick={onAllItemsSelected}>
-                            <input type="checkbox" className="form-checkbox h-5 w-5 text-indigo-600"
+                            <input type="checkbox" className="min-h-5 min-w-5 text-indigo-600"
                                    checked={selectedItems.length === items.length} readOnly/>
                             <span className="ml-3">Select all</span>
                         </div>
@@ -67,7 +63,7 @@ const MultiSelectDropDownMenu = <T extends { id: string }>({
                                  className="flex items-center gap-x-2 px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 hover:text-gray-900"
                                  role="menuitem" onClick={() => onItemSelected(item)}>
 
-                                <input type="checkbox" className="form-checkbox h-5 w-5 text-indigo-600"
+                                <input type="checkbox" className="min-h-5 min-w-5 text-indigo-600"
                                        checked={selectedItems.includes(item)} readOnly/>
                                 <div className="cursor-pointer hover:bg-gray-100">
                                     <ItemComponent item={item}/>

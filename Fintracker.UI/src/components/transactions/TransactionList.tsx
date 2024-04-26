@@ -5,6 +5,7 @@ import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAl
 import Spinner from "../other/Spinner.tsx";
 import {TransactionItem} from "./TransactionItem.tsx";
 import {CategoryType} from "../../entities/CategoryType.ts";
+import useTransactionQueryStore, {TransactionFilters} from "../../stores/transactionQueryStore.ts";
 
 
 interface TransactionListProps {
@@ -27,6 +28,33 @@ const getUniqueCurrencySymbols = (trans: Transaction[]) => {
     const symbols = trans.map(t => t.currency.symbol);
     return [...new Set(symbols)]
 }
+
+function filterTransactions(transactions: Transaction[], filters: TransactionFilters): Transaction[] {
+    console.log("HA")
+    return transactions.filter(transaction => {
+        // Фільтрація за категоріями
+        if (!filters.categories.map(c => c.id).includes(transaction.category.id)) {
+            return false;
+        }
+
+        // Фільтрація за користувачами
+        if (!filters.users.map(u => u.id).includes(transaction.userId)) {
+            return false;
+        }
+
+        // Фільтрація за мінімальним і максимальним значеннями
+        if (transaction.amount < filters.minMaxRange.min || transaction.amount > filters.minMaxRange.max) {
+            return false;
+        }
+
+        // Фільтрація за нотатками
+        if (filters.note && (!transaction.note || !transaction.note.toLowerCase().includes(filters.note.toLowerCase()))) {
+            return false;
+        }
+        return true;
+    });
+}
+
 
 const groupTransactionsByDate = (transactions: Transaction[]) => {
     let transactionContainer: GroupedTransactionByDate[] = [];
@@ -66,8 +94,9 @@ const getCurrencyRates = (convertedCurrencies: ConvertCurrency[] | undefined, un
 }
 export default function TransactionList({transactions, walletSymbol}: TransactionListProps) {
 
-
-    const groupedTransactions = groupTransactionsByDate(transactions);
+    const filters = useTransactionQueryStore(x => x.filters);
+    const filteredTransactions = filterTransactions(transactions, filters);
+    const groupedTransactions = groupTransactionsByDate(filteredTransactions);
     const allTransactions = groupedTransactions.flatMap(group => group.transactions);
     const uniqueSymbols = getUniqueCurrencySymbols(allTransactions);
     const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
@@ -134,7 +163,6 @@ interface TransactionBlockHeaderProps {
 
 const TransactionBlockHeader = ({date, totalSpent, walletSymbol}: TransactionBlockHeaderProps) => {
     const datePeriod = new Date(date).toLocaleDateString();
-    const sortOptions = ["Label", "Note", "Amount"];
     const totalSpentText = Math.abs(totalSpent).toFixed(2);
     const isPositive = totalSpent > 0;
     const classNameForTotalSpent = isPositive ? "text-green-400 font-bold text-right" : "text-red-400 font-bold text-right";
@@ -144,13 +172,6 @@ const TransactionBlockHeader = ({date, totalSpent, walletSymbol}: TransactionBlo
         <div className={'flex justify-between items-center text-sm sm:text-[15px] px-2 py-4'}>
             <div>
                 <p className={'font-bold text-left'}>{datePeriod}</p>
-            </div>
-            <div className={'hidden sm:flex gap-x-2'}>
-                <h1 className={'font-bold'}>Sort by:</h1>
-                <select>
-                    {sortOptions.map((s) =>
-                        <option key={s} value={s.toLowerCase()}>{s}</option>)}
-                </select>
             </div>
             <div className={''}>
                 <p className={classNameForTotalSpent}>{isPositive ? "" : "-"} {totalSpentText} {walletSymbol}</p>
