@@ -11,4 +11,6 @@ public class UserPureDTO : IBaseDto
     public string Email { get; set; } = default!;
 
     public UserDetailsDTO? UserDetails { get; set; } = default!;
+    
+    public string GlobalCurrency { get; set; }
 }

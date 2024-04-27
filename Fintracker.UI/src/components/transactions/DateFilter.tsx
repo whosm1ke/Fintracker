@@ -6,7 +6,7 @@ import {formatDate} from "../../helpers/globalHelper.ts";
 // interface TransactionsDateFiltersProps {}
 
 
-const TransactionsDateFilters = () => {
+const DateFilter = () => {
 
     const [
         startDate, endDate, setStartDate, setEndDate
@@ -192,4 +192,4 @@ const TransactionsDateFilters = () => {
 }
 
 //@ts-ignore
-export default TransactionsDateFilters;
+export default DateFilter;

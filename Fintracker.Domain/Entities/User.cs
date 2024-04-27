@@ -25,6 +25,8 @@ public class User: IdentityUser<Guid>, IEntity<Guid>
     public string CreatedBy { get; set; } = default!;
     public DateTime ModifiedAt { get; set; }
     public string ModifiedBy { get; set; } = default!;
+
+    public string GlobalCurrency { get; set; }
 }
 
 public class UserDetails

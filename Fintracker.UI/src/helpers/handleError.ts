@@ -1,4 +1,5 @@
 ﻿import axios from "axios";
+import {FieldValues, Path, UseFormSetError} from "react-hook-form";
 
 export const handleError = (error: any): BaseResponse | NotFoundResponse | UnauthorizedResponse | Error => {
     if (axios.isAxiosError(error)) {
@@ -16,4 +17,21 @@ export const handleError = (error: any): BaseResponse | NotFoundResponse | Unaut
     }
 
     return error;
+}
+
+export const handleServerErrorResponse = <T extends FieldValues>(error: any,setError: UseFormSetError<T>) => {
+    if (error && 'details' in error) {
+        const serverErrors = error.details;
+        serverErrors.forEach((errorDetail: any) => {
+            if (errorDetail.propertyName) {
+                setError(errorDetail.propertyName as unknown as Path<T>, {
+                    type: 'server',
+                    message: errorDetail.errorMessage,
+                });
+
+            }
+        });
+    } else {
+        console.log(error);
+    }
 }

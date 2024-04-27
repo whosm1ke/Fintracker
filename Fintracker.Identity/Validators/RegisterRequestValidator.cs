@@ -14,7 +14,7 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
             .ApplyCommonRules()
             .ApplyEmail()
             .MustAsync(async (email, _) => await userManager.FindByEmailAsync(email) == null)
-            .WithMessage("Already been in use");
+            .WithMessage("Email already been in use");
 
         RuleFor(x => x.Password)
             .ApplyCommonRules();

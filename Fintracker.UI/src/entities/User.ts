@@ -9,4 +9,5 @@ export interface User extends BaseEntity {
     budgets: Budget[];
     memberWallets: Wallet[];
     ownedWallets: Wallet[];
+    globalCurrency: string;
 }

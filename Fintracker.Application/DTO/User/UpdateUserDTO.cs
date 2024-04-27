@@ -12,5 +12,7 @@ public class UpdateUserDTO : IBaseDto
     public UserDetailsDTO UserDetails { get; set; } = default!;
 
     public IFormFile? Avatar { get; set; }
+    
+    public string GlobalCurrency { get; set; }
 
 }
