@@ -17,7 +17,7 @@ interface TransactionItemProps {
 }
 
 const variants : Variants = {
-    editing: { backgroundColor: ["#ffef00", "#ffdf00"], transition: { duration: 0.5, repeatType: 'reverse', repeat: Infinity } },
+    editing: { backgroundColor: ["#ffef00", "#ffdf00"], transition: { duration: 0.7, repeatType: 'reverse', repeat: Infinity } },
     idle: {backgroundColor: 'rgb(245,245,245)'},
 };
 export function TransactionItem({transaction, conversionRate, walletCurrencySymbol}: TransactionItemProps) {

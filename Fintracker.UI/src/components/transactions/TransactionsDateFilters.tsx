@@ -133,7 +133,7 @@ const TransactionsDateFilters = () => {
     
     const isAllHistoryShowing = currentStep !== "All history"
     return (
-        <div className={'w-full'}>
+        <div className={''}>
             <div
                 className={'flex justify-between items-center gap-x-3 sm:gap-x-5 text-sm md:text-lg ' + `${isDateFilterOpen ? 'pointer-events-none' : 'pointer-events-auto'}`}>
                 <div className={'bg-stone-200 rounded shadow px-4 py-2'}>

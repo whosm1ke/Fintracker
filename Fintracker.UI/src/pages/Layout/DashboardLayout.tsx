@@ -89,7 +89,7 @@ const DashboardNavBar = () => {
             >
                 <FlyoutLink FlyoutContent={NavigationContent} open={isMenuOpen}>
                     <div className={'flex items-center space-x-2 text-neutral-900'}>
-                        <img src={avatar} alt="Logo" className={'w-12 h-12'}/>
+                        <img src={avatar || logo} alt="Logo" className={'w-12 h-12 rounded-full'}/>
                         <p className={'text-2xl font-bold hidden md:inline'}>{userName}</p>
                         <motion.span
                             onClick={() => toggleMenuOpen(p => !p)}

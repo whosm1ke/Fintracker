@@ -35,7 +35,10 @@ const MultiSelectDropDownMenu = <T extends { id: string }>({
 
     return (
         <div className="relative" ref={dropdownRef}>
-            <div onClick={() => setIsOpen(p => !p)}>
+            <div onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(p => !p)
+            }}>
                 <button type="button"
                         className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm ring-0 font-medium text-gray-700 hover:bg-gray-50 hover:outline-none hover:ring-2 hover:ring-offset-2 hover:ring-offset-gray-100 hover:ring-indigo-500"
                         id="options-menu" aria-haspopup="true" aria-expanded="true">
