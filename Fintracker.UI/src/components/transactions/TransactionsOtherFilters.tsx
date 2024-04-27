@@ -7,69 +7,65 @@ import {User} from "../../entities/User.ts";
 import {useEffect, useMemo, useRef, useState} from "react";
 import useTransactionQueryStore, {MinMaxRange} from "../../stores/transactionQueryStore.ts";
 import {Transaction} from "../../entities/Transaction.ts";
+import useWalletInfoStore from "../../stores/walletStore.ts";
+import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAll.tsx";
+import {calcExpenseAndIncome, getCurrencyRates, getMinMaxRange,
+    getUniqueCategories, getUniqueCurrencySymbols, getUniqueUsers } from "../../helpers/globalHelper.ts";
 
 interface TransactionsOtherFiltersProps {
-    transactions: Transaction[]
+    transactions: Transaction[];
+    walletCurrencySymbol: string;
 }
 
-function getUniqueCategories(transactions: Transaction[]): Category[] {
-    const categories = transactions.map(transaction => transaction.category);
-    return Array.from(new Set(categories.map(category => category.name)))
-        .map(name => categories.find(category => category.name === name)!);
-}
-
-function getUniqueUsers(transactions: Transaction[]): User[] {
-    const users = transactions.map(t => t.user);
-    const uniqueUsers = Array.from(new Set(users.map(u => u.id)))
-        .map(id => users.find(u => u.id === id)!);
-    return uniqueUsers;
-}
-
-
-function getMinMaxRange(transactions: Transaction[]): MinMaxRange {
-
-    if (transactions.length === 0)
-        return {min: 1, max: 1000}
-    const amounts = transactions.map(transaction => transaction.amount);
-    const min = Math.min(...amounts);
-    const max = Math.max(...amounts);
-
-
-    return {min, max};
-}
-
-export default function TransactionsOtherFilters({transactions}: TransactionsOtherFiltersProps) {
+export default function TransactionsOtherFilters({transactions, walletCurrencySymbol}: TransactionsOtherFiltersProps) {
     const [filterCategories, filterUsers, filterMinMax, filterNote, setFilterCategories, setFilterUsers, setFilterMinMax, setFilterNote
     ] = useTransactionQueryStore(x =>
         [x.filters.categories,
             x.filters.users, x.filters.minMaxRange, x.filters.note, x.setCategories, x.setUsers, x.setMinMaxRange, x.setNote]);
 
+    const [setTotalChange, setExpense, setIncome] =
+        useWalletInfoStore(x => [x.setChangeForPeriod, x.setExpenseForPeriod, x.setIncomeForPeriod])
+    const uniqueSymbols = getUniqueCurrencySymbols(transactions);
+    
+
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(true);
     const initialCategories = useRef<Category[]>([]);
     const initialUsers = useRef<User[]>([]);
     const initialMinMax = useRef<MinMaxRange>({min: 1, max: 1000});
+    const { data: convertedCurrencies, isLoading } = useCurrencyConvertAll({
+        from: uniqueSymbols,
+        to: walletCurrencySymbol,
+        amount: [1]
+    });
 
     useEffect(() => {
-        if (transactions) {
+        if (transactions && !isLoading) {
             const uniqueCategories = getUniqueCategories(transactions);
             const uniqueUsers = getUniqueUsers(transactions);
             const minMaxRange = getMinMaxRange(transactions);
-
             initialCategories.current = uniqueCategories;
             initialUsers.current = uniqueUsers;
             initialMinMax.current = minMaxRange;
 
             setFilterCategories(uniqueCategories);
-            setFilterUsers(uniqueUsers);
+            setFilterUsers(uniqueUsers)
             setFilterMinMax(minMaxRange);
+
+            const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
+
+            const expAndInc = calcExpenseAndIncome(transactions, currencyRates);
+            setExpense(expAndInc.expense);
+            setIncome(expAndInc.income);
+            setTotalChange(expAndInc.expense + expAndInc.income)
         }
-    }, [transactions]);
-    
+    }, [transactions, isLoading]);
 
+//Getting default filters
     const minMaxRange = useMemo(() => getMinMaxRange(transactions || []), [transactions]);
-
     const uniqueCategories = getUniqueCategories(transactions);
     const uniqueUsers = getUniqueUsers(transactions);
+
+
     const handleToggleCategory = (category: Category) => {
 
         if (filterCategories.includes(category)) {
@@ -114,16 +110,19 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
 
     return (
         <div
-            onClick={toggleFilterMenu}
-            className={'mt-8 bg-slate-200 rounded shadow-lg py-4 px-3'}>
-            <header className={'flex justify-between px-1'}>
-                <p className={'font-bold text-lg'}>Filters</p>
-                <button onClick={resetFilters} className={'text-center underline underline-offset-2'}>
-                    Reset filters
-                </button>
-            </header>
+            className={'bg-slate-200 rounded-xl shadow-lg'}>
+            <div className={'w-full h-full'}
+                 onClick={toggleFilterMenu}
+            >
+                <header className={'flex justify-between  py-4 px-3'}>
+                    <p className={'font-bold text-lg'}>Filters</p>
+                    <button onClick={resetFilters} className={'text-center underline underline-offset-2'}>
+                        Reset filters
+                    </button>
+                </header>
+            </div>
             {isFilterMenuOpen && <div
-                className={'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-center items-center gap-y-3 gap-x-10 mt-2'}>
+                className={'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-center items-center gap-y-3 gap-x-10 px-3 pb-4'}>
                 <div className={'w-full flex flex-col gap-y-2'}>
                     <p className={'font-semibold'}>By category</p>
                     <MultiSelectDropDownMenu items={uniqueCategories} ItemComponent={CategoryItem}
@@ -143,12 +142,15 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
                     <input type="text"
                            value={filterNote}
                            className={'w-full px-2 py-1 rounded text-gray-400 focus:outline-0'}
+                           onClick={e => e.stopPropagation()}
                            onChange={e => handleNoteFilterChanged(e.target.value)}
                     />
                 </div>
                 <div className={'w-full flex flex-col gap-y-2'}>
                     <p className={'font-semibold'}>By Amount</p>
-                    <div>
+                    <div
+                        onClick={e => e.stopPropagation()}
+                    >
                         <ReactSlider
                             className="horizontal-slider"
                             thumbClassName="example-thumb"

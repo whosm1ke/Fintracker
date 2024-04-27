@@ -26,6 +26,7 @@ const useDeleteTransaction = (id: string) => {
         onSettled: async (_resp, _error, transToDelete) => {
             await queryClient.invalidateQueries({queryKey: ['transactions', transToDelete.walletId]})
             await queryClient.invalidateQueries({queryKey: ['wallets']})
+            await queryClient.invalidateQueries({queryKey: ['wallet', transToDelete.walletId]})
             await queryClient.invalidateQueries({queryKey: ['budgets']})
         },
     })

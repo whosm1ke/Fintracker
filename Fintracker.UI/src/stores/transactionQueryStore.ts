@@ -29,6 +29,7 @@ export interface TransactionFilters {
     note: string
 }
 
+
 interface TransactionQueryStore {
     query: TransactionQueryParams;
     filters: TransactionFilters;

@@ -1,96 +1,15 @@
 ﻿import {useId} from "react";
-import {ConvertCurrency} from "../../entities/Currency";
-import {GroupedTransactionByDate, Transaction} from "../../entities/Transaction";
+import {Transaction} from "../../entities/Transaction";
 import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAll";
 import Spinner from "../other/Spinner.tsx";
 import {TransactionItem} from "./TransactionItem.tsx";
-import {CategoryType} from "../../entities/CategoryType.ts";
-import useTransactionQueryStore, {TransactionFilters} from "../../stores/transactionQueryStore.ts";
+import useTransactionQueryStore from "../../stores/transactionQueryStore.ts";
+import {calculateTotalExpense, filterTransactions, getCurrencyRates, getUniqueCurrencySymbols, groupTransactionsByDate } from "../../helpers/globalHelper.ts";
 
 
 interface TransactionListProps {
     transactions: Transaction[];
     walletSymbol: string;
-}
-
-const calculateTotalExpenseByDate = (transactions: Transaction[], convertionRate: { [key: string]: number }) => {
-    let total = 0;
-    transactions.forEach(t => {
-        if (t.category.type === CategoryType.EXPENSE)
-            total -= t.amount * (convertionRate[t.currency.symbol] || 1)
-        else
-            total += t.amount * (convertionRate[t.currency.symbol] || 1)
-    });
-    return total;
-}
-
-const getUniqueCurrencySymbols = (trans: Transaction[]) => {
-    const symbols = trans.map(t => t.currency.symbol);
-    return [...new Set(symbols)]
-}
-
-function filterTransactions(transactions: Transaction[], filters: TransactionFilters): Transaction[] {
-    console.log("HA")
-    return transactions.filter(transaction => {
-        // Фільтрація за категоріями
-        if (!filters.categories.map(c => c.id).includes(transaction.category.id)) {
-            return false;
-        }
-
-        // Фільтрація за користувачами
-        if (!filters.users.map(u => u.id).includes(transaction.userId)) {
-            return false;
-        }
-
-        // Фільтрація за мінімальним і максимальним значеннями
-        if (transaction.amount < filters.minMaxRange.min || transaction.amount > filters.minMaxRange.max) {
-            return false;
-        }
-
-        // Фільтрація за нотатками
-        if (filters.note && (!transaction.note || !transaction.note.toLowerCase().includes(filters.note.toLowerCase()))) {
-            return false;
-        }
-        return true;
-    });
-}
-
-
-const groupTransactionsByDate = (transactions: Transaction[]) => {
-    let transactionContainer: GroupedTransactionByDate[] = [];
-    transactions.forEach(transaction => {
-        const transDate = new Date(transaction.date);
-        const date = transDate.toLocaleDateString('en-CA'); // format: YYYY-MM-DD
-
-        let group = transactionContainer.find(x => new Date(x.date).toLocaleDateString('en-CA') === date);
-
-        if (!group) {
-            group = {
-                date: new Date(date),
-                transactions: []
-            };
-            transactionContainer.push(group);
-        }
-
-        group.transactions.push(transaction);
-    });
-
-    return transactionContainer;
-}
-
-type uniqueCurrency = { [key: string]: number }
-
-const getCurrencyRates = (convertedCurrencies: ConvertCurrency[] | undefined, uniqueSymbols: string[]) => {
-    const currencyRates: uniqueCurrency = {};
-    if (convertedCurrencies) {
-        convertedCurrencies.forEach((rate, i) => {
-            currencyRates[uniqueSymbols[i]] = rate.value;
-        });
-
-        return currencyRates;
-    }
-
-    return null;
 }
 export default function TransactionList({transactions, walletSymbol}: TransactionListProps) {
 
@@ -110,7 +29,7 @@ export default function TransactionList({transactions, walletSymbol}: Transactio
                 <div className={''} key={i}>
                     <TransactionBlock transactions={group.transactions} date={group.date}
                                       walletSymbol={walletSymbol}
-                                      totalSpent={calculateTotalExpenseByDate(group.transactions, currencyRates)}/>
+                                      totalSpent={calculateTotalExpense(group.transactions, currencyRates)}/>
                 </div>
             )}
         </div>
@@ -140,7 +59,7 @@ export function TransactionBlock({
 
 
     return (
-        <div className={'flex flex-col  border-b-2 border-b-blue-300'}>
+        <div className={'flex flex-col border-b-2 border-b-blue-300'}>
             <TransactionBlockHeader date={date} totalSpent={totalSpent}
                                     walletSymbol={walletSymbol}/>
             <div className={'flex flex-col'}>
