@@ -25,14 +25,19 @@ export type MinMaxRange = {
 export interface TransactionFilters {
     categories: Category[];
     users: User[];
-    minMaxRange: MinMaxRange,
+    minMaxRange: MinMaxRange;
     note: string
+}
+
+export interface TransactionOverview {
+    changeForPeriod: number;
+    expenseForPeriod: number;
+    incomeForPeriod: number
 }
 
 
 interface TransactionQueryStore {
     query: TransactionQueryParams;
-    filters: TransactionFilters;
     setPageNumber: (num: number) => void;
     setPageSize: (num: number) => void;
     setSortBy: (sortBy: string) => void;
@@ -41,10 +46,17 @@ interface TransactionQueryStore {
     setStartDate: (date: string) => void;
     setEndDate: (date: string) => void;
 
+    filters: TransactionFilters;
     setCategories: (categories: Category[]) => void;
     setUsers: (users: User[]) => void;
     setMinMaxRange: (minMax: MinMaxRange) => void;
     setNote: (note: string) => void;
+    
+    overview: TransactionOverview;
+    setChangeForPeriod: (num: number) => void;
+    setExpenseForPeriod: (num: number) => void;
+    setIncomeForPeriod: (num: number) => void;
+    
 }
 
 
@@ -67,12 +79,6 @@ const useTransactionQueryStore = createWithEqualityFn<TransactionQueryStore>((se
             startDate: formatDate(startDate),
             endDate: formatDate(endDate)
         },
-        filters: {
-            categories: [],
-            minMaxRange: {min: 1, max: 1000},
-            users: [],
-            note: ""
-        },
         setPageNumber: (num: number) => set(store => ({query: {...store.query, pageNumber: num}})),
         setPageSize: (num: number) => set(store => ({query: {...store.query, page_size: num}})),
         setTransactionsPerDate: (num: number) => set(store => ({query: {...store.query, transactionsPerDate: num}})),
@@ -85,6 +91,12 @@ const useTransactionQueryStore = createWithEqualityFn<TransactionQueryStore>((se
         setSortBy: (sort: string) => set(store => ({query: {...store.query, sortBy: sort}})),
         setEndDate: (date: string) => set(store => ({query: {...store.query, endDate: date}})),
         setStartDate: (date: string) => set(store => ({query: {...store.query, startDate: date}})),
+        filters: {
+            categories: [],
+            minMaxRange: {min: 1, max: 1000},
+            users: [],
+            note: ""
+        },
         setCategories: (categories: Category[]) => set(store => ({
             filters: {
                 ...store.filters,
@@ -94,6 +106,15 @@ const useTransactionQueryStore = createWithEqualityFn<TransactionQueryStore>((se
         setUsers: (users: User[]) => set(store => ({filters: {...store.filters, users: users}})),
         setMinMaxRange: (minMax: MinMaxRange) => set(store => ({filters: {...store.filters, minMaxRange: minMax}})),
         setNote: (note: string) => set(store => ({filters: {...store.filters, note: note}})),
+        
+        overview: {
+            changeForPeriod: 0,
+            expenseForPeriod: 0,
+            incomeForPeriod: 0
+        },
+        setIncomeForPeriod: (num: number) => set(store => ({overview: {...store.overview, incomeForPeriod: num}})),
+        setExpenseForPeriod: (num: number) => set(store => ({overview: {...store.overview, expenseForPeriod: num}})),
+        setChangeForPeriod: (num: number) => set(store => ({overview: {...store.overview, changeForPeriod: num}})),
     }
 }, shallow);
 

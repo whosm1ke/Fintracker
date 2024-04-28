@@ -2,9 +2,9 @@
 import {GroupedTransactionByDate, Transaction} from "../entities/Transaction.ts";
 import {CategoryType} from "../entities/CategoryType.ts";
 import {User} from "../entities/User.ts";
-import {MinMaxRange, CommonFilters} from "../stores/transactionQueryStore.ts";
+import {MinMaxRange} from "../stores/transactionQueryStore.ts";
 import {Category} from "../entities/Category.ts";
-import { Wallet } from "../entities/Wallet.ts";
+import {Wallet} from "../entities/Wallet.ts";
 
 export function formatDate(date: Date): string {
     const year = date.getFullYear();
@@ -27,29 +27,30 @@ export const getCurrencyRates = (convertedCurrencies: ConvertCurrency[] | undefi
     return null;
 }
 
-export const calculateWalletsBalance = (wallets: Wallet[], convertionRate: UniqueCurrencyRates) : number => {
+export const calculateWalletsBalance = (wallets: Wallet[], convertionRate: UniqueCurrencyRates | null): number => {
     let result = 0;
-    
+
     wallets.forEach(w => {
-        result += w.balance * (convertionRate[w.currency.symbol] || 1)
+        result += w.balance * (convertionRate ? convertionRate[w.currency.symbol] || 1 : 1)
     })
-    
+
     return result;
 }
 
-export const calculateTotalExpense = (transactions: Transaction[], convertionRate: UniqueCurrencyRates) => {
+export const calculateTotalExpense = (transactions: Transaction[], convertionRate: UniqueCurrencyRates | null) => {
     let total = 0;
     transactions.forEach(t => {
         if (t.category.type === CategoryType.EXPENSE)
-            total -= t.amount * (convertionRate[t.currency.symbol] || 1)
+            total -= t.amount * (convertionRate ? convertionRate[t.currency.symbol] || 1 : 1)
         else
-            total += t.amount * (convertionRate[t.currency.symbol] || 1)
+            total += t.amount * (convertionRate ? convertionRate[t.currency.symbol] || 1 : 1)
     });
     return total;
 }
 
+
 export const getUniqueCurrencySymbols = (items: Transaction[] | Wallet[]) => {
-    
+
     const symbols = items.map(t => t.currency.symbol);
     return [...new Set(symbols)]
 }
@@ -58,11 +59,11 @@ export type ExpenseAndIncome = {
     expense: number;
     income: number;
 }
+
 export function calcExpenseAndIncome(transactions: Transaction[], currencyRates: UniqueCurrencyRates | null): ExpenseAndIncome {
     let expense = 0;
     let income = 0;
 
-    console.log("currencyRates: ", currencyRates)
 
     transactions.forEach(t => {
         if (t.category.type === CategoryType.EXPENSE)
@@ -84,22 +85,16 @@ export function getUniqueCategories(transactions: Transaction[]): Category[] {
         .map(name => categories.find(category => category.name === name)!);
 }
 
+export function getUniqueCategoriesFromWallets(wallets: Wallet[]): Category[] {
+    return getUniqueCategories(wallets.flatMap(w => w.transactions))
+}
+
 export function getUniqueUsers(transactions: Transaction[]): User[] {
     const users = transactions.map(t => t.user);
     return Array.from(new Set(users.map(u => u.id)))
         .map(id => users.find(u => u.id === id)!);
 }
 
-export function getUniqueUsersAndOwners(wallets: Wallet[]): User[] {
-    const uniqueUsersAndOwners = new Set<User>();
-    wallets.forEach(wallet => {
-        uniqueUsersAndOwners.add(wallet.owner);
-
-        wallet.users.forEach(user => uniqueUsersAndOwners.add(user));
-    });
-
-    return Array.from(uniqueUsersAndOwners);
-}
 
 export function getMinMaxRange(transactions: Transaction[]): MinMaxRange {
 
@@ -113,16 +108,30 @@ export function getMinMaxRange(transactions: Transaction[]): MinMaxRange {
     return {min, max};
 }
 
-export function filterTransactions(transactions: Transaction[], filters: CommonFilters): Transaction[] {
+export function getMinMaxRangeFromWallets(wallets: Wallet[]): MinMaxRange {
+
+    return getMinMaxRange(wallets.flatMap(w => w.transactions))
+}
+
+type CommonFilters = {
+    categories: Category[];
+    users: User[];
+    minMaxRange: MinMaxRange;
+    note: string
+}
+
+export function filterTransactions(transactions: Transaction[], filters: CommonFilters, includeUsers: boolean = true): Transaction[] {
     return transactions.filter(transaction => {
         // Фільтрація за категоріями
         if (!filters.categories.map(c => c.id).includes(transaction.category.id)) {
             return false;
         }
 
-        // Фільтрація за користувачами
-        if (!filters.users.map(u => u.id).includes(transaction.userId)) {
-            return false;
+        if (includeUsers) {
+            // Фільтрація за користувачами
+            if (!filters.users.map(u => u.id).includes(transaction.userId)) {
+                return false;
+            }
         }
 
         // Фільтрація за мінімальним і максимальним значеннями
@@ -136,6 +145,33 @@ export function filterTransactions(transactions: Transaction[], filters: CommonF
         }
         return true;
     });
+}
+
+export function filterTransactionsByDate(wallets: Wallet[], startDate: string, endDate: string): Transaction[] {
+    // Convert the start and end dates to Date objects
+    const start = new Date(startDate);
+    start.setHours(0,0,0,0)
+    const end = new Date(endDate);
+    end.setHours(0,0,0,0)
+
+    // Get all transactions from all wallets
+    const allTransactions = wallets.flatMap(wallet => wallet.transactions);
+
+    // Filter the transactions by date
+    return allTransactions.filter(transaction => {
+        const transactionDate = new Date(transaction.date);
+        console.log("transactionDate: ", transactionDate);
+        console.log("start: ", start);
+        console.log("end: ", end);
+        return transactionDate >= start && transactionDate <= end;
+    });
+}
+
+
+export function filterTransactionsFrowWallets(wallets: Wallet[], filters: CommonFilters, startDate: string, endDate: string): Transaction[] {
+    const filteredByDate = filterTransactionsByDate(wallets, startDate, endDate)
+    
+    return filterTransactions(filteredByDate, filters, false)
 }
 
 export const groupTransactionsByDate = (transactions: Transaction[]) => {

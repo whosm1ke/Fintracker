@@ -1,52 +1,48 @@
-﻿import MultiSelectDropDownMenu from "../other/MultiSelectDropDownMenu.tsx";
-import CategoryItem from "../categories/CategoryItem.tsx";
-import UserItem from "../auth/UserItem.tsx";
-import ReactSlider from "react-slider";
-import {Category} from "../../entities/Category.ts";
-import {User} from "../../entities/User.ts";
+﻿import {MinMaxRange} from "../../stores/transactionQueryStore.ts";
 import {useEffect, useMemo, useRef, useState} from "react";
-import useTransactionQueryStore, {MinMaxRange} from "../../stores/transactionQueryStore.ts";
-import {Transaction} from "../../entities/Transaction.ts";
-import {
-    getMinMaxRange,
-    getUniqueCategories, getUniqueUsers
-} from "../../helpers/globalHelper.ts";
+import {Category} from "../../entities/Category.ts";
+import { getMinMaxRangeFromWallets, getUniqueCategoriesFromWallets} from "../../helpers/globalHelper.ts";
+import MultiSelectDropDownMenu from "../other/MultiSelectDropDownMenu.tsx";
+import CategoryItem from "../categories/CategoryItem.tsx";
+import ReactSlider from "react-slider";
+import { Wallet } from "../../entities/Wallet.ts";
+import useWalletInfoStore from "../../stores/walletStore.ts";
+import WalletItem from "./WalletItem.tsx";
 
-interface TransactionsOtherFiltersProps {
-    transactions: Transaction[];
+interface WalletsOtherFiltersProps {
+    wallets: Wallet[]
 }
 
-export default function TransactionsOtherFilters({transactions}: TransactionsOtherFiltersProps) {
-    const [filterCategories, filterUsers, filterMinMax, filterNote, setFilterCategories, setFilterUsers, setFilterMinMax, setFilterNote
-    ] = useTransactionQueryStore(x =>
+export default function WalletsOtherFilters({wallets} : WalletsOtherFiltersProps){
+
+    const [filterCategories, filterWallets, filterMinMax, filterNote, setFilterCategories, setFilterWallets, setFilterMinMax, setFilterNote
+    ] = useWalletInfoStore(x =>
         [x.filters.categories,
-            x.filters.users, x.filters.minMaxRange, x.filters.note, x.setCategories, x.setUsers, x.setMinMaxRange, x.setNote]);
+            x.filters.selectedWallets, x.filters.minMaxRange, x.filters.note, x.setCategories, x.setWallets, x.setMinMaxRange, x.setNote]);
 
 
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(true);
     const initialCategories = useRef<Category[]>([]);
-    const initialUsers = useRef<User[]>([]);
+    const initialWallets = useRef<Wallet[]>([]);
     const initialMinMax = useRef<MinMaxRange>({min: 1, max: 1000});
 
     useEffect(() => {
-        if (transactions) {
-            const uniqueCategories = getUniqueCategories(transactions);
-            const uniqueUsers = getUniqueUsers(transactions);
-            const minMaxRange = getMinMaxRange(transactions);
+        if (wallets) {
+            const uniqueCategories = getUniqueCategoriesFromWallets(wallets);
+            const minMaxRange = getMinMaxRangeFromWallets(wallets);
             initialCategories.current = uniqueCategories;
-            initialUsers.current = uniqueUsers;
+            initialWallets.current = wallets;
             initialMinMax.current = minMaxRange;
 
             setFilterCategories(uniqueCategories);
-            setFilterUsers(uniqueUsers)
+            setFilterWallets(wallets)
             setFilterMinMax(minMaxRange);
         }
-    }, [transactions]);
+    }, [wallets]);
 
 //Getting default filters
-    const minMaxRange = useMemo(() => getMinMaxRange(transactions || []), [transactions]);
-    const uniqueCategories = getUniqueCategories(transactions);
-    const uniqueUsers = getUniqueUsers(transactions);
+    const minMaxRange = useMemo(() => getMinMaxRangeFromWallets(wallets || []), [wallets]);
+    const uniqueCategories = getUniqueCategoriesFromWallets(filterWallets);
 
 
     const handleToggleCategory = (category: Category) => {
@@ -65,26 +61,34 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
             setFilterCategories(uniqueCategories);
         }
     }
-    const handleToggleUser = (user: User) => {
+    const handleToggleWallet = (wallet: Wallet) => {
 
-        if (filterUsers.includes(user)) {
-            const newUsers = filterUsers.filter(u => u.id !== user.id);
-            setFilterUsers(newUsers);
+        if (filterWallets.includes(wallet)) {
+            const newWallets = filterWallets.filter(u => u.id !== wallet.id);
+            const newMinMax = getMinMaxRangeFromWallets(newWallets)
+            setFilterMinMax(newMinMax)
+            setFilterWallets(newWallets);
         } else {
-            setFilterUsers([...filterUsers, user]);
+            const newMinMax = getMinMaxRangeFromWallets([...filterWallets, wallet])
+            setFilterMinMax(newMinMax)
+            setFilterWallets([...filterWallets, wallet]);
         }
     };
-    const handleSelectAllUsers = () => {
-        if (filterUsers.length === uniqueUsers.length) {
-            setFilterUsers([]);
+    const handleSelectAllWallets = () => {
+        if (filterWallets.length === wallets.length) {
+            setFilterWallets([]);
+            const newMinMax = getMinMaxRangeFromWallets([])
+            setFilterMinMax(newMinMax)
         } else {
-            setFilterUsers(uniqueUsers);
+            const newMinMax = getMinMaxRangeFromWallets(wallets)
+            setFilterMinMax(newMinMax)
+            setFilterWallets(wallets);
         }
     }
     const handleNoteFilterChanged = (note: string) => setFilterNote(note);
     const resetFilters = () => {
         setFilterCategories(initialCategories.current);
-        setFilterUsers(initialUsers.current);
+        setFilterWallets(initialWallets.current);
         setFilterMinMax(initialMinMax.current);
         setFilterNote("");
     };
@@ -110,18 +114,18 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
             {isFilterMenuOpen && <div
                 className={'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-center items-center gap-y-3 gap-x-10 px-3 pb-4'}>
                 <div className={'w-full flex flex-col gap-y-2'}>
+                    <p className={'font-semibold'}>By wallet</p>
+                    <MultiSelectDropDownMenu items={wallets} ItemComponent={WalletItem}
+                                             heading={"Wallets"} onItemSelected={handleToggleWallet}
+                                             onAllItemsSelected={handleSelectAllWallets}
+                                             selectedItems={filterWallets}/>
+                </div>
+                <div className={'w-full flex flex-col gap-y-2'}>
                     <p className={'font-semibold'}>By category</p>
                     <MultiSelectDropDownMenu items={uniqueCategories} ItemComponent={CategoryItem}
                                              heading={"Categories"} onItemSelected={handleToggleCategory}
                                              onAllItemsSelected={handleSelectAllCategories}
                                              selectedItems={filterCategories}/>
-                </div>
-                <div className={'w-full flex flex-col gap-y-2'}>
-                    <p className={'font-semibold'}>By people</p>
-                    <MultiSelectDropDownMenu items={uniqueUsers} ItemComponent={UserItem}
-                                             heading={"Users"} onItemSelected={handleToggleUser}
-                                             onAllItemsSelected={handleSelectAllUsers}
-                                             selectedItems={filterUsers}/>
                 </div>
                 <div className={'w-full flex flex-col gap-y-2'}>
                     <p className={'font-semibold'}>By Note</p>

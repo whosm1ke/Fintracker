@@ -1,17 +1,19 @@
 ﻿import {FaChevronLeft, FaChevronRight} from "react-icons/fa6";
 import {useEffect, useRef, useState} from "react";
-import useTransactionQueryStore from "../../stores/transactionQueryStore.ts";
 import {formatDate} from "../../helpers/globalHelper.ts";
 
-// interface TransactionsDateFiltersProps {}
 
 
-const DateFilter = () => {
+interface DateFilterBaseProps {
+    startDate: string;
+    setStartDate: (date: string) => void;
+    endDate: string;
+    setEndDate: (date: string) => void;
+}
 
-    const [
-        startDate, endDate, setStartDate, setEndDate
-    ] = useTransactionQueryStore(x =>
-        [x.query.startDate, x.query.endDate, x.setStartDate, x.setEndDate]);
+const DateFilterBase = ({endDate,startDate,setStartDate,setEndDate} : DateFilterBaseProps) => {
+
+  
 
     const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
     const [currentStep, setCurrentStep] = useState('This week');
@@ -192,4 +194,4 @@ const DateFilter = () => {
 }
 
 //@ts-ignore
-export default DateFilter;
+export default DateFilterBase;

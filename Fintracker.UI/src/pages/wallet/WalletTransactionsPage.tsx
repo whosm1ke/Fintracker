@@ -2,12 +2,12 @@
 import useWallet from "../../hooks/wallet/useWallet.ts";
 import useUserStore from "../../stores/userStore.ts";
 import useTransactions from "../../hooks/transactions/useTransactions.ts";
-import TransactionsDateFilters from "../../components/transactions/TransactionsDateFilters.tsx";
 import Spinner from "../../components/other/Spinner.tsx";
 import CreateTransactionModal from "../../components/transactions/CreateTransactionModal.tsx";
 import TransactionList from "../../components/transactions/TransactionList.tsx";
+import TransactionDateFilter from "../../components/transactions/TransactionDateFilter.tsx";
 import TransactionsOtherFilters from "../../components/transactions/TransactionsOtherFilters.tsx";
-import WalletInfoCardList from "../../components/wallets/WalletInfoCardList.tsx";
+import TransactionOverviewList from "../../components/transactions/TransactionOverviewList.tsx";
 
 export default function WalletTransactionsPage() {
     const {walletId} = useParams();
@@ -16,7 +16,6 @@ export default function WalletTransactionsPage() {
     const {data: transactions} = useTransactions(walletId!)
     const {data: walletResponse} = useWallet(walletId!);
 
-   
 
     if (!transactions || !walletResponse || !walletResponse.response) return <Spinner/>
     const wallet = walletResponse.response;
@@ -27,10 +26,10 @@ export default function WalletTransactionsPage() {
                 {!wallet.isBanking &&
                     <CreateTransactionModal userId={userId!} walletId={wallet.id}
                                             walletCurrency={wallet.currency}/>}
-                <TransactionsDateFilters/>
+                <TransactionDateFilter/>
             </div>
-            <TransactionsOtherFilters transactions={transactions} walletCurrencySymbol={wallet.currency.symbol}/>
-            <WalletInfoCardList walletCurrency={wallet.currency.symbol} walletBalance={wallet.balance}/>
+            <TransactionsOtherFilters transactions={transactions}/>
+            <TransactionOverviewList walletCurrency={wallet.currency.symbol} balance={wallet.balance}/>
             <div className={'mt-4'}>
                 <TransactionList transactions={transactions} walletSymbol={wallet.currency.symbol}/>
             </div>
