@@ -21,28 +21,28 @@ const useUserStore = createWithEqualityFn<AppUserStore>((set, get) => ({
       return userToken !== null;
     },
     setUserToken: (token: string) => {
-        localStorage.setItem('userToken', token);
+        sessionStorage.setItem('userToken', token);
         set(store => ({user: {...store.user, token: token}}));
     },
     getUserToken: () => {
         const { user } = get();
-        return user.token || localStorage.getItem('userToken');
+        return user.token || sessionStorage.getItem('userToken');
     },
     setUserId: (id: string) => {
-        localStorage.setItem('userId', id);
+        sessionStorage.setItem('userId', id);
         set(store => ({user: {...store.user, id: id}}));
     },
     getUserId: () => {
         const { user } = get();
-        return user.id || localStorage.getItem('userId');
+        return user.id || sessionStorage.getItem('userId');
     },
     setUserEmail: (email: string) => {
-        localStorage.setItem('userEmail', email);
+        sessionStorage.setItem('userEmail', email);
         set(store => ({user: {...store.user, email: email}}));
     },
     getUserEmail: () => {
         const { user } = get();
-        return user.email || localStorage.getItem('userEmail');
+        return user.email || sessionStorage.getItem('userEmail');
     },
 }), shallow);
 

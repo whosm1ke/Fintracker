@@ -8,13 +8,15 @@ import DashboardLayout from "./pages/Layout/DashboardLayout.tsx";
 import FintrackerPage from "./pages/start/FintrackerPage.tsx";
 import BudgetsPage from "./pages/budget/BudgetsPage.tsx";
 import BudgetDetailsPage from "./pages/budget/BudgetDetailsPage.tsx";
-import WalletLayout from "./pages/wallet/WalletLayout.tsx";
+import WalletLayout from "./pages/Layout/WalletLayout.tsx";
 import WalletTransactionsPage from "./pages/wallet/WalletTransactionsPage.tsx";
 import WalletOverviewPage from "./pages/wallet/WalletOverviewPage.tsx";
-import WalletSettingsPage from "./pages/wallet/WalletSettingsPage.tsx";
-import WalletSettingsCategoriesPage from "./pages/wallet/WalletSettingsCategoriesPage.tsx";
+import WalletGeneralSettingsPage from "./pages/wallet/WalletGeneralSettingsPage.tsx";
+import WalletCategoriesSettingsPage from "./pages/wallet/WalletCategoriesSettingsPage.tsx";
 import RegisterForm from "./components/auth/RegisterForm.tsx";
 import LoginForm from "./components/auth/LoginForm.tsx";
+import WalletSettingsLayoutPage from "./pages/Layout/WalletSettingsLayoutPage.tsx";
+import InviteAccept from "./components/auth/InviteAccept.tsx";
 
 const router = createBrowserRouter([
     {
@@ -38,7 +40,7 @@ const router = createBrowserRouter([
                 id: 'bank',
                 path: 'bank',
                 element: <BankPage/>
-            },
+            }
         ],
 
     },
@@ -93,15 +95,22 @@ const router = createBrowserRouter([
                 element: <BudgetDetailsPage/>
             },
             {
-                id: 'walletSettingsGeneral',
-                path: ":walletId/settings/general",
-                element: <WalletSettingsPage/>
+                id: 'walletSettings',
+                path: ':walletId/settings',
+                element: <WalletSettingsLayoutPage/>,
+                children: [
+                    {
+                        index: true,
+                        id: 'walletSettingsGeneral',
+                        element: <WalletGeneralSettingsPage/>
+                    },
+                    {
+                        id: 'walletSettingsCategories',
+                        path: "categories",
+                        element: <WalletCategoriesSettingsPage/>
+                    }
+                ]
             },
-            {
-                id: 'walletSettingsCategories',
-                path: ":walletId/settings/categories",
-                element: <WalletSettingsCategoriesPage/>
-            }
         ]
     },
     {
@@ -113,6 +122,11 @@ const router = createBrowserRouter([
         id: 'login',
         path: 'login',
         element: <LoginForm/>
+    },
+    {
+        id:'confirm-invite',
+        path: 'confirm-invite',
+        element: <InviteAccept/>
     }
 ])
 

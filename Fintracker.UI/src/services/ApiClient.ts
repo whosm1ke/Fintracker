@@ -7,8 +7,9 @@ import {LoginResponse, LoginSchema} from "../models/LoginSchema.ts";
 import axiosInstance, {axiosInstanceCurrencyConverter} from "../logic/axiosInstance.ts";
 import {Wallet} from "../entities/Wallet.ts";
 import {MonoWalletToken} from "../hooks/wallet/useCreateMonoWallet.ts";
-import { ConvertCurrency } from "../entities/Currency.ts";
-import {MonobankConfiguration, MonobankUserInfo } from "../entities/MonobankUserInfo.ts";
+import {ConvertCurrency} from "../entities/Currency.ts";
+import {MonobankConfiguration, MonobankUserInfo} from "../entities/MonobankUserInfo.ts";
+import AcceptInvite from "../models/AcceptInvite.ts";
 
 
 export default class ApiClient<TResponse, TModel = undefined> implements CommandApiClient<TModel, TResponse>,
@@ -116,6 +117,21 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         }
     }
 
+
+    async acceptInvite(model: AcceptInvite): Promise<BaseCommandResponse> {
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+        try {
+            const data = await axiosInstance.post<BaseCommandResponse>(this.endpoint, model, {
+                cancelToken: this.cancelToken.token
+            });
+
+            return data.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async update(updatedEntity: TModel): Promise<ClientWrapper<UpdateCommandResponse<TResponse>>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
@@ -176,15 +192,14 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
     async getAll(config?: AxiosRequestConfig): Promise<TResponse> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
-        if(config)
+        if (config)
             config.cancelToken = this.cancelToken.token;
         return await axiosInstance.get<TResponse>(this.endpoint, config || {
             cancelToken: this.cancelToken.token
         })
             .then(res => res.data);
     }
-    
-    
+
 
     async get(cfg: AxiosRequestConfig): Promise<TResponse> {
         this.cancelCurrentRequest();

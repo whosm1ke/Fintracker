@@ -32,33 +32,12 @@ public class MockUserRepository
             {
                 Id = new Guid("2F566F81-4723-4D28-AB7C-A3004F98735C"),
                 Email = "accessToWalletUser1",
-                MemberWallets = new List<Wallet>
-                {
-                    new()
-                    {
-                        Id = new Guid("BC3CCC22-F825-4522-8FF8-18DE43D198A9"),
-                        Name = "Wallet 1"
-                    },
-                    new()
-                    {
-                        Id = new Guid("934B7E74-F0F2-47F1-B1AB-87B7E88F0778"),
-                        Name = "Wallet 2"
-                    }
-                }
             },
             //GetUsersAccessedToWalled
             new()
             {
                 Id = new Guid("D4577085-22CE-4DE3-91E2-7C454C9653BE"),
                 Email = "accessToWalletUser2",
-                MemberWallets = new List<Wallet>
-                {
-                    new()
-                    {
-                        Id = new Guid("BC3CCC22-F825-4522-8FF8-18DE43D198A9"),
-                        Name = "Wallet 1"
-                    }
-                }
             },
             //GetUserWithBudgets
             new()
@@ -84,19 +63,6 @@ public class MockUserRepository
             {
                 Id = new Guid("5718AD4F-3065-4E46-85A4-785E64F60EC5"),
                 UserName = "With owned wallets",
-                OwnedWallets = new List<Wallet>
-                {
-                    new ()
-                    {
-                        Id = new Guid("7183A82C-CBDB-43B1-8FE9-A0525109731A"),
-                        Name= "Owned wallet 1"
-                    },
-                    new ()
-                    {
-                        Id = new Guid("87E1885E-11D6-4029-B3D6-C3FA849628BB"),
-                        Name= "Owned wallet 2"
-                    }
-                }
             }
         };
         var mock = new Mock<IUserRepository>();
@@ -107,11 +73,6 @@ public class MockUserRepository
         mock.Setup(x => x.ExistsAsync(It.IsAny<string>()))
             .Returns((string email) => { return Task.FromResult(users.Find(c => c.Email == email) != null); });
 
-        mock.Setup(x => x.GetAllAccessedToWalletAsync(It.IsAny<Guid>()))
-            .Returns((Guid walletId) => Task.FromResult(
-                (IReadOnlyList<User>)users.Where(x => x.MemberWallets.Any(x => x.Id == walletId))
-                    .ToList()
-            ));
 
         mock.Setup(x => x.GetAllAsync())
             .Returns(() => Task.FromResult<IReadOnlyList<User?>>(users));
@@ -121,13 +82,7 @@ public class MockUserRepository
 
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => { return Task.FromResult(users.Find(c => c.Id == id)); });
-
-       
-
-        mock.Setup(x => x.GetUserWithMemberWalletsByIdAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) => Task.FromResult(
-                users.Find(x => x.Id == id)
-            ));
+        
 
         mock.Setup(x => x.UpdateAsync(It.IsAny<User>()))
             .Returns((User b) =>

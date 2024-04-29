@@ -52,33 +52,6 @@ public class UserRequestTests
         actualResult.Should().BeEquivalentTo(expectedResult);
     }
 
-    [Fact]
-    public async Task GetUsersAccessedToWallet_98A9_Should_Return_735C_53BE_Test()
-    {
-        var mockUserRepo = MockUserRepository.GetUserRepository().Object;
-        var handler = new GetUsersAccessedToWalletRequestHandler(_mapper, mockUserRepo);
-        var expectedResult = new List<UserBaseDTO>
-        {
-            new()
-            {
-                Id = new Guid("2F566F81-4723-4D28-AB7C-A3004F98735C"),
-                Email = "accessToWalletUser1"
-            },
-            new()
-            {
-                Id = new Guid("D4577085-22CE-4DE3-91E2-7C454C9653BE"),
-                Email = "accessToWalletUser2"
-            }
-        };
-
-        var actualResult = await handler.Handle(new GetUsersAccessedToWalletRequest
-        {
-            WalletId = new Guid("BC3CCC22-F825-4522-8FF8-18DE43D198A9")
-        }, default);
-
-        actualResult.Should().NotBeNull();
-        actualResult.Count.Should().Be(expectedResult.Count);
-    }
 
    
 }

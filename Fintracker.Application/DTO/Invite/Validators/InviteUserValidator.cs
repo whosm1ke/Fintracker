@@ -16,7 +16,7 @@ public class InviteUserValidator : AbstractValidator<InviteUserCommand>
             .ApplyCommonRules()
             .MustAsync(async (id, _) => await unitOfWork.WalletRepository.ExistsAsync(id))
             .WithMessage(x => $"Wallet with id does not exist [{x.WalletId}]")
-            .MustAsync(async (dto, id, _) => !await userRepository.HasMemberWallet(id, dto.UserEmail))
+            .MustAsync(async (dto, id, _) => !await userRepository.HasMemberWallet(dto.WalletId, dto.UserEmail))
             .WithMessage("User already has access to that wallet");
 
         RuleFor(x => x.UserEmail)

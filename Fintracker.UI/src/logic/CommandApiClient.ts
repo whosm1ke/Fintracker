@@ -4,6 +4,7 @@ import {Wallet} from "../entities/Wallet.ts";
 import {MonoWalletToken} from "../hooks/wallet/useCreateMonoWallet.ts";
 import { MonobankConfiguration, MonobankUserInfo } from "../entities/MonobankUserInfo.ts";
 import { ConvertCurrency } from "../entities/Currency.ts";
+import AcceptInvite from "../models/AcceptInvite.ts";
 
 export interface CommandApiClient<TModel, TResponse> {
     create: (newEntity: TModel) => Promise<ClientWrapper<CreateCommandResponse<TResponse>>>;
@@ -15,6 +16,7 @@ export interface AuthApiClient {
     register: (registerModel: RegisterSchema) => Promise<ClientWrapper<RegisterResponse>>;
     login: (loginModel: LoginSchema) => Promise<ClientWrapper<LoginResponse>>;
     logout: () => Promise<null>;
+    acceptInvite: (model: AcceptInvite) => Promise<BaseCommandResponse>;
 }
 
 export interface MonobankClient {

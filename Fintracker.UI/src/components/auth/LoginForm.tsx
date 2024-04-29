@@ -5,13 +5,13 @@ import PasswordInput from "./PasswordInput.tsx";
 import SubTitle from "./SubTitle.tsx";
 import Title from "./Title.tsx";
 import {loginSchema, LoginSchema} from "../../models/LoginSchema.ts";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import useLogin from "../../hooks/auth/useLogin.ts";
 
 
 export default function LoginForm() {
 
-
+    const location = useLocation();
     const {register, handleSubmit, setError, formState: {errors}} = useForm<LoginSchema>({
         resolver: zodResolver(loginSchema),
         mode: 'onBlur'
@@ -36,7 +36,7 @@ export default function LoginForm() {
                 <form className="mt-8 space-y-6 border-2 p-6 sm:p-16 w-auto rounded bg-white shadow-xl"
                       onSubmit={handleSubmit(onSubmit)} method={'post'}>
                     <div className="flex flex-col gap-y-6 rounded-md shadow-sm -space-y-px">
-                        <SimpleInput id={'email'} placeholder={'Email'} showError={false}
+                        <SimpleInput id={'email'} placeholder={'Email'} showError={false} defaultValue={location.state}
                                      register={register('email')} error={errors.email} autoComplete={"email"}/>
                         <PasswordInput id={'password'} placeholder={'Password'} register={register('password')}
                                        error={errors.password} showError={false}/>

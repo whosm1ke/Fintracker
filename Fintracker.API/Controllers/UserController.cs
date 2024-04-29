@@ -40,20 +40,6 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-    //TODO PUTANYA
-    [HttpGet("accessed-wallets/{walletId:guid}")]
-    [ProducesResponseType(typeof(List<UserBaseDTO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<UserBaseDTO>>> GetWithAccessedWallets(Guid walletId)
-    {
-        var response = await _mediator.Send(new GetUsersAccessedToWalletRequest
-        {
-            WalletId = walletId
-        });
-
-        return Ok(response);
-    }
-
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(DeleteCommandResponse<UserBaseDTO>), StatusCodes.Status200OK)]

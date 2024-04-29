@@ -13,19 +13,17 @@ namespace Fintracker.Application.Features.User.Handlers.Commands;
 public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
 {
     private readonly IEmailSender _emailSender;
-    private readonly IMediator _mediator;
     private readonly IUserRepository _userRepository;
     private readonly ITokenService _tokenService;
     private readonly AppSettings _appSettings;
     private readonly string _tempPass;
 
     public InviteUserCommandHandler(IEmailSender emailSender, IUserRepository userRepository,
-        ITokenService tokenService, IOptions<AppSettings> options, IMediator mediator)
+        ITokenService tokenService, IOptions<AppSettings> options)
     {
         _emailSender = emailSender;
         _userRepository = userRepository;
         _tokenService = tokenService;
-        _mediator = mediator;
         _appSettings = options.Value;
         _tempPass = GenerateTempPassword();
     }
@@ -45,26 +43,17 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
         {
             user = await _userRepository.RegisterUserWithTemporaryPassword(request.UserEmail, Guid.NewGuid(),
                 _tempPass);
-            var token = await _tokenService.CreateToken(user);
             inviteEmailModel.Ref =
-                $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
-            inviteEmailModel.DeclineRef = $"{_appSettings.BaseUrl}/api/account/invite/decline?token={token}";
-            
-            await _mediator.Send(new PopulateUserWithCategoriesCommand()
-            {
-                UserId = user.Id,
-                PathToFile = request.PathToCategories!
-            });
+                $"{_appSettings.UiUrl}/{request.UrlCallback}?userId={user.Id}&walletId={request.WalletId}";
+
         }
         else
         {
-            var token =
-                await _tokenService.CreateToken(
-                    (await _userRepository.GetAsNoTrackingAsync(request.UserEmail))!);
-
+            var existingUser = await _userRepository.GetAsNoTrackingAsync(request.UserEmail);
+            
             inviteEmailModel.Ref =
-                $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}&walletId={request.WalletId}";
-            inviteEmailModel.DeclineRef = $"{_appSettings.BaseUrl}";
+                $"{_appSettings.UiUrl}/{request.UrlCallback}?userId={existingUser!.Id}&walletId={request.WalletId}";
+
         }
 
         var isEmailSent = await _emailSender.SendEmail(new EmailModel

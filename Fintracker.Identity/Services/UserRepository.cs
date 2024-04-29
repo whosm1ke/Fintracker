@@ -18,7 +18,7 @@ public class UserRepository : IUserRepository
         _userManager = context;
         var uid = accessor.HttpContext!.User.Claims
             .FirstOrDefault(x => x.Type == ClaimTypeConstants.Uid)?.Value;
-        if(!Guid.TryParse(uid, out _currentUserId))
+        if (!Guid.TryParse(uid, out _currentUserId))
             _currentUserId = Guid.Empty;
     }
 
@@ -28,7 +28,7 @@ public class UserRepository : IUserRepository
             .Where(x => x.Id == _currentUserId && x.MemberWallets.Any(w => w.Id == walletId))
             .ToListAsync();
     }
-    
+
     public async Task<User?> GetUserWithMemberWalletsByIdAsync(Guid id)
     {
         return await _userManager.Users
@@ -36,7 +36,7 @@ public class UserRepository : IUserRepository
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
-    
+
 
     public async Task<bool> HasMemberWallet(Guid walletId, string userEmail)
     {
@@ -45,6 +45,8 @@ public class UserRepository : IUserRepository
             .Where(x => x.Email == userEmail && x.MemberWallets.Any(x => x.Id == walletId))
             .FirstOrDefaultAsync() != null;
     }
+    
+
 
     public async Task<bool> ExistsAsync(Guid id)
     {

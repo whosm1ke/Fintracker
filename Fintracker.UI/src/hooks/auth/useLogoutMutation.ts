@@ -8,14 +8,14 @@ const useLogoutMutation = () => {
             return await apiClient.logout();
         },
         onSuccess: () => {
-            localStorage.removeItem('userToken')
-            localStorage.removeItem('userEmail')
-            localStorage.removeItem('userId')
+            sessionStorage.removeItem('userToken')
+            sessionStorage.removeItem('userEmail')
+            sessionStorage.removeItem('userId')
         },
         onError: () => {
-            localStorage.removeItem('userToken')
-            localStorage.removeItem('userEmail')
-            localStorage.removeItem('userId')
+            sessionStorage.removeItem('userToken')
+            sessionStorage.removeItem('userEmail')
+            sessionStorage.removeItem('userId')
         }
     })
 }

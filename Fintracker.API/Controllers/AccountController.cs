@@ -89,25 +89,15 @@ public class AccountController : ControllerBase
 
     [HttpPost("invite/accept")]
     [ProducesResponseType(typeof(BaseCommandResponse), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<BaseCommandResponse>> AddUserToWallet([FromQuery] Guid walletId,
-        [FromQuery] string token)
+    public async Task<ActionResult<BaseCommandResponse>> AddUserToWallet([FromBody] AcceptInviteDto accept)
     {
         var response = await _mediator.Send(new AddUserToWalletCommand
         {
-            WalletId = walletId,
-            Token = token
+            WalletId = accept.WalletId,
+            UserId = accept.UserId,
+            PathToCategories = Path.Combine(_environment.WebRootPath, "data", "categories.json")
         });
         return Ok(response);
-    }
-
-    [HttpPost("invite/decline")]
-    public async Task<IActionResult> DeleteUserFromWallet([FromQuery] string token)
-    {
-        await _mediator.Send(new RemoveUserFromWallet()
-        {
-            Token = token,
-        });
-        return Redirect("/");
     }
 
 
