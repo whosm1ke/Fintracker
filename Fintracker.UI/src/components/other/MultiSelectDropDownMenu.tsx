@@ -21,6 +21,7 @@ const MultiSelectDropDownMenu = <T extends { id: string }>({
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
+    
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -67,7 +68,7 @@ const MultiSelectDropDownMenu = <T extends { id: string }>({
                                  role="menuitem" onClick={() => onItemSelected(item)}>
 
                                 <input type="checkbox" className="min-h-5 min-w-5 text-indigo-600"
-                                       checked={selectedItems.includes(item)} readOnly/>
+                                       checked={selectedItems.some(selectedItem => selectedItem.id === item.id)} readOnly/>
                                 <div className="cursor-pointer hover:bg-gray-100">
                                     <ItemComponent item={item}/>
                                 </div>
@@ -81,3 +82,7 @@ const MultiSelectDropDownMenu = <T extends { id: string }>({
 };
 
 export default MultiSelectDropDownMenu;
+// checked={(() => {
+//     console.log(selectedItems.includes(item))
+//     return selectedItems.includes(item)
+// })()}

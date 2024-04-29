@@ -2,7 +2,7 @@
 import {shallow} from "zustand/shallow";
 import {Category} from "../entities/Category.ts";
 import {User} from "../entities/User.ts";
-import {formatDate} from "../helpers/globalHelper.ts";
+import {dateToString} from "../helpers/globalHelper.ts";
 
 export interface QueryParams {
     pageNumber?: number;
@@ -76,8 +76,8 @@ const useTransactionQueryStore = createWithEqualityFn<TransactionQueryStore>((se
             sortBy: '',
             isDescending: false,
             transactionsPerDate: 10,
-            startDate: formatDate(startDate),
-            endDate: formatDate(endDate)
+            startDate: dateToString(startDate),
+            endDate: dateToString(endDate)
         },
         setPageNumber: (num: number) => set(store => ({query: {...store.query, pageNumber: num}})),
         setPageSize: (num: number) => set(store => ({query: {...store.query, page_size: num}})),

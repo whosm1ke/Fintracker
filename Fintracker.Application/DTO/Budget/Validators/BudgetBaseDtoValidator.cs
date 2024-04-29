@@ -16,7 +16,7 @@ public class BudgetBaseDtoValidator : AbstractValidator<IBudgetDto>
         _unitOfWork = unitOfWork;
 
 
-        RuleFor(x => x.Balance)
+        RuleFor(x => x.StartBalance)
             .NotEmpty()
             .ApplyCommonRules()
             .ApplyGreaterLessThan(BudgetConstraints.MinBalance, BudgetConstraints.MaxBalance);

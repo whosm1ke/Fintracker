@@ -9,26 +9,24 @@ const apiClinet = new ApiClient<Budget, Budget>('budget');
 const useDeleteBudget = (id: string) => {
     const queryClient = useQueryClient();
     return useMutation<ClientWrapper<DeleteCommandResponse<Budget>>, Error, {
-        id: string,
-        walletId: string | undefined
-    }, Context>({
+        id: string}, Context>({
         mutationFn: async () => await apiClinet.delete(id),
-        onMutate: async ({id,walletId}) => {
-            await queryClient.cancelQueries({queryKey: ['budgets', walletId]});
+        onMutate: async ({id}) => {
+            await queryClient.cancelQueries({queryKey: ['budgets']});
 
-            const prevData = queryClient.getQueryData<Budget[]>(['budgets', walletId]) || [];
+            const prevData = queryClient.getQueryData<Budget[]>(['budgets']) || [];
 
-            queryClient.setQueryData(['budgets', walletId], (oldQueryData: Budget[]) => oldQueryData ? oldQueryData.filter(b => b.id !== id) : []);
+            queryClient.setQueryData(['budgets'], (oldQueryData: Budget[]) => oldQueryData ? oldQueryData.filter(b => b.id !== id) : []);
 
             return {prevBudgets: prevData};
         },
         // @ts-ignore
         onError: (err, budgetToDelete, context) => {
-            queryClient.setQueryData(['budgets', budgetToDelete.walletId], context?.prevBudgets)
+            queryClient.setQueryData(['budgets'], context?.prevBudgets)
             return err;
         },
-        onSettled: async (_data, _error, budgetToDelete, _context) => {
-            await queryClient.invalidateQueries({queryKey: ['budgets', budgetToDelete.walletId]})
+        onSettled: async (_data, _error, _budgetToDelete, _context) => {
+            await queryClient.invalidateQueries({queryKey: ['budgets']})
         }
     })
 }

@@ -1,6 +1,6 @@
 ﻿import {createWithEqualityFn} from "zustand/traditional";
 import {shallow} from "zustand/shallow";
-import {formatDate} from "../helpers/globalHelper.ts";
+import {dateToString} from "../helpers/globalHelper.ts";
 import {Category} from "../entities/Category.ts";
 import {MinMaxRange} from "./transactionQueryStore.ts";
 import { Wallet } from "../entities/Wallet.ts";
@@ -61,8 +61,8 @@ const useWalletInfoStore = createWithEqualityFn<WalletInfoStore>(set => {
 
 
         filters: {
-            startDate: formatDate(startDate),
-            endDate: formatDate(endDate),
+            startDate: dateToString(startDate),
+            endDate: dateToString(endDate),
             note: "",
             categories: [],
             minMaxRange: {min: 1, max: 1000},

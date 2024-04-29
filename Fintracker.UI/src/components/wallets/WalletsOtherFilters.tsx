@@ -43,7 +43,7 @@ export default function WalletsOtherFilters({wallets} : WalletsOtherFiltersProps
 //Getting default filters
     const minMaxRange = useMemo(() => getMinMaxRangeFromWallets(wallets || []), [wallets]);
     const uniqueCategories = getUniqueCategoriesFromWallets(filterWallets);
-
+    const hasTransactions = wallets.flatMap(w => w.transactions).length > 0;
 
     const handleToggleCategory = (category: Category) => {
 
@@ -95,6 +95,8 @@ export default function WalletsOtherFilters({wallets} : WalletsOtherFiltersProps
 
     const toggleFilterMenu = () => setIsFilterMenuOpen(p => !p);
 
+    if(wallets.length === 0 || !hasTransactions) return null;
+    
     return (
         <div
             className={'bg-slate-200 rounded-xl shadow-lg'}>
@@ -104,7 +106,7 @@ export default function WalletsOtherFilters({wallets} : WalletsOtherFiltersProps
                 <header className={'flex justify-between  py-4 px-3'}>
                     <p className={'font-bold text-lg'}>Filters</p>
                     <button onClick={e => {
-                        e.preventDefault()
+                        e.stopPropagation()
                         resetFilters()
                     }} className={'text-center underline underline-offset-2'}>
                         Reset filters

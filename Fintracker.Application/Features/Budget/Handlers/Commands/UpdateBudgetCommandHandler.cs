@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Budget;
+using Fintracker.Application.DTO.Currency;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Budget.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
@@ -12,11 +14,13 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ICurrencyConverter _currencyConverter;
 
-    public UpdateBudgetCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public UpdateBudgetCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrencyConverter currencyConverter)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _currencyConverter = currencyConverter;
     }
 
     public async Task<UpdateCommandResponse<BudgetBaseDTO>> Handle(UpdateBudgetCommand request,
@@ -36,22 +40,8 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
 
         var oldBudget = _mapper.Map<BudgetBaseDTO>(budget);
 
-        if (request.Budget.CurrencyId != budget.CurrencyId)
-        {
-            var currency = await _unitOfWork.CurrencyRepository.GetAsync(request.Budget.CurrencyId);
-            budget.Currency = currency ?? budget.Currency;
-        }
 
-        _mapper.Map(request.Budget, budget);
-
-
-        var categories = await _unitOfWork.CategoryRepository
-            .GetAllWithIds(request.Budget.CategoryIds, budget.UserId);
-        budget.Categories = new HashSet<Domain.Entities.Category>();
-        foreach (var category in categories)
-        {
-            budget.Categories.Add(category);
-        }
+        await UpdateBudget(budget, request.Budget);
 
         _unitOfWork.BudgetRepository.Update(budget);
         await _unitOfWork.SaveAsync();
@@ -66,5 +56,56 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
 
 
         return response;
+    }
+
+    private async Task UpdateBudget(Domain.Entities.Budget oldBudget, UpdateBudgetDTO newBudget)
+    {
+        oldBudget.Name = newBudget.Name;
+        oldBudget.StartBalance = newBudget.StartBalance;
+        oldBudget.Transactions = new HashSet<Domain.Entities.Transaction>();
+        oldBudget.Categories = new HashSet<Domain.Entities.Category>();
+        oldBudget.StartDate = newBudget.StartDate;
+        oldBudget.EndDate = newBudget.EndDate;
+        
+        
+        var newStartDate = newBudget.StartDate;
+        var newEndDate = newBudget.EndDate;
+        var newCurrency = await _unitOfWork.CurrencyRepository.GetAsync(newBudget.CurrencyId);
+
+        var categories = await _unitOfWork.CategoryRepository
+            .GetAllWithIds(newBudget.CategoryIds, oldBudget.UserId);
+        foreach (var category in categories)
+        {
+            oldBudget.Categories.Add(category);
+        }
+
+        var transactionsPerBudget = await
+            _unitOfWork.TransactionRepository.GetByWalletIdInRangeAsync(newBudget.WalletId, newStartDate, newEndDate);
+
+        var filteredTransactions = transactionsPerBudget.Where(x => newBudget.CategoryIds.Contains(x.CategoryId))
+            .ToList();
+
+
+        var transactionCurrencySymbols = filteredTransactions.Select(x => x.Currency.Symbol).ToList();
+        var transactionAmounts = filteredTransactions.Select(x => x.Amount).ToList();
+
+        
+
+        decimal totalSpent = 0;
+        if (oldBudget.CurrencyId != newBudget.CurrencyId)
+        {
+            List<ConvertCurrencyDTO?> convertedResult =
+                await _currencyConverter.Convert(transactionCurrencySymbols, newCurrency!.Symbol, transactionAmounts);
+            convertedResult.ForEach(x => totalSpent += x.Value);
+            oldBudget.Currency = newCurrency;
+        }
+        else
+        {
+            filteredTransactions.ForEach(t => totalSpent += t.Amount);
+        }
+
+        filteredTransactions.ForEach(x => oldBudget.Transactions.Add(x));
+        oldBudget.TotalSpent = totalSpent;
+        oldBudget.Balance = oldBudget.StartBalance - totalSpent;
     }
 }

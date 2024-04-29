@@ -9,8 +9,11 @@ public class TransactionProfile : Profile
 {
     public TransactionProfile()
     {
-        CreateMap<Transaction, TransactionBaseDTO>().ReverseMap();
-        CreateMap<Transaction, TransactionPureDTO>().ReverseMap();
+        CreateMap<Transaction, TransactionBaseDTO>()
+            .ForMember(x => x.Username, memOpt => memOpt.MapFrom(t => t.User.UserName))
+            .ReverseMap();
+        CreateMap<Transaction, TransactionPureDTO>()
+            .ReverseMap();
         CreateMap<Transaction, CreateTransactionDTO>().ReverseMap();
         CreateMap<Transaction, UpdateTransactionDTO>().ReverseMap();
         CreateMap<MonoTransactionDTO, Transaction>()

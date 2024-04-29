@@ -8,6 +8,8 @@ import {HiX} from "react-icons/hi";
 import currencies from "../../data/currencies.ts";
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
 import CurrencyItem from "../currencies/CurrencyItem.tsx";
+import {useGetUser} from "../../hooks/auth/useUser.ts";
+import useStopScrolling from "../../hooks/other/useStopScrolling.ts";
 
 interface CashWalletModalProps {
     userId: string,
@@ -15,10 +17,13 @@ interface CashWalletModalProps {
 
 const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
 
+    const {data: user} = useGetUser(userId);
     const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Wallet>();
     const walletMutation = useCreateWallet();
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
+    const defaultCurrency = currencies.filter(c => c.symbol === user?.response?.globalCurrency)[0];
+    const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(defaultCurrency)
+    useStopScrolling(isOpen)
 
     function handleOpenModal() {
         setIsOpen(p => !p);
@@ -52,8 +57,8 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
     return (
         <>
             <ActionButton text={"Add new wallet"} onModalOpen={handleOpenModal}/>
-            {isOpen && <div className={'absolute inset-0  flex justify-center items-center visible bg-black/20 z-50'}>
-                <div className="bg-white p-4 rounded-md shadow-lg max-w-md mx-auto">
+            {isOpen && <div className={'absolute inset-0 flex -top-1/2 sm:top-0 justify-center items-center visible bg-black/20 z-50'}>
+                <div className="bg-white p-4 rounded-md shadow-lg w-1/2 2xl:w-1/4 mx-auto">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add Wallet
                         <HiX size={'2rem'} color={'red'} onClick={handleOpenModal}/>
                     </h2>
@@ -77,7 +82,8 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="Balance"
-                                min={1}
+                                min={0.01}
+                                step={0.01}
                                 type="number"
                                 {...register("balance", balanceRegisterOptionsForWallet)}
                             />

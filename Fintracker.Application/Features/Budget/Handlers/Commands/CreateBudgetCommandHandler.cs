@@ -28,7 +28,6 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
 
 
         var budgetEntity = _mapper.Map<Domain.Entities.Budget>(request.Budget);
-        budgetEntity.StartBalance = request.Budget.Balance;
         var categories = await _unitOfWork.CategoryRepository
             .GetAllWithIds(request.Budget.CategoryIds, request.Budget.UserId);
 
@@ -42,7 +41,7 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
         await PopulateBudgetWithTransactionsAndCalculateBalance(budgetEntity.WalletId, budgetEntity.StartDate,
             budgetEntity.EndDate, budgetEntity, budgetCurrency!.Symbol, request.Budget.CategoryIds);
 
-
+    
         await _unitOfWork.BudgetRepository.AddAsync(budgetEntity);
 
 
@@ -76,6 +75,7 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
         convertedResult.ForEach(x => totalSpent += x.Value);
 
         filteredTransactions.ForEach(x => budget.Transactions.Add(x));
+        budget.Balance = budget.StartBalance;
         budget.TotalSpent =  totalSpent;
         budget.Balance -= totalSpent;
     }

@@ -8,14 +8,15 @@ import {RegisterOptions} from "react-hook-form";
 export interface Budget extends FinancialEntity {
     categories: Category[];
     categoryIds: string[]
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
     userId: string;
     isPublic: boolean;
     user: User;
     wallet: Wallet;
     walletId: string;
-    transactions: Transaction[]
+    transactions: Transaction[];
+    startBalance: number
 }
 
 export const nameRegisterOptionsForBudget: RegisterOptions = {

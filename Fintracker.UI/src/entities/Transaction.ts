@@ -10,7 +10,6 @@ export interface Transaction extends BaseEntity {
     userId: string;
     currencyId?: string;
     categoryId?: string;
-    budgetId: string;
     amount: number;
     note?: string;
     label?: string;
@@ -20,6 +19,7 @@ export interface Transaction extends BaseEntity {
     currency: Currency;
     wallet: Wallet;
     user: User;
+    username: string;
     budgets: Budget[];
 }
 

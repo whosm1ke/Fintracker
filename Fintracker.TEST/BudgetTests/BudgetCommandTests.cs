@@ -65,7 +65,7 @@ public class BudgetCommandTests
     public async Task UpdateAsync_Should_Return_True_And_Old_With_New_Objects()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new UpdateBudgetCommandHandler(mockUnitOfWork, _mapper);
+        var handler = new UpdateBudgetCommandHandler(mockUnitOfWork, _mapper, null);
         var budgetToUpdate = _fixture.Build<UpdateBudgetDTO>()
             .With(c => c.Name, "This is a new budget")
             .With(c => c.Balance, 100)

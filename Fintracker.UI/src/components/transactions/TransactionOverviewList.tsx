@@ -9,7 +9,9 @@ export interface OverviewListProps {
 export default function TransactionOverviewList({walletCurrency, balance}: OverviewListProps) {
     const transInfo = useTransactionQueryStore(x => x.overview);
     return (
-        <OverviewListBase balance={balance} changeForPeriod={transInfo.changeForPeriod} currency={walletCurrency}
+        <OverviewListBase balanceTitle={"Wallet balance"} changeForPeriodTitle={"Change for period"}
+                          expenseTitle={"Expense for period"} incomeTitle={"Income for period"} balance={balance}
+                          changeForPeriod={transInfo.changeForPeriod} currency={walletCurrency}
                           expenseForPeriod={transInfo.expenseForPeriod} incomeForPeriod={transInfo.incomeForPeriod}/>
     )
 }

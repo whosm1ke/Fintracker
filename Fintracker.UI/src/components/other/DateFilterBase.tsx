@@ -1,19 +1,18 @@
 ﻿import {FaChevronLeft, FaChevronRight} from "react-icons/fa6";
 import {useEffect, useRef, useState} from "react";
-import {formatDate} from "../../helpers/globalHelper.ts";
-
+import {dateToString} from "../../helpers/globalHelper.ts";
 
 
 interface DateFilterBaseProps {
     startDate: string;
-    setStartDate: (date: string) => void;
+    setStartDate?: (date: string) => void;
     endDate: string;
-    setEndDate: (date: string) => void;
+    setEndDate?: (date: string) => void;
+    canChangeDate?: boolean
 }
 
-const DateFilterBase = ({endDate,startDate,setStartDate,setEndDate} : DateFilterBaseProps) => {
+const DateFilterBase = ({endDate, startDate, setStartDate, setEndDate, canChangeDate = true}: DateFilterBaseProps) => {
 
-  
 
     const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
     const [currentStep, setCurrentStep] = useState('This week');
@@ -34,8 +33,13 @@ const DateFilterBase = ({endDate,startDate,setStartDate,setEndDate} : DateFilter
     }, []);
 
     const handleDateFilterChange = (date: Date, isStartDate: boolean) => {
-        if (isStartDate) setStartDate(formatDate(date))
-        if (!isStartDate) setEndDate(formatDate(date))
+        if (isStartDate) 
+            if (setStartDate) {
+            setStartDate(dateToString(date))
+        }
+        if (!isStartDate) if (setEndDate) {
+            setEndDate(dateToString(date))
+        }
     }
 
 
@@ -132,38 +136,38 @@ const DateFilterBase = ({endDate,startDate,setStartDate,setEndDate} : DateFilter
     const buttonsLabels: string[] = [
         'This week', 'Previous week', 'This month', 'Previous month', 'This year', 'Previous year', 'All history'
     ]
-    
+
     const isAllHistoryShowing = currentStep !== "All history"
     return (
         <div className={''}>
             <div
-                className={'flex justify-between items-center gap-x-3 sm:gap-x-5 text-sm md:text-lg ' + `${isDateFilterOpen ? 'pointer-events-none' : 'pointer-events-auto'}`}>
-                <div className={'bg-stone-200 rounded shadow px-4 py-2'}>
+                className={'flex justify-between items-center gap-x-2 sm:gap-x-5 text-sm md:text-lg ' + `${isDateFilterOpen ? 'pointer-events-none' : 'pointer-events-auto'}`}>
+                {canChangeDate && <div className={'bg-stone-200 rounded shadow px-4 py-2'}>
                     <button onClick={() => shiftDates('left')}
                             className={'text-center align-middle'}>
                         <FaChevronLeft size={'1rem'}/>
                     </button>
-                </div>
+                </div>}
                 <div onClick={openDateFilter}
-                     className={'min-w-64 md:w-96 lg:w-128 xl:w-160 flex justify-center bg-stone-200 rounded shadow px-4 py-2'}>
+                     className={'min-w-32 sm:min-w-64 md:w-96 lg:w-128 xl:w-160 flex justify-center bg-stone-200 rounded shadow px-4 py-2'}>
                     {isAllHistoryShowing ?
                         <div className={'flex justify-around w-full'}>
                             <p className={''}>{new Date(startDate!).toDateString()}</p>
-                            <p className={''}>{" - "}</p>
+                            <p className={'mx-4'}>{" - "}</p>
                             <p className={''}>{new Date(endDate!).toDateString()}</p>
                         </div>
                         :
                         <p className={''}>All history</p>
                     }
                 </div>
-                <div className={'bg-stone-200 rounded shadow px-4 py-2'}>
+                {canChangeDate && <div className={'bg-stone-200 rounded shadow px-4 py-2'}>
                     <button onClick={() => shiftDates('right')}
                             className={'text-center align-middle'}>
                         <FaChevronRight size={'1rem'}/>
                     </button>
-                </div>
+                </div>}
             </div>
-            {isDateFilterOpen &&
+            {isDateFilterOpen && canChangeDate &&
                 <div ref={menuRef}
                      className={'relative inset-0 flex w-full justify-center items-center visible bg-black/20 z-10'}>
                     <div className={'absolute top-1 w-full mt-1 bg-stone-200 px-4 py-2 rounded-lg shadow-lg'}>

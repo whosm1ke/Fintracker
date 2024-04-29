@@ -6,6 +6,8 @@ public class CreateBudgetDTO : IBudgetDto
 
     public decimal Balance { get; set; }
     
+    public decimal StartBalance { get; set; }
+    
     public Guid CurrencyId { get; set; }
     
     public Guid WalletId { get; set; }

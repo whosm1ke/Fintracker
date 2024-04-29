@@ -17,7 +17,7 @@ export const useBudgets = (walletId: string | undefined) => {
 
     const query = useBudgetQueryStore(x => x.query);
     return useQuery({
-        queryKey: ['budgets', walletId],
+        queryKey: ['budgets'],
         queryFn: async () => await apiClient.getAll({
             params: {
                 isPublic: query.isPublic || null,

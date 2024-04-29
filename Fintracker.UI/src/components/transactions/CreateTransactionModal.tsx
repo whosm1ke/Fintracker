@@ -133,6 +133,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency}: AddTr
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="Amount"
                                     type="number"
+                                    step={0.01}
                                     {...register("amount", amountRegisterForTransaction)}
                                 />
                                 {errors.amount && <p className={'text-red-400 italic'}>{errors.amount.message}</p>}

@@ -5,14 +5,16 @@ import {User} from "../entities/User.ts";
 import {MinMaxRange} from "../stores/transactionQueryStore.ts";
 import {Category} from "../entities/Category.ts";
 import {Wallet} from "../entities/Wallet.ts";
+import { Budget } from "../entities/Budget.ts";
 
-export function formatDate(date: Date): string {
+export function dateToString(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
 }
+
 
 export const getCurrencyRates = (convertedCurrencies: ConvertCurrency[] | undefined, uniqueSymbols: string[]) => {
     const currencyRates: UniqueCurrencyRates = {};
@@ -29,6 +31,7 @@ export const getCurrencyRates = (convertedCurrencies: ConvertCurrency[] | undefi
 
 export const calculateWalletsBalance = (wallets: Wallet[], convertionRate: UniqueCurrencyRates | null): number => {
     let result = 0;
+
 
     wallets.forEach(w => {
         result += w.balance * (convertionRate ? convertionRate[w.currency.symbol] || 1 : 1)
@@ -49,9 +52,22 @@ export const calculateTotalExpense = (transactions: Transaction[], convertionRat
 }
 
 
+export const getUniqueCurrencySymbolsFromWallets = (wallets: Wallet[]) => {
+    const symbols = wallets.map(w => {
+        if (w && w.currency)
+            return w.currency.symbol;
+        return "";
+    });
+    return [...new Set(symbols)]
+}
+
 export const getUniqueCurrencySymbols = (items: Transaction[] | Wallet[]) => {
 
-    const symbols = items.map(t => t.currency.symbol);
+    const symbols = items.map(t => {
+        if (t && t.currency)
+            return t.currency.symbol;
+        return "";
+    });
     return [...new Set(symbols)]
 }
 
@@ -80,7 +96,13 @@ export function calcExpenseAndIncome(transactions: Transaction[], currencyRates:
 }
 
 export function getUniqueCategories(transactions: Transaction[]): Category[] {
-    const categories = transactions.map(transaction => transaction.category);
+    const transWithCats = transactions.filter(transaction => {
+        if (transaction && transaction.category)
+            return transaction;
+    });
+
+    const categories = transWithCats.map(t => t.category)
+
     return Array.from(new Set(categories.map(category => category.name)))
         .map(name => categories.find(category => category.name === name)!);
 }
@@ -98,13 +120,31 @@ export function getUniqueUsers(transactions: Transaction[]): User[] {
 
 export function getMinMaxRange(transactions: Transaction[]): MinMaxRange {
 
-    if (transactions.length === 0)
+
+    if (transactions && transactions.length === 0)
         return {min: 1, max: 1000}
-    const amounts = transactions.map(transaction => transaction.amount);
-    const min = Math.min(...amounts);
-    const max = Math.max(...amounts);
 
+    const incomeTransactions = transactions.filter(t => t?.category.type === CategoryType.INCOME)
+    const expenseTransactions = transactions.filter(t => t?.category.type === CategoryType.EXPENSE)
 
+    const incomeAmounts = incomeTransactions.map(transaction => {
+        if (transaction)
+            return transaction.amount;
+        return 0;
+    });
+
+    const expenseAmounts = expenseTransactions.map(transaction => {
+        if (transaction)
+            return -transaction.amount;
+        return 0;
+    });
+    let min = Math.min(...expenseAmounts, ...incomeAmounts);
+    let max = Math.max(...expenseAmounts, ...incomeAmounts);
+
+    if (min === Infinity || min === -Infinity)
+        min = 0;
+    if (max === Infinity || max === -Infinity)
+        max = 1;
     return {min, max};
 }
 
@@ -122,8 +162,11 @@ type CommonFilters = {
 
 export function filterTransactions(transactions: Transaction[], filters: CommonFilters, includeUsers: boolean = true): Transaction[] {
     return transactions.filter(transaction => {
+
+        if (!transaction) return false;
+
         // Фільтрація за категоріями
-        if (!filters.categories.map(c => c.id).includes(transaction.category.id)) {
+        if (!filters.categories.map(c => c?.id).includes(transaction.category.id)) {
             return false;
         }
 
@@ -134,8 +177,10 @@ export function filterTransactions(transactions: Transaction[], filters: CommonF
             }
         }
 
+        const amount = transaction.category.type === CategoryType.EXPENSE ? transaction.amount * -1 : transaction.amount
+
         // Фільтрація за мінімальним і максимальним значеннями
-        if (transaction.amount < filters.minMaxRange.min || transaction.amount > filters.minMaxRange.max) {
+        if (amount < filters.minMaxRange.min || amount > filters.minMaxRange.max) {
             return false;
         }
 
@@ -144,33 +189,47 @@ export function filterTransactions(transactions: Transaction[], filters: CommonF
             return false;
         }
         return true;
+
     });
 }
+
+export const calculateDailyBudget = (budget: Budget) => {
+    const startDate = new Date(budget.startDate);
+    const endDate = new Date(budget.endDate);
+
+    const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    const dailyBudget = budget.startBalance / diffDays;
+
+    return dailyBudget;
+}
+
+
+
 
 export function filterTransactionsByDate(wallets: Wallet[], startDate: string, endDate: string): Transaction[] {
     // Convert the start and end dates to Date objects
     const start = new Date(startDate);
-    start.setHours(0,0,0,0)
+    start.setHours(0, 0, 0, 0)
     const end = new Date(endDate);
-    end.setHours(0,0,0,0)
+    end.setHours(0, 0, 0, 0)
 
     // Get all transactions from all wallets
     const allTransactions = wallets.flatMap(wallet => wallet.transactions);
 
     // Filter the transactions by date
     return allTransactions.filter(transaction => {
-        const transactionDate = new Date(transaction.date);
-        console.log("transactionDate: ", transactionDate);
-        console.log("start: ", start);
-        console.log("end: ", end);
-        return transactionDate >= start && transactionDate <= end;
+        if (transaction && transaction.date) {
+            const transactionDate = new Date(transaction.date);
+            return transactionDate >= start && transactionDate <= end;
+        }
     });
 }
 
 
 export function filterTransactionsFrowWallets(wallets: Wallet[], filters: CommonFilters, startDate: string, endDate: string): Transaction[] {
     const filteredByDate = filterTransactionsByDate(wallets, startDate, endDate)
-    
     return filterTransactions(filteredByDate, filters, false)
 }
 

@@ -28,7 +28,9 @@ const useCreateTransaction = () => {
             await queryClient.invalidateQueries({queryKey: ['transactions', newTransaction.walletId]})
             await queryClient.invalidateQueries({queryKey: ['wallets']})
             await queryClient.invalidateQueries({queryKey: ['wallet', newTransaction.walletId]})
-            await queryClient.invalidateQueries({queryKey: ['budgets', newTransaction.walletId]})
+            await queryClient.invalidateQueries({queryKey: ['budgets']})
+            // await queryClient.invalidateQueries({queryKey: ['budget', newTransaction.budgetId]})
+            //TODO Refactor create transaction with budget/id queryKey
         },
     });
 }

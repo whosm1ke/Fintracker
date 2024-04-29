@@ -72,7 +72,7 @@ const WalletNavBar = () => {
     const [isMenuOpen, toggleMenuOpen] = useState(false);
 
     return (
-        <motion.nav className={'w-full flex justify-between items-center bg-gray-100 p-3 px-12 shadow'}>
+        <motion.nav className={'w-full flex justify-between items-center bg-gray-100 p-3 px-2 sm:px-12 shadow'}>
             <div>
                 <NavLink to={'/dashboard'} className={'flex items-center gap-x-3'}>
                     <img src={logo} alt="Logo" className={'w-14 h-14 hidden md:inline'}/>

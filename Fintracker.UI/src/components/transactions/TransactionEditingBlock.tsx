@@ -21,12 +21,13 @@ import CurrencyItem from "../currencies/CurrencyItem.tsx";
 interface TransactionEditingBlockProps {
     transaction: Transaction;
     categories: Category[];
-    handleIsEditing: () => void
+    handleIsEditing: () => void;
+    budgetId?: string
 }
 
-const TransactionEditingBlock = ({transaction, categories, handleIsEditing}: TransactionEditingBlockProps) => {
-    const updateTransactionMutation = useUpdateTransaction();
-    const deleteTransactionMutation = useDeleteTransaction(transaction.id);
+const TransactionEditingBlock = ({transaction, categories, handleIsEditing, budgetId}: TransactionEditingBlockProps) => {
+    const updateTransactionMutation = useUpdateTransaction(budgetId);
+    const deleteTransactionMutation = useDeleteTransaction(transaction.id, budgetId);
     const {handleSubmit, register, reset, clearErrors, setError, formState: {errors}} = useForm<Transaction>();
     const [selectedCategory, setSelectedCategory] = useState<Category>(transaction.category);
     const [selectedCurrency, setSelectedCurrency] = useState<Currency>(transaction.currency);
@@ -73,7 +74,7 @@ const TransactionEditingBlock = ({transaction, categories, handleIsEditing}: Tra
         e.preventDefault();
         await deleteTransactionMutation.mutateAsync({
             id: transaction.id,
-            walletId: transaction.walletId
+            walletId: transaction.walletId,
         })
     }
 

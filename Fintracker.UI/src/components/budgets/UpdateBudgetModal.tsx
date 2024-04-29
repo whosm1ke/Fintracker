@@ -1,45 +1,62 @@
 ﻿import {SubmitHandler, useForm} from "react-hook-form";
 import {
-    Budget, balanceRegisterOptionsForBudget,
-    endDateRegisterOptionsForBudget, nameRegisterOptionsForBudget, startDateRegisterOptionsForBudget
-} from "../../entities/Budget";
-import {useNavigate, useParams} from "react-router-dom";
-import useCreateBudget from "../../hooks/budgets/useCreateBudget";
-import useWallets from "../../hooks/wallet/useWallets";
-import Spinner from "../other/Spinner.tsx";
-import {useState} from "react";
+    balanceRegisterOptionsForBudget,
+    Budget, endDateRegisterOptionsForBudget,
+    nameRegisterOptionsForBudget,
+    startDateRegisterOptionsForBudget
+} from "../../entities/Budget.ts";
+import {useParams} from "react-router-dom";
+import useWallets from "../../hooks/wallet/useWallets.ts";
+import useExpenseCategories from "../../hooks/categories/useExpenseCategories.ts";
+import {useLayoutEffect, useState} from "react";
+import {Wallet} from "../../entities/Wallet.ts";
 import {Currency} from "../../entities/Currency.ts";
-import currencies from "../../data/currencies.ts";
+import {Category} from "../../entities/Category.ts";
 import useStopScrolling from "../../hooks/other/useStopScrolling.ts";
+import Spinner from "../other/Spinner.tsx";
 import {ActionButton} from "../other/ActionButton.tsx";
 import {HiX} from "react-icons/hi";
-import MultiSelectDropDownMenu from "../other/MultiSelectDropDownMenu.tsx";
-import CategoryItem from "../categories/CategoryItem.tsx";
-import {Category} from "../../entities/Category.ts";
-import {Wallet} from "../../entities/Wallet.ts";
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
+import currencies from "../../data/currencies.ts";
 import CurrencyItem from "../currencies/CurrencyItem.tsx";
 import WalletItem from "../wallets/WalletItem.tsx";
-import useExpenseCategories from "../../hooks/categories/useExpenseCategories.ts";
+import MultiSelectDropDownMenu from "../other/MultiSelectDropDownMenu.tsx";
+import CategoryItem from "../categories/CategoryItem.tsx";
+import useUpdateBudget from "../../hooks/budgets/useUpdateBudget.ts";
+import {dateToString} from "../../helpers/globalHelper.ts";
 
-
-interface CreateBudgetModalProps {
+interface UpdateBudgetModalProps {
     userId: string,
+    budget: Budget;
 }
 
-export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
+const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
+
     const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Budget>();
     const {walletId} = useParams();
-    const budgetMutation = useCreateBudget();
+    const budgetMutation = useUpdateBudget();
     const {data: wallets} = useWallets(userId)
     const {data: categories} = useExpenseCategories();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined)
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
-    const navigate = useNavigate();
-    useStopScrolling(isOpen)
-    if (wallets === undefined || categories === undefined) return <Spinner/>
+    useStopScrolling(isOpen);
+
+    useLayoutEffect(() => {
+        if (isOpen) {
+            setSelectedWallet(budget.wallet);
+            setSelectedCurrency(budget.currency);
+            setSelectedCategories(budget.categories);
+            console.log("LayoutEffect")
+        }
+    }, [isOpen]);
+
+
+    if (!wallets || !categories) return <Spinner/>
+    const start = dateToString(new Date(budget.startDate));
+    const end = dateToString(new Date(budget.endDate));
+
 
     function handleOpenModal() {
         handleSelectedCurrency(undefined);
@@ -90,6 +107,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
         else
             model.walletId = selectedWallet!.id
 
+        model.id = budget.id;
         model.userId = userId;
         model.currencyId = selectedCurrency!.id;
         model.currency = selectedCurrency!;
@@ -107,7 +125,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
 
     return (
         <>
-            <ActionButton text={"Add new budget"} onModalOpen={handleOpenModal}/>
+            <ActionButton text={"Update budget"} onModalOpen={handleOpenModal}/>
             {isOpen && <div
                 className={'absolute inset-0 flex justify-center items-start px-4 lg:px-0 visible bg-black/20 z-50'}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto mt-4">
@@ -129,6 +147,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="name"
                                     type="text"
+                                    defaultValue={budget.name}
                                     {...register("name", nameRegisterOptionsForBudget)}
                                 />
                                 {errors.name && <p className={'text-red-400 italic'}>{errors.name.message}</p>}
@@ -142,6 +161,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="balance"
                                     type="number"
+                                    defaultValue={budget.startBalance}
                                     {...register("startBalance", balanceRegisterOptionsForBudget)}
                                 />
                                 {errors.balance && <p className={'text-red-400 italic'}>{errors.balance.message}</p>}
@@ -154,7 +174,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="startDate"
                                     type="date"
-                                    defaultValue={new Date().toLocaleDateString('en-CA')}
+                                    defaultValue={start}
                                     {...register("startDate", startDateRegisterOptionsForBudget)}
                                 />
 
@@ -169,12 +189,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="endDate"
                                     type="date"
-                                    defaultValue={(function () {
-                                        const tomorrow = new Date();
-                                        tomorrow.setDate(tomorrow.getDate() + 1);
-                                        return tomorrow.toLocaleDateString('en-CA');
-                                    })()}
-
+                                    defaultValue={end}
                                     {...register("endDate", endDateRegisterOptionsForBudget)}
                                 />
 
@@ -192,7 +207,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                         <p className={'text-red-400 italic'}>{errors.currencyId.message}</p>}
                                 </div>
                             </div>
-                            {!walletId && <div className="mb-4 col-start-1 col-span-2">
+                            <div className="mb-4 col-start-1 col-span-2">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="walletId">
                                     Wallet
                                 </label>
@@ -200,17 +215,10 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                     <SingleSelectDropDownMenu items={wallets} ItemComponent={WalletItem}
                                                               defaultSelectedItem={selectedWallet}
                                                               heading={"Wallet"} onItemSelected={handleSelectedWallet}/>
-                                    {wallets.length === 0 ? (<div
-                                        className={'px-4 py-2 mt-4 bg-green-400 w-1/3 text-center rounded-full font-semibold'}>
-                                        <button className={'text-white text-sm'}
-                                                onClick={() => navigate("/dashboard", {state: "showArrow"})}
-                                        >Add new Wallet
-                                        </button>
-                                    </div>) : null}
                                     {errors.walletId &&
                                         <p className={'text-red-400 italic'}>{errors.walletId.message}</p>}
                                 </div>
-                            </div>}
+                            </div>
 
                             <div className={'mb-4 col-start-1 col-span-2 sm:col-start-0 sm:col-span-0'}
                                  {...register("categoryIds")}>
@@ -243,7 +251,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                         checked:bg-blue-500"
                                         id="isPublic"
                                         type="checkbox"
-                                        defaultChecked={false}
+                                        defaultChecked={budget.isPublic}
                                         {...register("isPublic")}
                                     />
                                 </div>
@@ -256,4 +264,4 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
     );
 }
 
-
+export default UpdateBudgetModal;

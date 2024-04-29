@@ -6,23 +6,33 @@ interface OverviewListBaseProps {
     changeForPeriod: number;
     expenseForPeriod: number;
     incomeForPeriod: number;
+    balanceTitle: string;
+    changeForPeriodTitle: string;
+    incomeTitle: string;
+    expenseTitle: string;
+    numberPostfix?: string;
 }
 
 export default function OverviewListBase({
-                                     currency,
-                                     balance,
-                                     changeForPeriod,
-                                     expenseForPeriod,
-                                     incomeForPeriod
-                                 }: OverviewListBaseProps) {
+                                             currency,
+                                             balance,
+                                             changeForPeriod,
+                                             expenseForPeriod,
+                                             incomeForPeriod,
+                                             changeForPeriodTitle,
+                                             expenseTitle,
+                                             incomeTitle,
+                                             balanceTitle,
+                                             numberPostfix
+                                         }: OverviewListBaseProps) {
     return (
         <div className={'grid sm:grid-cols-2 lg:grid-cols-4 gap-3'}>
-            <WalletInfoCard title={"Wallet balance"} amount={balance} currencySymbol={currency}/>
-            <WalletInfoCard title={"Change for period"} amount={changeForPeriod}
+            <WalletInfoCard title={balanceTitle} amount={balance} currencySymbol={currency}/>
+            <WalletInfoCard title={changeForPeriodTitle} amount={changeForPeriod}
                             currencySymbol={currency}/>
-            <WalletInfoCard title={"Expense for period"} amount={expenseForPeriod}
+            <WalletInfoCard title={expenseTitle} amount={expenseForPeriod}
                             currencySymbol={currency}/>
-            <WalletInfoCard title={"Income for period"} amount={incomeForPeriod}
+            <WalletInfoCard title={incomeTitle} amount={incomeForPeriod} amountPostfix={numberPostfix}
                             currencySymbol={currency}/>
         </div>
     )

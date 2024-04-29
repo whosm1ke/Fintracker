@@ -91,6 +91,8 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
 
     const toggleFilterMenu = () => setIsFilterMenuOpen(p => !p);
 
+    if(transactions.length === 0) return null;
+    
     return (
         <div
             className={'bg-slate-200 rounded-xl shadow-lg'}>
@@ -100,7 +102,7 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
                 <header className={'flex justify-between  py-4 px-3'}>
                     <p className={'font-bold text-lg'}>Filters</p>
                     <button onClick={e => {
-                        e.preventDefault()
+                        e.stopPropagation()
                         resetFilters()
                     }} className={'text-center underline underline-offset-2'}>
                         Reset filters

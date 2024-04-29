@@ -86,7 +86,7 @@ export function TransactionBlock({
             <div className={'flex flex-col'}>
                 {
                     transactions.map(tran =>
-                        <TransactionItem key={tran.id + id} transaction={tran} walletCurrencySymbol={walletSymbol}
+                        <TransactionItem key={tran.id + id} transaction={tran} parentCurrencySymbol={walletSymbol}
                                          conversionRate={currencyRates[tran.currency.symbol] || 1}/>
                     )
                 }

@@ -53,7 +53,7 @@ public class
 
 
         await UpdateWallet(transaction.Wallet, transaction.Amount, transCurrency!.Symbol, transaction.Category.Type);
-        await IncreaseBudgetBalance(transaction.WalletId);
+        await IncreaseBudgetBalance(transaction.WalletId, transaction);
 
 
         _unitOfWork.TransactionRepository.Delete(transaction);
@@ -87,35 +87,25 @@ public class
         }
     }
 
-    private async Task IncreaseBudgetBalance(Guid walletId)
+    private async Task IncreaseBudgetBalance(Guid walletId, Domain.Entities.Transaction transToDelete)
     {
         var budgetsByWalletId = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(walletId, null);
         foreach (var budget in budgetsByWalletId)
         {
-            var transactions =
-                await _unitOfWork.TransactionRepository.GetByWalletIdInRangeAsync(walletId, budget.StartDate,
-                    budget.EndDate);
-            
-            if (transactions.Count == 0) return;
-            var filteredTransactions = transactions.Where(x => budget.Categories.Any(c => c.Id == x.CategoryId))
-                .ToList();
-            
-            if (filteredTransactions.Count == 0) return;
-            var transactionCurrencySymbols = filteredTransactions.Select(x => x.Currency.Symbol);
-            var transactionAmounts = filteredTransactions.Select(x => x.Amount);
+            if (budget.Categories.All(c => c.Id != transToDelete.CategoryId)) continue;
 
-            var convertedResult =
-                await _currencyConverter.Convert(transactionCurrencySymbols, budget.Currency.Symbol,
-                    transactionAmounts);
+            var transactionCurrencySymbol = transToDelete.Currency.Symbol;
+            var transactionAmount = transToDelete.Amount;
 
-            decimal totalSpent = 0;
-            convertedResult.ForEach(x => totalSpent += x.Value);
-            filteredTransactions.ForEach(x => budget.Transactions.Remove(x));
+            ConvertCurrencyDTO? convertedResult = null;
+            if (transToDelete.CurrencyId != budget.CurrencyId)
+                convertedResult = await _currencyConverter.Convert(transactionCurrencySymbol, budget.Currency.Symbol, transactionAmount);
 
+            decimal totalSpent = convertedResult?.Value ?? transactionAmount;
+
+            budget.Transactions.Remove(transToDelete);
             budget.TotalSpent -= totalSpent;
             budget.Balance += totalSpent;
-
-            await _unitOfWork.SaveAsync();
         }
     }
 }

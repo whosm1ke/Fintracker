@@ -1,4 +1,4 @@
-﻿import {Link, useParams} from "react-router-dom";
+﻿import {Link} from "react-router-dom";
 import {motion, PanInfo, useMotionValue} from "framer-motion";
 import {useState} from "react";
 import useDeleteBudget from "../../hooks/budgets/useDeleteBudget.ts";
@@ -10,8 +10,8 @@ interface BudgetCardProps {
     balance: number,
     totalSpent: number,
     currencySymbol: string,
-    startDate: Date,
-    endDate: Date,
+    startDate: string,
+    endDate: string,
     isPublic: boolean
 }
 
@@ -35,11 +35,9 @@ export const BudgetCard = ({
     const cardBgColor = isPublic ? "bg-green-100" : "bg-orange-100"
     const [showDeleteButton, setShowDeleteButton] = useState(false);
     const deleteBudgetMutation = useDeleteBudget(budgetId);
-    const {walletId} = useParams();
     const handleDeleteWallet = async () => {
         await deleteBudgetMutation.mutateAsync({
-            id: budgetId,
-            walletId: walletId
+            id: budgetId
         });
     }
     const toggleDeleteButton = () => setShowDeleteButton(p => !p);
