@@ -5,7 +5,7 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 type Context = {
     prevWallets: Wallet[]
 }
-const apiClinet = new ApiClient<Wallet, Wallet>('wallet');
+const apiClinet = new ApiClient<Wallet>('wallet');
 const useDeleteWallet = (id: string) => {
     const queryClient = useQueryClient();
     return useMutation<ClientWrapper<DeleteCommandResponse<Wallet>>, Error, string, Context>({

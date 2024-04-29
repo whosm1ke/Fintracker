@@ -4,7 +4,7 @@ import ms from 'ms'
 import {Wallet} from "../../entities/Wallet.ts";
 
 const useWallets = (ownerId: string) => {
-    const apiClient = new ApiClient<Wallet, Wallet[]>(`wallet/owner/${ownerId}`);
+    const apiClient = new ApiClient<Wallet[]>(`wallet/owner/${ownerId}`);
     return useQuery({
         queryKey: ['wallets'],
         queryFn: async () => apiClient.getAll(),

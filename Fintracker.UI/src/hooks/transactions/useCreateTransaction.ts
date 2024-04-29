@@ -2,6 +2,7 @@
 import {Transaction} from "../../entities/Transaction.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 
+//TODO Create CreateTransactionDTO
 type Context = {
     previousTransactions: Transaction[]
 }

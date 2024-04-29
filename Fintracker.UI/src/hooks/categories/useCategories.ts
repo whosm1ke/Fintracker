@@ -3,7 +3,7 @@ import {useQuery} from "@tanstack/react-query";
 import useCategoryQueryStore from "../../stores/categoryQueryStore.ts";
 import { Category } from "../../entities/Category.ts";
 
-const apiClient = new ApiClient<Category, Category[]>('category')
+const apiClient = new ApiClient<Category[]>('category')
 const useCategories = () => {
     const query = useCategoryQueryStore(x => x.query);
     return useQuery({

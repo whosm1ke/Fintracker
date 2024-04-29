@@ -5,10 +5,10 @@ import {MonoWalletToken} from "../hooks/wallet/useCreateMonoWallet.ts";
 import { MonobankConfiguration, MonobankUserInfo } from "../entities/MonobankUserInfo.ts";
 import { ConvertCurrency } from "../entities/Currency.ts";
 
-export interface CommandApiClient<TRequest> {
-    create: (newEntity: TRequest) => Promise<ClientWrapper<CreateCommandResponse<TRequest>>>;
-    update: (updatedEntity: TRequest) => Promise<ClientWrapper<UpdateCommandResponse<TRequest>>>;
-    delete: (id: string) => Promise<ClientWrapper<DeleteCommandResponse<TRequest>>>;
+export interface CommandApiClient<TModel, TResponse> {
+    create: (newEntity: TModel) => Promise<ClientWrapper<CreateCommandResponse<TResponse>>>;
+    update: (updatedEntity: TModel) => Promise<ClientWrapper<UpdateCommandResponse<TResponse>>>;
+    delete: (id: string) => Promise<ClientWrapper<DeleteCommandResponse<TResponse>>>;
 }
 
 export interface AuthApiClient {

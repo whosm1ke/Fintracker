@@ -10,9 +10,9 @@ export const useBudgets = (walletId: string | undefined) => {
     let apiClient;
         const userId = useUserStore(x => x.getUserId());
     if (walletId === undefined) {
-        apiClient = new ApiClient<Budget, Budget[]>(`budget/user/${userId}`)
+        apiClient = new ApiClient<Budget[]>(`budget/user/${userId}`)
     } else {
-        apiClient = new ApiClient<Budget, Budget[]>(`budget/wallet/${walletId}`)
+        apiClient = new ApiClient<Budget[]>(`budget/wallet/${walletId}`)
     }
 
     const query = useBudgetQueryStore(x => x.query);

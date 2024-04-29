@@ -11,7 +11,7 @@ import { ConvertCurrency } from "../entities/Currency.ts";
 import {MonobankConfiguration, MonobankUserInfo } from "../entities/MonobankUserInfo.ts";
 
 
-export default class ApiClient<TRequest, TResponse> implements CommandApiClient<TRequest>,
+export default class ApiClient<TResponse, TModel = undefined> implements CommandApiClient<TModel, TResponse>,
     RequestApiClient<TResponse>,
     AuthApiClient,
     MonobankClient,
@@ -102,11 +102,11 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
 
     }
 
-    async create(newEntity: TRequest): Promise<ClientWrapper<CreateCommandResponse<TRequest>>> {
+    async create(newEntity: TModel): Promise<ClientWrapper<CreateCommandResponse<TResponse>>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.post<CreateCommandResponse<TRequest>>(this.endpoint, newEntity, {
+            const data = await axiosInstance.post<CreateCommandResponse<TResponse>>(this.endpoint, newEntity, {
                 cancelToken: this.cancelToken.token
             });
 
@@ -116,11 +116,11 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
         }
     }
 
-    async update(updatedEntity: TRequest): Promise<ClientWrapper<UpdateCommandResponse<TRequest>>> {
+    async update(updatedEntity: TModel): Promise<ClientWrapper<UpdateCommandResponse<TResponse>>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.put<UpdateCommandResponse<TRequest>>(this.endpoint, updatedEntity, {
+            const data = await axiosInstance.put<UpdateCommandResponse<TResponse>>(this.endpoint, updatedEntity, {
                 cancelToken: this.cancelToken.token
             });
 
@@ -130,11 +130,11 @@ export default class ApiClient<TRequest, TResponse> implements CommandApiClient<
         }
     }
 
-    async delete(id: string): Promise<ClientWrapper<DeleteCommandResponse<TRequest>>> {
+    async delete(id: string): Promise<ClientWrapper<DeleteCommandResponse<TResponse>>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.delete<DeleteCommandResponse<TRequest>>(this.endpoint + `/${id}`, {
+            const data = await axiosInstance.delete<DeleteCommandResponse<TResponse>>(this.endpoint + `/${id}`, {
                 cancelToken: this.cancelToken.token
             });
 

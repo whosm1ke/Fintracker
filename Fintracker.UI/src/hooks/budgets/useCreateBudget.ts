@@ -2,6 +2,7 @@
 import {Budget} from "../../entities/Budget.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 
+//TODO Create CreateBudgetDTO
 const apiClient = new ApiClient<Budget, Budget>('budget')
 
 type Context = {

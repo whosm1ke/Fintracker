@@ -1,9 +1,9 @@
 ﻿import ApiClient from "../../services/ApiClient.ts";
 import {useMutation} from "@tanstack/react-query";
-import {RegisterResponse, RegisterSchema} from "../../models/RegisterSchema.ts";
+import {RegisterSchema} from "../../models/RegisterSchema.ts";
 import useUserStore from "../../stores/userStore.ts";
 
-const apiClient = new ApiClient<RegisterSchema, RegisterResponse>('account/register');
+const apiClient = new ApiClient<RegisterSchema>('account/register');
 
 const useRegister = () => {
     const [setEmail, setId] = useUserStore(x => ([x.setUserEmail, x.setUserId]));

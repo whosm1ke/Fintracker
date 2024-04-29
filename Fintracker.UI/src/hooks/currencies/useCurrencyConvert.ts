@@ -3,7 +3,7 @@ import ApiClient from "../../services/ApiClient.ts";
 import ms from "ms";
 import { ConvertCurrency } from "../../entities/Currency.ts";
 
-const apiClient = new ApiClient<ConvertCurrency, ConvertCurrency>('convert')
+const apiClient = new ApiClient<ConvertCurrency>('convert')
 const useCurrencyConvert = (from: string, to: string, amount: number = 1) => {
     return useQuery({
         queryKey:['convertCurrency', from,to,amount],

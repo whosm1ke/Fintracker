@@ -1,7 +1,7 @@
 ﻿import ApiClient from "../../services/ApiClient.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {Wallet} from "../../entities/Wallet.ts";
-import { MonobankConfiguration, MonobankUserInfo } from "../../entities/MonobankUserInfo.ts";
+import { MonobankConfiguration } from "../../entities/MonobankUserInfo.ts";
 
 export interface MonoWalletToken {
     xToken: string
@@ -10,7 +10,7 @@ type Context = {
     previousWallets: Wallet[]
 }
 
-const apiClient = new ApiClient<MonoWalletToken, MonobankUserInfo>('bank/monobank/add-initial-transactions')
+const apiClient = new ApiClient<MonoWalletToken>('bank/monobank/add-initial-transactions')
 const useCreateMonoWallet = () => {
     const queryClient = useQueryClient();
     return useMutation<ClientWrapper<CreateCommandResponse<Wallet>>, Error, MonobankConfiguration, Context>({

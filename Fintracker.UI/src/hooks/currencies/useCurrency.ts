@@ -3,7 +3,7 @@ import {useQuery} from "@tanstack/react-query";
 import ms from "ms";
 import { Currency } from "../../entities/Currency.ts";
 
-const apiClient = new ApiClient<Currency, Currency>('currency')
+const apiClient = new ApiClient<Currency>('currency')
 const useCurrency = (id: string) => {
     return useQuery({
         queryKey: ['currency', id],

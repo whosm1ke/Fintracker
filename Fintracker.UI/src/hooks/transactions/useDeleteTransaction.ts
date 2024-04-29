@@ -5,7 +5,7 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 type Context = {
     prevTransactions: Transaction[]
 }
-const apiClinet = new ApiClient<Transaction, Transaction>('transaction');
+const apiClinet = new ApiClient<Transaction>('transaction');
 const useDeleteTransaction = (id: string, budgetId: string | undefined) => {
     const queryClient = useQueryClient();
     return useMutation<ClientWrapper<DeleteCommandResponse<Transaction>>, Error, {

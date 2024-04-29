@@ -4,7 +4,7 @@ import ApiClient from "../../services/ApiClient";
 import useTransactionQueryStore from "../../stores/transactionQueryStore";
 
 const useTransactions = (walletId: string) => {
-    const apiClient = new ApiClient<Transaction, Transaction[]>(`transaction/wallet/${walletId}`);
+    const apiClient = new ApiClient<Transaction[]>(`transaction/wallet/${walletId}`);
     const query = useTransactionQueryStore(x => x.query);
     return useQuery({
         queryKey: ['transactions', walletId, {...query}],

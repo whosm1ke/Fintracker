@@ -3,7 +3,7 @@ import {useQuery} from "@tanstack/react-query";
 import ms from "ms";
 import { User } from "../../entities/User.ts";
 
-const apiClient = new ApiClient<void, User>('user');
+const apiClient = new ApiClient<User>('user');
 
 export function useGetUser(id: string) {
     return useQuery<ClientWrapper<User>>({
