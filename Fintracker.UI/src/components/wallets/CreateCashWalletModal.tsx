@@ -77,7 +77,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Balance">
-                                Balance
+                                Start balance
                             </label>
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -85,7 +85,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
                                 min={0.01}
                                 step={0.01}
                                 type="number"
-                                {...register("balance", balanceRegisterOptionsForWallet)}
+                                {...register("startBalance", balanceRegisterOptionsForWallet)}
                             />
                             {errors.balance && <p className={'text-red-400 italic'}>{errors.balance.message}</p>}
                         </div>

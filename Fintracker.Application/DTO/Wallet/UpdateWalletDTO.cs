@@ -8,8 +8,12 @@ public class UpdateWalletDTO : IBaseDto, IWalletDto
     
     public string Name { get; set; } = default!;
 
-    public decimal Balance { get; set; }
+    public decimal StartBalance { get; set; }
 
     public Guid CurrencyId { get; set; }
+
+    public IEnumerable<Guid> UserIds { get; set; }
+
+    public bool DeleteUserTransaction { get; set; }
     
 }

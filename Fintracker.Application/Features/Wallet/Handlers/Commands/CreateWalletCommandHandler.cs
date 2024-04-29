@@ -25,6 +25,7 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, C
 
 
         var wallet = _mapper.Map<Domain.Entities.Wallet>(request.Wallet);
+        wallet.Balance = request.Wallet.StartBalance;
         await _unitOfWork.WalletRepository.AddAsync(wallet);
         
         response.Success = true;

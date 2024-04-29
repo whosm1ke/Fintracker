@@ -37,7 +37,7 @@ public class WalletCommandTests
         var handler = new CreateWalletCommandHandler(mockUnitOfWork, _mapper);
         var walletToAdd = _fixture.Build<CreateWalletDTO>()
             .With(c => c.Name, "New Budget")
-            .With(c => c.Balance, 100)
+            .With(c => c.StartBalance, 100)
             .With(x => x.OwnerId, new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"))
             .With(x => x.CurrencyId,new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"))
             .Create();
@@ -58,10 +58,10 @@ public class WalletCommandTests
     public async Task UpdateAsync_Should_Return_True_And_Old_With_New_Objects()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new UpdateWalletCommandHandler(mockUnitOfWork, _mapper);
+        var handler = new UpdateWalletCommandHandler(mockUnitOfWork, _mapper, null);
         var budgetToUpdate = _fixture.Build<UpdateWalletDTO>()
             .With(c => c.Name, "This is a new wallet")
-            .With(c => c.Balance, 101230)
+            .With(c => c.StartBalance, 101230)
             .With(x => x.Id,new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"))
             .With(x => x.CurrencyId,new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"))
             .Create();

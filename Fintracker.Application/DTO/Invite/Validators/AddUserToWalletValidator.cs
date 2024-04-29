@@ -17,7 +17,9 @@ public class AddUserToWalletValidator : AbstractValidator<AddUserToWalletCommand
             .MustAsync(async (id, _) => await unitOfWork.WalletRepository.ExistsAsync(id))
             .WithMessage(x => $"Wallet with id does not exist [{x.WalletId}]");
 
-        RuleFor(x => x.Token)
-            .ApplyCommonRules(x => x.Token is not null);
+        RuleFor(x => x.UserId)
+            .ApplyCommonRules(x => x.UserId != Guid.Empty)
+            .MustAsync(async (id, _) => await userRepository.ExistsAsync(id))
+            .WithMessage(x => $"User with id does not exist [{x.UserId}]");;
     }
 }

@@ -11,7 +11,7 @@ public class WalletBaseDtoValidator : AbstractValidator<IWalletDto>
 {
     public WalletBaseDtoValidator(IUnitOfWork unitOfWork)
     {
-        RuleFor(x => x.Balance)
+        RuleFor(x => x.StartBalance)
             .ApplyCommonRules()
             .ApplyLessThanEqual(WalletConstraints.MaxBalance);
 

@@ -8,5 +8,8 @@ public class AddUserToWalletCommand : IRequest<BaseCommandResponse>, INotGetRequ
 {
     public Guid WalletId { get; set; }
 
-    public string Token { get; set; } = default!;
+    public Guid UserId { get; set; } = default!;
+
+    public string PathToCategories { get; set; } = default!;
 }
+

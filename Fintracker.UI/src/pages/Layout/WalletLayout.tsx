@@ -51,7 +51,7 @@ const Footer = () => {
                     >Budgets</NavLink>
                 </div>
                 <div>
-                    <NavLink  to={`./${walletId}/settings/general`}
+                    <NavLink  to={`./${walletId}/settings`}
                              className={({isActive}) =>
                                  isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
@@ -105,7 +105,7 @@ const WalletNavBar = () => {
                     Budgets
                 </NavLink>
                 <NavLink
-                    to={`./${walletId}/settings/general`}
+                    to={`./${walletId}/settings`}
                     className={({isActive}) =>
                         isActive ? 'text-green-400 text-xl font-bold border-b-4 rounded-b border-b-green-400 p-6' : 'text-xl p-5'
                     }

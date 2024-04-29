@@ -37,26 +37,12 @@ public class MockWalletRepository
                 Id = new Guid("95E0ECF9-0647-450B-9495-B2A709D166B5"),
                 Balance = 500,
                 Name = "With Owner",
-                Owner = new User { Id = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"), Email = "owner@gmail.com" },
             },
             new()
             {
                 Id = new Guid("83D7946B-3CCD-401E-8EF4-62BCA04FD528"),
                 Balance = 2000,
                 Name = "With Members",
-                Users = new List<User>
-                {
-                    new()
-                    {
-                        Id = new Guid("2045DCCE-ED9E-4880-ABF8-1710C678BA3F"),
-                        Email = "member1@gmail.com"
-                    },
-                    new()
-                    {
-                        Id = new Guid("99E84605-35FB-491A-ADC5-523516612B41"),
-                        Email = "member2@gmail.com"
-                    }
-                }
             },
             new()
             {

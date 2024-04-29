@@ -4,7 +4,7 @@ public interface IWalletDto
 {
     public string Name { get; set; }
 
-    public decimal Balance { get; set; }
+    public decimal StartBalance { get; set; }
 
     public Guid CurrencyId { get; set; }
 }

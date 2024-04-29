@@ -4,7 +4,7 @@ public class CreateWalletDTO: IWalletDto
 {
     public string Name { get; set; } = default!;
 
-    public decimal Balance { get; set; }
+    public decimal StartBalance { get; set; }
 
     public Guid CurrencyId { get; set; }
 

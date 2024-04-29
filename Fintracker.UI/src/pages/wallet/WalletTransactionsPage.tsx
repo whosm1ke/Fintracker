@@ -31,7 +31,8 @@ export default function WalletTransactionsPage() {
             <TransactionsOtherFilters transactions={transactions}/>
             <TransactionOverviewList walletCurrency={wallet.currency.symbol} balance={wallet.balance}/>
             <div className={'mt-4'}>
-                <TransactionList transactions={transactions} walletSymbol={wallet.currency.symbol}/>
+                {wallet.transactions.length !== 0 &&
+                    <TransactionList transactions={transactions} walletSymbol={wallet.currency.symbol}/>}
             </div>
         </div>
     )
