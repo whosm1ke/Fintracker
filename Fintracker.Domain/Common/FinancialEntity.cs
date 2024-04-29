@@ -18,6 +18,8 @@ public class FinancialEntity : IEntity<Guid>
 
     public decimal Balance { get; set; }
     
+    public decimal StartBalance { get; set; }
+    
     public decimal TotalSpent { get; set; }
     
     public Guid CurrencyId { get; set; }

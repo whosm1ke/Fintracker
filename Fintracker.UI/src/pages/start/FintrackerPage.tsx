@@ -18,8 +18,8 @@ export default function FintrackerPage() {
     const location = useLocation();
     const {data: user} = useGetUser(userId!);
     const shouldBounce = location.state !== null
-    
-    
+
+
     if (!wallets || !user || !user.response) return <Spinner/>
 
     return (
@@ -32,7 +32,7 @@ export default function FintrackerPage() {
                     >
                         <CreateCashWalletModal userId={userId!}/>
                     </motion.div>
-                    
+
                     <CreateMonobankWalletModal/>
                 </div>
                 <div className={'grid gap-x-10 gap-y-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}>
@@ -41,14 +41,16 @@ export default function FintrackerPage() {
                 </div>
             </section>
             <section className={'space-y-5 mt-10'}>
-                <div className={'flex flex-col gap-y-5 items-start justify-between sm:flex-row sm:items-center gap-x-10'}>
+                <div
+                    className={'flex flex-col gap-y-5 items-start justify-between sm:flex-row sm:items-center gap-x-10'}>
                     <h2 className={'text-2xl font-[500]'}>Overview</h2>
                     <WalletsDateFilter/>
                 </div>
-                <div className={'flex flex-col gap-y-5'}>
-                    <WalletsOtherFilters wallets={wallets}/>
-                    <WalletOverviewList globalCurrency={user.response.globalCurrency}/>
-                </div>
+                {wallets.length !== 0 &&
+                    <div className={'flex flex-col gap-y-5'}>
+                        <WalletsOtherFilters wallets={wallets}/>
+                        <WalletOverviewList globalCurrency={user.response.globalCurrency}/>
+                    </div>}
             </section>
         </div>
     )

@@ -12,8 +12,6 @@ public class BudgetPureDTO : FinancialEntityDTO
     public Guid UserId { get; set; }
 
     public bool IsPublic { get; set; }
-
-    public decimal StartBalance { get; set; }
     
     public ICollection<CategoryDTO> Categories { get; set; } = default!;
     

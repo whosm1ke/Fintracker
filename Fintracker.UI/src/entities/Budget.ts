@@ -16,7 +16,6 @@ export interface Budget extends FinancialEntity {
     wallet: Wallet;
     walletId: string;
     transactions: Transaction[];
-    startBalance: number
 }
 
 export const nameRegisterOptionsForBudget: RegisterOptions = {

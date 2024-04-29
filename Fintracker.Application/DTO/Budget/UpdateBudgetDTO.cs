@@ -8,7 +8,6 @@ public class UpdateBudgetDTO :  IBaseDto, IBudgetDto
     
     public string Name { get; set; } = default!;
 
-    public decimal Balance { get; set; }
     
     public decimal StartBalance { get; set; }
     

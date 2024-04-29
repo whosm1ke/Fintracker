@@ -28,6 +28,4 @@ public class Budget : FinancialEntity
 
     public bool IsPublic { get; set; }
     
-    public decimal StartBalance { get; set; }
-
 }

@@ -48,7 +48,6 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
             setSelectedWallet(budget.wallet);
             setSelectedCurrency(budget.currency);
             setSelectedCategories(budget.categories);
-            console.log("LayoutEffect")
         }
     }, [isOpen]);
 

@@ -40,7 +40,7 @@ public class BudgetCommandTests
         var handler = new CreateBudgetCommandHandler(mockUnitOfWork, _mapper, null);
         var budgetToAdd = _fixture.Build<CreateBudgetDTO>()
             .With(c => c.Name, "New Budget")
-            .With(c => c.Balance, 100)
+            .With(c => c.StartBalance, 100)
             .With(c => c.EndDate, new DateTime(2024, 12, 12))
             .With(c => c.StartDate, new DateTime(2024, 12, 10))
             .With(x => x.CategoryIds, new List<Guid> { new("77326B96-DF2B-4CC8-93A3-D11A276433D6") })
@@ -68,7 +68,7 @@ public class BudgetCommandTests
         var handler = new UpdateBudgetCommandHandler(mockUnitOfWork, _mapper, null);
         var budgetToUpdate = _fixture.Build<UpdateBudgetDTO>()
             .With(c => c.Name, "This is a new budget")
-            .With(c => c.Balance, 100)
+            .With(c => c.StartBalance, 100)
             .With(c => c.EndDate, new DateTime(2024, 10, 12))
             .With(c => c.StartDate, new DateTime(2024, 9, 10))
             .With(x => x.CategoryIds, new List<Guid> { new("77326B96-DF2B-4CC8-93A3-D11A276433D6") })

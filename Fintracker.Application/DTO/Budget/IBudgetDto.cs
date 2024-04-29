@@ -4,7 +4,6 @@ public interface IBudgetDto
 {
     public string Name { get; set; }
 
-    public decimal Balance { get; set; }
     
     public decimal StartBalance { get; set; }
     

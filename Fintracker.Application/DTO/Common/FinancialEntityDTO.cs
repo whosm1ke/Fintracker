@@ -9,6 +9,7 @@ public class FinancialEntityDTO : IBaseDto
     public string Name { get; set; } = default!;
 
     public decimal Balance { get; set; }
+    public decimal StartBalance { get; set; }
     
     public decimal TotalSpent { get; set; }
     

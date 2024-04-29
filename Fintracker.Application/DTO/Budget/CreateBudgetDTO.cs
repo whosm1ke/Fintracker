@@ -3,8 +3,6 @@
 public class CreateBudgetDTO : IBudgetDto
 {
     public string Name { get; set; } = default!;
-
-    public decimal Balance { get; set; }
     
     public decimal StartBalance { get; set; }
     

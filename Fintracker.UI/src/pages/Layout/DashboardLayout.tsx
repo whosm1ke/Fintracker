@@ -53,6 +53,7 @@ const Footer = () => {
 const DashboardNavBar = () => {
     const [userId] = useUserStore(x => [x.getUserId()]);
     const {data} = useGetUser(userId || 'no-user');
+    console.log(data)
     const userName = data?.response?.userName || 'New user';
     const avatar = data?.response?.userDetails?.avatar || logo
     const [isMenuOpen, toggleMenuOpen] = useState(false);

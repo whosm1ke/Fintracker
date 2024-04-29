@@ -7,14 +7,17 @@ export default defineConfig({
     plugins: [react(), mkcert()],
     server: {
         https: true,
-        port: 1337
+        port: 1337,
+        host: 'localhost',
+// @ts-ignore
+        historyApiFallback: true,
     },
-    css:{
-        postcss:{
+    css: {
+        postcss: {
             plugins: [
                 tailwindcss,
             ]
         }
     },
-    
+
 })
