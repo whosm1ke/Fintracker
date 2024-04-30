@@ -16,9 +16,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.CreatedBy).HasMaxLength(50);
         builder.Property(x => x.ModifiedBy).HasMaxLength(50);
 
-        builder.HasMany(x => x.Budgets)
-            .WithOne(x => x.User)
-            .HasForeignKey(x => x.UserId);
+        builder.HasMany(x => x.OwnedBudgets)
+            .WithOne(x => x.Owner)
+            .HasForeignKey(x => x.OwnerId);
 
         builder.HasMany(x => x.Categories)
             .WithOne()

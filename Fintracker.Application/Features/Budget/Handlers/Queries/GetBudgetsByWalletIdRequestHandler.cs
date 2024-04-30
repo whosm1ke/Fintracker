@@ -21,7 +21,7 @@ public class
     public async Task<IReadOnlyList<BudgetBaseDTO>> Handle(GetBudgetsByWalletIdRequest request,
         CancellationToken cancellationToken)
     {
-        var budgets = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(request.WalletId,
+        var budgets = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(request.WalletId, request.UserId,
             request.IsPublic);
 
 

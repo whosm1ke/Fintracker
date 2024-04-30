@@ -38,3 +38,4 @@ public static class CategoryExtensions
         return await query.ToListAsync();
     }
 }
+

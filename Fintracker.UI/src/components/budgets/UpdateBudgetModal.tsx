@@ -24,6 +24,7 @@ import MultiSelectDropDownMenu from "../other/MultiSelectDropDownMenu.tsx";
 import CategoryItem from "../categories/CategoryItem.tsx";
 import useUpdateBudget from "../../hooks/budgets/useUpdateBudget.ts";
 import {dateToString} from "../../helpers/globalHelper.ts";
+import useUserStore from "../../stores/userStore.ts";
 
 interface UpdateBudgetModalProps {
     userId: string,
@@ -33,10 +34,11 @@ interface UpdateBudgetModalProps {
 const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
 
     const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Budget>();
+    const currencyUserId = useUserStore(x => x.getUserId())
     const {walletId} = useParams();
     const budgetMutation = useUpdateBudget();
     const {data: wallets} = useWallets(userId)
-    const {data: categories} = useExpenseCategories();
+    const {data: categories} = useExpenseCategories(budget.ownerId);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined)
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
@@ -107,10 +109,11 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
             model.walletId = selectedWallet!.id
 
         model.id = budget.id;
-        model.userId = userId;
+        model.ownerId = userId;
         model.currencyId = selectedCurrency!.id;
         model.currency = selectedCurrency!;
         model.categories = selectedCategories
+        model.members = budget.members
         model.wallet = selectedWallet || wallets.find(w => w.id === walletId)!;
         await budgetMutation.mutateAsync(model, {
             onSuccess: () => {
@@ -121,14 +124,13 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
         });
     };
 
-
     return (
         <>
             <ActionButton text={"Update budget"} onModalOpen={handleOpenModal}/>
             {isOpen && <div
                 className={'absolute inset-0 flex justify-center items-start px-4 lg:px-0 visible bg-black/20 z-50'}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto mt-4">
-                    <h2 className="text-2xl font-bold mb-4 flex justify-between">Add budget
+                    <h2 className="text-2xl font-bold mb-4 flex justify-between">Update budget
                         <HiX size={'2rem'} color={'red'} onClick={() => {
                             reset()
                             clearErrors()
@@ -238,9 +240,9 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
                                 className="bg-blue-500 hover:bg-blue-700 text-white text-[1rem] sm:text-lg font-semibold sm:font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 type="submit"
                             >
-                                Add budget
+                                Update budget
                             </button>
-                            <div className="flex gap-4">
+                            {currencyUserId === budget.ownerId && <div className="flex gap-4">
                                 <label className="block text-sm font-bold" htmlFor="isPublic">
                                     Public?
                                 </label>
@@ -254,7 +256,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
                                         {...register("isPublic")}
                                     />
                                 </div>
-                            </div>
+                            </div>}
                         </div>
                     </form>
                 </div>

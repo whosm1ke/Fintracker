@@ -34,20 +34,20 @@ public class CategoryController : ControllerBase
         return Guid.Empty;
     }
 
-    [HttpGet]
+    [HttpGet("user/{userId:guid?}")]
     [ProducesResponseType(typeof(List<CategoryDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<CategoryDTO>>> Get([FromQuery] QueryParams query)
+    public async Task<ActionResult<List<CategoryDTO>>> Get(Guid? userId, [FromQuery] QueryParams query)
     {
         var sortRequest = new GetCategoriesSortedRequest
         {
             Params = query,
-            UserId = GetCurrentUserId()
+            UserId = userId ?? GetCurrentUserId()
         };
 
         var simpleRequest = new GetCategoriesRequest
         {
-            UserId = GetCurrentUserId()
+            UserId = userId ?? GetCurrentUserId()
         };
 
         IReadOnlyList<CategoryDTO> response;
@@ -59,6 +59,7 @@ public class CategoryController : ControllerBase
 
         return Ok(response);
     }
+    
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(CategoryDTO), StatusCodes.Status200OK)]
@@ -75,15 +76,15 @@ public class CategoryController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("{type}")]
+    [HttpGet("{type}/user/{userId:guid?}")]
     [ProducesResponseType(typeof(List<CategoryDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<CategoryDTO>>> Get(CategoryType type)
+    public async Task<ActionResult<List<CategoryDTO>>> Get(Guid? userId, CategoryType type)
     {
         var response = await _mediator.Send(new GetCategoriesByTypeRequest
         {
             Type = type,
-            UserId = GetCurrentUserId()
+            UserId = userId ?? GetCurrentUserId()
         });
 
         return Ok(response);

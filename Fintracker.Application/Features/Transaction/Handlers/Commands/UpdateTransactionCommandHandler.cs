@@ -50,7 +50,7 @@ public class
         var newCurrency = await _unitOfWork.CurrencyRepository.GetAsync(request.Transaction.CurrencyId);
         var newCategory = await _unitOfWork.CategoryRepository.GetAsync(request.Transaction.CategoryId);
         await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, transaction.Amount,
-            transaction.Currency.Symbol,newCurrency!.Symbol, transaction.Category.Type, newCategory!.Type);
+            transaction.Currency.Symbol, newCurrency!.Symbol, transaction.Category.Type, newCategory!.Type);
 
         var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
         _unitOfWork.TransactionRepository.Update(transaction);
@@ -58,7 +58,7 @@ public class
 
 
         await _unitOfWork.SaveAsync();
-        await UpdateBudgets(transaction.WalletId);
+        await UpdateBudgets(transaction.WalletId, transaction.UserId);
 
         var newObject = _mapper.Map<TransactionBaseDTO>(transaction);
         response.Success = true;
@@ -85,7 +85,7 @@ public class
             convertedCurrencyOldAmount =
                 await _currencyConverter.Convert(oldCurrencySymbol, wallet.Currency.Symbol, oldAmount);
         }
-        
+
         if (oldTransType == CategoryType.EXPENSE && newTransType == CategoryType.EXPENSE)
         {
             wallet.Balance += convertedCurrencyOldAmount?.Value ?? oldAmount;
@@ -113,13 +113,11 @@ public class
             wallet.Balance -= convertedCurrencyNewAmount?.Value ?? newAmount;
             wallet.TotalSpent += convertedCurrencyNewAmount?.Value ?? newAmount;
         }
-
-
     }
 
-    private async Task UpdateBudgets(Guid walletId)
+    private async Task UpdateBudgets(Guid walletId, Guid userId)
     {
-        var budgetsByWalletId = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(walletId, null);
+        var budgetsByWalletId = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(walletId, userId, null);
         foreach (var budget in budgetsByWalletId)
         {
             var transactions =

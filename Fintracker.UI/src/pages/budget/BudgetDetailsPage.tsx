@@ -1,4 +1,4 @@
-﻿import {useNavigate, useParams} from "react-router-dom";
+﻿import {Navigate, useNavigate, useParams} from "react-router-dom";
 import useBudget from "../../hooks/budgets/useBudget.ts";
 import Spinner from "../../components/other/Spinner.tsx";
 import {
@@ -13,14 +13,21 @@ import BudgetOverviewList from "../../components/budgets/BudgetOverviewList.tsx"
 import {Transaction} from "../../entities/Transaction.ts";
 import {TransactionItem} from "../../components/transactions/TransactionItem.tsx";
 import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAll.tsx";
+import useUserStore from "../../stores/userStore.ts";
 
 export default function BudgetDetailsPage() {
     const {budgetId} = useParams()
     const navigate = useNavigate();
     const {data: budgetResponse, isLoading} = useBudget(budgetId!);
+    const currenctUserId = useUserStore(x => x.getUserId());
 
     if (!budgetResponse || !budgetResponse.response || isLoading) return <Spinner/>
     const budget = budgetResponse.response;
+    console.log("Budget owner id: ", budget.ownerId)
+    console.log("currenctUserId: ", currenctUserId)
+    console.log("budget.members.find(u => u.id === currenctUserId): ", budget.members.find(u => u.id === currenctUserId))
+    console.log("budget member: ", budget.members)
+    if (budget.ownerId != currenctUserId && !budget.members.find(u => u.id === currenctUserId)) return <Navigate to={'../../dashboard'}/>
 
     const start = dateToString(new Date(budget.startDate));
     const end = dateToString(new Date(budget.endDate));
@@ -49,7 +56,7 @@ export default function BudgetDetailsPage() {
                     </li>
                 </ul>
                 <div>
-                    <UpdateBudgetModal userId={budget.userId} budget={budget}/>
+                    <UpdateBudgetModal userId={budget.ownerId} budget={budget}/>
                 </div>
             </div>
             <BudgetOverviewList budget={budget}/>
@@ -73,7 +80,8 @@ export default function BudgetDetailsPage() {
                 </div>
             </div>
             {budget.transactions.length !== 0 && <BudgetTransactionItemList transactions={budget.transactions}
-                                        budgetCurrencySymbol={budget.currency.symbol} budgetId={budgetId!}/>}
+                                                                            budgetCurrencySymbol={budget.currency.symbol}
+                                                                            budgetId={budgetId!} budgetOwnerId={budget.ownerId}/>}
         </div>
     )
 }
@@ -81,11 +89,17 @@ export default function BudgetDetailsPage() {
 interface BudgetTransactionItemListProps {
     transactions: Transaction[];
     budgetCurrencySymbol: string;
-    budgetId: string
+    budgetId: string;
+    budgetOwnerId: string;
 }
 
-export function BudgetTransactionItemList({transactions, budgetCurrencySymbol, budgetId}: BudgetTransactionItemListProps) {
-    
+export function BudgetTransactionItemList({
+                                              transactions,
+                                              budgetCurrencySymbol,
+                                              budgetId,
+                                              budgetOwnerId
+                                          }: BudgetTransactionItemListProps) {
+
     const uniqueSymbols = getUniqueCurrencySymbols(transactions);
     const {data: convertedCurrencies} = useCurrencyConvertAll({
         from: uniqueSymbols,
@@ -102,7 +116,8 @@ export function BudgetTransactionItemList({transactions, budgetCurrencySymbol, b
             <div className={'mt-4'}>
                 {transactions.map(t =>
                     <TransactionItem key={t.id} transaction={t} parentCurrencySymbol={budgetCurrencySymbol}
-                                     conversionRate={currencyRates![t.currency.symbol]} showDate={true} budgetId={budgetId}/>
+                                     conversionRate={currencyRates![t.currency.symbol]} showDate={true}
+                                     budgetId={budgetId} walletOwnerId={budgetOwnerId}/>
                 )}
             </div>
         </div>

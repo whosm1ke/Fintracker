@@ -32,7 +32,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
     const {walletId} = useParams();
     const budgetMutation = useCreateBudget();
     const {data: wallets} = useWallets(userId)
-    const {data: categories} = useExpenseCategories();
+    const {data: categories} = useExpenseCategories(userId);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined)
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
@@ -73,6 +73,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
     const onSubmit: SubmitHandler<Budget> = async (model: Budget) => {
         if (selectedCategories.length === 0) {
             setError("categoryIds", {message: "Budget must contain at least one category"})
+            return;
         } else {
             clearErrors("categoryIds")
             model.categoryIds = selectedCategories.map(c => c.id);
@@ -80,6 +81,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
 
         if (!selectedCurrency) {
             setError("currencyId", {message: "Currency is required"})
+            return;
         } else {
             clearErrors("currencyId")
             model.currencyId = selectedCurrency.id;
@@ -87,10 +89,17 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
 
         if (walletId)
             model.walletId = walletId
-        else
-            model.walletId = selectedWallet!.id
+        else {
+            if (!selectedWallet) {
+                setError("walletId", {message: "Wallet is required"})
+                return;
+            } else {
+                clearErrors("walletId")
+                model.walletId = selectedWallet!.id
+            }
+        }
 
-        model.userId = userId;
+        model.ownerId = userId;
         model.currencyId = selectedCurrency!.id;
         model.currency = selectedCurrency!;
         model.categories = selectedCategories

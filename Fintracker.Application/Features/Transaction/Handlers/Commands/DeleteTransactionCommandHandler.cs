@@ -53,7 +53,7 @@ public class
 
 
         await UpdateWallet(transaction.Wallet, transaction.Amount, transCurrency!.Symbol, transaction.Category.Type);
-        await IncreaseBudgetBalance(transaction.WalletId, transaction);
+        await IncreaseBudgetBalance(transaction.WalletId, transaction.UserId, transaction);
 
 
         _unitOfWork.TransactionRepository.Delete(transaction);
@@ -87,9 +87,9 @@ public class
         }
     }
 
-    private async Task IncreaseBudgetBalance(Guid walletId, Domain.Entities.Transaction transToDelete)
+    private async Task IncreaseBudgetBalance(Guid walletId, Guid userId, Domain.Entities.Transaction transToDelete)
     {
-        var budgetsByWalletId = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(walletId, null);
+        var budgetsByWalletId = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(walletId, userId, null);
         foreach (var budget in budgetsByWalletId)
         {
             if (budget.Categories.All(c => c.Id != transToDelete.CategoryId)) continue;

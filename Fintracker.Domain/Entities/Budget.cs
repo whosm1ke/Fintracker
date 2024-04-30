@@ -14,9 +14,11 @@ public class Budget : FinancialEntity
     public ICollection<Category> Categories { get; set; }
     
     public ICollection<Transaction> Transactions { get; set; }
-    public User User { get; set; } = default!;
+    public User Owner { get; set; } = default!;
 
-    public Guid UserId { get; set; }
+    public Guid OwnerId { get; set; }
+
+    public ICollection<User> Members { get; set; }
 
     public Wallet Wallet { get; set; } = default!;
 

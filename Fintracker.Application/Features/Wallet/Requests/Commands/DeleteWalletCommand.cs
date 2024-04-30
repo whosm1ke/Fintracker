@@ -8,4 +8,6 @@ namespace Fintracker.Application.Features.Wallet.Requests.Commands;
 public class DeleteWalletCommand : IRequest<DeleteCommandResponse<WalletBaseDTO>>, INotGetRequest
 {
     public Guid Id { get; set; }
+
+    public Guid UserId { get; set; }
 }

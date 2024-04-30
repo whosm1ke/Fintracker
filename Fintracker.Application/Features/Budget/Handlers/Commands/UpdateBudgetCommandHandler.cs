@@ -73,7 +73,7 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         var newCurrency = await _unitOfWork.CurrencyRepository.GetAsync(newBudget.CurrencyId);
 
         var categories = await _unitOfWork.CategoryRepository
-            .GetAllWithIds(newBudget.CategoryIds, oldBudget.UserId);
+            .GetAllWithIds(newBudget.CategoryIds, oldBudget.OwnerId);
         foreach (var category in categories)
         {
             oldBudget.Categories.Add(category);

@@ -131,7 +131,7 @@ public class WalletRequestTests
                 Id = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"), Email = "owner@gmail.com",
                 OwnedWallets = new List<WalletPureDTO>(),
                 MemberWallets = new List<WalletPureDTO>(),
-                Budgets = new List<BudgetPureDTO>()
+                OwnedBudgets = new List<BudgetPureDTO>()
             },
             Budgets = new List<BudgetPureDTO>(),
             Users = new List<UserPureDTO>(),

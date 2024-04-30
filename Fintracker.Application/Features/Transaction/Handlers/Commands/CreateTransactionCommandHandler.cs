@@ -64,7 +64,7 @@ public class
 
         foreach (var budget in budgets)
         {
-            if ((budget.IsPublic || budget.UserId == userId) && budget.WalletId == walletId &&
+            if ((budget.IsPublic || budget.OwnerId == userId) && budget.WalletId == walletId &&
                 transDate >= budget.StartDate && transDate <= budget.EndDate)
             {
                 var convertedCurrency = convertedCurrencies.Find(x => x?.To == budget.Currency.Symbol);

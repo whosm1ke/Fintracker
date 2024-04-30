@@ -14,6 +14,5 @@ public class UpdateWalletDTO : IBaseDto, IWalletDto
 
     public IEnumerable<Guid> UserIds { get; set; }
 
-    public bool DeleteUserTransaction { get; set; }
     
 }

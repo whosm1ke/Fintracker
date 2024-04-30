@@ -38,13 +38,11 @@ public class
                 PropertyName = nameof(request.Params.SortBy),
                 ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
             });
-
-
-        var budgets =
+        
+        var budgetsByUserId =
             await _unitOfWork.BudgetRepository.GetByUserIdSortedAsync(request.UserId, request.Params);
+        
 
-        //TODO: may be there should be some validation logic to ensure that list is not empty
-
-        return _mapper.Map<List<BudgetBaseDTO>>(budgets);
+        return _mapper.Map<List<BudgetBaseDTO>>(budgetsByUserId);
     }
 }

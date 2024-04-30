@@ -21,13 +21,15 @@ import CategoryItem from "../categories/CategoryItem.tsx";
 interface AddTransactionModalProps {
     userId: string;
     walletId: string;
-    walletCurrency: Currency
+    walletCurrency: Currency;
+    walletOwnerId: string;
 }
 
-export const CreateTransactionModal = ({userId, walletId, walletCurrency}: AddTransactionModalProps) => {
+export const CreateTransactionModal = ({userId, walletId, walletCurrency, walletOwnerId}: AddTransactionModalProps) => {
     const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Transaction>();
     const transactionMutation = useCreateTransaction();
-    const {data: categories} = useCategories();
+    const {data: categories} = useCategories(walletOwnerId);
+    console.log("categories: ", categories)
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(walletCurrency);
     const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined)

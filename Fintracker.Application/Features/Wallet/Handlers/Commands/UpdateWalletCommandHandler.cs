@@ -29,7 +29,7 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
     {
         var response = new UpdateCommandResponse<WalletBaseDTO>();
 
-        var wallet = await _unitOfWork.WalletRepository.GetWalletById(request.Wallet.Id);
+        var wallet = await _unitOfWork.WalletRepository.GetWalletByIdWithMemberBudgets(request.Wallet.Id);
 
         if (wallet is null)
             throw new NotFoundException(new ExceptionDetails
@@ -45,7 +45,8 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
                 PropertyName = nameof(wallet.Balance)
             });
 
-        await UpdateWallet(wallet, request.Wallet);
+        await UpdateWalletBalance(wallet, request.Wallet);
+        await UpdateBudgetsBalance(wallet, request.Wallet);
 
         var oldObject = _mapper.Map<WalletBaseDTO>(wallet);
         _mapper.Map(request.Wallet, wallet);
@@ -65,59 +66,106 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
         return response;
     }
 
-    
-    
-    private async Task UpdateWallet(Domain.Entities.Wallet oldWallet, UpdateWalletDTO newWallet)
+    private async Task UpdateBudgetsBalance(Domain.Entities.Wallet oldWallet, UpdateWalletDTO newWallet)
     {
-        oldWallet.StartBalance = newWallet.StartBalance;
-        oldWallet.Balance = newWallet.StartBalance;
-        oldWallet.TotalSpent = 0;
-
         foreach (var userId in newWallet.UserIds)
         {
-            var userToDelete = oldWallet.Users.FirstOrDefault(u => u.Id == userId);
-            if(userToDelete is not null)
-                oldWallet.Users.Remove(userToDelete);
+            var user = oldWallet.Users.FirstOrDefault(u => u.Id == userId);
+            if (user is null) continue;
 
-            if (newWallet.DeleteUserTransaction)
+            foreach (var memberBudget in user.MemberBudgets)
             {
-                var transactionsToDelete = oldWallet.Transactions.Where(t => t.UserId == userId).ToList();
-                
-                transactionsToDelete.ForEach(t => oldWallet.Transactions.Remove(t));
+                memberBudget.TotalSpent = 0;
+                var userTransactions = memberBudget.Transactions.Where(t => t.UserId == userId).ToList();
+                var transactionDetails =
+                    GetTransactionDetails(userTransactions);
+
+
+                var convertedResult = await _currencyConverter.Convert(transactionDetails.Symbols,
+                    memberBudget.Currency.Symbol,
+                    transactionDetails.Amounts);
+
+
+                var totalSpent = convertedResult.Sum(x => x.Value);
+
+                memberBudget.Balance -= totalSpent;
+                memberBudget.TotalSpent = memberBudget.StartBalance - memberBudget.Balance;
+
             }
+            
+            RemoveUserFromCollections(user, oldWallet);
+        }
+    }
+    
+    private void RemoveUserFromCollections(Domain.Entities.User user, Domain.Entities.Wallet wallet)
+    {
+        foreach (var memberBudget in user.MemberBudgets)
+        {
+            memberBudget.Members.Remove(user);
         }
 
-
-        var transactionCurrencySymbols = oldWallet.Transactions.Select(x => x.Currency.Symbol).ToList();
-        var transactionAmounts = oldWallet.Transactions.Select(x =>
+        var useTransactions = wallet.Transactions.Where(t => t.UserId == user.Id);
+        foreach (var transaction in useTransactions)
         {
-            if (x.Category.Type == CategoryType.INCOME)
-                return x.Amount;
-            return x.Amount * -1;
-        }).ToList();
+            wallet.Transactions.Remove(transaction);
+        }
+        wallet.Users.Remove(user);
+    }
 
-        //Calculating new balance and total spent
+
+
+    private async Task UpdateWalletBalance(Domain.Entities.Wallet oldWallet, UpdateWalletDTO newWallet)
+    {
+        ResetWallet(oldWallet, newWallet.StartBalance);
+
+        var transactionDetails = GetTransactionDetails(oldWallet.Transactions);
+
+        decimal totalSpent = await CalculateTotalSpent(oldWallet, newWallet, transactionDetails);
+
+        UpdateWalletAfterCalculations(oldWallet, newWallet, totalSpent);
+    }
+
+    private void ResetWallet(Domain.Entities.Wallet wallet, decimal startBalance)
+    {
+        wallet.StartBalance = startBalance;
+        wallet.Balance = startBalance;
+        wallet.TotalSpent = 0;
+    }
+
+    private (List<string> Symbols, List<decimal> Amounts) GetTransactionDetails(
+        ICollection<Domain.Entities.Transaction> transactions)
+    {
+        var symbols = transactions.Select(x => x.Currency.Symbol).ToList();
+        var amounts = transactions.Select(x => x.Category.Type == CategoryType.INCOME ? x.Amount : -x.Amount).ToList();
+
+        return (symbols, amounts);
+    }
+
+    private async Task<decimal> CalculateTotalSpent(Domain.Entities.Wallet oldWallet, UpdateWalletDTO newWallet,
+        (List<string> Symbols, List<decimal> Amounts) transactionDetails)
+    {
         decimal totalSpent = 0;
+
         if (oldWallet.CurrencyId != newWallet.CurrencyId)
         {
             var newCurrency = await _unitOfWork.CurrencyRepository.GetAsync(newWallet.CurrencyId);
             oldWallet.Currency = newCurrency!;
-            List<ConvertCurrencyDTO?> convertedResult =
-                await _currencyConverter.Convert(transactionCurrencySymbols, newCurrency!.Symbol, transactionAmounts);
 
-            convertedResult.ForEach(x => totalSpent += x.Value);
+            var convertedResult = await _currencyConverter.Convert(transactionDetails.Symbols, newCurrency!.Symbol,
+                transactionDetails.Amounts);
+            totalSpent = convertedResult.Sum(x => x.Value);
         }
         else
         {
-            foreach (var transaction in oldWallet.Transactions)
-            {
-                if (transaction.Category.Type == CategoryType.INCOME)
-                    totalSpent += transaction.Amount;
-                else
-                    totalSpent += transaction.Amount * -1;
-            }
+            totalSpent = transactionDetails.Amounts.Sum();
         }
 
+        return totalSpent;
+    }
+
+    private void UpdateWalletAfterCalculations(Domain.Entities.Wallet oldWallet, UpdateWalletDTO newWallet,
+        decimal totalSpent)
+    {
         oldWallet.Balance = newWallet.StartBalance + totalSpent;
         oldWallet.TotalSpent = totalSpent > 0 ? 0 : Math.Abs(totalSpent);
     }

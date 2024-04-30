@@ -6,7 +6,8 @@ export interface User extends BaseEntity {
     email: string;
     userName: string;
     userDetails?: UserDetails;
-    budgets: Budget[];
+    ownedBudgets: Budget[];
+    memberBudgets: Budget[];
     memberWallets: Wallet[];
     ownedWallets: Wallet[];
     globalCurrency: string;

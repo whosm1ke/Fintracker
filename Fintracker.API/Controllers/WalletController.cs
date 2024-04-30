@@ -1,4 +1,5 @@
-﻿using Fintracker.Application.DTO.Wallet;
+﻿using Fintracker.Application.BusinessRuleConstraints;
+using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.Features.Wallet.Requests.Commands;
 using Fintracker.Application.Features.Wallet.Requests.Queries;
 using Fintracker.Application.Models;
@@ -20,6 +21,15 @@ public class WalletController : ControllerBase
     public WalletController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+    
+    [NonAction]
+    private Guid GetCurrentUserId()
+    {
+        var uid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.Uid)?.Value;
+        if (Guid.TryParse(uid, out var currentUserId))
+            return currentUserId;
+        return Guid.Empty;
     }
 
     [HttpGet("{id:guid}")]
@@ -110,7 +120,8 @@ public class WalletController : ControllerBase
     {
         var response = await _mediator.Send(new DeleteWalletCommand
         {
-            Id = id
+            Id = id,
+            UserId = GetCurrentUserId()
         });
 
         return Ok(response);

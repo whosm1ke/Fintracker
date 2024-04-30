@@ -32,8 +32,14 @@ public class DeleteBudgetCommandHandler : IRequestHandler<DeleteBudgetCommand, D
                 ErrorMessage = $"Attempt to delete non-existing item with by id [{request.Id}]",
                 PropertyName = nameof(request.Id)
             },nameof(Domain.Entities.Budget));
-
-
+  
+        if(budget.OwnerId != request.UserId)
+            throw new ForbiddenException(new ExceptionDetails
+            {
+                ErrorMessage = "Attempt to delete wallet with other owner",
+                PropertyName = nameof(request.Id)
+            });
+        
         var budgetBaseDto = _mapper.Map<BudgetBaseDTO>(budget);
         _unitOfWork.BudgetRepository.Delete(budget);
 

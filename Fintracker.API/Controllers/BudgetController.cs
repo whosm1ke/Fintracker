@@ -1,4 +1,5 @@
-﻿using Fintracker.Application.DTO.Budget;
+﻿using Fintracker.Application.BusinessRuleConstraints;
+using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.Features.Budget.Requests.Commands;
 using Fintracker.Application.Features.Budget.Requests.Queries;
 using Fintracker.Application.Models;
@@ -21,6 +22,16 @@ public class BudgetController : ControllerBase
     {
         _mediator = mediator;
     }
+    
+    [NonAction]
+    private Guid GetCurrentUserId()
+    {
+        var uid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.Uid)?.Value;
+        if (Guid.TryParse(uid, out var currentUserId))
+            return currentUserId;
+        return Guid.Empty;
+    }
+
 
 
     [HttpGet("{id:guid}")]
@@ -42,17 +53,20 @@ public class BudgetController : ControllerBase
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsByWalletId(Guid walletId, [FromQuery] BudgetQueryParams? query)
     {
+        
 
         var simpleRequest = new GetBudgetsByWalletIdRequest()
         {
             WalletId = walletId,
-            IsPublic = query?.IsPublic
+            IsPublic = query?.IsPublic,
+            UserId = GetCurrentUserId()
         };
 
         var sortedRequest = new GetBudgetsByWalletIdSortedRequest()
         {
             WalletId = walletId,
-            Params = query!
+            Params = query!,
+            UserId = GetCurrentUserId()
         };
         
         IReadOnlyList<BudgetBaseDTO> budgets;
@@ -129,7 +143,8 @@ public class BudgetController : ControllerBase
     {
         var response = await _mediator.Send(new DeleteBudgetCommand
         {
-            Id = id
+            Id = id,
+            UserId = GetCurrentUserId()
         });
 
         return Ok(response);

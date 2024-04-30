@@ -32,7 +32,14 @@ public class DeleteWalletCommandHandler : IRequestHandler<DeleteWalletCommand, D
                 ErrorMessage = $"Attempt to delete non-existing item by id [{request.Id}]",
                 PropertyName = nameof(request.Id)
             },nameof(Domain.Entities.Wallet));
-
+        
+        if(wallet.OwnerId != request.UserId)
+            throw new ForbiddenException(new ExceptionDetails
+            {
+                ErrorMessage = "Attempt to delete wallet with other owner",
+                PropertyName = nameof(request.Id)
+            });
+        
         var deletedObj = _mapper.Map<WalletBaseDTO>(wallet);
         _unitOfWork.WalletRepository.Delete(wallet);
 

@@ -18,6 +18,6 @@ public class CreateBudgetDTO : IBudgetDto
     
     public bool IsPublic { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid OwnerId { get; set; }
     
 }

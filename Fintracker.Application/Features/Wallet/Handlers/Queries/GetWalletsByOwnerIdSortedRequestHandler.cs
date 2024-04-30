@@ -37,10 +37,17 @@ public class
                 ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
             });
 
-        var wallets =
+        var walletsByOwner =
             await _unitOfWork.WalletRepository.GetByOwnerIdSortedAsync(request.OwnerId, request.Params);
+        
+        var walletsByMember =
+            await _unitOfWork.WalletRepository.GetByMemberIdSortedAsync(request.OwnerId, request.Params);
+
+        var unionWallets = walletsByMember.Union(walletsByOwner);
+
+        var distnctWallets = unionWallets.DistinctBy(w => w.Id);
 
 
-        return _mapper.Map<List<WalletBaseDTO>>(wallets);
+        return _mapper.Map<List<WalletBaseDTO>>(distnctWallets);
     }
 }

@@ -8,4 +8,5 @@ namespace Fintracker.Application.Features.Transaction.Requests.Commands;
 public class DeleteTransactionCommand : IRequest<DeleteCommandResponse<TransactionBaseDTO>>, INotGetRequest
 {
     public Guid Id { get; set; }
+    public Guid UserId { get; set; }
 }

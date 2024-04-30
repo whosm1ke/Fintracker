@@ -25,9 +25,9 @@ public class MockBudgetRepository
                 Name = "A",
                 Id = new Guid("29DECA11-E633-47E4-A0B2-569791B7D8C7"),
                 Wallet = new Wallet(),
-                User = new User(),
+                Owner = new User(),
                 Categories = new List<Category>(),
-                UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
+                OwnerId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
                 CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"),
                 WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0")
             },
@@ -44,10 +44,10 @@ public class MockBudgetRepository
                 Name = "B",
                 Id = new Guid("5F5F42ED-345C-4B13-AA35-76005A9607FF"),
                 Wallet = new Wallet(),
-                User = new User(),
+                Owner = new User(),
                 Categories = new List<Category>(),
                 WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
-                UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
+                OwnerId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
                 CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
             },
             new()
@@ -63,7 +63,7 @@ public class MockBudgetRepository
                 Name = "Budget3",
                 Id = new Guid("8FE42E15-4484-4DF7-BC1A-6C4047DD5C2C"),
                 Wallet = new Wallet(),
-                User = new User(),
+                Owner = new User(),
                 Categories = new List<Category>()
             },
             new()
@@ -84,13 +84,13 @@ public class MockBudgetRepository
                     Balance = 1000,
                     Name = "Wallet 1",
                 },
-                User = new User
+                Owner = new User
                 {
                     Id = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7")
                 },
                 Categories = new List<Category>(),
                 WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
-                UserId = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
+                OwnerId = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
                 CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
             },
             new()
@@ -106,14 +106,14 @@ public class MockBudgetRepository
                 Name = "Budget with user",
                 Id = new Guid("9055E428-38C3-4616-A389-0102B766FD98"),
                 Wallet = new(),
-                User = new User
+                Owner = new User
                 {
                     Id = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
                     Email = "user@mail.com"
                 },
                 Categories = new List<Category>(),
                 WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
-                UserId = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
+                OwnerId = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
                 CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
             }
         };
@@ -169,22 +169,22 @@ public class MockBudgetRepository
         mock.Setup(x => x.GetBudgetByIdAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id)); });
 
-        mock.Setup(x => x.GetByUserIdAsync(It.IsAny<Guid>(),It.IsAny<bool>()))
-            .Returns((Guid id, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.UserId == id).ToList()));
+        mock.Setup(x => x.GetByBudgetOwnerIdAsync(It.IsAny<Guid>(),It.IsAny<bool>()))
+            .Returns((Guid id, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.OwnerId == id).ToList()));
 
-        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<BudgetQueryParams>()))
+        mock.Setup(x => x.GetByOwnerIdSortedAsync(It.IsAny<Guid>(), It.IsAny<BudgetQueryParams>()))
             .Returns((Guid id, BudgetQueryParams query) => Task.FromResult((IReadOnlyList<Budget>)budgets
-                .Where(x => x.UserId == id)
+                .Where(x => x.OwnerId == id)
                 .AsQueryable()
                 .OrderBy(query.SortBy)
                 .ToList()));
 
-        mock.Setup(x => x.GetByWalletIdAsync(It.IsAny<Guid>(),It.IsAny<bool>()))
-            .Returns((Guid id, bool isPublic) =>
+        mock.Setup(x => x.GetByWalletIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>()))
+            .Returns((Guid id, Guid userId, bool isPublic) =>
                 Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.WalletId == id).ToList()));
 
-        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<BudgetQueryParams>()))
-            .Returns((Guid id, BudgetQueryParams query) => Task.FromResult((IReadOnlyList<Budget>)budgets
+        mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<BudgetQueryParams>()))
+            .Returns((Guid id, Guid userId, BudgetQueryParams query) => Task.FromResult((IReadOnlyList<Budget>)budgets
                 .Where(x => x.WalletId == id)
                 .AsQueryable()
                 .OrderBy(query.SortBy)

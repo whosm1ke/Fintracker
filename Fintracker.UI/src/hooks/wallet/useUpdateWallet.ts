@@ -1,8 +1,10 @@
 ﻿import ApiClient from "../../services/ApiClient.ts";
 import {Wallet} from "../../entities/Wallet.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import { Transaction } from "../../entities/Transaction.ts";
-import { Currency } from "../../entities/Currency.ts";
+import {Transaction} from "../../entities/Transaction.ts";
+import {Currency} from "../../entities/Currency.ts";
+import {User} from "../../entities/User.ts";
+import {Budget} from "../../entities/Budget.ts";
 //TODO Create UpdateWalletDTO
 export type UpdateWalletDTO = {
     name: string;
@@ -11,7 +13,9 @@ export type UpdateWalletDTO = {
     currency: Currency;
     id: string;
     userIds: string[];
-    deleteUserTransaction: boolean;
+    users: User[];
+    owner: User;
+    ownerId: string;
     transactions: Transaction[]
 }
 
@@ -19,7 +23,7 @@ type Context = {
     prevWallet: Wallet | undefined
 }
 
-const apiClient = new ApiClient<Wallet,UpdateWalletDTO>('wallet');
+const apiClient = new ApiClient<Wallet, UpdateWalletDTO>('wallet');
 const useUpdateWallet = () => {
     const queryClient = useQueryClient();
     return useMutation<ClientWrapper<UpdateCommandResponse<Wallet>>, Error, UpdateWalletDTO, Context>({
@@ -30,11 +34,16 @@ const useUpdateWallet = () => {
 
             const prevData = queryClient.getQueryData<Wallet>(['wallet', newWallet.id]);
 
+            console.log("prevData: ", prevData)
             queryClient.setQueryData(['wallet', newWallet.id], (oldQueryData: ClientWrapper<Wallet>) => {
+                console.log("oldQueryData: ", oldQueryData)
                 newWallet.transactions = oldQueryData.response!.transactions
-                const clientWarpper : ClientWrapper<Wallet> = {
+                newWallet.currency = oldQueryData.response!.currency
+                newWallet.users = oldQueryData.response!.users
+                newWallet.owner = oldQueryData.response!.owner
+                const clientWarpper: ClientWrapper<Wallet> = {
                     hasError: false,
-                // @ts-ignore
+                    // @ts-ignore
                     response: newWallet
                 }
                 return clientWarpper;
@@ -48,6 +57,8 @@ const useUpdateWallet = () => {
         onSettled: async (_data, _error, variables, _context) => {
             await queryClient.invalidateQueries({queryKey: ['wallets']})
             await queryClient.invalidateQueries({queryKey: ['wallet', variables.id]})
+            await queryClient.invalidateQueries({queryKey: ['budgets']})
+            _context?.prevWallet?.budgets.map(async (b: Budget) => await queryClient.invalidateQueries({queryKey: ['budget', b.id]}))
         }
     })
 }

@@ -44,7 +44,7 @@ public class MockUserRepository
             {
                 Id = new Guid("E126CEFE-57A3-4E2A-93A6-5EE7F819B10C"),
                 UserName = "With budget",
-                Budgets = new List<Budget>
+                OwnedBudgets = new List<Budget>
                 {
                     new()
                     {

@@ -9,7 +9,7 @@ public class BudgetPureDTO : FinancialEntityDTO
     
     public DateTime EndDate { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid OwnerId { get; set; }
 
     public bool IsPublic { get; set; }
     

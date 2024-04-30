@@ -10,7 +10,8 @@ public class User: IdentityUser<Guid>, IEntity<Guid>
     {
         OwnedWallets = new HashSet<Wallet>();
         MemberWallets = new HashSet<Wallet>();
-        Budgets = new HashSet<Budget>();
+        OwnedBudgets = new HashSet<Budget>();
+        MemberBudgets = new HashSet<Budget>();
         Categories = new HashSet<Category>();
     }
 
@@ -18,7 +19,9 @@ public class User: IdentityUser<Guid>, IEntity<Guid>
     public ICollection<Wallet> MemberWallets { get; set; }
     
     public ICollection<Category> Categories { get; set; }
-    public ICollection<Budget> Budgets { get; set; }
+    public ICollection<Budget> OwnedBudgets { get; set; }
+    
+    public ICollection<Budget> MemberBudgets { get; set; }
 
     public UserDetails? UserDetails { get; set; }
     public DateTime CreatedAt { get; set; }

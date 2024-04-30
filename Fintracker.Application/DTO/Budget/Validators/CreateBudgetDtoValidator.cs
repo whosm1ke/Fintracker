@@ -15,10 +15,10 @@ public class CreateBudgetDtoValidator : AbstractValidator<CreateBudgetCommand>
             .SetValidator(new BudgetBaseDtoValidator(unitOfWork))
             .OverridePropertyName(string.Empty);
         
-        RuleFor(x => x.Budget.UserId)
+        RuleFor(x => x.Budget.OwnerId)
             .ApplyCommonRules()
             .MustAsync(async (guid, _) => await userRepository.ExistsAsync(guid))
-            .OverridePropertyName(nameof(CreateBudgetCommand.Budget.UserId))
-            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.Budget.UserId}]");
+            .OverridePropertyName(nameof(CreateBudgetCommand.Budget.OwnerId))
+            .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.Budget.OwnerId}]");
     }
 }

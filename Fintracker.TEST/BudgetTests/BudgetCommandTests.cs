@@ -44,7 +44,7 @@ public class BudgetCommandTests
             .With(c => c.EndDate, new DateTime(2024, 12, 12))
             .With(c => c.StartDate, new DateTime(2024, 12, 10))
             .With(x => x.CategoryIds, new List<Guid> { new("77326B96-DF2B-4CC8-93A3-D11A276433D6") })
-            .With(x => x.UserId, new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"))
+            .With(x => x.OwnerId, new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"))
             .With(x => x.WalletId, new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"))
             .With(x => x.CurrencyId, new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"))
             .Create();

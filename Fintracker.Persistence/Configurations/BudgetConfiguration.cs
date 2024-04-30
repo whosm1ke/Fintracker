@@ -43,11 +43,14 @@ public class BudgetConfiguration : IEntityTypeConfiguration<Budget>
             .HasColumnType("decimal")
             .HasPrecision(12, 2);
 
-        builder.HasOne(x => x.User)
-            .WithMany(x => x.Budgets)
-            .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired();
+        builder.HasOne(x => x.Owner)
+            .WithMany(x => x.OwnedBudgets)
+            .HasForeignKey(x => x.OwnerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.Members)
+            .WithMany(x => x.MemberBudgets)
+            .UsingEntity(j => j.ToTable("BudgetMembers"));
 
         builder.HasOne(x => x.Wallet)
             .WithMany(x => x.Budgets)

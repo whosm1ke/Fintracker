@@ -51,10 +51,10 @@ public class BudgetRequestTests
             Name = "B",
             Id = new Guid("5F5F42ED-345C-4B13-AA35-76005A9607FF"),
             Wallet = new Wallet(),
-            User = new User(),
+            Owner = new User(),
             Categories = new List<Category>(),
             WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
-            UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
+            OwnerId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
             CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
         });
 

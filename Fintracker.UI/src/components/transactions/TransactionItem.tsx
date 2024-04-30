@@ -15,17 +15,18 @@ interface TransactionItemProps {
     parentCurrencySymbol: string;
     conversionRate: number;
     showDate?: boolean;
-    budgetId?: string
+    budgetId?: string;
+    walletOwnerId: string;
 }
 
 const variants : Variants = {
     editing: { backgroundColor: ["#ffef00", "#ffdf00"], transition: { duration: 0.7, repeatType: 'reverse', repeat: Infinity } },
     idle: {backgroundColor: '#FFFAFA'},
 };
-export function TransactionItem({transaction, conversionRate, parentCurrencySymbol, showDate = false, budgetId}: TransactionItemProps) {
+export function TransactionItem({transaction, conversionRate, parentCurrencySymbol, showDate = false, budgetId, walletOwnerId}: TransactionItemProps) {
     const Icon = (Icons as any)[transaction.category.image] as IconType;
     const convertedAmount = transaction.amount * conversionRate;
-    const {data: categories} = useCategories();
+    const {data: categories} = useCategories(walletOwnerId);
     const [isEditing, setIsEditing] = useState(false);
     const gridTemplateCols = showDate ? ' md:grid-cols-5 ' : ' md:grid-cols-4 ';
 

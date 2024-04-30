@@ -3,11 +3,12 @@ import {useQuery} from "@tanstack/react-query";
 import useCategoryQueryStore from "../../stores/categoryQueryStore.ts";
 import { Category } from "../../entities/Category.ts";
 
-const apiClient = new ApiClient<Category[]>('category')
-const useCategories = () => {
+const useCategories = (userId: string) => {
+const apiClient = new ApiClient<Category[]>(`category/user/${userId}`)
     const query = useCategoryQueryStore(x => x.query);
+console.log("category query: ", query)
     return useQuery({
-        queryKey: ["categories"],
+        queryKey: ["categories","user", userId],
         queryFn: async () => await apiClient.getAll({
             params: {
                 sortBy: query.sortBy || "name",

@@ -5,11 +5,11 @@ export default function WalletSettingsLayoutPage() {
     const isGeneralSettings = !loc.pathname.includes('categories');
     return (
         <div className={'container mx-auto p-4'}>
-            <div className={'flex flex-row p-2'}>
+            <div className={'flex flex-col sm:flex-row p-2'}>
                 <div className={'basis-1/4'}>
                     <nav className={'w-full'}>
                         <ul className={'w-full'}>
-                            <li className={'w-full h-full text-center text-lg flex'}>
+                            <li className={'w-full h-full text-center text-md sm:text-lg flex'}>
                                 <NavLink to={``}
                                          end
                                          className={({isActive}) => {
@@ -18,7 +18,7 @@ export default function WalletSettingsLayoutPage() {
                                          }}
                                 >General Settings</NavLink>
                             </li>
-                            <li className={'w-full text-center text-lg flex'}>
+                            <li className={'w-full text-center text-md sm:text-lg flex'}>
                                 <NavLink to={`categories`}
                                          className={({isActive}) => {
                                              return isActive ? "w-full h-full bg-white rounded-tl rounded-bl shadow p-4 " +

@@ -10,5 +10,6 @@ public class BudgetBaseDTO : BudgetPureDTO
     
     public WalletPureDTO Wallet { get; set; } = default!;
     
-    public UserPureDTO User { get; set; } = default!;
+    public UserPureDTO Owner { get; set; } = default!;
+    public ICollection<UserPureDTO> Members { get; set; } = default!;
 }

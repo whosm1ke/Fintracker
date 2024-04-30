@@ -10,9 +10,10 @@ export interface Budget extends FinancialEntity {
     categoryIds: string[]
     startDate: string;
     endDate: string;
-    userId: string;
+    ownerId: string;
     isPublic: boolean;
-    user: User;
+    owner: User;
+    members: User[];
     wallet: Wallet;
     walletId: string;
     transactions: Transaction[];

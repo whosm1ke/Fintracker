@@ -12,7 +12,9 @@ interface BudgetCardProps {
     currencySymbol: string,
     startDate: string,
     endDate: string,
-    isPublic: boolean
+    isPublic: boolean,
+    userId: string;
+    budgetUserId: string
 }
 
 export const BudgetCard = ({
@@ -25,6 +27,8 @@ export const BudgetCard = ({
                                endDate,
                                startDate,
                                totalSpent = 0,
+                               userId,
+                               budgetUserId
                            }: BudgetCardProps) => {
 
 
@@ -49,7 +53,9 @@ export const BudgetCard = ({
             await handleDeleteWallet();
         }
     };
-
+console.log("userId !== budgetUserId: ", userId !== budgetUserId)
+console.log("userId: ", userId)
+console.log("budgetUserId: ", budgetUserId)
     // @ts-ignore
     const isMobile = navigator.userAgentData.mobile;
     return (
@@ -67,7 +73,10 @@ export const BudgetCard = ({
                 to={`${budgetId}`}
                 className={`${cardBgColor} p-4 rounded-lg w-full shadow-md`}>
                 <h2 className="flex justify-between font-bold">
-                    <p className={'text-lg text-black'}>{name}</p>
+                    <p className={'flex gap-3 text-lg text-black'}>
+                        {name}
+                        {userId !== budgetUserId && <span>(invited)</span>}
+                    </p>
                     <p className={isPublic ? "text-green-600" : "text-red-600"}>{isPublic ? "PUBLIC" : "PRIVATE"}</p>
                 </h2>
                 <p className="text-sm text-gray-500">{walletName}</p>
@@ -82,7 +91,7 @@ export const BudgetCard = ({
                     <span>{end}</span>
                 </div>
             </Link>
-            <motion.div
+            {budgetUserId === userId && <motion.div
                 onClick={async (e) => {
                     e.stopPropagation()
                     await handleDeleteWallet()
@@ -98,7 +107,7 @@ export const BudgetCard = ({
                 <motion.span
                     initial={{rotate: -45}}
                     className={'w-3 bg-black h-0.5 block absolute'}></motion.span>
-            </motion.div>
+            </motion.div>}
         </motion.div>
     )
 }

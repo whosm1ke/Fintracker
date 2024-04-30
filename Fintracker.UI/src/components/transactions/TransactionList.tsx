@@ -87,7 +87,7 @@ export function TransactionBlock({
                 {
                     transactions.map(tran =>
                         <TransactionItem key={tran.id + id} transaction={tran} parentCurrencySymbol={walletSymbol}
-                                         conversionRate={currencyRates[tran.currency.symbol] || 1}/>
+                                         conversionRate={currencyRates[tran.currency.symbol] || 1} walletOwnerId={tran.wallet.ownerId}/>
                     )
                 }
             </div>

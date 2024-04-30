@@ -21,10 +21,16 @@ public class
     public async Task<IReadOnlyList<WalletBaseDTO>> Handle(GetWalletsByOwnerIdRequest request,
         CancellationToken cancellationToken)
     {
-        var wallets = await _unitOfWork.WalletRepository.GetByOwnerIdAsync(request.OwnerId);
+        var walletsByOwner = await _unitOfWork.WalletRepository.GetByOwnerIdAsync(request.OwnerId);
+        var walletsByMember = await _unitOfWork.WalletRepository.GetByMemberIdAsync(request.OwnerId);
 
+        var unionWallets = walletsByMember.Union(walletsByOwner);
+        var distintcWallets = unionWallets.DistinctBy(x => x.Id);
+        
         //TODO add validation logic
+        
+        
 
-        return _mapper.Map<List<WalletBaseDTO>>(wallets);
+        return _mapper.Map<List<WalletBaseDTO>>(distintcWallets);
     }
 }

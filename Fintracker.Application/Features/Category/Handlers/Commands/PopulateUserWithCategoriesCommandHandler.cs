@@ -21,13 +21,46 @@ public class PopulateUserWithCategoriesCommandHandler : IRequestHandler<Populate
     {
         string categoriesJson = await File.ReadAllTextAsync(request.PathToFile, cancellationToken);
         var categories = JsonConvert.DeserializeObject<IEnumerable<Domain.Entities.Category>>(categoriesJson);
-        foreach (var category in categories!)
+
+        var existingCategories = await _unitOfWork.CategoryRepository.GetAllAsync(request.UserId);
+
+        if (existingCategories.Count == 0)
         {
-            category.UserId = request.UserId;
-            await _unitOfWork.CategoryRepository.AddAsync(category);
+            foreach (var category in categories!)
+            {
+                category.UserId = request.UserId;
+                await _unitOfWork.CategoryRepository.AddAsync(category);
+            }
         }
+        else
+        {
+            // Отримуємо лише ті категорії, яких немає в existingCategories
+            var categoriesToAdd = categories!.Except(existingCategories, new CategoryEqualityComparer()).ToList();
+
+            foreach (var category in categoriesToAdd)
+            {
+                category.UserId = request.UserId;
+                await _unitOfWork.CategoryRepository.AddAsync(category);
+            }
+        }
+
 
         await _unitOfWork.SaveAsync();
         return Unit.Value;
+    }
+}
+
+public class CategoryEqualityComparer : IEqualityComparer<Domain.Entities.Category>
+{
+    public bool Equals(Domain.Entities.Category? x, Domain.Entities.Category? y)
+    {
+        if (ReferenceEquals(x, y)) return true;
+        if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
+        return x.UserId == y.UserId;
+    }
+
+    public int GetHashCode(Domain.Entities.Category obj)
+    {
+        return obj.UserId.GetHashCode();
     }
 }

@@ -29,7 +29,7 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
 
         var budgetEntity = _mapper.Map<Domain.Entities.Budget>(request.Budget);
         var categories = await _unitOfWork.CategoryRepository
-            .GetAllWithIds(request.Budget.CategoryIds, request.Budget.UserId);
+            .GetAllWithIds(request.Budget.CategoryIds, request.Budget.OwnerId);
 
         foreach (var category in categories)
         {

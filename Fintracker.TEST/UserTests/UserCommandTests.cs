@@ -65,7 +65,7 @@ public class UserCommandTests
             },
             OwnedWallets = new List<WalletPureDTO>(),
             MemberWallets = new List<WalletPureDTO>(),
-            Budgets = new List<BudgetPureDTO>(),
+            OwnedBudgets = new List<BudgetPureDTO>(),
             UserName = "username1"
         };
         var formFileMock = new Mock<IFormFile>();

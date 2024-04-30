@@ -18,7 +18,8 @@ interface WalletFilters {
     categories: Category[];
     minMaxRange: MinMaxRange;
     note: string,
-    selectedWallets: Wallet[]
+    selectedWallets: Wallet[];
+    selectedWallet: Wallet;
 }
 
 interface WalletInfoStore {
@@ -32,6 +33,7 @@ interface WalletInfoStore {
     setEndDate: (date: string) => void;
     setCategories: (categories: Category[]) => void;
     setWallets: (wallets: Wallet[]) => void;
+    setWallet: (wallet: Wallet) => void;
     setMinMaxRange: (minMax: MinMaxRange) => void;
     setNote: (note: string) => void;
 }
@@ -66,7 +68,8 @@ const useWalletInfoStore = createWithEqualityFn<WalletInfoStore>(set => {
             note: "",
             categories: [],
             minMaxRange: {min: 1, max: 1000},
-            selectedWallets: []
+            selectedWallets: [],
+            selectedWallet: {} as Wallet
         },
         setEndDate: (date: string) => set(store => ({filters: {...store.filters, endDate: date}})),
         setStartDate: (date: string) => set(store => ({filters: {...store.filters, startDate: date}})),
@@ -77,6 +80,7 @@ const useWalletInfoStore = createWithEqualityFn<WalletInfoStore>(set => {
             }
         })),
         setWallets: (wallets: Wallet[]) => set(store => ({filters: {...store.filters, selectedWallets: wallets}})),
+        setWallet: (wallet: Wallet) => set(store => ({filters: {...store.filters, selectedWallet: wallet}})),
         setMinMaxRange: (minMax: MinMaxRange) => set(store => ({filters: {...store.filters, minMaxRange: minMax}})),
         setNote: (note: string) => set(store => ({filters: {...store.filters, note: note}})),
     }

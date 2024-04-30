@@ -82,7 +82,3 @@ const MultiSelectDropDownMenu = <T extends { id: string }>({
 };
 
 export default MultiSelectDropDownMenu;
-// checked={(() => {
-//     console.log(selectedItems.includes(item))
-//     return selectedItems.includes(item)
-// })()}

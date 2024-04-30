@@ -1,16 +1,17 @@
 ﻿import {Link} from "react-router-dom";
 import {IoWalletSharp} from "react-icons/io5";
 import useDeleteWallet from "../../hooks/wallet/useDeleteWallet.ts";
-import { motion, useMotionValue, PanInfo} from 'framer-motion';
+import {motion, useMotionValue, PanInfo} from 'framer-motion';
 import {useState} from "react";
 import {Wallet} from "../../entities/Wallet.ts";
 
 interface WalletCardProps {
-   wallet: Wallet
+    wallet: Wallet,
+    userId: string;
 }
 
 
-const WalletCard = ({wallet}: WalletCardProps) => {
+const WalletCard = ({wallet, userId}: WalletCardProps) => {
     const isPositiveBalance = wallet.balance > 0;
     const formatedBalance: string = Math.abs(wallet.balance || 0).toLocaleString();
     const balanceText: string = isPositiveBalance ? `+ ${formatedBalance} ${wallet.currency.symbol}` :
@@ -31,11 +32,12 @@ const WalletCard = ({wallet}: WalletCardProps) => {
         }
     };
 
+
     // @ts-ignore
     const isMobile = navigator.userAgentData.mobile;
 
     return (
-        
+
         <motion.div
             drag={isMobile ? "x" : false}
             dragConstraints={{left: 0, right: 0}}
@@ -44,9 +46,9 @@ const WalletCard = ({wallet}: WalletCardProps) => {
             onMouseEnter={toggleDeleteButton}
             onMouseLeave={toggleDeleteButton}
             className={'relative flex'}
-            style={{ x }}
+            style={{x}}
         >
-           
+
             <Link to={`/wallet/${wallet.id}/trans`}
                   className={'flex flex-col sm:flex-row space-y-3 sm:space-y-0 space-x-0 sm:space-x-3 ' +
                       'p-4 bg-slate-100 rounded-lg shadow w-full'}>
@@ -54,12 +56,15 @@ const WalletCard = ({wallet}: WalletCardProps) => {
                     <IoWalletSharp color={wallet.isBanking ? 'orange' : 'green'} size={'2rem'}/>
                 </span>
                 <div className={'px-4 py-2'}>
-                    <h4 className={'text-lg'}>{wallet.name}</h4>
+                    <h4 className={'text-lg flex items-center gap-3'}>
+                        <span>{wallet.name}</span>
+                        {userId !== wallet.ownerId && <span className={'text-sm'}>(Invited)</span>}
+                    </h4>
                     <span>{wallet.isBanking ? 'Monobank' : 'Cash'}</span>
                     <p className={isPositiveBalance ? "text-green-400 text-xl" : 'text-red-500 text-xl'}>{balanceText}</p>
                 </div>
             </Link>
-            <motion.div
+            {userId === wallet.ownerId && <motion.div
                 onClick={async (e) => {
                     e.stopPropagation()
                     await handleDeleteWallet()
@@ -75,7 +80,7 @@ const WalletCard = ({wallet}: WalletCardProps) => {
                 <motion.span
                     initial={{rotate: -45}}
                     className={'w-3 bg-black h-0.5 block absolute'}></motion.span>
-            </motion.div>
+            </motion.div>}
         </motion.div>
     )
 }

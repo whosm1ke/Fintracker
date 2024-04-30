@@ -12,15 +12,12 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ITokenService _tokenService;
     private readonly IMediator _mediator;
 
-    public AddUserToWalletCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork,
-        ITokenService tokenService, IMediator mediator)
+    public AddUserToWalletCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IMediator mediator)
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
-        _tokenService = tokenService;
         _mediator = mediator;
     }
 
@@ -28,10 +25,19 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
     {
         var response = new BaseCommandResponse();
 
-        var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsers(request.WalletId);
+        var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsersAndBudgets(request.WalletId);
         var user = await _userRepository.GetAsync(request.UserId);
 
         wallet!.Users.Add(user!);
+        
+        foreach (var budget in wallet.Budgets)
+        {
+            if (budget.IsPublic)
+            {
+                user!.MemberBudgets.Add(budget);
+            }
+        }
+        await _unitOfWork.SaveAsync();
          
         await _mediator.Send(new PopulateUserWithCategoriesCommand
         {
@@ -39,7 +45,6 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
             PathToFile = request.PathToCategories!
         });
 
-        await _unitOfWork.SaveAsync();
 
         response.Message = user.Email!;
         response.Success = true;

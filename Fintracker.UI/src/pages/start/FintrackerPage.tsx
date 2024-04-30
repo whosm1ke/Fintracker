@@ -37,7 +37,7 @@ export default function FintrackerPage() {
                 </div>
                 <div className={'grid gap-x-10 gap-y-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}>
                     {wallets.map((wallet, i) =>
-                        <WalletCard wallet={wallet} key={wallet.id ?? i}/>)}
+                        <WalletCard wallet={wallet} key={wallet.id ?? i} userId={userId!}/>)}
                 </div>
             </section>
             <section className={'space-y-5 mt-10'}>

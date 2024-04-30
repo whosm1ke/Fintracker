@@ -38,7 +38,7 @@ public class UserRequestTests
             Id = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
             Email = "user1@gmail.com",
             OwnedWallets = new List<WalletPureDTO>(),
-            Budgets = new List<BudgetPureDTO>(),
+            OwnedBudgets = new List<BudgetPureDTO>(),
             MemberWallets = new List<WalletPureDTO>(),
             UserName = "username1"
         };
