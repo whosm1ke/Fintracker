@@ -9,6 +9,7 @@ import TransactionDateFilter from "../../components/transactions/TransactionDate
 import TransactionsOtherFilters from "../../components/transactions/TransactionsOtherFilters.tsx";
 import TransactionOverviewList from "../../components/transactions/TransactionOverviewList.tsx";
 
+
 export default function WalletTransactionsPage() {
     const {walletId} = useParams();
     const userId = useUserStore(x => x.getUserId());
@@ -19,7 +20,6 @@ export default function WalletTransactionsPage() {
     if (!transactions || !walletResponse || !walletResponse.response) return <Spinner/>
     const wallet = walletResponse.response;
     if (wallet.ownerId != userId && !wallet.users.find(u => u.id === userId)) return <Navigate to={'../../dashboard'}/>
-
     return (
         <div className={'container flex flex-col gap-y-5 mx-auto p-4'}>
             <div className={'flex flex-col sm:flex-row justify-between items-center gap-5'}>
@@ -28,8 +28,8 @@ export default function WalletTransactionsPage() {
                                             walletCurrency={wallet.currency} walletOwnerId={wallet.ownerId}/>}
                 <TransactionDateFilter/>
             </div>
-            <TransactionsOtherFilters transactions={transactions} wallet={wallet}/>
-            <TransactionOverviewList walletCurrency={wallet.currency.symbol} balance={wallet.balance}/>
+            <TransactionsOtherFilters transactions={transactions}/>
+            <TransactionOverviewList walletCurrency={wallet.currency.symbol} balance={wallet.balance} transactions={transactions}/>
             <div className={'mt-4'}>
                 {wallet.transactions.length !== 0 &&
                     <TransactionList transactions={transactions} walletSymbol={wallet.currency.symbol}/>}

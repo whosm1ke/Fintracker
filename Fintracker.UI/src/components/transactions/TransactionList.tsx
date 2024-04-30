@@ -1,11 +1,10 @@
-﻿import {useEffect, useId} from "react";
+﻿import {useId} from "react";
 import {Transaction} from "../../entities/Transaction";
 import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAll";
 import Spinner from "../other/Spinner.tsx";
 import {TransactionItem} from "./TransactionItem.tsx";
 import useTransactionQueryStore from "../../stores/transactionQueryStore.ts";
 import {
-    calcExpenseAndIncome,
     calculateTotalExpense,
     filterTransactions,
     getCurrencyRates,
@@ -19,10 +18,7 @@ interface TransactionListProps {
     walletSymbol: string;
 }
 export default function TransactionList({transactions, walletSymbol}: TransactionListProps) {
-
-    const [setExpense, setIncome, setTotalChange] = useTransactionQueryStore(x => [
-        x.setExpenseForPeriod, x.setIncomeForPeriod, x.setChangeForPeriod
-    ])
+    
     
     
     const filters = useTransactionQueryStore(x => x.filters);
@@ -33,14 +29,6 @@ export default function TransactionList({transactions, walletSymbol}: Transactio
     const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
     const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
 
-    useEffect(() => {
-        const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
-
-        const expAndInc = calcExpenseAndIncome(filteredTransactions, currencyRates);
-        setExpense(expAndInc.expense);
-        setIncome(expAndInc.income);
-        setTotalChange(expAndInc.expense + expAndInc.income)
-    }, [filteredTransactions])
     
     if (!currencyRates) return <Spinner/>
 

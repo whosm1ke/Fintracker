@@ -6,7 +6,6 @@ import { Category } from "../../entities/Category.ts";
 const useCategories = (userId: string) => {
 const apiClient = new ApiClient<Category[]>(`category/user/${userId}`)
     const query = useCategoryQueryStore(x => x.query);
-console.log("category query: ", query)
     return useQuery({
         queryKey: ["categories","user", userId],
         queryFn: async () => await apiClient.getAll({

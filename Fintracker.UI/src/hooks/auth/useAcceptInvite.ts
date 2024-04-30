@@ -1,4 +1,5 @@
 ﻿import AcceptInvite from "../../models/AcceptInvite.ts";
+import { BaseCommandResponse } from "../../serverResponses/responses.ts";
 import ApiClient from "../../services/ApiClient.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 

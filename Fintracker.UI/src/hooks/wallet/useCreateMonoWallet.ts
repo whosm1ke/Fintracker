@@ -2,6 +2,7 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {Wallet} from "../../entities/Wallet.ts";
 import { MonobankConfiguration } from "../../entities/MonobankUserInfo.ts";
+import ClientWrapper, { CreateCommandResponse } from "../../serverResponses/responses.ts";
 
 export interface MonoWalletToken {
     xToken: string

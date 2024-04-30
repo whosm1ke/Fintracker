@@ -29,7 +29,6 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
     const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Transaction>();
     const transactionMutation = useCreateTransaction();
     const {data: categories} = useCategories(walletOwnerId);
-    console.log("categories: ", categories)
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(walletCurrency);
     const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined)

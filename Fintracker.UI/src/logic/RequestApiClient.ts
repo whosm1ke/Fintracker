@@ -1,4 +1,5 @@
 ﻿import {AxiosRequestConfig} from "axios";
+import ClientWrapper from "../serverResponses/responses";
 
 export interface RequestApiClient<TResponse> {
     getById:(id: string) => Promise<ClientWrapper<TResponse>>;

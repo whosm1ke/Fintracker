@@ -42,6 +42,7 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
 
 
         await UpdateBudget(budget, request.Budget);
+        await UpdateBudgetAccessibility(budget, request.Budget);
 
         _unitOfWork.BudgetRepository.Update(budget);
         await _unitOfWork.SaveAsync();
@@ -58,6 +59,31 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         return response;
     }
 
+    private async Task UpdateBudgetAccessibility(Domain.Entities.Budget budget, UpdateBudgetDTO newBudget)
+    {
+        if (newBudget.IsPublic && !budget.IsPublic)
+        {
+            var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsersAndBudgets(budget.WalletId);
+            foreach (var walletUser in wallet.Users)
+            {
+                walletUser.MemberBudgets.Add(budget);
+            }
+
+            budget.IsPublic = newBudget.IsPublic;
+        }
+
+        if (!newBudget.IsPublic && budget.IsPublic)
+        {
+            var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsersAndBudgets(budget.WalletId);
+            foreach (var walletUser in wallet.Users)
+            {
+                walletUser.MemberBudgets.Remove(budget);
+            }
+
+            budget.IsPublic = newBudget.IsPublic;
+        }
+    }
+
     private async Task UpdateBudget(Domain.Entities.Budget oldBudget, UpdateBudgetDTO newBudget)
     {
         oldBudget.Name = newBudget.Name;
@@ -66,8 +92,8 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         oldBudget.Categories = new HashSet<Domain.Entities.Category>();
         oldBudget.StartDate = newBudget.StartDate;
         oldBudget.EndDate = newBudget.EndDate;
-        
-        
+
+
         var newStartDate = newBudget.StartDate;
         var newEndDate = newBudget.EndDate;
         var newCurrency = await _unitOfWork.CurrencyRepository.GetAsync(newBudget.CurrencyId);
@@ -89,7 +115,6 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         var transactionCurrencySymbols = filteredTransactions.Select(x => x.Currency.Symbol).ToList();
         var transactionAmounts = filteredTransactions.Select(x => x.Amount).ToList();
 
-        
 
         decimal totalSpent = 0;
         if (oldBudget.CurrencyId != newBudget.CurrencyId)

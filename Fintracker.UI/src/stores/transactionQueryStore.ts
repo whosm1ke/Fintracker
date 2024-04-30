@@ -29,11 +29,6 @@ export interface TransactionFilters {
     note: string
 }
 
-export interface TransactionOverview {
-    changeForPeriod: number;
-    expenseForPeriod: number;
-    incomeForPeriod: number
-}
 
 
 interface TransactionQueryStore {
@@ -51,11 +46,6 @@ interface TransactionQueryStore {
     setUsers: (users: User[]) => void;
     setMinMaxRange: (minMax: MinMaxRange) => void;
     setNote: (note: string) => void;
-    
-    overview: TransactionOverview;
-    setChangeForPeriod: (num: number) => void;
-    setExpenseForPeriod: (num: number) => void;
-    setIncomeForPeriod: (num: number) => void;
     
 }
 
@@ -106,15 +96,6 @@ const useTransactionQueryStore = createWithEqualityFn<TransactionQueryStore>((se
         setUsers: (users: User[]) => set(store => ({filters: {...store.filters, users: users}})),
         setMinMaxRange: (minMax: MinMaxRange) => set(store => ({filters: {...store.filters, minMaxRange: minMax}})),
         setNote: (note: string) => set(store => ({filters: {...store.filters, note: note}})),
-        
-        overview: {
-            changeForPeriod: 0,
-            expenseForPeriod: 0,
-            incomeForPeriod: 0
-        },
-        setIncomeForPeriod: (num: number) => set(store => ({overview: {...store.overview, incomeForPeriod: num}})),
-        setExpenseForPeriod: (num: number) => set(store => ({overview: {...store.overview, expenseForPeriod: num}})),
-        setChangeForPeriod: (num: number) => set(store => ({overview: {...store.overview, changeForPeriod: num}})),
     }
 }, shallow);
 

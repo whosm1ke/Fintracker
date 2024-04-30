@@ -53,9 +53,6 @@ export const BudgetCard = ({
             await handleDeleteWallet();
         }
     };
-console.log("userId !== budgetUserId: ", userId !== budgetUserId)
-console.log("userId: ", userId)
-console.log("budgetUserId: ", budgetUserId)
     // @ts-ignore
     const isMobile = navigator.userAgentData.mobile;
     return (

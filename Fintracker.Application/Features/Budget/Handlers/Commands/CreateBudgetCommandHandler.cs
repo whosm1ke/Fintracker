@@ -41,6 +41,7 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
         await PopulateBudgetWithTransactionsAndCalculateBalance(budgetEntity.WalletId, budgetEntity.StartDate,
             budgetEntity.EndDate, budgetEntity, budgetCurrency!.Symbol, request.Budget.CategoryIds);
 
+        await AddBudgetToMemberUsersIfPublic(budgetEntity);
     
         await _unitOfWork.BudgetRepository.AddAsync(budgetEntity);
 
@@ -54,6 +55,17 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
 
 
         return response;
+    }
+
+    private async Task AddBudgetToMemberUsersIfPublic(Domain.Entities.Budget budget)
+    {
+        if (!budget.IsPublic) return;
+
+        var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsersAndBudgets(budget.WalletId);
+        foreach (var walletUser in wallet.Users)
+        {
+            walletUser.MemberBudgets.Add(budget);
+        }
     }
 
     private async Task PopulateBudgetWithTransactionsAndCalculateBalance(Guid walletId, DateTime budgetStart, DateTime budgetEnd, Domain.Entities.Budget budget,

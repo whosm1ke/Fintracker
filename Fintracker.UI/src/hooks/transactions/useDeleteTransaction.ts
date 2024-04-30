@@ -1,4 +1,6 @@
 ﻿import {Transaction} from "../../entities/Transaction.ts";
+import { DeleteCommandResponse } from "../../serverResponses/responses.ts";
+import ClientWrapper from "../../serverResponses/responses.ts";
 import ApiClient from "../../services/ApiClient.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 

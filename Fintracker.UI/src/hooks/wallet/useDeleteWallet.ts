@@ -1,4 +1,6 @@
 ﻿import {Wallet} from "../../entities/Wallet";
+import ClientWrapper from "../../serverResponses/responses";
+import { DeleteCommandResponse } from "../../serverResponses/responses";
 import ApiClient from "../../services/ApiClient";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 

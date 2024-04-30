@@ -68,7 +68,7 @@ export function TransactionItem({transaction, conversionRate, parentCurrencySymb
                         </p>
                         {transaction.currency.symbol !== parentCurrencySymbol &&
                             <p className={`text-gray-400 font-bold text-sm`}>
-                                {convertedAmount > 0 ? "-" : ""}
+                                {transaction.category.type === CategoryType.EXPENSE  ? "-" : ""}
                                 {convertedAmount.toFixed(2)} {parentCurrencySymbol}
                             </p>}
                     </div>

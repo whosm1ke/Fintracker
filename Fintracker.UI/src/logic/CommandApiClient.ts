@@ -2,9 +2,15 @@
 import {LoginResponse, LoginSchema} from "../models/LoginSchema.ts";
 import {Wallet} from "../entities/Wallet.ts";
 import {MonoWalletToken} from "../hooks/wallet/useCreateMonoWallet.ts";
-import { MonobankConfiguration, MonobankUserInfo } from "../entities/MonobankUserInfo.ts";
-import { ConvertCurrency } from "../entities/Currency.ts";
+import {MonobankConfiguration, MonobankUserInfo} from "../entities/MonobankUserInfo.ts";
+import {ConvertCurrency} from "../entities/Currency.ts";
 import AcceptInvite from "../models/AcceptInvite.ts";
+import ClientWrapper, {
+    BaseCommandResponse,
+    CreateCommandResponse,
+    DeleteCommandResponse,
+    UpdateCommandResponse
+} from "../serverResponses/responses.ts";
 
 export interface CommandApiClient<TModel, TResponse> {
     create: (newEntity: TModel) => Promise<ClientWrapper<CreateCommandResponse<TResponse>>>;
@@ -32,7 +38,7 @@ type ConvertListProps = {
 }
 
 export interface ConvertClient {
-    convert: (from: string, to: string, amount: number) => Promise<ConvertCurrency | null>; 
-    convertAll: (data: ConvertListProps) => Promise<ConvertCurrency[] | null>; 
+    convert: (from: string, to: string, amount: number) => Promise<ConvertCurrency | null>;
+    convertAll: (data: ConvertListProps) => Promise<ConvertCurrency[] | null>;
 }
 

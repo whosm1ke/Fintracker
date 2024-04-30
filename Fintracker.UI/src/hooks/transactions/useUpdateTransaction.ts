@@ -3,6 +3,7 @@ import {Transaction} from "../../entities/Transaction.ts";
 import ApiClient from "../../services/ApiClient.ts";
 import useTransactionQueryStore from "../../stores/transactionQueryStore.ts";
 import {Budget} from "../../entities/Budget.ts";
+import ClientWrapper, { UpdateCommandResponse } from "../../serverResponses/responses.ts";
 
 //TODO Create UpdateTransactionDTO
 

@@ -41,6 +41,9 @@ public class DeleteBudgetCommandHandler : IRequestHandler<DeleteBudgetCommand, D
             });
         
         var budgetBaseDto = _mapper.Map<BudgetBaseDTO>(budget);
+
+        await DeleteBudgetFromMemberUsersIfPublic(budget);
+        
         _unitOfWork.BudgetRepository.Delete(budget);
 
         response.Success = true;
@@ -52,4 +55,16 @@ public class DeleteBudgetCommandHandler : IRequestHandler<DeleteBudgetCommand, D
 
         return response;
     }
+    
+    private async Task DeleteBudgetFromMemberUsersIfPublic(Domain.Entities.Budget budget)
+    {
+        if (!budget.IsPublic) return;
+
+        var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsersAndBudgets(budget.WalletId);
+        foreach (var walletUser in wallet.Users)
+        {
+            walletUser.MemberBudgets.Remove(budget);
+        }
+    }
 }
+

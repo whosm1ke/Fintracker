@@ -66,7 +66,6 @@ export default function WalletGeneralSettingsPage() {
 
     const handleToggleUser = (user: User) => {
         if (selectedUsers?.includes(user)) {
-            console.log("Includes")
             setUserIdsToDelete(prev => [...prev, user.id])
             setSelectedUsers(prev => prev?.filter(c => c.id !== user.id));
         } else {

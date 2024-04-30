@@ -1,6 +1,8 @@
 ﻿import {useMutation, useQueryClient} from "@tanstack/react-query";
 import ApiClient from "../../services/ApiClient.ts";
 import {Wallet} from "../../entities/Wallet.ts";
+import { CreateCommandResponse } from "../../serverResponses/responses.ts";
+import ClientWrapper from "../../serverResponses/responses.ts";
 //TODO Create CreateWalletDTO
 const apiClient = new ApiClient<Wallet, Wallet>('wallet')
 

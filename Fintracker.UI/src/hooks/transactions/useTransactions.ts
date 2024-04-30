@@ -19,7 +19,7 @@ const useTransactions = (walletId: string) => {
                 endDate: query.endDate
             }
         }),
-        placeholderData: (prevData) => prevData
+        // placeholderData: (prevData) => prevData
     })
 }
 

@@ -21,13 +21,12 @@ export default function BudgetDetailsPage() {
     const {data: budgetResponse, isLoading} = useBudget(budgetId!);
     const currenctUserId = useUserStore(x => x.getUserId());
 
+    
+
     if (!budgetResponse || !budgetResponse.response || isLoading) return <Spinner/>
     const budget = budgetResponse.response;
-    console.log("Budget owner id: ", budget.ownerId)
-    console.log("currenctUserId: ", currenctUserId)
-    console.log("budget.members.find(u => u.id === currenctUserId): ", budget.members.find(u => u.id === currenctUserId))
-    console.log("budget member: ", budget.members)
-    if (budget.ownerId != currenctUserId && !budget.members.find(u => u.id === currenctUserId)) return <Navigate to={'../../dashboard'}/>
+    if (budget.ownerId != currenctUserId && !budget.members.find(u => u.id === currenctUserId)) return <Navigate
+        to={'../../dashboard'}/>
 
     const start = dateToString(new Date(budget.startDate));
     const end = dateToString(new Date(budget.endDate));
@@ -81,7 +80,8 @@ export default function BudgetDetailsPage() {
             </div>
             {budget.transactions.length !== 0 && <BudgetTransactionItemList transactions={budget.transactions}
                                                                             budgetCurrencySymbol={budget.currency.symbol}
-                                                                            budgetId={budgetId!} budgetOwnerId={budget.ownerId}/>}
+                                                                            budgetId={budgetId!}
+                                                                            budgetOwnerId={budget.ownerId}/>}
         </div>
     )
 }

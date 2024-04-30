@@ -11,18 +11,17 @@ import {
     getMinMaxRange,
     getUniqueCategories, getUniqueUsers
 } from "../../helpers/globalHelper.ts";
-import {Wallet} from "../../entities/Wallet.ts";
 
 interface TransactionsOtherFiltersProps {
     transactions: Transaction[];
-    wallet: Wallet;
 }
 
-export default function TransactionsOtherFilters({transactions, wallet}: TransactionsOtherFiltersProps) {
+export default function TransactionsOtherFilters({transactions}: TransactionsOtherFiltersProps) {
     const [filterCategories, filterUsers, filterMinMax, filterNote, setFilterCategories, setFilterUsers, setFilterMinMax, setFilterNote
     ] = useTransactionQueryStore(x =>
         [x.filters.categories,
             x.filters.users, x.filters.minMaxRange, x.filters.note, x.setCategories, x.setUsers, x.setMinMaxRange, x.setNote]);
+
 
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(true);
     const initialCategories = useRef<Category[]>([]);
@@ -37,12 +36,12 @@ export default function TransactionsOtherFilters({transactions, wallet}: Transac
             initialCategories.current = uniqueCategories;
             initialUsers.current = uniqueUsers;
             initialMinMax.current = minMaxRange;
-
+            
             setFilterCategories(uniqueCategories);
             setFilterUsers(uniqueUsers)
             setFilterMinMax(minMaxRange);
         }
-    }, [transactions,wallet]);
+    }, [transactions]);
 
 //Getting default filters
     const minMaxRange = useMemo(() => getMinMaxRange(transactions || []), [transactions]);

@@ -2,6 +2,7 @@
 import {useQuery} from "@tanstack/react-query";
 import ms from "ms";
 import { User } from "../../entities/User.ts";
+import ClientWrapper from "../../serverResponses/responses.ts";
 
 const apiClient = new ApiClient<User>('user');
 

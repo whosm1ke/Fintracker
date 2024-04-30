@@ -1,6 +1,7 @@
 ﻿import {useMutation, useQueryClient} from "@tanstack/react-query";
 import ApiClient from "../../services/ApiClient.ts";
 import {Budget} from "../../entities/Budget.ts";
+import ClientWrapper, { DeleteCommandResponse } from "../../serverResponses/responses.ts";
 
 type Context = {
     prevBudgets: Budget[]

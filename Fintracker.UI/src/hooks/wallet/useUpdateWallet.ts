@@ -5,6 +5,7 @@ import {Transaction} from "../../entities/Transaction.ts";
 import {Currency} from "../../entities/Currency.ts";
 import {User} from "../../entities/User.ts";
 import {Budget} from "../../entities/Budget.ts";
+import ClientWrapper, { UpdateCommandResponse } from "../../serverResponses/responses.ts";
 //TODO Create UpdateWalletDTO
 export type UpdateWalletDTO = {
     name: string;
@@ -34,9 +35,7 @@ const useUpdateWallet = () => {
 
             const prevData = queryClient.getQueryData<Wallet>(['wallet', newWallet.id]);
 
-            console.log("prevData: ", prevData)
             queryClient.setQueryData(['wallet', newWallet.id], (oldQueryData: ClientWrapper<Wallet>) => {
-                console.log("oldQueryData: ", oldQueryData)
                 newWallet.transactions = oldQueryData.response!.transactions
                 newWallet.currency = oldQueryData.response!.currency
                 newWallet.users = oldQueryData.response!.users

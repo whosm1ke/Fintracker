@@ -1,6 +1,7 @@
 ﻿import ApiClient from "../../services/ApiClient.ts";
 import {Budget} from "../../entities/Budget.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
+import ClientWrapper, { CreateCommandResponse } from "../../serverResponses/responses.ts";
 
 //TODO Create CreateBudgetDTO
 const apiClient = new ApiClient<Budget, Budget>('budget')

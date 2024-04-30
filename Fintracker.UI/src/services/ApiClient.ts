@@ -10,6 +10,7 @@ import {MonoWalletToken} from "../hooks/wallet/useCreateMonoWallet.ts";
 import {ConvertCurrency} from "../entities/Currency.ts";
 import {MonobankConfiguration, MonobankUserInfo} from "../entities/MonobankUserInfo.ts";
 import AcceptInvite from "../models/AcceptInvite.ts";
+import ClientWrapper, {BaseCommandResponse, CreateCommandResponse, DeleteCommandResponse, UpdateCommandResponse } from "../serverResponses/responses.ts";
 
 
 export default class ApiClient<TResponse, TModel = undefined> implements CommandApiClient<TModel, TResponse>,

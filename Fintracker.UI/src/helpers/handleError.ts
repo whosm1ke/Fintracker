@@ -1,5 +1,6 @@
 ﻿import axios from "axios";
 import {FieldValues, Path, UseFormSetError} from "react-hook-form";
+import { BaseResponse, UnauthorizedResponse, NotFoundResponse } from "../serverResponses/responses";
 
 export const handleError = (error: any): BaseResponse | NotFoundResponse | UnauthorizedResponse | Error => {
     if (axios.isAxiosError(error)) {
