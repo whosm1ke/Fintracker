@@ -1,4 +1,4 @@
-﻿import  {useState, useRef, FC, useEffect} from 'react';
+﻿import {useState, useRef, FC, useEffect} from 'react';
 import {FaChevronDown} from "react-icons/fa6";
 
 interface DropdownProps<T extends { id: string }> {

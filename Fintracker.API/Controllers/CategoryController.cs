@@ -90,7 +90,6 @@ public class CategoryController : ControllerBase
         return Ok(response);
     }
     
-
     [HttpPost]
     [ProducesResponseType(typeof(CreateCommandResponse<CategoryDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
@@ -106,6 +105,7 @@ public class CategoryController : ControllerBase
         return Ok(response);
     }
 
+//TODO Add logic for updating categories. Wallets, budgets and transactions should be changed
     [HttpPut]
     [ProducesResponseType(typeof(UpdateCommandResponse<CategoryDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
@@ -122,6 +122,7 @@ public class CategoryController : ControllerBase
         return Ok(response);
     }
 
+//TODO Add logic for deleting categories. Wallets, budgets and transactions should be changed
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(DeleteCommandResponse<CategoryDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
