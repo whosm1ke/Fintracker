@@ -36,7 +36,7 @@ public class WalletController : BaseController
         return Ok(response);
     }
 
-    [HttpGet("owner/{ownerId:guid}")]
+    [HttpGet("user/{ownerId:guid}")]
     [ProducesResponseType(typeof(List<WalletBaseDTO>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<WalletBaseDTO>>> Get(Guid ownerId,[FromQuery] QueryParams? query)

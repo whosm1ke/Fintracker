@@ -118,19 +118,6 @@ public class TransactionController : BaseController
         return Ok(response);
     }
 
-    [HttpGet("user/{userId:guid}/all")]
-    [ProducesResponseType(typeof(List<TransactionBaseDTO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<TransactionBaseDTO>>> GetAllForUser(Guid userId)
-    {
-        var response = await _mediator.Send(new GetTransactionsRequest
-        {
-            UserId = userId
-        });
-
-        return Ok(response);
-    }
-
 
     [HttpPost]
     [ProducesResponseType(typeof(CreateCommandResponse<TransactionBaseDTO>), StatusCodes.Status201Created)]

@@ -3,7 +3,7 @@ import ApiClient from "../../services/ApiClient.ts";
 import {Wallet} from "../../entities/Wallet.ts";
 
 const useWallets = (ownerId: string) => {
-    const apiClient = new ApiClient<Wallet[]>(`wallet/owner/${ownerId}`);
+    const apiClient = new ApiClient<Wallet[]>(`wallet/user/${ownerId}`);
     return useQuery({
         queryKey: ['wallets'],
         queryFn: async () => apiClient.getAll(),
