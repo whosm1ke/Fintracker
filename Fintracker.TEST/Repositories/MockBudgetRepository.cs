@@ -169,15 +169,10 @@ public class MockBudgetRepository
         mock.Setup(x => x.GetBudgetByIdAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id)); });
 
-        mock.Setup(x => x.GetByBudgetOwnerIdAsync(It.IsAny<Guid>(),It.IsAny<bool>()))
-            .Returns((Guid id, bool isPublic) => Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.OwnerId == id).ToList()));
+        mock.Setup(x => x.GetByBudgetsUserIdAsync(It.IsAny<Guid>(), It.IsAny<bool>()))
+            .Returns((Guid id, bool isPublic) =>
+                Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.OwnerId == id).ToList()));
 
-        mock.Setup(x => x.GetByOwnerIdSortedAsync(It.IsAny<Guid>(), It.IsAny<BudgetQueryParams>()))
-            .Returns((Guid id, BudgetQueryParams query) => Task.FromResult((IReadOnlyList<Budget>)budgets
-                .Where(x => x.OwnerId == id)
-                .AsQueryable()
-                .OrderBy(query.SortBy)
-                .ToList()));
 
         mock.Setup(x => x.GetByWalletIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>()))
             .Returns((Guid id, Guid userId, bool isPublic) =>
@@ -190,11 +185,13 @@ public class MockBudgetRepository
                 .OrderBy(query.SortBy)
                 .ToList()));
 
-        mock.Setup(x => x.GetBudgetsByCategoryId(It.IsAny<Guid>()))
-            .Returns((Guid catId) =>
+        mock.Setup(x => x.GetBudgetsByCategoryId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .Returns((Guid catId, Guid userId) =>
             {
                 IReadOnlyList<Budget> budgetsToReturn =
-                    budgets.Where(b => b.Categories.Any(c => c.Id == catId)).ToList();
+                    budgets.Where(b =>
+                        b.Categories.Any(c => c.Id == catId) && b.OwnerId == userId ||
+                        b.Members.Any(m => m.Id == userId)).ToList();
 
                 return Task.FromResult(budgetsToReturn);
             });

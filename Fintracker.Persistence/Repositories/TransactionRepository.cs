@@ -14,10 +14,10 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
     {
         _db = context;
     }
-
-    public async Task<Transaction?> GetTransactionAsync(Guid id)
+    
+    private  IQueryable<Transaction> GetTransactionQuery()
     {
-        return await _db.Transactions
+        return _db.Transactions
             .Include(x => x.Budgets)
             .ThenInclude(x => x.Currency)
             .Include(x => x.Budgets)
@@ -28,25 +28,19 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
             .ThenInclude(x => x.UserDetails)
             .Include(x => x.Wallet)
             .ThenInclude(x => x.Currency)
-            .AsSplitQuery()
+            .AsSplitQuery();
+    }
+
+    public async Task<Transaction?> GetTransactionAsync(Guid id)
+    {
+        return await GetTransactionQuery()
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
 
     public async Task<Transaction?> GetTransactionWithWalletAsync(Guid id)
     {
-        return await _db.Transactions
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Categories)
-            .Include(x => x.Category)
-            .Include(x => x.Currency)
-            .Include(x => x.User)
-            .ThenInclude(x => x.UserDetails)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Currency)
-            .AsSplitQuery()
+        return await GetTransactionQuery()
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
@@ -54,86 +48,46 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
 
     public async Task<IReadOnlyList<Transaction>> GetAllAsync(Guid userId)
     {
-        return await _db.Transactions
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Categories)
-            .Include(x => x.Category)
-            .Include(x => x.Currency)
-            .Include(x => x.User)
-            .ThenInclude(x => x.UserDetails)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Currency)
-            .AsSplitQuery()
+        return await GetTransactionQuery()
             .Where(t => t.UserId == userId)
             .ToListAsync();
     }
 
     public async Task<IReadOnlyList<Transaction>> GetByUserIdAsync(Guid userId)
     {
-        return await _db.Transactions
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Categories)
-            .Include(x => x.Category)
-            .Include(x => x.Currency)
-            .Include(x => x.User)
-            .ThenInclude(x => x.UserDetails)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Currency)
-            .AsSplitQuery()
+        return await GetTransactionQuery()
             .Where(x => x.UserId == userId)
             .ToListAsync();
     }
 
     public async Task<IReadOnlyList<Transaction>> GetByWalletIdAsync(Guid walletId)
     {
-        return await _db.Transactions
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Categories)
-            .Include(x => x.Category)
-            .Include(x => x.Currency)
-            .Include(x => x.User)
-            .ThenInclude(x => x.UserDetails)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Currency)
-            .AsSplitQuery()
+        return await GetTransactionQuery()
             .Where(x => x.WalletId == walletId)
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByCategoryIdAsync(Guid categoryId)
+ 
+
+    public async Task<IReadOnlyList<Transaction>> GetByCategoryIdAsync(Guid categoryId, Guid userId)
     {
-        return await _db.Transactions
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Categories)
-            .Include(x => x.Category)
-            .Include(x => x.Currency)
-            .Include(x => x.User)
-            .ThenInclude(x => x.UserDetails)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Currency)
-            .AsSplitQuery()
-            .Where(x => x.CategoryId == categoryId)
+        return await GetTransactionQuery()
+            .Where(t => t.CategoryId == categoryId && t.UserId == userId)
             .ToListAsync();
     }
+    
 
     public async Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(Guid userId,
         TransactionQueryParams queryParams)
     {
-        return await _db.Transactions.GetByUserIdSortedAsync(userId, queryParams);
+        
+        return await GetTransactionQuery().GetByUserIdSortedAsync(userId, queryParams);
     }
 
     public async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(Guid walletId,
         TransactionQueryParams queryParams)
     {
-        return await _db.Transactions.GetByWalletIdSortedAsync(walletId, queryParams);
+        return await GetTransactionQuery().GetByWalletIdSortedAsync(walletId, queryParams);
     }
 
     public async Task<IReadOnlyList<Transaction>> GetByWalletIdInRangeAsync(Guid walletId, DateTime budgetStart,
@@ -150,26 +104,9 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId,
+    public async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(Guid categoryId, Guid userId,
         TransactionQueryParams queryParams)
     {
-        return await _db.Transactions.GetByCategoryIdSortedAsync(categoryId, queryParams);
-    }
-
-
-    public new async Task<IReadOnlyList<Transaction?>> GetAllAsync()
-    {
-        return await _db.Transactions
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Categories)
-            .Include(x => x.Category)
-            .Include(x => x.Currency)
-            .Include(x => x.User)
-            .ThenInclude(x => x.UserDetails)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Currency)
-            .ToListAsync();
+        return await GetTransactionQuery().GetByCategoryIdSortedAsync(categoryId, userId, queryParams);
     }
 }

@@ -30,8 +30,8 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
             {
                 ErrorMessage = $"Attempt to delete non-existing item by id [{request.Id}]",
                 PropertyName = nameof(request.Id)
-            },nameof(Domain.Entities.Category));
-        
+            }, nameof(Domain.Entities.Category));
+
         if (request.UserId != category.UserId)
         {
             throw new ForbiddenException(new ExceptionDetails
@@ -40,6 +40,14 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
                 PropertyName = nameof(Domain.Entities.Category)
             });
         }
+
+        Domain.Entities.Category? categoryToReplace = null;
+        if (request.ShouldReplace)
+            categoryToReplace = await _unitOfWork.CategoryRepository.GetAsync(request.CategoryToReplaceId);
+
+        await UpdateTransactionns(category, categoryToReplace);
+        await UpdateWallets(category, categoryToReplace);
+        await UpdateBudgets(category, categoryToReplace);
 
         var deletedObj = _mapper.Map<CategoryDTO>(category);
         _unitOfWork.CategoryRepository.Delete(category);
@@ -51,5 +59,20 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
         response.Id = deletedObj.Id;
 
         return response;
+    }
+
+    private async Task UpdateBudgets(Domain.Entities.Category category, Domain.Entities.Category? categoryToReplace)
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task UpdateWallets(Domain.Entities.Category category, Domain.Entities.Category? categoryToReplace)
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task UpdateTransactionns(Domain.Entities.Category category, Domain.Entities.Category? categoryToReplace)
+    {
+        throw new NotImplementedException();
     }
 }

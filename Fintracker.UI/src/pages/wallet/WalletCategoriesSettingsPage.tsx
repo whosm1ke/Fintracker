@@ -42,7 +42,7 @@ export default function WalletCategoriesSettingsPage() {
         image: "MdHub",
         type: CategoryType.EXPENSE,
         id: ""
-    })
+    } as Category)
     const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
 
     const [categooryColorToCreate, setCategoryColorToCreate] = useState<Category>({
@@ -51,7 +51,7 @@ export default function WalletCategoriesSettingsPage() {
         image: "MdBrightness1",
         type: CategoryType.EXPENSE,
         id: ""
-    })
+    } as Category)
 
 
     const [allCategories, setAllCategories] = useState<Category[]>(icons.map((icon, i) => ({
@@ -60,13 +60,12 @@ export default function WalletCategoriesSettingsPage() {
             iconColour: 'gray',
             image: icon,
             id: i.toString()
-        }))
+        } as Category))
     )
     const [isEditing, setIsEditing] = useState(false);
     const {data: categories} = useCategories(userId!);
     const formRef = useRef<HTMLFormElement>(null);
     const nameRef = useRef<HTMLInputElement>(null);
-    const typeRef = useRef<HTMLSelectElement>(null);
     const submitButtonRef = useRef<HTMLButtonElement>(null);
 
     const categoryCreateMutation = useCreateCategory();
@@ -90,7 +89,7 @@ export default function WalletCategoriesSettingsPage() {
         iconColour: color,
         image: 'MdBrightness1',
         id: i.toString()
-    }));
+    } as Category));
 
     const handleSelectedCategory = (cat: Category) => setCategoryToCreate(cat);
     const handleSelectedIconColor = (cat: Category) => {
@@ -112,9 +111,9 @@ export default function WalletCategoriesSettingsPage() {
             image: 'MdHub',
         } as Category)
 
-        if(submitButtonRef.current)
+        if (submitButtonRef.current)
             submitButtonRef.current.innerText = 'Create'
-        
+
         reset()
     }
     const onSubmit: SubmitHandler<Category> = async (model: Category) => {
@@ -175,10 +174,7 @@ export default function WalletCategoriesSettingsPage() {
         if (nameRef.current)
             nameRef.current.value = cat.name
 
-        if (typeRef.current)
-            typeRef.current.value = cat.type.toString()
-        
-        if(submitButtonRef.current)
+        if (submitButtonRef.current)
             submitButtonRef.current.innerText = 'Update'
 
         if (formRef && formRef.current)
@@ -228,7 +224,7 @@ export default function WalletCategoriesSettingsPage() {
                             />
                             {errors.name && <p className={'text-red-400 italic'}>{errors.name.message}</p>}
                         </div>
-                        <div className="sm:col-span-2">
+                        {!isEditing && <div className="sm:col-span-2">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
                                 Category type
                             </label>
@@ -236,7 +232,6 @@ export default function WalletCategoriesSettingsPage() {
                                 {...register("type", {required: "Type for category is required"})}
                                 defaultValue=""
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                ref={typeRef}
                                 onChange={e => setValue("type", +e.target.value)}
                                 id="type">
 
@@ -246,15 +241,14 @@ export default function WalletCategoriesSettingsPage() {
                             </select>
 
                             {errors.type && <p className={'text-red-400 italic'}>{errors.type.message}</p>}
-                        </div>
+                        </div>}
                         <div className={'flex gap-x-2 col-span-2'}>
                             <div className={'w-full bg-green-400 text-white font-semibold text-center rounded-lg mt-5'}>
                                 <button ref={submitButtonRef} type={'submit'} className={'w-full  p-2 '}>Create</button>
                             </div>
                             {isEditing && <div
                                 className={'w-full bg-red-400 text-white font-semibold text-center rounded-lg mt-5'}>
-                                <button type={'submit'} onClick={() => 
-                                {
+                                <button type={'submit'} onClick={() => {
                                     toggleIsEditing()
                                     setDefaultValues()
                                 }}
@@ -302,10 +296,14 @@ interface CategoryBlockProps {
 
 export function CategoryBlock({category}: CategoryBlockProps) {
     const Icon = (Icons as any)[category.image] as IconType;
+    
     return (
         <div className={'flex items-center h-auto w-full'}>
             <Icon color={category.iconColour} className="" size={'2.5rem'}/>
-            <span className="ml-3">{category.name}</span>
+            <p className="ml-3 flex flex-col">
+                <span className={'text-sm font-semibold text-gray-700'}>{category.name}</span>
+                <span className={'text-[14px] text-gray-500'}>{category.transactionCount} transactions</span>
+            </p>
         </div>
     )
 }

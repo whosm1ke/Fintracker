@@ -21,7 +21,7 @@ public class GetBudgetsByUserIdRequestHandler : IRequestHandler<GetBudgetsByUser
         CancellationToken cancellationToken)
     {
         var budgetsByUserId =
-            await _unitOfWork.BudgetRepository.GetByBudgetUserIdAsync(request.UserId, request.IsPublic);
+            await _unitOfWork.BudgetRepository.GetByBudgetsUserIdAsync(request.UserId, request.IsPublic);
 
 
         return _mapper.Map<List<BudgetBaseDTO>>(budgetsByUserId);

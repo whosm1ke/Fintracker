@@ -28,7 +28,6 @@ const apiClient = new ApiClient<Wallet, UpdateWalletDTO>('wallet');
 const useUpdateWallet = () => {
     const queryClient = useQueryClient();
     return useMutation<ClientWrapper<UpdateCommandResponse<Wallet>>, Error, UpdateWalletDTO, Context>({
-        mutationKey: ['wallets'],
         mutationFn: async (model: UpdateWalletDTO) => await apiClient.update(model),
         onMutate: async (newWallet: UpdateWalletDTO) => {
             await queryClient.cancelQueries({queryKey: ['wallet', newWallet.id]});

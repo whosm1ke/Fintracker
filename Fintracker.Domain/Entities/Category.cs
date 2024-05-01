@@ -26,4 +26,6 @@ public class Category : IEntity<Guid>
     public Guid UserId { get; set; }
 
     public bool IsSystemCategory { get; set; }
+
+    public int TransactionCount { get; set; }
 }

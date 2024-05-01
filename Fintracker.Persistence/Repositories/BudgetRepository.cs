@@ -15,9 +15,9 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
         _db = context;
     }
 
-    public async Task<Budget?> GetBudgetByIdAsync(Guid id)
+    private IQueryable<Budget> GetBudgetQuery()
     {
-        return await _db.Budgets
+        return _db.Budgets
             .Include(x => x.Transactions)
             .ThenInclude(x => x.Category)
             .Include(x => x.Transactions)
@@ -36,41 +36,27 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
             .ThenInclude(x => x.UserDetails)
             .Include(b => b.Members)
             .ThenInclude(m => m.UserDetails)
-            .AsSplitQuery()
+            .AsSplitQuery();
+    }
+
+    public async Task<Budget?> GetBudgetByIdAsync(Guid id)
+    {
+        return await GetBudgetQuery()
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }
 
-    public async Task<IReadOnlyList<Budget>> GetBudgetsByCategoryId(Guid categoryId)
+    public async Task<IReadOnlyList<Budget>> GetBudgetsByCategoryId(Guid categoryId, Guid userId)
     {
-        return await _db.Budgets
-            .Include(x => x.Transactions)
-            .ThenInclude(x => x.Category)
-            .Include(x => x.Transactions)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Categories)
-            .Include(x => x.Currency)
+        return await GetBudgetQuery()
             .Where(x => x.Categories
-                .Any(x => x.Id == categoryId))
+                .Any(x => x.Id == categoryId) &&  x.OwnerId == userId || x.Members.Any(m => m.Id == userId) )
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByBudgetOwnerIdAsync(Guid userId, bool? isPublic)
+    public async Task<IReadOnlyList<Budget>> GetByBudgetsUserIdAsync(Guid userId, bool? isPublic)
     {
-        var query = _db.Budgets
-            .Include(x => x.Transactions)
-            .ThenInclude(x => x.Category)
-            .Include(x => x.Transactions)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Categories)
-            .Include(x => x.Currency)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Owner)
-            .Include(x => x.Owner)
-            .ThenInclude(x => x.UserDetails)
-            .AsSplitQuery()
-            .Where(x => x.OwnerId == userId);
-
+        var query = GetBudgetQuery().Where(b => b.OwnerId == userId || b.Members.Any(m => m.Id == userId));
         if (isPublic.HasValue)
         {
             query = query.Where(x => x.IsPublic == isPublic);
@@ -78,79 +64,13 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
 
         return await query.ToListAsync();
     }
-
-    public async Task<IReadOnlyList<Budget>> GetByBudgetUserIdAsync(Guid userId, bool? isPublic)
-    {
-        var user = await _db.Users
-            .Include(user => user.OwnedBudgets)
-            .ThenInclude(b => b.Categories)
-            .Include(user => user.OwnedBudgets)
-            .ThenInclude(b => b.Transactions)
-            .ThenInclude(t => t.Currency)
-            .Include(user => user.OwnedBudgets)
-            .ThenInclude(b => b.Transactions)
-            .ThenInclude(t => t.Category)
-            .Include(user => user.OwnedBudgets)
-            .ThenInclude(b => b.Owner)
-            .ThenInclude(u => u.UserDetails)
-            .Include(user => user.OwnedBudgets)
-            .ThenInclude(b => b.Members)
-            .ThenInclude(u => u.UserDetails)
-            .Include(user => user.OwnedBudgets)
-            .ThenInclude(b => b.Wallet)
-            .Include(user => user.MemberBudgets)
-            .ThenInclude(b => b.Categories)
-            .Include(user => user.MemberBudgets)
-            .ThenInclude(b => b.Transactions)
-            .ThenInclude(t => t.Currency)
-            .Include(user => user.MemberBudgets)
-            .ThenInclude(b => b.Transactions)
-            .ThenInclude(t => t.Category)
-            .Include(user => user.MemberBudgets)
-            .ThenInclude(b => b.Owner)
-            .ThenInclude(u => u.UserDetails)
-            .Include(user => user.MemberBudgets)
-            .ThenInclude(b => b.Members)
-            .ThenInclude(u => u.UserDetails)
-            .Include(user => user.MemberBudgets)
-            .ThenInclude(b => b.Wallet)
-            .FirstOrDefaultAsync(u => u.Id == userId);
-
-        if (user == null)
-        {
-            return new List<Budget>();
-        }
-
-        var ownedBudgets = user.OwnedBudgets.AsQueryable();
-        var memberBudgets = user.MemberBudgets.AsQueryable();
-
-        if (isPublic.HasValue)
-        {
-            ownedBudgets = ownedBudgets.Where(b => b.IsPublic == isPublic.Value);
-            memberBudgets = memberBudgets.Where(b => b.IsPublic == isPublic.Value);
-        }
-
-        var budgets = ownedBudgets.Union(memberBudgets).DistinctBy(b => b.Id);
-
-        return budgets.ToList();
-    }
+    
 
 
     public async Task<IReadOnlyList<Budget>> GetByWalletIdAsync(Guid walletId, Guid userId, bool? isPublic)
     {
-        var query = _db.Budgets
-            .Include(x => x.Transactions)
-            .ThenInclude(x => x.Category)
-            .Include(x => x.Transactions)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Categories)
-            .Include(x => x.Currency)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Owner)
-            .Include(x => x.Owner)
-            .ThenInclude(x => x.UserDetails)
-            .AsSplitQuery()
-            .Where(x => x.WalletId == walletId && x.OwnerId == userId);
+        var query = GetBudgetQuery()
+            .Where(x => x.WalletId == walletId &&  x.OwnerId == userId || x.Members.Any(m => m.Id == userId));
 
         if (isPublic.HasValue)
         {
@@ -159,21 +79,16 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
 
         return await query.ToListAsync();
     }
-
-
-    public async Task<IReadOnlyList<Budget>> GetByOwnerIdSortedAsync(Guid userId, BudgetQueryParams queryParams)
-    {
-        return await _db.Budgets.GetByOwnerIdSortedAsync(userId, queryParams);
-    }
+    
 
     public async Task<IReadOnlyList<Budget>> GetByUserIdSortedAsync(Guid userId, BudgetQueryParams queryParams)
     {
-        return await _db.Users.GetByUserIdSortedAsync(userId, queryParams);
+        return await GetBudgetQuery().GetByUserIdSortedAsync(userId, queryParams);
     }
 
     public async Task<IReadOnlyList<Budget>> GetByWalletIdSortedAsync(Guid walletId, Guid userId,
         BudgetQueryParams queryParams)
     {
-        return await _db.Budgets.GetByWalletIdSortedAsync(walletId, userId, queryParams);
+        return await GetBudgetQuery().GetByWalletIdSortedAsync(walletId, userId, queryParams);
     }
 }

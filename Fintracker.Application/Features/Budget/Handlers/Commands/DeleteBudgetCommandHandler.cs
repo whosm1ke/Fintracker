@@ -60,8 +60,8 @@ public class DeleteBudgetCommandHandler : IRequestHandler<DeleteBudgetCommand, D
     {
         if (!budget.IsPublic) return;
 
-        var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsersAndBudgets(budget.WalletId);
-        foreach (var walletUser in wallet.Users)
+        var wallet = await _unitOfWork.WalletRepository.GetWalletById(budget.WalletId);
+        foreach (var walletUser in wallet!.Users)
         {
             walletUser.MemberBudgets.Remove(budget);
         }

@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fintracker.API.Controllers;
 
-[ApiController]
+
 [Route("api/transaction")]
 [Authorize(Roles = "Admin,User")]
-public class TransactionController : ControllerBase
+public class TransactionController : BaseController
 {
     private readonly IMediator _mediator;
 
@@ -36,21 +36,23 @@ public class TransactionController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("category/{categoryId:guid}")]
+    [HttpGet("category/{categoryId:guid}/user/{userId:guid?}")]
     [ProducesResponseType(typeof(List<TransactionBaseDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByCategoryId(Guid categoryId,
+    public async Task<ActionResult<List<TransactionBaseDTO>>> GetByCategoryId(Guid categoryId, Guid? userId,
         [FromQuery] TransactionQueryParams? query)
     {
         var sortRequest = new GetTransactionsByCategoryIdSortedRequest
         {
             CategoryId = categoryId,
-            Params = query!
+            Params = query!,
+            UserId = userId ?? GetCurrentUserId()
         };
 
         var simpleRequest = new GetTransactionsByCategoryIdRequest
         {
-            CategoryId = categoryId
+            CategoryId = categoryId,
+            UserId = userId ?? GetCurrentUserId()
         };
 
         IReadOnlyList<TransactionBaseDTO> response;

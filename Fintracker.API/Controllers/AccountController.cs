@@ -14,8 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Fintracker.API.Controllers;
 
 [Route("api/account")]
-[ApiController]
-public class AccountController : ControllerBase
+public class AccountController : BaseController
 {
     private readonly IAccountService _accountService;
     private readonly IMediator _mediator;

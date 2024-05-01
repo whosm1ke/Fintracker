@@ -16,7 +16,8 @@ const useCreateBudget = () => {
         mutationFn: async (model: Budget) => await apiClient.create(model),
         onMutate: async (newBudget: Budget) => {
             await queryClient.cancelQueries({queryKey: ['budgets']});
-
+            
+            newBudget.totalSpent = 0;
             const prevData = queryClient.getQueryData<Budget[]>(['budgets']) || [];
             queryClient.setQueryData(['budgets'], (oldQueryData: Budget[]) => [...oldQueryData || [], newBudget]);
             return {previousWallets: prevData};

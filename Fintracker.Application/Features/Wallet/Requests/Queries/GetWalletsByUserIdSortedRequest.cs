@@ -4,8 +4,8 @@ using MediatR;
 
 namespace Fintracker.Application.Features.Wallet.Requests.Queries;
 
-public class GetWalletsByOwnerIdSortedRequest : IRequest<IReadOnlyList<WalletBaseDTO>>
+public class GetWalletsByUserIdSortedRequest : IRequest<IReadOnlyList<WalletBaseDTO>>
 {
-    public Guid OwnerId { get; set; }
+    public Guid UserId { get; set; }
     public QueryParams Params { get; set; } = default!;
 }

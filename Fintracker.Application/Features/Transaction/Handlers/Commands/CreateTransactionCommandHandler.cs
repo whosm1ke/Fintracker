@@ -36,8 +36,9 @@ public class
         await _unitOfWork.TransactionRepository.AddAsync(transaction);
 
         var transCategory = await _unitOfWork.CategoryRepository.GetAsync(request.Transaction.CategoryId);
+        ++transCategory!.TransactionCount;
 
-        await UpdateWallet(transaction.WalletId, transaction.Amount, transCurrency!.Symbol, transCategory!.Type);
+        await UpdateWallet(transaction.WalletId, transaction.Amount, transCurrency!.Symbol, transCategory.Type);
         await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount, transaction.UserId,
             transaction.WalletId, transCurrency.Symbol, transaction, request.Transaction.Date);
 
@@ -56,7 +57,7 @@ public class
     private async Task DecreaseBalanceInBudgets(Guid categoryId, decimal amount, Guid userId, Guid walletId,
         string transactionCurrencySymbol, Domain.Entities.Transaction transaction, DateTime transDate)
     {
-        var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId);
+        var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(categoryId, userId);
         var currencySymbols = budgets.Select(x => x.Currency.Symbol);
 
         var convertedCurrencies =
@@ -78,7 +79,7 @@ public class
     private async Task UpdateWallet(Guid walletId, decimal amount, string transactionCurrencySymbol,
         CategoryType transType)
     {
-        var wallet = await _unitOfWork.WalletRepository.GetWalletWithCurrency(walletId);
+        var wallet = await _unitOfWork.WalletRepository.GetWalletById(walletId);
         ConvertCurrencyDTO? convertedCurrency = null;
         if (wallet!.Currency.Symbol != transactionCurrencySymbol)
             convertedCurrency =

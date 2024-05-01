@@ -12,10 +12,10 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Fintracker.API.Controllers;
 
-[ApiController]
+
 [Route("api/bank")]
 [Authorize(Roles = "Admin, User")]
-public class BankController : ControllerBase
+public class BankController : BaseController
 {
     private readonly IMediator _mediator;
     private readonly IMemoryCache _cache;

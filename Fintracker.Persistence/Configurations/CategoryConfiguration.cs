@@ -20,6 +20,10 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasMaxLength(CategoryConstraints.MaximumNameLength)
             .IsRequired();
 
+        builder.Property(x => x.TransactionCount)
+            .HasDefaultValue(0)
+            .IsRequired();
+
         builder.Property(x => x.Type)
             .IsRequired()
             .HasConversion<string>();

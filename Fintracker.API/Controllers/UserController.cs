@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using Fintracker.Application;
+﻿using Fintracker.Application;
 using Fintracker.Application.DTO.User;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Features.User.Requests.Queries;
@@ -12,10 +11,10 @@ using Microsoft.Extensions.Options;
 
 namespace Fintracker.API.Controllers;
 
-[ApiController]
+
 [Route("api/user")]
 [Authorize(Roles = "Admin,User")]
-public class UserController : ControllerBase
+public class UserController : BaseController
 {
     private readonly IMediator _mediator;
     private readonly AppSettings _appSettings;

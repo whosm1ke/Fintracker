@@ -143,13 +143,13 @@ public class MockTransactionRepository
 
         //TransactionRepository
 
-        mock.Setup(x => x.GetByCategoryIdAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) =>
-                Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.CategoryId == id).ToList()));
+        mock.Setup(x => x.GetByCategoryIdAsync(It.IsAny<Guid>(),It.IsAny<Guid>()))
+            .Returns((Guid id,Guid userId) =>
+                Task.FromResult((IReadOnlyList<Transaction>)transactions.Where(x => x.CategoryId == id && x.UserId == userId).ToList()));
 
-        mock.Setup(x => x.GetByCategoryIdSortedAsync(It.IsAny<Guid>(), It.IsAny<TransactionQueryParams>()))
-            .Returns((Guid id, TransactionQueryParams query) => Task.FromResult(
-                (IReadOnlyList<Transaction>)transactions.Where(x => x.CategoryId == id)
+        mock.Setup(x => x.GetByCategoryIdSortedAsync(It.IsAny<Guid>(), It.IsAny<Guid>(),It.IsAny<TransactionQueryParams>()))
+            .Returns((Guid id, Guid userId, TransactionQueryParams query) => Task.FromResult(
+                (IReadOnlyList<Transaction>)transactions.Where(x => x.CategoryId == id && x.UserId == userId)
                     .AsQueryable()
                     .OrderBy(query.SortBy)
                     .ToList()

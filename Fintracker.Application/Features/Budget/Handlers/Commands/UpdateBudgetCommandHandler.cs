@@ -61,10 +61,12 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
 
     private async Task UpdateBudgetAccessibility(Domain.Entities.Budget budget, UpdateBudgetDTO newBudget)
     {
+        if (newBudget.IsPublic == budget.IsPublic) return;
+        
+        var wallet = await _unitOfWork.WalletRepository.GetWalletById(budget.WalletId);
         if (newBudget.IsPublic && !budget.IsPublic)
         {
-            var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsersAndBudgets(budget.WalletId);
-            foreach (var walletUser in wallet.Users)
+            foreach (var walletUser in wallet!.Users)
             {
                 walletUser.MemberBudgets.Add(budget);
             }
@@ -74,8 +76,7 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
 
         if (!newBudget.IsPublic && budget.IsPublic)
         {
-            var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsersAndBudgets(budget.WalletId);
-            foreach (var walletUser in wallet.Users)
+            foreach (var walletUser in wallet!.Users)
             {
                 walletUser.MemberBudgets.Remove(budget);
             }

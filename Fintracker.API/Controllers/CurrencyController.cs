@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fintracker.API.Controllers;
 
-[ApiController]
+
 [Route("api/currency")]
 [AllowAnonymous]
-public class CurrencyController : ControllerBase
+public class CurrencyController : BaseController
 {
     private readonly IMediator _mediator;
 

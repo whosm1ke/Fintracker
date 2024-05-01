@@ -36,7 +36,7 @@ public class WalletRequestTests
     public async Task GetWalletsByOwnerId_Should_Return_52A0_BE71_Test()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new GetWalletsByOwnerIdRequestHandler(_mapper, mockUnitOfWork);
+        var handler = new GetWalletsByUserIdRequestHandler(_mapper, mockUnitOfWork);
         var expectedResult = new List<WalletBaseDTO>
         {
             new()
@@ -75,7 +75,7 @@ public class WalletRequestTests
     public async Task GetWalletsByOwnerIdSorted_SortBy_Balance_Should_Return_52A0_BE71_Test()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new GetWalletsByOwnerIdSortedRequestHandler(_mapper, mockUnitOfWork);
+        var handler = new GetWalletsByUserIdSortedRequestHandler(_mapper, mockUnitOfWork);
         var expectedResult = new List<WalletBaseDTO>
         {
             new()
@@ -100,9 +100,9 @@ public class WalletRequestTests
             }
         };
 
-        var actualResult = await handler.Handle(new GetWalletsByOwnerIdSortedRequest
+        var actualResult = await handler.Handle(new GetWalletsByUserIdSortedRequest
         {
-            OwnerId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"),
+            UserId = new Guid("A98A21C7-E794-4A65-B618-FA6D8A5F63D9"),
             Params = new()
             {
                 SortBy = "balance"

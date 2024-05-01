@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
-using Fintracker.Application.DTO.Currency;
 using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Wallet.Requests.Commands;
@@ -29,7 +28,7 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
     {
         var response = new UpdateCommandResponse<WalletBaseDTO>();
 
-        var wallet = await _unitOfWork.WalletRepository.GetWalletByIdWithMemberBudgets(request.Wallet.Id);
+        var wallet = await _unitOfWork.WalletRepository.GetWalletById(request.Wallet.Id);
 
         if (wallet is null)
             throw new NotFoundException(new ExceptionDetails

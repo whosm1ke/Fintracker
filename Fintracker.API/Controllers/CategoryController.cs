@@ -1,5 +1,4 @@
-﻿using Fintracker.Application.BusinessRuleConstraints;
-using Fintracker.Application.DTO.Category;
+﻿using Fintracker.Application.DTO.Category;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Features.Category.Requests.Queries;
 using Fintracker.Application.Models;
@@ -12,10 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fintracker.API.Controllers;
 
-[ApiController]
 [Route("api/category")]
 [Authorize(Roles = "Admin, User")]
-public class CategoryController : ControllerBase
+public class CategoryController : BaseController
 {
     private readonly IMediator _mediator;
 
@@ -25,14 +23,6 @@ public class CategoryController : ControllerBase
         
     }
 
-    [NonAction]
-    private Guid GetCurrentUserId()
-    {
-        var uid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.Uid)?.Value;
-        if (Guid.TryParse(uid, out var currentUserId))
-            return currentUserId;
-        return Guid.Empty;
-    }
 
     [HttpGet("user/{userId:guid?}")]
     [ProducesResponseType(typeof(List<CategoryDTO>), StatusCodes.Status200OK)]
@@ -127,12 +117,14 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(DeleteCommandResponse<CategoryDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<DeleteCommandResponse<CategoryDTO>>> Delete(Guid id)
+    public async Task<ActionResult<DeleteCommandResponse<CategoryDTO>>> Delete(Guid id, [FromBody] DeleteCategoryDTO options)
     {
         var response = await _mediator.Send(new DeleteCategoryCommand
         {
             Id = id,
-            UserId = GetCurrentUserId()
+            UserId = GetCurrentUserId(),
+            CategoryToReplaceId = options.CategoryToReplaceId,
+            ShouldReplace = options.ShouldReplace
         });
 
         return Ok(response);

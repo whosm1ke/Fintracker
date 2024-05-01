@@ -61,8 +61,8 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
     {
         if (!budget.IsPublic) return;
 
-        var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsersAndBudgets(budget.WalletId);
-        foreach (var walletUser in wallet.Users)
+        var wallet = await _unitOfWork.WalletRepository.GetWalletById(budget.WalletId);
+        foreach (var walletUser in wallet!.Users)
         {
             walletUser.MemberBudgets.Add(budget);
         }
@@ -84,7 +84,7 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, C
             await _currencyConverter.Convert(transactionCurrencySymbols, budgetCurrencySymbol, transactionAmounts);
 
         decimal totalSpent = 0;
-        convertedResult.ForEach(x => totalSpent += x.Value);
+        convertedResult.ForEach(x => totalSpent += x!.Value);
 
         filteredTransactions.ForEach(x => budget.Transactions.Add(x));
         budget.Balance = budget.StartBalance;

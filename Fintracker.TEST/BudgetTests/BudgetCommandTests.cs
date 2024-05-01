@@ -5,7 +5,6 @@ using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.Features.Budget.Handlers.Commands;
 using Fintracker.Application.Features.Budget.Requests.Commands;
 using Fintracker.Application.MapProfiles;
-using Fintracker.Infrastructure.CurrencyConvert;
 using Fintracker.TEST.Repositories;
 using FluentAssertions;
 

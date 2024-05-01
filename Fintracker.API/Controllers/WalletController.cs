@@ -1,5 +1,4 @@
-﻿using Fintracker.Application.BusinessRuleConstraints;
-using Fintracker.Application.DTO.Wallet;
+﻿using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.Features.Wallet.Requests.Commands;
 using Fintracker.Application.Features.Wallet.Requests.Queries;
 using Fintracker.Application.Models;
@@ -11,10 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fintracker.API.Controllers;
 
-[ApiController]
 [Route("api/wallet")]
 [Authorize(Roles = "Admin,User")]
-public class WalletController : ControllerBase
+public class WalletController : BaseController
 {
     private readonly IMediator _mediator;
 
@@ -23,14 +21,6 @@ public class WalletController : ControllerBase
         _mediator = mediator;
     }
     
-    [NonAction]
-    private Guid GetCurrentUserId()
-    {
-        var uid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.Uid)?.Value;
-        if (Guid.TryParse(uid, out var currentUserId))
-            return currentUserId;
-        return Guid.Empty;
-    }
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(WalletBaseDTO),StatusCodes.Status200OK)]
@@ -51,9 +41,9 @@ public class WalletController : ControllerBase
     [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<WalletBaseDTO>>> Get(Guid ownerId,[FromQuery] QueryParams? query)
     {
-        var sortRequest = new GetWalletsByOwnerIdSortedRequest
+        var sortRequest = new GetWalletsByUserIdSortedRequest
         {
-            OwnerId = ownerId,
+            UserId = ownerId,
             Params = query!
         };
 

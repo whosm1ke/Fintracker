@@ -49,6 +49,13 @@ public class
 
         var newCurrency = await _unitOfWork.CurrencyRepository.GetAsync(request.Transaction.CurrencyId);
         var newCategory = await _unitOfWork.CategoryRepository.GetAsync(request.Transaction.CategoryId);
+
+        if (request.Transaction.CategoryId != transaction.CategoryId)
+        {
+            newCategory!.TransactionCount += 1;
+            transaction.Category.TransactionCount -= 1;
+        }
+
         await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, transaction.Amount,
             transaction.Currency.Symbol, newCurrency!.Symbol, transaction.Category.Type, newCategory!.Type);
 

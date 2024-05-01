@@ -8,7 +8,7 @@ namespace Fintracker.Persistence.Extensions;
 public static class TransactionExtensions
 {
     public static async Task<IReadOnlyList<Transaction>> GetByUserIdSortedAsync(
-        this DbSet<Transaction> transactions,
+        this IQueryable<Transaction> transactions,
         Guid userId,
         TransactionQueryParams queryParams)
     {
@@ -27,17 +27,6 @@ public static class TransactionExtensions
         var baseQuery = transactions
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
             .Take(queryParams.PageSize)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Categories)
-            .Include(x => x.Category)
-            .Include(x => x.Currency)
-            .Include(x => x.User)
-            .ThenInclude(x => x.UserDetails)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Currency)
-            .AsSplitQuery()
             .Where(x => x.UserId == userId && x.Date.Date >= queryParams.StartDate.Date &&
                         x.Date.Date <= queryParams.EndDate.Date);
 
@@ -50,7 +39,7 @@ public static class TransactionExtensions
     }
 
     public static async Task<IReadOnlyList<Transaction>> GetByWalletIdSortedAsync(
-        this DbSet<Transaction> transactions,
+        this IQueryable<Transaction> transactions,
         Guid walletId,
         TransactionQueryParams queryParams)
     {
@@ -68,17 +57,6 @@ public static class TransactionExtensions
         var baseQuery = transactions
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
             .Take(queryParams.PageSize)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Categories)
-            .Include(x => x.Category)
-            .Include(x => x.Currency)
-            .Include(x => x.User)
-            .ThenInclude(x => x.UserDetails)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Currency)
-            .AsSplitQuery()
             .Where(x => x.WalletId == walletId && x.Date.Date >= queryParams.StartDate.Date &&
                         x.Date.Date <= queryParams.EndDate.Date);
 
@@ -91,7 +69,7 @@ public static class TransactionExtensions
     }
 
     public static async Task<IReadOnlyList<Transaction>> GetByCategoryIdSortedAsync(
-        this DbSet<Transaction> transactions,
+        this IQueryable<Transaction> transactions, Guid userId,
         Guid categoryId,
         TransactionQueryParams queryParams)
     {
@@ -109,18 +87,7 @@ public static class TransactionExtensions
         var baseQuery = transactions
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
             .Take(queryParams.PageSize)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Currency)
-            .Include(x => x.Budgets)
-            .ThenInclude(x => x.Categories)
-            .Include(x => x.Category)
-            .Include(x => x.Currency)
-            .Include(x => x.User)
-            .ThenInclude(x => x.UserDetails)
-            .Include(x => x.Wallet)
-            .ThenInclude(x => x.Currency)
-            .AsSplitQuery()
-            .Where(x => x.CategoryId == categoryId && x.Date.Date >= queryParams.StartDate.Date &&
+            .Where(x => x.CategoryId == categoryId && x.UserId == userId && x.Date.Date >= queryParams.StartDate.Date &&
                         x.Date.Date <= queryParams.EndDate.Date);
 
 // Apply ordering

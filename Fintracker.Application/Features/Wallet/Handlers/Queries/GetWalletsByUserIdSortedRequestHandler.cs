@@ -8,14 +8,14 @@ using MediatR;
 namespace Fintracker.Application.Features.Wallet.Handlers.Queries;
 
 public class
-    GetWalletsByOwnerIdSortedRequestHandler : IRequestHandler<GetWalletsByOwnerIdSortedRequest,
+    GetWalletsByUserIdSortedRequestHandler : IRequestHandler<GetWalletsByUserIdSortedRequest,
     IReadOnlyList<WalletBaseDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly List<string> _allowedSortColumns;
 
-    public GetWalletsByOwnerIdSortedRequestHandler(IMapper mapper, IUnitOfWork unitOfWork)
+    public GetWalletsByUserIdSortedRequestHandler(IMapper mapper, IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
@@ -27,7 +27,7 @@ public class
         };
     }
 
-    public async Task<IReadOnlyList<WalletBaseDTO>> Handle(GetWalletsByOwnerIdSortedRequest request,
+    public async Task<IReadOnlyList<WalletBaseDTO>> Handle(GetWalletsByUserIdSortedRequest request,
         CancellationToken cancellationToken)
     {
         if (!_allowedSortColumns.Contains(request.Params.SortBy))
@@ -37,17 +37,11 @@ public class
                 ErrorMessage = $"Allowed values for sort by are {string.Join(", ", _allowedSortColumns)}"
             });
 
-        var walletsByOwner =
-            await _unitOfWork.WalletRepository.GetByOwnerIdSortedAsync(request.OwnerId, request.Params);
-        
-        var walletsByMember =
-            await _unitOfWork.WalletRepository.GetByMemberIdSortedAsync(request.OwnerId, request.Params);
 
-        var unionWallets = walletsByMember.Union(walletsByOwner);
-
-        var distnctWallets = unionWallets.DistinctBy(w => w.Id);
+        var wallets =
+            await _unitOfWork.WalletRepository.GetByUserIdSortedAsync(request.UserId, request.Params);
 
 
-        return _mapper.Map<List<WalletBaseDTO>>(distnctWallets);
+        return _mapper.Map<List<WalletBaseDTO>>(wallets);
     }
 }

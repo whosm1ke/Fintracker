@@ -1,5 +1,4 @@
-﻿using System.Transactions;
-using Fintracker.Domain.Common;
+﻿using Fintracker.Domain.Common;
 
 namespace Fintracker.Domain.Entities;
 

@@ -11,10 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fintracker.API.Controllers;
 
-[ApiController]
 [Route("api/budget")]
 [Authorize(Roles = "Admin,User")]
-public class BudgetController : ControllerBase
+public class BudgetController : BaseController
 {
     private readonly IMediator _mediator;
 
@@ -22,22 +21,12 @@ public class BudgetController : ControllerBase
     {
         _mediator = mediator;
     }
-    
-    [NonAction]
-    private Guid GetCurrentUserId()
-    {
-        var uid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.Uid)?.Value;
-        if (Guid.TryParse(uid, out var currentUserId))
-            return currentUserId;
-        return Guid.Empty;
-    }
-
 
 
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(typeof(BudgetBaseDTO),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(BudgetBaseDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BudgetBaseDTO>> GetById(Guid id)
     {
         var budget = await _mediator.Send(new GetBudgetByIdRequest
@@ -49,12 +38,11 @@ public class BudgetController : ControllerBase
     }
 
     [HttpGet("wallet/{walletId:guid}")]
-    [ProducesResponseType(typeof(List<BudgetBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsByWalletId(Guid walletId, [FromQuery] BudgetQueryParams? query)
+    [ProducesResponseType(typeof(List<BudgetBaseDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsByWalletId(Guid walletId,
+        [FromQuery] BudgetQueryParams? query)
     {
-        
-
         var simpleRequest = new GetBudgetsByWalletIdRequest()
         {
             WalletId = walletId,
@@ -68,7 +56,7 @@ public class BudgetController : ControllerBase
             Params = query!,
             UserId = GetCurrentUserId()
         };
-        
+
         IReadOnlyList<BudgetBaseDTO> budgets;
         if (query is null)
             budgets = await _mediator.Send(simpleRequest);
@@ -79,11 +67,11 @@ public class BudgetController : ControllerBase
     }
 
     [HttpGet("user/{userId:guid}")]
-    [ProducesResponseType(typeof(List<BudgetBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsByUserId(Guid userId, [FromQuery] BudgetQueryParams? query)
+    [ProducesResponseType(typeof(List<BudgetBaseDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<BudgetBaseDTO>>> GetBudgetsByUserId(Guid userId,
+        [FromQuery] BudgetQueryParams? query)
     {
-
         var simpleRequest = new GetBudgetsByUserIdRequest()
         {
             UserId = userId,
@@ -95,7 +83,7 @@ public class BudgetController : ControllerBase
             UserId = userId,
             Params = query!
         };
-        
+
         IReadOnlyList<BudgetBaseDTO> budgets;
         if (query is null)
             budgets = await _mediator.Send(simpleRequest);
@@ -106,12 +94,11 @@ public class BudgetController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(CreateCommandResponse<CreateBudgetDTO>),StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(CreateCommandResponse<CreateBudgetDTO>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CreateCommandResponse<BudgetBaseDTO>>> Post([FromBody] CreateBudgetDTO budget)
     {
-        
         var response = await _mediator.Send(new CreateBudgetCommand
         {
             Budget = budget
@@ -121,10 +108,10 @@ public class BudgetController : ControllerBase
     }
 
     [HttpPut]
-    [ProducesResponseType(typeof(UpdateCommandResponse<BudgetBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(UpdateCommandResponse<BudgetBaseDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UpdateCommandResponse<BudgetBaseDTO>>> Put([FromBody] UpdateBudgetDTO budget)
     {
         var response = await _mediator.Send(new UpdateBudgetCommand
@@ -136,9 +123,9 @@ public class BudgetController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(DeleteCommandResponse<BudgetBaseDTO>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UnauthorizedResponse),StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(NotFoundResponse),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(DeleteCommandResponse<BudgetBaseDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<BudgetBaseDTO>>> Delete(Guid id)
     {
         var response = await _mediator.Send(new DeleteBudgetCommand

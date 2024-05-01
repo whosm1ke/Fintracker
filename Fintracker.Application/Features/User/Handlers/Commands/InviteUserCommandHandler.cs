@@ -2,7 +2,6 @@
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Exceptions;
-using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Mail;
 using MediatR;

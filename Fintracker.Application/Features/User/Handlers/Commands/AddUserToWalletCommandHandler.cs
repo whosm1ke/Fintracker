@@ -25,7 +25,7 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
     {
         var response = new BaseCommandResponse();
 
-        var wallet = await _unitOfWork.WalletRepository.GetWalletByIdOnlyUsersAndBudgets(request.WalletId);
+        var wallet = await _unitOfWork.WalletRepository.GetWalletById(request.WalletId);
         var user = await _userRepository.GetAsync(request.UserId);
 
         wallet!.Users.Add(user!);

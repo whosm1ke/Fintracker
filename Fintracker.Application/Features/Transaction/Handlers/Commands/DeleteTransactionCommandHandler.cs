@@ -50,7 +50,7 @@ public class
         var transCurrency = await _unitOfWork.CurrencyRepository.GetAsync(transaction.CurrencyId);
 
         var deletedObj = _mapper.Map<TransactionBaseDTO>(transaction);
-
+        transaction.Category.TransactionCount -= 1;
 
         await UpdateWallet(transaction.Wallet, transaction.Amount, transCurrency!.Symbol, transaction.Category.Type);
         await IncreaseBudgetBalance(transaction.WalletId, transaction.UserId, transaction);

@@ -28,7 +28,7 @@ export default function BudgetsPage() {
                                             balance={b.balance} currencySymbol={b.currency.symbol}
                                             endDate={b.endDate} startDate={b.startDate} name={b.name}
                                             totalSpent={b.totalSpent} budgetId={b.id} isPublic={b.isPublic}
-                                            key={b.id || "Pipa"} userId={userId!} budgetUserId={b.ownerId}/>)
+                                            key={b.id || "Pipa"} userId={userId!} startBalance={b.startBalance} budgetUserId={b.ownerId}/>)
 
                     })}
                 </div>

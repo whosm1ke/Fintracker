@@ -134,20 +134,7 @@ public class MockWalletRepository
 
         mock.Setup(x => x.GetWalletById(It.IsAny<Guid>()))
             .Returns((Guid id) => Task.FromResult(wallets.Find(x => x.Id == id)));
-
-       
-
-        mock.Setup(x => x.GetByOwnerIdAsync(It.IsAny<Guid>()))
-            .Returns((Guid id) =>
-                Task.FromResult((IReadOnlyList<Wallet>)wallets.Where(x => x.OwnerId == id).ToList()));
-
-        mock.Setup(x => x.GetByOwnerIdSortedAsync(It.IsAny<Guid>(), It.IsAny<QueryParams>()))
-            .Returns((Guid id, QueryParams query) =>
-                Task.FromResult((IReadOnlyList<Wallet>)wallets
-                    .Where(x => x.OwnerId == id)
-                    .AsQueryable()
-                    .OrderBy(query.SortBy)
-                    .ToList()));
+        
 
         return mock;
     }

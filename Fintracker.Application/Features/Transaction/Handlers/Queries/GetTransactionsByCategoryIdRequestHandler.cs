@@ -22,7 +22,7 @@ public class
     public async Task<IReadOnlyList<TransactionBaseDTO>> Handle(GetTransactionsByCategoryIdRequest request,
         CancellationToken cancellationToken)
     {
-        var transactions = await _unitOfWork.TransactionRepository.GetByCategoryIdAsync(request.CategoryId);
+        var transactions = await _unitOfWork.TransactionRepository.GetByCategoryIdAsync(request.CategoryId, request.UserId);
 
         //TODO validation logic if needed
 
