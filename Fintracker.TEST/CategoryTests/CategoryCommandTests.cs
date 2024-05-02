@@ -78,7 +78,7 @@ public class CategoryCommandTests
     public async Task DeleteAsync_Should_Return_True()
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new DeleteCategoryCommandHandler(mockUnitOfWork, _mapper);
+        var handler = new DeleteCategoryCommandHandler(mockUnitOfWork, _mapper, null);
 
 
         var result = await handler.Handle(new DeleteCategoryCommand

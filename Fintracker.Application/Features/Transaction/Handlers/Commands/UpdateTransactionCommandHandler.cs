@@ -64,8 +64,8 @@ public class
         _mapper.Map(request.Transaction, transaction);
 
 
+        await UpdateBudgets(transaction);
         await _unitOfWork.SaveAsync();
-        await UpdateBudgets(transaction.WalletId, transaction.UserId);
 
         var newObject = _mapper.Map<TransactionBaseDTO>(transaction);
         response.Success = true;
@@ -122,8 +122,10 @@ public class
         }
     }
 
-    private async Task UpdateBudgets(Guid walletId, Guid userId)
+    private async Task UpdateBudgets(Domain.Entities.Transaction transaction)
     {
+        Guid walletId = transaction.WalletId;
+        Guid userId = transaction.UserId;
         var budgetsByWalletId = await _unitOfWork.BudgetRepository.GetByWalletIdAsync(walletId, userId, null);
         foreach (var budget in budgetsByWalletId)
         {
@@ -131,11 +133,12 @@ public class
                 await _unitOfWork.TransactionRepository.GetByWalletIdInRangeAsync(walletId, budget.StartDate,
                     budget.EndDate);
 
-            if (transactions.Count == 0) return;
+            if (transactions.Count == 0) continue;
             var filteredTransactions = transactions.Where(x => budget.Categories.Any(c => c.Id == x.CategoryId))
                 .ToList();
 
-            if (filteredTransactions.Count == 0) return;
+            budget.Transactions = filteredTransactions.ToList();
+
             var transactionCurrencySymbols = filteredTransactions.Select(x => x.Currency.Symbol);
             var transactionAmounts = filteredTransactions.Select(x => x.Amount);
 
@@ -149,7 +152,6 @@ public class
             budget.TotalSpent = totalSpent;
             budget.Balance = budget.StartBalance - totalSpent;
 
-            await _unitOfWork.SaveAsync();
         }
     }
 }

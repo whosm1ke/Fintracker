@@ -95,7 +95,6 @@ public class CategoryController : BaseController
         return Ok(response);
     }
 
-//TODO Add logic for updating categories. Wallets, budgets and transactions should be changed
     [HttpPut]
     [ProducesResponseType(typeof(UpdateCommandResponse<CategoryDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]

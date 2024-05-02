@@ -30,28 +30,28 @@ const Footer = () => {
         <div className="border-t-2 border-t-gray-300 p-6 mt-6 w-full fixed bottom-0 bg-white">
             <div className={'flex justify-around items-center gap-x-2 w-full text-sm'}>
                 <div>
-                    <NavLink  to={`./${walletId}/trans`}
+                    <NavLink to={`./${walletId}/trans`}
                              className={({isActive}) =>
                                  isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
                     >Transactions</NavLink>
                 </div>
                 <div>
-                    <NavLink  to={`./${walletId}/overview`}
+                    <NavLink to={`./${walletId}/overview`}
                              className={({isActive}) =>
                                  isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
                     >Overview</NavLink>
                 </div>
                 <div>
-                    <NavLink  to={`./${walletId}/budgets`}
+                    <NavLink to={`./${walletId}/budgets`}
                              className={({isActive}) =>
                                  isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
                     >Budgets</NavLink>
                 </div>
                 <div>
-                    <NavLink  to={`./${walletId}/settings`}
+                    <NavLink to={`./${walletId}/settings`}
                              className={({isActive}) =>
                                  isActive ? 'text-green-400 font-bold' : 'p-2'
                              }
@@ -69,7 +69,9 @@ const WalletNavBar = () => {
     const {data} = useGetUser(userId || 'no-user');
     const userName = data?.response?.userName || 'New user';
     const avatar = data?.response?.userDetails?.avatar || logo
-    const [isMenuOpen, toggleMenuOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenuOpen = () => setIsMenuOpen(p => !p)
 
     return (
         <motion.nav className={'w-full flex justify-between items-center bg-gray-100 p-3 px-2 sm:px-12 shadow'}>
@@ -116,13 +118,14 @@ const WalletNavBar = () => {
             </div>
             <motion.div
                 className={'relative z-50'}
+                onHoverEnd={toggleMenuOpen}
+                onHoverStart={toggleMenuOpen}
             >
                 <FlyoutLink FlyoutContent={NavigationContent} open={isMenuOpen}>
                     <div className={'flex items-center space-x-2 text-neutral-900'}>
                         <img src={avatar} alt="Logo" className={'w-12 h-12 rounded-full'}/>
                         <p className={'text-2xl font-bold hidden md:inline'}>{userName}</p>
                         <motion.span
-                            onClick={() => toggleMenuOpen(p => !p)}
                             animate={isMenuOpen ? {rotate: 180} : {rotate: 0}}
                         >
                             <FiChevronDown size={'2rem'}/>
@@ -142,6 +145,7 @@ interface FlyoutLinkProps {
 }
 
 const FlyoutLink = ({children, FlyoutContent, open}: FlyoutLinkProps) => {
+
 
     const showFlyout = FlyoutContent && open;
     return (

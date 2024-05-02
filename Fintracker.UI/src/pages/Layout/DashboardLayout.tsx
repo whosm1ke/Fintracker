@@ -55,7 +55,9 @@ const DashboardNavBar = () => {
     const {data} = useGetUser(userId || 'no-user');
     const userName = data?.response?.userName || 'New user';
     const avatar = data?.response?.userDetails?.avatar || logo
-    const [isMenuOpen, toggleMenuOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenuOpen = () => setIsMenuOpen(p => !p)
 
     return (
         <motion.nav className={'w-full flex justify-between items-center bg-gray-100 p-3 px-12 shadow'}>
@@ -85,14 +87,15 @@ const DashboardNavBar = () => {
                 </NavLink>
             </div>
             <motion.div
-                className={'relative'}
+                className={'relative z-50'}
+                onHoverEnd={toggleMenuOpen}
+                onHoverStart={toggleMenuOpen}
             >
                 <FlyoutLink FlyoutContent={NavigationContent} open={isMenuOpen}>
                     <div className={'flex items-center space-x-2 text-neutral-900'}>
                         <img src={avatar || logo} alt="Logo" className={'w-12 h-12 rounded-full'}/>
                         <p className={'text-2xl font-bold hidden md:inline'}>{userName}</p>
                         <motion.span
-                            onClick={() => toggleMenuOpen(p => !p)}
                             animate={isMenuOpen ? {rotate: 180} : {rotate: 0}}
                         >
                             <FiChevronDown size={'2rem'}/>
