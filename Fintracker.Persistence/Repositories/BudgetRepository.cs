@@ -54,7 +54,7 @@ public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<Budget>> GetByBudgetsUserIdAsync(Guid userId, bool? isPublic)
+    public async Task<IReadOnlyList<Budget>> GetBudgetsByUserIdAsync(Guid userId, bool? isPublic)
     {
         var query = GetBudgetQuery().Where(b => b.OwnerId == userId || b.Members.Any(m => m.Id == userId));
         if (isPublic.HasValue)

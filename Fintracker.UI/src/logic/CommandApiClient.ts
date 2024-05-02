@@ -16,6 +16,7 @@ export interface CommandApiClient<TModel, TResponse> {
     create: (newEntity: TModel) => Promise<ClientWrapper<CreateCommandResponse<TResponse>>>;
     update: (updatedEntity: TModel) => Promise<ClientWrapper<UpdateCommandResponse<TResponse>>>;
     delete: (id: string) => Promise<ClientWrapper<DeleteCommandResponse<TResponse>>>;
+    deleteWithModel: (id: string, model: TModel) => Promise<ClientWrapper<DeleteCommandResponse<TResponse>>>;
 }
 
 export interface AuthApiClient {

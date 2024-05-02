@@ -17,6 +17,7 @@ import {IconType} from "react-icons";
 import {BsFillGearFill} from "react-icons/bs";
 import {FaTrash} from "react-icons/fa6";
 import useDeleteCategory from "../../hooks/categories/useDeleteCategory.ts";
+import {HiX} from "react-icons/hi";
 
 export default function WalletCategoriesSettingsPage() {
 
@@ -67,10 +68,11 @@ export default function WalletCategoriesSettingsPage() {
     const formRef = useRef<HTMLFormElement>(null);
     const nameRef = useRef<HTMLInputElement>(null);
     const submitButtonRef = useRef<HTMLButtonElement>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [categoryToDelete, setCategoryToDelete] = useState<Category>();
 
     const categoryCreateMutation = useCreateCategory();
     const categoryUpdateMutation = useUpdateCategory();
-    const categoryDeleteMutation = useDeleteCategory();
 
     useEffect(() => {
         if (categoryToEdit) {
@@ -90,6 +92,7 @@ export default function WalletCategoriesSettingsPage() {
         image: 'MdBrightness1',
         id: i.toString()
     } as Category));
+
 
     const handleSelectedCategory = (cat: Category) => setCategoryToCreate(cat);
     const handleSelectedIconColor = (cat: Category) => {
@@ -154,8 +157,11 @@ export default function WalletCategoriesSettingsPage() {
         setCategoryToEdit(newCat)
         clearErrors();
     }
+
+    const toggleDeleteModal = () => setIsDeleting(p => !p);
     const onTrashClick = async (cat: Category) => {
-        await categoryDeleteMutation.mutateAsync(cat.id);
+        toggleDeleteModal();
+        setCategoryToDelete(cat);
     }
 
     const onGearClick = (cat: Category) => {
@@ -286,6 +292,94 @@ export default function WalletCategoriesSettingsPage() {
                     </fieldset>
                 </div>
             </section>
+            {isDeleting && <DeleteCategoryModal categoryToDelete={categoryToDelete!} allCategories={categories}
+                                                toggleModal={toggleDeleteModal}
+                                                handleSelectedCategory={(cat) => setCategoryToDelete(cat)}/>}
+        </div>
+    )
+}
+
+interface DeleteCategoryModalProps {
+    categoryToDelete: Category;
+    allCategories: Category[];
+    toggleModal: () => void;
+    handleSelectedCategory: (cat: Category | undefined) => void;
+}
+
+export function DeleteCategoryModal({
+                                        categoryToDelete,
+                                        allCategories,
+                                        toggleModal,
+                                        handleSelectedCategory,
+                                    }: DeleteCategoryModalProps) {
+    const [isForceDelete, setIsForseDelete] = useState(false);
+    const categoryDeleteMutation = useDeleteCategory();
+    const [categoryToReplace, setCategoryToReplace] = useState<Category>(categoryToDelete);
+    const toggleForceDelete = () => setIsForseDelete(p => !p);
+    const handleDelete = async () => {
+        
+        console.log("categoryToReplace: ", categoryToReplace)
+        console.log("categoryToDelete: ", categoryToDelete)
+    
+        console.log({
+            categoryToReplaceId: categoryToReplace!.id,
+            id: categoryToDelete!.id,
+            shouldReplace: isForceDelete
+        })
+        
+        await categoryDeleteMutation.mutateAsync({
+            categoryToReplaceId: categoryToReplace!.id,
+            id: categoryToDelete!.id,
+            shouldReplace: isForceDelete
+        })
+    }
+
+    return (
+        <div
+            className={'absolute inset-0 flex justify-center items-center px-4 lg:px-0 visible bg-black/20 z-50'}>
+            <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto mt-4">
+                <h2 className="text-2xl font-bold mb-4 flex justify-between">Category deletion
+                    <HiX size={'2rem'} color={'red'} onClick={() => {
+                        toggleModal()
+                        handleSelectedCategory(undefined)
+                    }}/>
+                </h2>
+                <div className={'w-full flex flex-col text-lg gap-y-5'}>
+                    <p>
+                        You category is used in {categoryToDelete?.transactionCount} transactions
+                    </p>
+                    <p>
+                        You category is used in {categoryToDelete?.budgetCount} budgets
+                    </p>
+                    <div className={'flex gap-10'}>
+                        <p>
+                            Would you like to replace?
+                        </p>
+                        <div className="flex gap-4">
+                            <div className="relative">
+                                <input
+                                    onChange={toggleForceDelete}
+                                    className="h-6 w-6 border-blue-500 rounded-full cursor-pointer checked:border-transparent 
+                                        checked:bg-blue-500"
+                                    id="isPublic"
+                                    type="checkbox"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    {isForceDelete && <div>
+                        <SingleSelectDropDownMenu items={allCategories} ItemComponent={CategoryItem}
+                                                  heading={"Categories"}
+                                                  onItemSelected={(cat) => setCategoryToReplace(cat)}
+                                                  defaultSelectedItem={categoryToReplace}/>
+                    </div>}
+                </div>
+                <div className={'flex justify-center items-center mt-5'}>
+                    <button 
+                        onClick={handleDelete}
+                        className={'bg-red-400 px-4 py-2 rounded text-white'}>Delete</button>
+                </div>
+            </div>
         </div>
     )
 }
@@ -296,7 +390,7 @@ interface CategoryBlockProps {
 
 export function CategoryBlock({category}: CategoryBlockProps) {
     const Icon = (Icons as any)[category.image] as IconType;
-    
+
     return (
         <div className={'flex items-center h-auto w-full'}>
             <Icon color={category.iconColour} className="" size={'2.5rem'}/>
@@ -334,6 +428,7 @@ export function CategoryCRUDButtons({category, onGearClick, onTrashClick}: Categ
                     <FaTrash size={'1rem'} color={'red'}/>
                 </button>
             </div>
+
         </div>
     )
 }

@@ -169,7 +169,7 @@ public class MockBudgetRepository
         mock.Setup(x => x.GetBudgetByIdAsync(It.IsAny<Guid>()))
             .Returns((Guid id) => { return Task.FromResult(budgets.FirstOrDefault(x => x.Id == id)); });
 
-        mock.Setup(x => x.GetByBudgetsUserIdAsync(It.IsAny<Guid>(), It.IsAny<bool>()))
+        mock.Setup(x => x.GetBudgetsByUserIdAsync(It.IsAny<Guid>(), It.IsAny<bool>()))
             .Returns((Guid id, bool isPublic) =>
                 Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.OwnerId == id).ToList()));
 

@@ -3,18 +3,24 @@ import ApiClient from "../../services/ApiClient.ts";
 import {Category} from "../../entities/Category.ts";
 import useUserStore from "../../stores/userStore.ts";
 
-const apiClient = new ApiClient<Category, Category>('category');
+type CategoryToDelete = {
+    shouldReplace: boolean;
+    categoryToReplaceId: string,
+    id: string
+}
+
+const apiClient = new ApiClient<Category, CategoryToDelete>('category');
 const useDeleteCategory = () => {
     const userId = useUserStore(x => x.getUserId());
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (model: string) => await apiClient.delete(model),
-        onMutate: async (id: string) => {
+        mutationFn: async (model: CategoryToDelete) => await apiClient.deleteWithModel(model.id, model),
+        onMutate: async (model: CategoryToDelete) => {
             await queryClient.cancelQueries({queryKey: ['categories', 'user', userId]});
 
             const prevData = queryClient.getQueryData<Category[]>(['categories', 'user', userId]);
 
-            queryClient.setQueryData(['categories', 'user', userId], (oldQueryData: Category[]) => oldQueryData ? oldQueryData.filter(b => b.id !== id) : []);
+            queryClient.setQueryData(['categories', 'user', userId], (oldQueryData: Category[]) => oldQueryData ? oldQueryData.filter(b => b.id !== model.id) : []);
             return {prevBudget: prevData};
         },
         // @ts-ignore

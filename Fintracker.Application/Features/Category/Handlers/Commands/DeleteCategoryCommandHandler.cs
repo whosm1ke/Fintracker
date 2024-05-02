@@ -50,9 +50,12 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
             ? await _unitOfWork.CategoryRepository.GetAsync(request.CategoryToReplaceId)
             : category)!;
 
-        await UpdateTransactionns(category, categoryToReplace, request.ShouldReplace);
-        await UpdateWallets(category, request.ShouldReplace, categoryToReplace.Type);
-        await UpdateBudgets(category, categoryToReplace, request.ShouldReplace);
+        var transactionToUpdate =
+            await _unitOfWork.TransactionRepository.GetByCategoryIdAsync(category.Id, category.UserId);
+
+        UpdateTransactionns(transactionToUpdate, category, categoryToReplace, request.ShouldReplace);
+        await UpdateWallets(transactionToUpdate, category, request.ShouldReplace, categoryToReplace.Type);
+        await UpdateBudgets(transactionToUpdate, category, categoryToReplace, request.ShouldReplace);
 
         var deletedObj = _mapper.Map<CategoryDTO>(category);
         _unitOfWork.CategoryRepository.Delete(category);
@@ -66,31 +69,40 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
         return response;
     }
 
-    private async Task UpdateBudgets(Domain.Entities.Category category, Domain.Entities.Category categoryToReplace,
+    private async Task UpdateBudgets(IReadOnlyList<Domain.Entities.Transaction> transactionToUpdate,
+        Domain.Entities.Category category, Domain.Entities.Category categoryToReplace,
         bool replace)
     {
-        var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByCategoryId(category.Id, category.UserId);
+        var budgets = await _unitOfWork.BudgetRepository.GetBudgetsByUserIdAsync(category.UserId, null);
 
         foreach (var budget in budgets)
         {
             if (!replace)
             {
-                await HandleCategoryRemoval(category, budget);
+                await HandleCategoryRemoval(transactionToUpdate, category, budget);
             }
             else
             {
-                await HandleCategoryReplacement(category, categoryToReplace, budget);
+                await HandleCategoryReplacement(transactionToUpdate, category, categoryToReplace, budget);
+            }
+
+            if (budget.Categories.Count == 0)
+            {
+                _unitOfWork.BudgetRepository.Delete(budget);
             }
         }
     }
 
-    private async Task HandleCategoryRemoval(Domain.Entities.Category category, Domain.Entities.Budget budget)
+    private async Task HandleCategoryRemoval(IReadOnlyList<Domain.Entities.Transaction> transactionToUpdate,
+        Domain.Entities.Category category, Domain.Entities.Budget budget)
     {
         budget.Categories.Remove(category);
-        await UpdateBudgetForTransactions(category, budget, true);
+        await UpdateBudgetForTransactions(transactionToUpdate, budget, true);
+        await CalculateBudgetBalance(budget, transactionToUpdate);
     }
 
-    private async Task HandleCategoryReplacement(Domain.Entities.Category category,
+    private async Task HandleCategoryReplacement(IReadOnlyList<Domain.Entities.Transaction> transactionToUpdate,
+        Domain.Entities.Category category,
         Domain.Entities.Category categoryToReplace, Domain.Entities.Budget budget)
     {
         budget.Categories.Remove(category);
@@ -98,35 +110,24 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
         if (categoryToReplace.Type == CategoryType.EXPENSE)
         {
             budget.Categories.Add(categoryToReplace);
-            await UpdateBudgetForTransactions(category, budget, true);
-            await UpdateBudgetForTransactions(categoryToReplace, budget, false);
+            await UpdateBudgetForTransactions(transactionToUpdate, budget, true);
+            await UpdateBudgetForTransactions(transactionToUpdate, budget, false);
+            await CalculateBudgetBalance(budget, transactionToUpdate);
         }
         else
         {
-            await UpdateBudgetForTransactions(category, budget, true);
+            await UpdateBudgetForTransactions(transactionToUpdate, budget, true);
+            await CalculateBudgetBalance(budget, transactionToUpdate);
         }
     }
 
-    private async Task UpdateBudgetForTransactions(Domain.Entities.Category category, Domain.Entities.Budget budget,
+    private async Task UpdateBudgetForTransactions(IReadOnlyList<Domain.Entities.Transaction> transactionToUpdate,
+        Domain.Entities.Budget budget,
         bool isRemoving)
     {
-        var transactions = isRemoving
-            ? budget.Transactions.Where(t => t.CategoryId == category.Id).ToList()
-            : await _unitOfWork.TransactionRepository.GetByCategoryIdAsync(category.Id, category.UserId);
-        
-        if(transactions.Count == 0) return;
-        
-        decimal transactionsAmount = transactions.Sum(x => x.Amount);
-        var transactionSymbols = transactions.Select(t => t.Currency.Symbol).ToList();
+        if (transactionToUpdate.Count == 0) return;
 
-        var convertCurrency =
-            await _currencyConverter.Convert(transactionSymbols, budget.Currency.Symbol, transactionsAmount);
-        decimal totalSpent = convertCurrency.Sum(x => x.Value);
-
-        budget.Balance += isRemoving ? totalSpent : -totalSpent;
-        budget.TotalSpent += isRemoving ? -totalSpent : totalSpent;
-
-        foreach (var transaction in transactions)
+        foreach (var transaction in transactionToUpdate)
         {
             if (isRemoving)
             {
@@ -139,12 +140,72 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
         }
     }
 
-
-    private async Task UpdateWallets(Domain.Entities.Category category, bool replace, CategoryType newCategoryType)
+    private async Task CalculateBudgetBalance(Domain.Entities.Budget budget,
+        IReadOnlyList<Domain.Entities.Transaction> transactions)
     {
-        var transactions = await _unitOfWork.TransactionRepository.GetByCategoryIdAsync(category.Id, category.UserId);
+        decimal transactionsAmount = transactions.Sum(x =>
+        {
+            if (x.Category.Type == CategoryType.EXPENSE)
+                return -x.Amount;
+            return x.Amount;
+        });
+        var transactionSymbols = transactions.Select(t => t.Currency.Symbol).ToList();
+
+        var convertCurrency =
+            await _currencyConverter.Convert(transactionSymbols, budget.Currency.Symbol, transactionsAmount);
+        decimal totalSpent = convertCurrency.Sum(x => x.Value);
+
+        budget.Balance += totalSpent;
+        budget.TotalSpent = budget.StartBalance - budget.Balance;
+    }
+
+    /*private async Task RemoveTransactionsFromBudget(Domain.Entities.Category category, Domain.Entities.Budget budget)
+    {
+        var transactions = budget.Transactions.Where(t => t.CategoryId == category.Id).ToList();
+        if(transactions.Count == 0) return;
+
+        decimal transactionsAmount = transactions.Sum(x => x.Amount);
+        var transactionSymbols = transactions.Select(t => t.Currency.Symbol).ToList();
+
+        var convertCurrency =
+            await _currencyConverter.Convert(transactionSymbols, budget.Currency.Symbol, transactionsAmount);
+        decimal totalSpent = convertCurrency.Sum(x => x.Value);
+
+        budget.Balance += totalSpent;
+        budget.TotalSpent = budget.StartBalance - budget.Balance;
 
         foreach (var transaction in transactions)
+        {
+            budget.Transactions.Remove(transaction);
+        }
+    }
+
+    private async Task AddTransactionsToBudget(Domain.Entities.Category category, Domain.Entities.Budget budget)
+    {
+        var transactions = await _unitOfWork.TransactionRepository.GetByCategoryIdAsync(category.Id, category.UserId);
+        if(transactions.Count == 0) return;
+
+        decimal transactionsAmount = transactions.Sum(x => x.Amount);
+        var transactionSymbols = transactions.Select(t => t.Currency.Symbol).ToList();
+
+        var convertCurrency =
+            await _currencyConverter.Convert(transactionSymbols, budget.Currency.Symbol, transactionsAmount);
+        decimal totalSpent = convertCurrency.Sum(x => x.Value);
+
+        budget.Balance -= totalSpent;
+        budget.TotalSpent = budget.StartBalance - budget.Balance;
+
+        foreach (var transaction in transactions)
+        {
+            budget.Transactions.Add(transaction);
+        }
+    }*/
+
+
+    private async Task UpdateWallets(IReadOnlyList<Domain.Entities.Transaction> transactionToUpdate,
+        Domain.Entities.Category category, bool replace, CategoryType newCategoryType)
+    {
+        foreach (var transaction in transactionToUpdate)
         {
             var wallet = transaction.Wallet;
             decimal transAmount = transaction.Amount;
@@ -195,19 +256,18 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
     }
 
 
-    private async Task UpdateTransactionns(Domain.Entities.Category category,
+    private void UpdateTransactionns(IReadOnlyList<Domain.Entities.Transaction> transactionToUpdate,
+        Domain.Entities.Category category,
         Domain.Entities.Category categoryToReplace, bool replace)
     {
-        var transactions = await _unitOfWork.TransactionRepository.GetByCategoryIdAsync(category.Id, category.UserId);
-
         if (replace)
-            foreach (var transaction in transactions)
+            foreach (var transaction in transactionToUpdate)
             {
                 transaction.Category = categoryToReplace;
                 categoryToReplace.TransactionCount += 1;
             }
         else
-            foreach (var transaction in transactions)
+            foreach (var transaction in transactionToUpdate)
             {
                 _unitOfWork.TransactionRepository.Delete(transaction);
             }

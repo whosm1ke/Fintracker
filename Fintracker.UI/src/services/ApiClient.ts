@@ -147,12 +147,27 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         }
     }
 
+    async deleteWithModel(id: string, model: TModel): Promise<ClientWrapper<DeleteCommandResponse<TResponse>>> {
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+        try {
+            const data = await axiosInstance.delete<DeleteCommandResponse<TResponse>>(this.endpoint + `/${id}`, {
+                cancelToken: this.cancelToken.token,
+                data: model
+            });
+
+            return {response: data.data, hasError: false};
+        } catch (error) {
+            return {hasError: true, error: handleError(error)};
+        }
+    }
+
     async delete(id: string): Promise<ClientWrapper<DeleteCommandResponse<TResponse>>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
             const data = await axiosInstance.delete<DeleteCommandResponse<TResponse>>(this.endpoint + `/${id}`, {
-                cancelToken: this.cancelToken.token
+                cancelToken: this.cancelToken.token,
             });
 
             return {response: data.data, hasError: false};
