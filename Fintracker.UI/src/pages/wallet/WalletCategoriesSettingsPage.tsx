@@ -69,7 +69,7 @@ export default function WalletCategoriesSettingsPage() {
     const nameRef = useRef<HTMLInputElement>(null);
     const submitButtonRef = useRef<HTMLButtonElement>(null);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [categoryToDelete, setCategoryToDelete] = useState<Category>();
+    const [categoryToDelete, setCategoryToDelete] = useState<Category>({} as Category);
 
     const categoryCreateMutation = useCreateCategory();
     const categoryUpdateMutation = useUpdateCategory();
@@ -95,6 +95,7 @@ export default function WalletCategoriesSettingsPage() {
 
 
     const handleSelectedCategory = (cat: Category) => setCategoryToCreate(cat);
+
     const handleSelectedIconColor = (cat: Category) => {
         setCategoryColorToCreate(cat);
         setCategoryToCreate(p => ({...p, iconColour: cat.iconColour}));
@@ -116,7 +117,11 @@ export default function WalletCategoriesSettingsPage() {
 
         if (submitButtonRef.current)
             submitButtonRef.current.innerText = 'Create'
+        // Оновлюємо колір кожної категорії в allCategories
+        let updatedCategories = allCategories.map(c => ({...c, iconColour: 'gray'}));
 
+        // Встановлюємо оновлений масив як новий стан
+        setAllCategories(updatedCategories);
         reset()
     }
     const onSubmit: SubmitHandler<Category> = async (model: Category) => {
@@ -125,12 +130,10 @@ export default function WalletCategoriesSettingsPage() {
         model.type = +getValues('type');
         model.name = getValues('name');
 
-        console.log("model: ", model);
 
         let result;
         if (isEditing) {
             model.id = categoryToCreate.id;
-            console.log("model: ", model);
             result = await categoryUpdateMutation.mutateAsync(model);
         } else {
             result = await categoryCreateMutation.mutateAsync(model);
@@ -283,7 +286,7 @@ export default function WalletCategoriesSettingsPage() {
                     <fieldset className={'flex flex-col gap-y-3'}>
                         <legend className={'font-semibold mb-5'}>Expense categories</legend>
                         {expenseCategories.map(c =>
-                            <div className={'flex justify-between items-center'} key={c.id}>
+                            <div className={'flex justify-between items-center'} key={c.id || "id1"}>
                                 <CategoryBlock category={c}/>
                                 <CategoryCRUDButtons category={c} onTrashClick={onTrashClick}
                                                      onGearClick={onGearClick}/>
@@ -292,64 +295,67 @@ export default function WalletCategoriesSettingsPage() {
                     </fieldset>
                 </div>
             </section>
-            {isDeleting && <DeleteCategoryModal categoryToDelete={categoryToDelete!} allCategories={categories}
-                                                toggleModal={toggleDeleteModal}
-                                                handleSelectedCategory={(cat) => setCategoryToDelete(cat)}/>}
+            {isDeleting &&
+                <DeleteCategoryModal budgetCounter={categoryToDelete.budgetCount}
+                                     categoryToDeleteId={categoryToDelete.id} categoryToDeleteName={categoryToDelete.name}
+                                     transCounter={categoryToDelete.transactionCount}
+                                     allCategories={categories.filter(c => c.id !== categoryToDelete?.id)}
+                                     toggleModal={toggleDeleteModal}/>}
         </div>
     )
 }
 
 interface DeleteCategoryModalProps {
-    categoryToDelete: Category;
+    transCounter: number;
+    budgetCounter: number;
+    categoryToDeleteId: string;
+    categoryToDeleteName: string;
     allCategories: Category[];
-    toggleModal: () => void;
-    handleSelectedCategory: (cat: Category | undefined) => void;
+    toggleModal: () => void
 }
 
 export function DeleteCategoryModal({
-                                        categoryToDelete,
+                                        transCounter,
+                                        budgetCounter,
+                                        categoryToDeleteId,
                                         allCategories,
-                                        toggleModal,
-                                        handleSelectedCategory,
+                                        categoryToDeleteName,
+                                        toggleModal
                                     }: DeleteCategoryModalProps) {
     const [isForceDelete, setIsForseDelete] = useState(false);
+    const [categoryToReplace, setCategoryToReplace] = useState<Category | undefined>(undefined);
     const categoryDeleteMutation = useDeleteCategory();
-    const [categoryToReplace, setCategoryToReplace] = useState<Category>(categoryToDelete);
     const toggleForceDelete = () => setIsForseDelete(p => !p);
     const handleDelete = async () => {
-        
-        console.log("categoryToReplace: ", categoryToReplace)
-        console.log("categoryToDelete: ", categoryToDelete)
-    
-        console.log({
-            categoryToReplaceId: categoryToReplace!.id,
-            id: categoryToDelete!.id,
+
+        const deleteResult = await categoryDeleteMutation.mutateAsync({
+            categoryToReplaceId: categoryToReplace?.id,
+            id: categoryToDeleteId,
             shouldReplace: isForceDelete
         })
-        
-        await categoryDeleteMutation.mutateAsync({
-            categoryToReplaceId: categoryToReplace!.id,
-            id: categoryToDelete!.id,
-            shouldReplace: isForceDelete
-        })
+        if (!deleteResult.hasError) {
+            toggleForceDelete()
+            toggleModal()
+            setCategoryToReplace(undefined)
+        }
     }
 
     return (
         <div
-            className={'absolute inset-0 flex justify-center items-center px-4 lg:px-0 visible bg-black/20 z-50'}>
+            className={'fixed inset-0 flex justify-center items-center px-4 lg:px-0 visible bg-black/20 z-50'}>
             <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto mt-4">
-                <h2 className="text-2xl font-bold mb-4 flex justify-between">Category deletion
+                <h2 className="text-2xl font-bold mb-4 flex justify-between">Delete category {categoryToDeleteName} ?
                     <HiX size={'2rem'} color={'red'} onClick={() => {
                         toggleModal()
-                        handleSelectedCategory(undefined)
+                        setCategoryToReplace(undefined)
                     }}/>
                 </h2>
                 <div className={'w-full flex flex-col text-lg gap-y-5'}>
                     <p>
-                        You category is used in {categoryToDelete?.transactionCount} transactions
+                        You category is used in {transCounter} transactions
                     </p>
                     <p>
-                        You category is used in {categoryToDelete?.budgetCount} budgets
+                        You category is used in {budgetCounter} budgets
                     </p>
                     <div className={'flex gap-10'}>
                         <p>
@@ -358,7 +364,6 @@ export function DeleteCategoryModal({
                         <div className="flex gap-4">
                             <div className="relative">
                                 <input
-                                    onChange={toggleForceDelete}
                                     className="h-6 w-6 border-blue-500 rounded-full cursor-pointer checked:border-transparent 
                                         checked:bg-blue-500"
                                     id="isPublic"
@@ -375,9 +380,10 @@ export function DeleteCategoryModal({
                     </div>}
                 </div>
                 <div className={'flex justify-center items-center mt-5'}>
-                    <button 
+                    <button
                         onClick={handleDelete}
-                        className={'bg-red-400 px-4 py-2 rounded text-white'}>Delete</button>
+                        className={'bg-red-400 px-4 py-2 rounded text-white'}>Delete
+                    </button>
                 </div>
             </div>
         </div>

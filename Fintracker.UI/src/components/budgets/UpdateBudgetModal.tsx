@@ -91,6 +91,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
     const onSubmit: SubmitHandler<Budget> = async (model: Budget) => {
         if (selectedCategories.length === 0) {
             setError("categoryIds", {message: "Budget must contain at least one category"})
+            return;
         } else {
             clearErrors("categoryIds")
             model.categoryIds = selectedCategories.map(c => c.id);
@@ -98,6 +99,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
 
         if (!selectedCurrency) {
             setError("currencyId", {message: "Currency is required"})
+            return;
         } else {
             clearErrors("currencyId")
             model.currencyId = selectedCurrency.id;

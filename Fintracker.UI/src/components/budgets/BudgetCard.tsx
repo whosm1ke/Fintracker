@@ -37,9 +37,6 @@ export const BudgetCard = ({
     const start = new Date(startDate).toLocaleDateString()
     const end = new Date(endDate).toLocaleDateString()
     const spentPercentage = (totalSpent * 100) / startBalance;
-    console.log("totalSpent: ", totalSpent)
-    console.log("spentPercentage: ",  spentPercentage)
-    console.log("balance: ",  balance)
     const spentBgColor = spentPercentage < 33 ? "bg-green-400" : spentPercentage < 66 ? "bg-yellow-200" : "bg-red-400"
     const cardBgColor = isPublic ? "bg-green-100" : "bg-orange-100"
     const [showDeleteButton, setShowDeleteButton] = useState(false);

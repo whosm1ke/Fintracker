@@ -19,7 +19,8 @@ public class DeleteCategoryDtoValidator : AbstractValidator<DeleteCategoryComman
         RuleFor(x => x.CategoryToReplaceId)
             .ApplyCommonRules(x => x.ShouldReplace)
             .OverridePropertyName(nameof(DeleteCategoryCommand.CategoryToReplaceId))
-            .MustAsync(async (id, _) => await unitOfWork.CategoryRepository.ExistsAsync(id))
+            .MustAsync(async (dto, catToReplace, _) =>
+                await unitOfWork.CategoryRepository.ExistsAsync(catToReplace) && catToReplace != dto.Id)
             .WithMessage(x => $"{nameof(Domain.Entities.Category)} with id does not exist [{x.CategoryToReplaceId}]")
             .When(x => x.ShouldReplace);
     }

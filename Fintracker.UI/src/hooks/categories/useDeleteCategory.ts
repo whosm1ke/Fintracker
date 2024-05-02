@@ -5,7 +5,7 @@ import useUserStore from "../../stores/userStore.ts";
 
 type CategoryToDelete = {
     shouldReplace: boolean;
-    categoryToReplaceId: string,
+    categoryToReplaceId?: string,
     id: string
 }
 

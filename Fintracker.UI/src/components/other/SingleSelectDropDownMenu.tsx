@@ -58,20 +58,22 @@ const SingleSelectDropDownMenu = <T extends { id: string }>({
                 <div
                     className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-auto max-h-60 z-10">
                     <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                        {items.map(item => (
-                            <div key={item.id}
-                                 className="flex w-full items-center px-4 py-2 gap-x-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 hover:text-gray-900"
-                                 role="menuitem" onClick={() => {
-                                setIsOpen(p => !p);
-                                onItemSelected(item);
-                            }}>
-                                <input type="radio" className="form-radio h-5 w-5 text-indigo-600"
-                                       checked={defaultSelectedItem?.id === item.id} readOnly/>
-                                <div className="cursor-pointer hover:bg-gray-100 w-full">
-                                    <ItemComponent item={item}/>
+                        {items.map(item => {
+                            return (
+                                <div key={item.id}
+                                     className="flex w-full items-center px-4 py-2 gap-x-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 hover:text-gray-900"
+                                     role="menuitem" onClick={() => {
+                                    setIsOpen(p => !p);
+                                    onItemSelected(item);
+                                }}>
+                                    <input type="radio" className="form-radio h-5 w-5 text-indigo-600"
+                                           checked={defaultSelectedItem?.id === item.id} readOnly/>
+                                    <div className="cursor-pointer hover:bg-gray-100 w-full">
+                                        <ItemComponent item={item}/>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
                 </div>
             )}

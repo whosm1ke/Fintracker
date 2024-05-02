@@ -53,7 +53,7 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
         var transactionToUpdate =
             await _unitOfWork.TransactionRepository.GetByCategoryIdAsync(category.Id, category.UserId);
 
-        UpdateTransactionns(transactionToUpdate, category, categoryToReplace, request.ShouldReplace);
+        UpdateTransactionns(transactionToUpdate, categoryToReplace, request.ShouldReplace);
         await UpdateWallets(transactionToUpdate, category, request.ShouldReplace, categoryToReplace.Type);
         await UpdateBudgets(transactionToUpdate, category, categoryToReplace, request.ShouldReplace);
 
@@ -257,7 +257,6 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
 
 
     private void UpdateTransactionns(IReadOnlyList<Domain.Entities.Transaction> transactionToUpdate,
-        Domain.Entities.Category category,
         Domain.Entities.Category categoryToReplace, bool replace)
     {
         if (replace)

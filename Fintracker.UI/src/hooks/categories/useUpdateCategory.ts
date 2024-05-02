@@ -10,7 +10,6 @@ const useUpdateCategory = () => {
     return useMutation({
         mutationFn: async (model: Category) => await apiClient.update(model),
         onMutate: async (newCategory: Category) => {
-            console.log('update category hook: ', newCategory)
             await queryClient.cancelQueries({queryKey: ["categories", "user", userId]});
 
             const prevData = queryClient.getQueryData<Category[]>(["categories", "user", userId]) || [];
