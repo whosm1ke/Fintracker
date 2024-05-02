@@ -2,7 +2,7 @@
 import {IoWalletSharp} from "react-icons/io5";
 import useDeleteWallet from "../../hooks/wallet/useDeleteWallet.ts";
 import {motion, useMotionValue, PanInfo} from 'framer-motion';
-import {useEffect, useState} from "react";
+import { useState} from "react";
 import {Wallet} from "../../entities/Wallet.ts";
 import useWalletInfoStore from "../../stores/walletStore.ts";
 
@@ -19,10 +19,9 @@ const WalletCard = ({wallet, userId}: WalletCardProps) => {
         `- ${formatedBalance} ${wallet.currency.symbol}`;
     const deleteWalletMutation = useDeleteWallet(wallet.id);
     const [showDeleteButton, setShowDeleteButton] = useState(false);
-    const setCurrenctWallet = useWalletInfoStore(x => x.setWallet);
+    const setSelectedWallet = useWalletInfoStore(x => x.setWallet);
 
-    useEffect(() => setCurrenctWallet(wallet), []);
-    
+
     const handleDeleteWallet = async () => {
         await deleteWalletMutation.mutateAsync(wallet.id);
     }
@@ -36,14 +35,13 @@ const WalletCard = ({wallet, userId}: WalletCardProps) => {
         }
     };
 
-
     // @ts-ignore
     const isMobile = navigator.userAgentData.mobile;
 
     return (
 
         <motion.div
-            drag={isMobile ? "x" : false}
+            drag={isMobile && wallet.ownerId === userId ? "x" : false}
             dragConstraints={{left: 0, right: 0}}
             dragElastic={1}
             onDragEnd={async (_e, info) => await handleDragEnd(info)}
@@ -51,9 +49,10 @@ const WalletCard = ({wallet, userId}: WalletCardProps) => {
             onMouseLeave={toggleDeleteButton}
             className={'relative flex'}
             style={{x}}
+            onClick={() => setSelectedWallet(wallet)}
         >
 
-            <Link to={`/wallet/${wallet.id}/trans`}
+            <Link to={`/wallet/${wallet.id}/trans?isInvited=${userId !== wallet.ownerId}`}
                   className={'flex flex-col sm:flex-row space-y-3 sm:space-y-0 space-x-0 sm:space-x-3 ' +
                       'p-4 bg-slate-100 rounded-lg shadow w-full'}>
                 <span className={'self-center'}>

@@ -10,7 +10,6 @@ import useCreateCategory from "../../hooks/categories/useCreateCategory.ts";
 import {handleServerErrorResponse} from "../../helpers/handleError.ts";
 import useUpdateCategory from "../../hooks/categories/useUpdateCategory.ts";
 import useCategories from "../../hooks/categories/useCategories.ts";
-import useUserStore from "../../stores/userStore.ts";
 import Spinner from "../../components/other/Spinner.tsx";
 import * as Icons from "react-icons/md";
 import {IconType} from "react-icons";
@@ -25,15 +24,11 @@ export default function WalletCategoriesSettingsPage() {
 
     // MdBrightness1 - for colour
     // <MdHub /> - for category
-    const userId = useUserStore(x => x.getUserId());
     const loc = useLocation();
     const urlQueryParams = new URLSearchParams(loc.search);
     const isOwner = urlQueryParams.get('isOwner') === 'true';
     const ownerId = urlQueryParams.get('ownerId');
 
-    console.log("ownerId: ", ownerId)
-    console.log("isOwner: ", isOwner)
-    console.log("userId: ", userId)
     const {
         register,
         handleSubmit,

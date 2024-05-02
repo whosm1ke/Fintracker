@@ -69,7 +69,8 @@ const useWalletInfoStore = createWithEqualityFn<WalletInfoStore>(set => {
             categories: [],
             minMaxRange: {min: 1, max: 1000},
             selectedWallets: [],
-            selectedWallet: {} as Wallet
+            selectedWallet: {
+            } as Wallet
         },
         setEndDate: (date: string) => set(store => ({filters: {...store.filters, endDate: date}})),
         setStartDate: (date: string) => set(store => ({filters: {...store.filters, startDate: date}})),

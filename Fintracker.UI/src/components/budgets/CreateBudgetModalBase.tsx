@@ -1,74 +1,75 @@
-﻿import {SubmitHandler, useForm} from "react-hook-form";
-import {
-    Budget, balanceRegisterOptionsForBudget,
-    endDateRegisterOptionsForBudget, nameRegisterOptionsForBudget, startDateRegisterOptionsForBudget
-} from "../../entities/Budget";
-import {useNavigate, useParams} from "react-router-dom";
-import useCreateBudget from "../../hooks/budgets/useCreateBudget";
-import useWallets from "../../hooks/wallet/useWallets";
-import Spinner from "../other/Spinner.tsx";
-import {useState} from "react";
+﻿import {Wallet} from "../../entities/Wallet.ts";
 import {Currency} from "../../entities/Currency.ts";
-import currencies from "../../data/currencies.ts";
+import {Category} from "../../entities/Category.ts";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {
+    balanceRegisterOptionsForBudget,
+    Budget, endDateRegisterOptionsForBudget,
+    nameRegisterOptionsForBudget,
+    startDateRegisterOptionsForBudget
+} from "../../entities/Budget.ts";
+import useCreateBudget from "../../hooks/budgets/useCreateBudget.ts";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import useStopScrolling from "../../hooks/other/useStopScrolling.ts";
 import {ActionButton} from "../other/ActionButton.tsx";
 import {HiX} from "react-icons/hi";
-import MultiSelectDropDownMenu from "../other/MultiSelectDropDownMenu.tsx";
-import CategoryItem from "../categories/CategoryItem.tsx";
-import {Category} from "../../entities/Category.ts";
-import {Wallet} from "../../entities/Wallet.ts";
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
+import currencies from "../../data/currencies.ts";
 import CurrencyItem from "../currencies/CurrencyItem.tsx";
 import WalletItem from "../wallets/WalletItem.tsx";
-import useExpenseCategories from "../../hooks/categories/useExpenseCategories.ts";
+import MultiSelectDropDownMenu from "../other/MultiSelectDropDownMenu.tsx";
+import CategoryItem from "../categories/CategoryItem.tsx";
 
-
-interface CreateBudgetModalProps {
+interface CreateBudgetModalBaseProps {
     userId: string,
+    walletId: string | undefined,
+    handleSelectedWallet: (w: Wallet) => void;
+    handleSelectedCurrency: (currency: Currency | undefined) => void
+    handleToggleCategoryId: (category: Category) => void;
+    handleSelectAllCategories: () => void;
+    refreshCategories: () => void;
+    categoriesToShow: Category[];
+    isActionButtonActive: boolean;
+    showWallets: boolean;
+    walletsToShow: Wallet[];
+    selectedWallet: Wallet | undefined;
+    selectedCurrency: Currency | undefined;
+    showAddWalletBtn: boolean;
+    selectedCategories: Category[];
 }
 
-export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
+
+export default function CreateBudgetModalBase ({
+                                          userId,
+                                          handleSelectAllCategories,
+                                          handleToggleCategoryId,
+                                          handleSelectedCurrency,
+                                          handleSelectedWallet,
+                                          refreshCategories,
+                                          isActionButtonActive,
+                                          showWallets,
+                                          walletsToShow,
+                                          selectedWallet,
+                                          showAddWalletBtn,
+                                          categoriesToShow,
+                                          selectedCurrency,
+                                          selectedCategories,
+                                          walletId
+                                      }: CreateBudgetModalBaseProps) {
     const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Budget>();
-    const {walletId} = useParams();
     const budgetMutation = useCreateBudget();
-    const {data: wallets} = useWallets(userId)
-    const {data: categories} = useExpenseCategories(userId);
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined)
-    const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
-    const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
     const navigate = useNavigate();
     useStopScrolling(isOpen)
-    if (wallets === undefined || categories === undefined) return <Spinner/>
+
 
     function handleOpenModal() {
         handleSelectedCurrency(undefined);
-        setSelectedCategories([])
+        refreshCategories()
         setIsOpen(p => !p);
     }
 
-    const handleSelectedWallet = (wallet: Wallet) => setSelectedWallet(wallet);
-
-    function handleSelectedCurrency(currency: Currency | undefined) {
-        setSelectedCurrency(currency);
-    }
-
-    const handleToggleCategoryId = (category: Category) => {
-
-        if (selectedCategories.includes(category)) {
-            setSelectedCategories(prev => prev.filter(c => c.id !== category.id));
-        } else {
-            setSelectedCategories(prev => [...prev, category!]);
-        }
-    };
-
-    const handleSelectAllCategories = () => {
-        if (selectedCategories.length === categories.length) {
-            setSelectedCategories([]);
-        } else {
-            setSelectedCategories(categories);
-        }
-    }
 
     const onSubmit: SubmitHandler<Budget> = async (model: Budget) => {
         if (selectedCategories.length === 0) {
@@ -103,7 +104,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
         model.currencyId = selectedCurrency!.id;
         model.currency = selectedCurrency!;
         model.categories = selectedCategories
-        model.wallet = selectedWallet || wallets.find(w => w.id === walletId)!;
+        model.wallet = selectedWallet || walletsToShow.find(w => w.id === walletId)!;
         await budgetMutation.mutateAsync(model, {
             onSuccess: () => {
                 reset();
@@ -116,7 +117,8 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
 
     return (
         <>
-            <ActionButton text={"Add new budget"} onModalOpen={handleOpenModal}/>
+            <ActionButton text={"Add new budget"} onModalOpen={handleOpenModal}
+                          isActive={isActionButtonActive}/>
             {isOpen && <div
                 className={'absolute inset-0 flex justify-center items-start px-4 lg:px-0 visible bg-black/20 z-50'}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto mt-4">
@@ -125,7 +127,7 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                             reset()
                             clearErrors()
                             handleOpenModal()
-                            setSelectedCategories([])
+                            refreshCategories()
                         }}/>
                     </h2>
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -201,32 +203,36 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
                                         <p className={'text-red-400 italic'}>{errors.currencyId.message}</p>}
                                 </div>
                             </div>
-                            {!walletId && <div className="mb-4 col-start-1 col-span-2">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="walletId">
-                                    Wallet
-                                </label>
-                                <div {...register("walletId")}>
-                                    <SingleSelectDropDownMenu items={wallets} ItemComponent={WalletItem}
-                                                              defaultSelectedItem={selectedWallet}
-                                                              heading={"Wallet"} onItemSelected={handleSelectedWallet}/>
-                                    {wallets.length === 0 ? (<div
-                                        className={'px-4 py-2 mt-4 bg-green-400 w-1/3 text-center rounded-full font-semibold'}>
-                                        <button className={'text-white text-sm'}
-                                                onClick={() => navigate("/dashboard", {state: "showArrow"})}
-                                        >Add new Wallet
-                                        </button>
-                                    </div>) : null}
-                                    {errors.walletId &&
-                                        <p className={'text-red-400 italic'}>{errors.walletId.message}</p>}
-                                </div>
-                            </div>}
+                            {showWallets &&
+                                <div className="mb-4 col-start-1 col-span-2">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="walletId">
+                                        Wallet
+                                    </label>
+                                    <div {...register("walletId")}>
+                                        <SingleSelectDropDownMenu items={walletsToShow}
+                                                                  ItemComponent={WalletItem}
+                                                                  defaultSelectedItem={selectedWallet}
+                                                                  heading={"Wallet"}
+                                                                  onItemSelected={handleSelectedWallet}/>
+                                        {showAddWalletBtn ? (<div
+                                            className={'px-4 py-2 mt-4 bg-green-400 w-1/3 text-center rounded-full font-semibold'}>
+                                            <button className={'text-white text-sm'}
+                                                    onClick={() => navigate("/dashboard", {state: "showArrow"})}
+                                            >Add new Wallet
+                                            </button>
+                                        </div>) : null}
+                                        {errors.walletId &&
+                                            <p className={'text-red-400 italic'}>{errors.walletId.message}</p>}
+                                    </div>
+                                </div>}
 
                             <div className={'mb-4 col-start-1 col-span-2 sm:col-start-0 sm:col-span-0'}
                                  {...register("categoryIds")}>
                                 <span className="block text-gray-700 text-sm font-bold mb-2">
                                     Select categories
                                 </span>
-                                <MultiSelectDropDownMenu items={categories} onItemSelected={handleToggleCategoryId}
+                                <MultiSelectDropDownMenu items={categoriesToShow}
+                                                         onItemSelected={handleToggleCategoryId}
                                                          selectedItems={selectedCategories} heading={"Categories"}
                                                          onAllItemsSelected={handleSelectAllCategories}
                                                          ItemComponent={CategoryItem}/>
@@ -264,5 +270,3 @@ export const CreateBudgetModal = ({userId}: CreateBudgetModalProps) => {
         </>
     );
 }
-
-

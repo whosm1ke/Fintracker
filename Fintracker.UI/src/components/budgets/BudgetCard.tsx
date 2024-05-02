@@ -59,7 +59,7 @@ export const BudgetCard = ({
     const isMobile = navigator.userAgentData.mobile;
     return (
         <motion.div
-            drag={isMobile ? "x" : false}
+            drag={isMobile && budgetUserId === userId ? "x" : false}
             dragConstraints={{left: 0, right: 0}}
             dragElastic={1}
             onDragEnd={async (_e, info) => await handleDragEnd(info)}
