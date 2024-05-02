@@ -35,7 +35,11 @@ public class PopulateUserWithCategoriesCommandHandler : IRequestHandler<Populate
         else
         {
             // Отримуємо лише ті категорії, яких немає в existingCategories
-            var categoriesToAdd = categories!.Except(existingCategories, new CategoryEqualityComparer()).ToList();
+            var categoriesToAdd = categories!
+                .Where(c => !existingCategories.Any(ec => ec.Name == c.Name && ec.Type == c.Type))
+                .ToList();
+
+
 
             foreach (var category in categoriesToAdd)
             {

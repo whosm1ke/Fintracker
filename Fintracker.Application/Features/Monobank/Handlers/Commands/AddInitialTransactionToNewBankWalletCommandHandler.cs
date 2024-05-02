@@ -33,8 +33,8 @@ public class AddInitialTransactionToNewBankWalletCommandHandler : IRequestHandle
         var response = new CreateCommandResponse<WalletPureDTO>();
         var transactions = _mapper.Map<ICollection<Domain.Entities.Transaction>>(request.Payload.Transactions);
         var defaultCurrency = await _unitOfWork.CurrencyRepository.GetAsync("UAH");
-        var expenseCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankExpenseCategoryId();
-        var incomeCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankIncomeCategoryId();
+        var expenseCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankExpenseCategoryId(request.Payload.OwnerId);
+        var incomeCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankIncomeCategoryId(request.Payload.OwnerId);
         var xToken = await _monobankService.GetMonobankTokenAsync(request.Payload.Email);
         var accountBalance = await _monobankService.GetAccountBalance(xToken!, request.Payload.AccountId);
 
@@ -48,7 +48,7 @@ public class AddInitialTransactionToNewBankWalletCommandHandler : IRequestHandle
         };
 
         bankWallet.BankAccountId = request.Payload.AccountId;
-
+        decimal walletBalance = 0;
         foreach (var transaction in transactions)
         {
             transaction.UserId = request.Payload.OwnerId;
@@ -56,9 +56,12 @@ public class AddInitialTransactionToNewBankWalletCommandHandler : IRequestHandle
             transaction.CurrencyId = defaultCurrency.Id;
             transaction.CategoryId = transaction.Amount < 0 ? expenseCategoryId : incomeCategoryId;
             transaction.Amount = (transaction.Amount < 0 ? transaction.Amount * -1 : transaction.Amount) / 100m;
+            walletBalance += transaction.Amount;
             bankWallet.Transactions.Add(transaction);
         }
 
+        bankWallet.Balance = walletBalance / 100m;
+        bankWallet.StartBalance = walletBalance / 100m;
 
         await _unitOfWork.WalletRepository.AddAsync(bankWallet);
         await _unitOfWork.SaveAsync();

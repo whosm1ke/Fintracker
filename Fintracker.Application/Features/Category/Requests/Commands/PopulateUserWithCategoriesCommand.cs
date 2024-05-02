@@ -8,4 +8,5 @@ public class PopulateUserWithCategoriesCommand : IRequest<Unit>, INotGetRequest
     public string PathToFile { get; set; }
 
     public Guid UserId { get; set; }
+
 }

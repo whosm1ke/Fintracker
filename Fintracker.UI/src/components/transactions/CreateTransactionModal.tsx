@@ -64,6 +64,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
     const onSubmit: SubmitHandler<Transaction> = async (model: Transaction) => {
         if (!selectedCategory) {
             setError("categoryId", {message: "Category is required"});
+            return;
         } else {
             model.category = selectedCategory;
             clearErrors("categoryId")
@@ -72,6 +73,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
 
         if (!selectedCurrency) {
             setError("currencyId", {message: "Currency is required"});
+            return;
         } else {
             clearErrors("currencyId")
             model.currency = selectedCurrency;

@@ -8,6 +8,7 @@ export interface Category extends BaseEntity {
     iconColour: string;
     transactionCount: number;
     budgetCount: number;
+    isSystemCategory: boolean
 }
 
 export const nameRegisterOptionsForCategory: RegisterOptions = {

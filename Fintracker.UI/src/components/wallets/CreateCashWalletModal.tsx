@@ -35,7 +35,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
 
     const onSubmit: SubmitHandler<Wallet> = async (model: Wallet) => {
 
-        if (selectedCurrency === undefined) {
+        if (!selectedCurrency) {
             setError("currencyId", {message: "Currency not selected"})
             return;
         } else {

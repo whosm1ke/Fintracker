@@ -24,35 +24,36 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
             .ToListAsync();
     }
 
-    public async Task<Guid> GetDefaultBankIncomeCategoryId()
+    public async Task<Guid> GetDefaultBankIncomeCategoryId(Guid userId)
     {
         var incomeCategory = await _db.Categories
-            .Where(x => x.IsSystemCategory &&
-                        x.Name == "Income" && x.Type == CategoryType.INCOME)
+            .Where(x => x.IsSystemCategory && x.UserId == userId &&
+                        x.Type == CategoryType.INCOME)
             .FirstOrDefaultAsync();
+
 
         if (incomeCategory is null)
             throw new NotFoundException(new ExceptionDetails
             {
-                ErrorMessage = "System category for bank income was not found",
-                PropertyName = ""
+                ErrorMessage = "Unable to find system income category",
+                PropertyName = "Id"
             }, nameof(Category));
 
         return incomeCategory.Id;
     }
 
-    public async Task<Guid> GetDefaultBankExpenseCategoryId()
+    public async Task<Guid> GetDefaultBankExpenseCategoryId(Guid userId)
     {
         var expenseCategory = await _db.Categories
-            .Where(x => x.IsSystemCategory &&
-                        x.Name == "Expense" && x.Type == CategoryType.EXPENSE)
+            .Where(x => x.IsSystemCategory && x.UserId == userId &&
+                        x.Type == CategoryType.EXPENSE)
             .FirstOrDefaultAsync();
 
         if (expenseCategory is null)
             throw new NotFoundException(new ExceptionDetails
             {
-                ErrorMessage = "System category for bank expense was not found",
-                PropertyName = ""
+                ErrorMessage = "Unable to find system expense category",
+                PropertyName = "Id"
             }, nameof(Category));
 
         return expenseCategory.Id;

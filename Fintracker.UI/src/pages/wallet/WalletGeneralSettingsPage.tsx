@@ -215,7 +215,7 @@ export default function WalletGeneralSettingsPage() {
                     </form>
                 </div>
             </section>
-            <section className={'flex flex-col gap-y-5'}>
+            {currenctUserId === wallet.ownerId && <section className={'flex flex-col gap-y-5'}>
                 <h2 className={'font-semibold text-md'}>Wallet members</h2>
                 <div className={'flex flex-col gap-y-1'}>
                     <label htmlFor="invite" className={'flex justify-between w-full'}>
@@ -269,7 +269,7 @@ export default function WalletGeneralSettingsPage() {
                         </div>
                     )}
                 </div>
-            </section>
+            </section>}
         </div>
     )
 }

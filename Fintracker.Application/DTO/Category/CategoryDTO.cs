@@ -14,6 +14,8 @@ public class CategoryDTO : IBaseDto
 
     public string IconColour { get; set; } = default!;
     
+    public bool IsSystemCategory { get; set; }
+    
     public int TransactionCount { get; set; }
 
     public int BudgetCount { get; set; }

@@ -18,12 +18,22 @@ import {BsFillGearFill} from "react-icons/bs";
 import {FaTrash} from "react-icons/fa6";
 import useDeleteCategory from "../../hooks/categories/useDeleteCategory.ts";
 import {HiX} from "react-icons/hi";
+import usePopulateCategories from "../../hooks/categories/usePopulateCategories.ts";
+import {useLocation} from "react-router-dom";
 
 export default function WalletCategoriesSettingsPage() {
 
     // MdBrightness1 - for colour
     // <MdHub /> - for category
     const userId = useUserStore(x => x.getUserId());
+    const loc = useLocation();
+    const urlQueryParams = new URLSearchParams(loc.search);
+    const isOwner = urlQueryParams.get('isOwner') === 'true';
+    const ownerId = urlQueryParams.get('ownerId');
+
+    console.log("ownerId: ", ownerId)
+    console.log("isOwner: ", isOwner)
+    console.log("userId: ", userId)
     const {
         register,
         handleSubmit,
@@ -64,7 +74,7 @@ export default function WalletCategoriesSettingsPage() {
         } as Category))
     )
     const [isEditing, setIsEditing] = useState(false);
-    const {data: categories} = useCategories(userId!);
+    const {data: categories} = useCategories(ownerId!);
     const formRef = useRef<HTMLFormElement>(null);
     const nameRef = useRef<HTMLInputElement>(null);
     const submitButtonRef = useRef<HTMLButtonElement>(null);
@@ -73,6 +83,7 @@ export default function WalletCategoriesSettingsPage() {
 
     const categoryCreateMutation = useCreateCategory();
     const categoryUpdateMutation = useUpdateCategory();
+    const populateCatsMutation = usePopulateCategories();
 
     useEffect(() => {
         if (categoryToEdit) {
@@ -106,6 +117,10 @@ export default function WalletCategoriesSettingsPage() {
 
         // Встановлюємо оновлений масив як новий стан
         setAllCategories(updatedCategories);
+    }
+
+    const hadnlePopulateCategories = async () => {
+        await populateCatsMutation.mutateAsync();
     }
 
     const setDefaultValues = () => {
@@ -190,86 +205,95 @@ export default function WalletCategoriesSettingsPage() {
             formRef.current.scrollIntoView({behavior: 'smooth', block: 'center'})
     }
 
+
     return (
         <div className={'mx-auto px-10 sm:px-12 md:px-24 lg:px-36 py-7 flex flex-col gap-y-10'}>
-            <h1 className={'text-lg font-semibold'}>Create your new category</h1>
-            <section>
-                <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
-                    <div className={'grid grid-cols-1 sm:grid-cols-2 gap-3'}>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2"
-                            >Icon</label>
-                            <div {...register("image")}>
-                                <SingleSelectDropDownMenu items={allCategories} ItemComponent={CategoryItem}
-                                                          heading={"Icons"} onItemSelected={handleSelectedCategory}
-                                                          defaultSelectedItem={categoryToCreate}/>
-                                {errors.image &&
-                                    <p className={'text-red-400 italic'}>{errors.image.message}</p>}
-                            </div>
-                        </div>
+            {isOwner &&
+                <>
+                    <h1 className={'text-lg font-semibold'}>Create your new category</h1>
+                    <section>
+                        <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
+                            <div className={'grid grid-cols-1 sm:grid-cols-2 gap-3'}>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2"
+                                    >Icon</label>
+                                    <div {...register("image")}>
+                                        <SingleSelectDropDownMenu items={allCategories} ItemComponent={CategoryItem}
+                                                                  heading={"Icons"}
+                                                                  onItemSelected={handleSelectedCategory}
+                                                                  defaultSelectedItem={categoryToCreate}/>
+                                        {errors.image &&
+                                            <p className={'text-red-400 italic'}>{errors.image.message}</p>}
+                                    </div>
+                                </div>
 
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2"
-                            >Color</label>
-                            <div {...register("iconColour")}>
-                                <SingleSelectDropDownMenu items={categoryColors} ItemComponent={CategoryItem}
-                                                          heading={"Colors"} onItemSelected={handleSelectedIconColor}
-                                                          defaultSelectedItem={categooryColorToCreate}/>
-                                {errors.image &&
-                                    <p className={'text-red-400 italic'}>{errors.image.message}</p>}
-                            </div>
-                        </div>
-                        <div className="sm:col-span-2">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                                Name
-                            </label>
-                            <input
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="name"
-                                type="text"
-                                {...register("name", nameRegisterOptionsForCategory)}
-                                onChange={e => setValue("name", e.target.value)}
-                                ref={nameRef}
-                            />
-                            {errors.name && <p className={'text-red-400 italic'}>{errors.name.message}</p>}
-                        </div>
-                        {!isEditing && <div className="sm:col-span-2">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
-                                Category type
-                            </label>
-                            <select
-                                {...register("type", {required: "Type for category is required"})}
-                                defaultValue=""
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                onChange={e => setValue("type", +e.target.value)}
-                                id="type">
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2"
+                                    >Color</label>
+                                    <div {...register("iconColour")}>
+                                        <SingleSelectDropDownMenu items={categoryColors} ItemComponent={CategoryItem}
+                                                                  heading={"Colors"}
+                                                                  onItemSelected={handleSelectedIconColor}
+                                                                  defaultSelectedItem={categooryColorToCreate}/>
+                                        {errors.image &&
+                                            <p className={'text-red-400 italic'}>{errors.image.message}</p>}
+                                    </div>
+                                </div>
+                                <div className="sm:col-span-2">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                                        Name
+                                    </label>
+                                    <input
+                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        id="name"
+                                        type="text"
+                                        {...register("name", nameRegisterOptionsForCategory)}
+                                        onChange={e => setValue("name", e.target.value)}
+                                        ref={nameRef}
+                                    />
+                                    {errors.name && <p className={'text-red-400 italic'}>{errors.name.message}</p>}
+                                </div>
+                                {!isEditing && <div className="sm:col-span-2">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
+                                        Category type
+                                    </label>
+                                    <select
+                                        {...register("type", {required: "Type for category is required"})}
+                                        defaultValue=""
+                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        onChange={e => setValue("type", +e.target.value)}
+                                        id="type">
 
-                                <option value=""></option>
-                                <option value={CategoryType.EXPENSE}>Expense</option>
-                                <option value={CategoryType.INCOME}>Income</option>
-                            </select>
+                                        <option value=""></option>
+                                        <option value={CategoryType.EXPENSE}>Expense</option>
+                                        <option value={CategoryType.INCOME}>Income</option>
+                                    </select>
 
-                            {errors.type && <p className={'text-red-400 italic'}>{errors.type.message}</p>}
-                        </div>}
-                        <div className={'flex gap-x-2 col-span-2'}>
-                            <div className={'w-full bg-green-400 text-white font-semibold text-center rounded-lg mt-5'}>
-                                <button ref={submitButtonRef} type={'submit'} className={'w-full  p-2 '}>Create</button>
+                                    {errors.type && <p className={'text-red-400 italic'}>{errors.type.message}</p>}
+                                </div>}
+                                <div className={'flex gap-x-2 col-span-2'}>
+                                    <div
+                                        className={'w-full bg-green-400 text-white font-semibold text-center rounded-lg mt-5'}>
+                                        <button ref={submitButtonRef} type={'submit'} className={'w-full  p-2 '}>Create
+                                        </button>
+                                    </div>
+                                    {isEditing && <div
+                                        className={'w-full bg-red-400 text-white font-semibold text-center rounded-lg mt-5'}>
+                                        <button type={'submit'} onClick={() => {
+                                            toggleIsEditing()
+                                            setDefaultValues()
+                                        }}
+                                                className={'w-full  p-2 '}>Cancel
+                                        </button>
+                                    </div>}
+                                </div>
                             </div>
-                            {isEditing && <div
-                                className={'w-full bg-red-400 text-white font-semibold text-center rounded-lg mt-5'}>
-                                <button type={'submit'} onClick={() => {
-                                    toggleIsEditing()
-                                    setDefaultValues()
-                                }}
-                                        className={'w-full  p-2 '}>Cancel
-                                </button>
-                            </div>}
-                        </div>
-                    </div>
-                </form>
-            </section>
-            <section className={'flex flex-col gap-y-5'}>
-                <h2 className={'font-semibold mt-10'}>Manage your categories</h2>
+                        </form>
+                    </section>
+                </>
+            }
+            <section className={`flex flex-col sm:flex-row items-center sm:justify-between sm:items-stretch gap-y-5`}>
+                {isOwner && <h2 className={'font-semibold mt-10'}>'Manage your categories'</h2>}
                 <div className={'mt-5'}>
                     <fieldset className={'flex flex-col gap-y-3'}>
                         <legend className={'font-semibold mb-5'}>Income categories</legend>
@@ -277,7 +301,7 @@ export default function WalletCategoriesSettingsPage() {
                             <div className={'flex justify-between items-center'} key={c.id || "Hi-hi-ha-ha"}>
                                 <CategoryBlock category={c}/>
                                 <CategoryCRUDButtons category={c} onTrashClick={onTrashClick}
-                                                     onGearClick={onGearClick}/>
+                                                     onGearClick={onGearClick} isOwner={isOwner}/>
                             </div>
                         )}
                     </fieldset>
@@ -289,15 +313,23 @@ export default function WalletCategoriesSettingsPage() {
                             <div className={'flex justify-between items-center'} key={c.id || "id1"}>
                                 <CategoryBlock category={c}/>
                                 <CategoryCRUDButtons category={c} onTrashClick={onTrashClick}
-                                                     onGearClick={onGearClick}/>
+                                                     onGearClick={onGearClick} isOwner={isOwner}/>
                             </div>
                         )}
                     </fieldset>
                 </div>
+                {categories.length === 2 &&
+                    <div className={'w-1/2 bg-green-400 text-center py-2 text-lg rounded-md shadow text-white'}>
+                        <button className={'w-full h-full'}
+                                onClick={hadnlePopulateCategories}
+                        >Populate with standart categories
+                        </button>
+                    </div>}
             </section>
             {isDeleting &&
                 <DeleteCategoryModal budgetCounter={categoryToDelete.budgetCount}
-                                     categoryToDeleteId={categoryToDelete.id} categoryToDeleteName={categoryToDelete.name}
+                                     categoryToDeleteId={categoryToDelete.id}
+                                     categoryToDeleteName={categoryToDelete.name}
                                      transCounter={categoryToDelete.transactionCount}
                                      allCategories={categories.filter(c => c.id !== categoryToDelete?.id)}
                                      toggleModal={toggleDeleteModal}/>}
@@ -394,7 +426,9 @@ interface CategoryBlockProps {
     category: Category;
 }
 
-export function CategoryBlock({category}: CategoryBlockProps) {
+export function CategoryBlock({
+                                  category
+                              }: CategoryBlockProps) {
     const Icon = (Icons as any)[category.image] as IconType;
 
     return (
@@ -410,31 +444,41 @@ export function CategoryBlock({category}: CategoryBlockProps) {
 
 interface CategoryCRUDButtonsProps {
     category: Category;
+    isOwner: boolean;
     onGearClick: (cat: Category) => void;
     onTrashClick: (cat: Category) => void;
 }
 
-export function CategoryCRUDButtons({category, onGearClick, onTrashClick}: CategoryCRUDButtonsProps) {
+export function CategoryCRUDButtons({
+                                        category, isOwner, onGearClick, onTrashClick
+                                    }: CategoryCRUDButtonsProps) {
 
     return (
-        <div className={'flex items-center justify-center gap-x-3'}>
-            <div className={'bg-green-400/30 p-2 rounded hover:bg-green-300/70 transition-all transform duration-300'}>
-                <button
-                    type={'button'}
-                    onClick={() => onGearClick(category)}
-                    className={'text-center flex justify-center items-center'}>
-                    <BsFillGearFill size={'1rem'} color={'rgb(74 222 128 / 1)'}/>
-                </button>
-            </div>
-            <div className={'bg-red-300/40 p-2 rounded hover:bg-red-300/70 transition-all transform duration-300'}>
-                <button
-                    type={'button'}
-                    onClick={() => onTrashClick(category)}
-                    className={'text-center flex justify-center items-center'}>
-                    <FaTrash size={'1rem'} color={'red'}/>
-                </button>
-            </div>
+        <>
+            {isOwner &&
+                <div className={'flex items-center justify-center gap-x-3'}>
+                    <div
+                        className={'bg-green-400/30 p-2 rounded hover:bg-green-300/70 transition-all transform duration-300'}>
+                        <button
+                            type={'button'}
+                            onClick={() => onGearClick(category)}
+                            className={'text-center flex justify-center items-center'}>
+                            <BsFillGearFill size={'1rem'} color={'rgb(74 222 128 / 1)'}/>
+                        </button>
+                    </div>
 
-        </div>
+                    {!category.isSystemCategory &&
+                        <div
+                            className={'bg-red-300/40 p-2 rounded hover:bg-red-300/70 transition-all transform duration-300'}>
+                            <button
+                                type={'button'}
+                                onClick={() => onTrashClick(category)}
+                                className={'text-center flex justify-center items-center'}>
+                                <FaTrash size={'1rem'} color={'red'}/>
+                            </button>
+                        </div>}
+                </div>
+            }
+        </>
     )
 }

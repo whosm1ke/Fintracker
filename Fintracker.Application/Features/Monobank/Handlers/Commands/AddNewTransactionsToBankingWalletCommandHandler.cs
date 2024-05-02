@@ -33,8 +33,7 @@ public class
         var response = new BaseCommandResponse();
         var transactions = _mapper.Map<ICollection<Domain.Entities.Transaction>>(request.Payload.Transactions);
         var defaultCurrency = await _unitOfWork.CurrencyRepository.GetAsync("UAH");
-        var expenseCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankExpenseCategoryId();
-        var incomeCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankIncomeCategoryId();
+     
         var xToken = await _monobankService.GetMonobankTokenAsync(request.Payload.Email);
         var accountBalance = await _monobankService.GetAccountBalance(xToken!, request.Payload.AccountId);
 
@@ -47,6 +46,9 @@ public class
                 ErrorMessage = $"Was not found by provided id [{request.Payload.AccountId}]",
                 PropertyName = nameof(request.Payload.AccountId)
             }, nameof(Domain.Entities.Wallet));
+        
+        var expenseCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankExpenseCategoryId(bankWallet.OwnerId);
+        var incomeCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankIncomeCategoryId(bankWallet.OwnerId);
 
         foreach (var transaction in transactions)
         {

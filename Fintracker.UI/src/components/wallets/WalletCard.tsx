@@ -2,8 +2,9 @@
 import {IoWalletSharp} from "react-icons/io5";
 import useDeleteWallet from "../../hooks/wallet/useDeleteWallet.ts";
 import {motion, useMotionValue, PanInfo} from 'framer-motion';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Wallet} from "../../entities/Wallet.ts";
+import useWalletInfoStore from "../../stores/walletStore.ts";
 
 interface WalletCardProps {
     wallet: Wallet,
@@ -18,7 +19,10 @@ const WalletCard = ({wallet, userId}: WalletCardProps) => {
         `- ${formatedBalance} ${wallet.currency.symbol}`;
     const deleteWalletMutation = useDeleteWallet(wallet.id);
     const [showDeleteButton, setShowDeleteButton] = useState(false);
+    const setCurrenctWallet = useWalletInfoStore(x => x.setWallet);
 
+    useEffect(() => setCurrenctWallet(wallet), []);
+    
     const handleDeleteWallet = async () => {
         await deleteWalletMutation.mutateAsync(wallet.id);
     }

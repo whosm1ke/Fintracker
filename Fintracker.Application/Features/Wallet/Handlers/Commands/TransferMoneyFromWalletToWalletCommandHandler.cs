@@ -21,8 +21,6 @@ public class
         CancellationToken cancellationToken)
     {
         var response = new BaseCommandResponse();
-        var incomeCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankIncomeCategoryId();
-        var expenseCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankExpenseCategoryId();
 
         var fromWallet = await _unitOfWork.WalletRepository.GetWalletById(request.FromWalletId);
 
@@ -41,6 +39,8 @@ public class
                 ErrorMessage = "Can not transfer money to banking wallet",
                 PropertyName = nameof(Domain.Entities.Wallet)
             });
+        var incomeCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankIncomeCategoryId(fromWallet.OwnerId);
+        var expenseCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankExpenseCategoryId(fromWallet.OwnerId);
 
         fromWallet!.Balance -= request.Amount;
         toWallet!.Balance += request.Amount;

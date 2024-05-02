@@ -1,8 +1,17 @@
-﻿import {NavLink, Outlet, useLocation} from "react-router-dom";
+﻿import {NavLink, Outlet, useLocation, useParams} from "react-router-dom";
+import useUserStore from "../../stores/userStore.ts";
+import useWallet from "../../hooks/wallet/useWallet.ts";
+import Spinner from "../../components/other/Spinner.tsx";
 
 export default function WalletSettingsLayoutPage() {
     const loc = useLocation();
+    const {walletId} = useParams();
     const isGeneralSettings = !loc.pathname.includes('categories');
+    const userId = useUserStore(x => x.getUserId());
+    const {data: wallet} = useWallet(walletId!)
+    
+    if(!wallet || !wallet.response) return <Spinner/>
+    
     return (
         <div className={'container mx-auto p-4'}>
             <div className={'flex flex-col sm:flex-row p-2'}>
@@ -19,7 +28,7 @@ export default function WalletSettingsLayoutPage() {
                                 >General Settings</NavLink>
                             </li>
                             <li className={'w-full text-center text-md sm:text-lg flex'}>
-                                <NavLink to={`categories`}
+                                <NavLink to={`categories?isOwner=${wallet.response.ownerId === userId ? true : false}&ownerId=${wallet.response.ownerId}`}
                                          className={({isActive}) => {
                                              return isActive ? "w-full h-full bg-white rounded-tl rounded-bl shadow p-4 " +
                                                  "text-green-400 font-bold" : "w-full p-4"

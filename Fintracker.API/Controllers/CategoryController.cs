@@ -16,11 +16,11 @@ namespace Fintracker.API.Controllers;
 public class CategoryController : BaseController
 {
     private readonly IMediator _mediator;
-
-    public CategoryController(IMediator mediator)
+    private readonly IWebHostEnvironment _environment;
+    public CategoryController(IMediator mediator, IWebHostEnvironment environment)
     {
         _mediator = mediator;
-        
+        _environment = environment;
     }
 
 
@@ -90,6 +90,21 @@ public class CategoryController : BaseController
         {
             Category = category,
             UserId = GetCurrentUserId()
+        });
+
+        return Ok(response);
+    }
+    
+    [HttpPost("populate")]
+    [ProducesResponseType(typeof(CreateCommandResponse<CategoryDTO>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Pupulate()
+    {
+        var response =   await _mediator.Send(new PopulateUserWithCategoriesCommand()
+        {
+            UserId = GetCurrentUserId(),
+            PathToFile = Path.Combine(_environment.WebRootPath, "data", "categories.json")
         });
 
         return Ok(response);
