@@ -107,7 +107,7 @@ public class MockCategoryRepository
                     .Where(x => x.Type == type).ToList());
             });
 
-        mock.Setup(x => x.GetAllWithIds(It.IsAny<ICollection<Guid>>(), It.IsAny<Guid>()))
+        mock.Setup(x => x.GetAllByIds(It.IsAny<ICollection<Guid>>(), It.IsAny<Guid>()))
             .Returns((ICollection<Guid> ids, Guid userId) =>
             {
                 IReadOnlyCollection<Category> cats =

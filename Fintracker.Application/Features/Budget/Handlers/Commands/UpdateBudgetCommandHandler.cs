@@ -87,6 +87,13 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
 
     private async Task UpdateBudget(Domain.Entities.Budget oldBudget, UpdateBudgetDTO newBudget)
     {
+        var oldCategories = oldBudget.Categories;
+
+        foreach (var oldCategory in oldCategories)
+        {
+            oldCategory.BudgetCount -= 1;
+        }
+        
         oldBudget.Name = newBudget.Name;
         oldBudget.StartBalance = newBudget.StartBalance;
         oldBudget.Transactions = new HashSet<Domain.Entities.Transaction>();
@@ -100,9 +107,10 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         var newCurrency = await _unitOfWork.CurrencyRepository.GetAsync(newBudget.CurrencyId);
 
         var categories = await _unitOfWork.CategoryRepository
-            .GetAllWithIds(newBudget.CategoryIds, oldBudget.OwnerId);
+            .GetAllByIds(newBudget.CategoryIds, oldBudget.OwnerId);
         foreach (var category in categories)
         {
+            category.BudgetCount += 1;
             oldBudget.Categories.Add(category);
         }
 

@@ -28,4 +28,6 @@ public class Category : IEntity<Guid>
     public bool IsSystemCategory { get; set; }
 
     public int TransactionCount { get; set; }
+    
+    public int BudgetCount { get; set; }
 }

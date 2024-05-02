@@ -40,6 +40,10 @@ public class DeleteBudgetCommandHandler : IRequestHandler<DeleteBudgetCommand, D
                 PropertyName = nameof(request.Id)
             });
         
+        foreach (var budgetCategory in budget.Categories)
+        {
+            budgetCategory.BudgetCount -= 1;
+        }
         var budgetBaseDto = _mapper.Map<BudgetBaseDTO>(budget);
 
         await DeleteBudgetFromMemberUsersIfPublic(budget);

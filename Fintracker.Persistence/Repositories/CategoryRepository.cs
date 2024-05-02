@@ -78,7 +78,7 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
         return await _db.Categories.GetAllSortedAsync(userId, queryParams);
     }
 
-    public async Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids, Guid userId)
+    public async Task<IReadOnlyCollection<Category>> GetAllByIds(ICollection<Guid> ids, Guid userId)
     {
         return await _db.Categories
             .Where(c => c.UserId == userId && ids.Contains(c.Id))

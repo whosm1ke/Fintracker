@@ -23,6 +23,10 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(x => x.TransactionCount)
             .HasDefaultValue(0)
             .IsRequired();
+        
+        builder.Property(x => x.BudgetCount)
+            .HasDefaultValue(0)
+            .IsRequired();
 
         builder.Property(x => x.Type)
             .IsRequired()

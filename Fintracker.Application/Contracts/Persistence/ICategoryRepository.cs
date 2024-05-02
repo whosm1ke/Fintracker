@@ -10,7 +10,7 @@ public interface ICategoryRepository : IGenericRepository<Category>
 
     Task<IReadOnlyList<Category>> GetAllSortedAsync(Guid userId, QueryParams queryParams);
 
-    Task<IReadOnlyCollection<Category>> GetAllWithIds(ICollection<Guid> ids, Guid userId);
+    Task<IReadOnlyCollection<Category>> GetAllByIds(ICollection<Guid> ids, Guid userId);
 
     Task<IReadOnlyList<Category>> GetAllAsync(Guid userId);
 
