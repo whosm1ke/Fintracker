@@ -34,7 +34,7 @@ interface UpdateBudgetModalProps {
 const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
 
     const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Budget>();
-    const currencyUserId = useUserStore(x => x.getUserId())
+    const currentUserId = useUserStore(x => x.getUserId())
     const {walletId} = useParams();
     const budgetMutation = useUpdateBudget();
     const {data: wallets} = useWallets(userId)
@@ -110,6 +110,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
         else
             model.walletId = selectedWallet!.id
 
+        
         model.id = budget.id;
         model.ownerId = userId;
         model.currencyId = selectedCurrency!.id;
@@ -244,7 +245,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
                             >
                                 Update budget
                             </button>
-                            {currencyUserId === budget.ownerId && <div className="flex gap-4">
+                            {<div className={`flex gap-4 ${currentUserId !== budget.ownerId ? 'hidden' : ''}`}>
                                 <label className="block text-sm font-bold" htmlFor="isPublic">
                                     Public?
                                 </label>

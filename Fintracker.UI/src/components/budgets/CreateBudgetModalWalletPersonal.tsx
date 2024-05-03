@@ -22,7 +22,6 @@ const CreateBudgetModalWalletPersonal = ({userId, walletId, categories}: CreateB
 
     if (wallet?.response === undefined) return <Spinner/>
 
-    console.log("categories: ", categories)
 
     function handleSelectedCurrency(currency: Currency | undefined) {
         setSelectedCurrency(currency);

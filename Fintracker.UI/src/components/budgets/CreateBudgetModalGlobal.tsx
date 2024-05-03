@@ -20,7 +20,6 @@ export default function CreateBudgetModalGlobal ({userId, categories}: CreateBud
 
     if (wallets === undefined || categories === undefined) return <Spinner/>
     const filteredWallets = wallets.filter(w => w.ownerId === userId)
-console.log("CreateBudgetModalGlobal")
     const handleSelectedWallet = (wallet: Wallet) => setSelectedWallet(wallet);
 
     function handleSelectedCurrency(currency: Currency | undefined) {
