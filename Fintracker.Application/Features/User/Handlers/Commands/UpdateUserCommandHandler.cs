@@ -32,19 +32,21 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
                 ErrorMessage = $"Was not found by id [{request.User.Id}]",
                 PropertyName = nameof(request.User.Id)
             }, nameof(Domain.Entities.User));
-        
+
         var oldUser = _mapper.Map<UserBaseDTO>(user);
         var oldAvatar = oldUser.UserDetails?.Avatar;
-        var newAvatar = Path.Combine(request.WWWRoot, "images", request.User.Avatar?.FileName!);
-        if (File.Exists(oldAvatar) && oldAvatar != newAvatar)
+        if (request.User.Avatar is not null)
         {
-            File.Delete(oldAvatar);
+            var newAvatar = Path.Combine(request.WWWRoot, "images", request.User.Avatar?.FileName!);
+            if (File.Exists(oldAvatar) && oldAvatar != newAvatar)
+            {
+                File.Delete(oldAvatar);
+            }
         }
-        
+
         _mapper.Map(request.User, user);
         var newUser = _mapper.Map<UserBaseDTO>(user);
-        
-        
+
 
         await _userRepository.UpdateAsync(user);
 

@@ -93,6 +93,11 @@ export default function WalletGeneralSettingsPage() {
             setIsEmailAlreadyAdded(true)
             return;
         }
+        
+        if(email === wallet.owner.email){
+            setIsEmailAlreadyAdded(true)
+            return;
+        }
 
         setIsEmailAlreadyAdded(false)
         setIsEmailValid(regResult)

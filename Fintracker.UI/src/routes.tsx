@@ -17,6 +17,8 @@ import RegisterForm from "./components/auth/RegisterForm.tsx";
 import LoginForm from "./components/auth/LoginForm.tsx";
 import WalletSettingsLayoutPage from "./pages/Layout/WalletSettingsLayoutPage.tsx";
 import InviteAccept from "./components/auth/InviteAccept.tsx";
+import GlobalSettings from "./pages/Layout/GlobalSettings.tsx";
+import AccountSettings from "./pages/AccountSettings.tsx";
 
 const router = createBrowserRouter([
     {
@@ -114,6 +116,23 @@ const router = createBrowserRouter([
         ]
     },
     {
+        id: "settings",
+        path: 'settings',
+        element: <GlobalSettings/>,
+        children: [
+            {
+                id: 'accountSettings',
+                index: true,
+                element: <AccountSettings/>
+            },
+            {
+                id: 'categoriesSettings',
+                path: 'all-categories',
+                element: <WalletCategoriesSettingsPage/>
+            }
+        ]
+    },
+    {
         id: 'registration',
         path: 'registration',
         element: <RegisterForm/>
@@ -124,7 +143,7 @@ const router = createBrowserRouter([
         element: <LoginForm/>
     },
     {
-        id:'confirm-invite',
+        id: 'confirm-invite',
         path: 'confirm-invite',
         element: <InviteAccept/>
     }

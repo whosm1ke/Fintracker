@@ -45,7 +45,6 @@ public class UserRepository : IUserRepository
             .Where(x => x.Email == userEmail && x.MemberWallets.Any(x => x.Id == walletId))
             .FirstOrDefaultAsync() != null;
     }
-    
 
 
     public async Task<bool> ExistsAsync(Guid id)
@@ -71,7 +70,19 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetAsync(Guid id)
     {
-        return await _userManager.FindByIdAsync(id.ToString());
+        return await _userManager.Users.Include(u => u.UserDetails)
+            .Include(u => u.MemberWallets)
+            .Include(u => u.OwnedWallets)
+            .Include(u => u.OwnedBudgets)
+            .ThenInclude(b => b.Categories)
+            .Include(u => u.OwnedBudgets)
+            .ThenInclude(b => b.Currency)
+            .Include(u => u.MemberBudgets)
+            .ThenInclude(b => b.Categories)
+            .Include(u => u.MemberBudgets)
+            .ThenInclude(b => b.Currency)
+            .Where(u => u.Id == id)
+            .FirstOrDefaultAsync();
     }
 
     public async Task<User?> GetAsNoTrackingAsync(string email)

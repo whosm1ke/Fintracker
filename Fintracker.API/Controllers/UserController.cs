@@ -62,6 +62,7 @@ public class UserController : BaseController
     public async Task<ActionResult<UpdateCommandResponse<UserBaseDTO>>> Put([FromForm] UpdateUserDTO user,
         [FromServices] IWebHostEnvironment env)
     {
+        
         if (user.Avatar != null)
         {
             var avatar = user.Avatar;

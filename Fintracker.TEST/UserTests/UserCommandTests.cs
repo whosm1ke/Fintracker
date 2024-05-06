@@ -75,7 +75,6 @@ public class UserCommandTests
             User = new()
             {
                 Id = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
-                Email = "user1gmail.com",
                 UserDetails = new()
                 {
                     Avatar = "avatar",

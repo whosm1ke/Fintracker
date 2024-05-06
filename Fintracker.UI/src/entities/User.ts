@@ -6,6 +6,7 @@ export interface User extends BaseEntity {
     email: string;
     userName: string;
     userDetails?: UserDetails;
+    avatarBlob: FileList;
     ownedBudgets: Budget[];
     memberBudgets: Budget[];
     memberWallets: Wallet[];

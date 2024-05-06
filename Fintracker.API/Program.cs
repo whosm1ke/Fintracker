@@ -51,7 +51,7 @@ builder.Services.AddCors(x =>
 {
     x.AddPolicy("UI", cors =>
     {
-        cors.WithOrigins("https://enabling-pleased-elf.ngrok-free.app")
+        cors.WithOrigins("https://8004-82-193-127-129.ngrok-free.app")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();

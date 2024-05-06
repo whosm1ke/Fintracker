@@ -147,6 +147,21 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         }
     }
 
+    async updateForm(updatedEntity: FormData): Promise<ClientWrapper<UpdateCommandResponse<TResponse>>> {
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+        try {
+            const data = await axiosInstance.putForm<UpdateCommandResponse<TResponse>>(this.endpoint, updatedEntity, {
+                cancelToken: this.cancelToken.token,
+                headers: {'Content-Type' : 'multipart/form-data'}
+            });
+
+            return {response: data.data, hasError: false};
+        } catch (error) {
+            return {hasError: true, error: handleError(error)};
+        }
+    }
+
     async deleteWithModel(id: string, model: TModel): Promise<ClientWrapper<DeleteCommandResponse<TResponse>>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();

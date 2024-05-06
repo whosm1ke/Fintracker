@@ -18,22 +18,6 @@ public class UpdateUserDtoValidator : AbstractValidator<UpdateUserCommand>
             .MustAsync(async (id, _) => await userRepository.ExistsAsync(id))
             .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.User.Id}]");
 
-        RuleFor(x => x.User.Email)
-            .ApplyCommonRules(x => x.User.Email is not null)
-            .ApplyEmail()
-            .OverridePropertyName(nameof(UpdateUserCommand.User.Email))
-            .MustAsync(async (dto, email, _) =>
-            {
-                var existingUser = await userRepository.GetAsNoTrackingAsync(email);
-
-                if (existingUser is null)
-                    return true;
-                if (existingUser.Email == dto.User.Email && existingUser.Id == dto.User.Id)
-                    return true;
-                return false;
-            })
-            .WithMessage(x => $"Invalid email [{x.User.Email}]");
-
         RuleFor(x => x.User.UserDetails)
             .SetValidator(new UserDetailsValidator(options))
             .OverridePropertyName(string.Empty);

@@ -1,12 +1,13 @@
-﻿import {NavLink, Outlet, useNavigate} from "react-router-dom";
+﻿import {NavLink, Outlet} from "react-router-dom";
 // @ts-ignore
 import logo from "../../assets/logo.png";
-import {AnimatePresence, motion} from "framer-motion";
-import {ReactNode, useState} from "react";
+import {motion} from "framer-motion";
+import {useState} from "react";
 import {FiChevronDown} from "react-icons/fi";
 import useUserStore from "../../stores/userStore";
 import { useGetUser } from "../../hooks/auth/useUser";
-import useLogoutMutation from "../../hooks/auth/useLogoutMutation";
+import FlyoutLink from "../../components/other/FlyoutLink.tsx";
+import NavigationContent from "../../components/other/NavigationContent.tsx";
 
 export default function DashboardLayout() {
 
@@ -108,75 +109,5 @@ const DashboardNavBar = () => {
     )
 }
 
-interface FlyoutLinkProps {
-    children: ReactNode,
-    FlyoutContent: any,
-    open: boolean;
-}
 
-const FlyoutLink = ({children, FlyoutContent, open}: FlyoutLinkProps) => {
 
-    const showFlyout = FlyoutContent && open;
-    return (
-        <div
-            className="relative w-fit h-fit bg-gray-100"
-        >
-            <span className="relative text-white cursor-pointer">
-                {children}
-            </span>
-            <AnimatePresence>
-                {showFlyout && (
-                    <motion.div
-                        initial={{opacity: 0, y: 50}}
-                        animate={{opacity: 1, y: 15}}
-                        exit={{opacity: 0, y: 50}}
-                        style={{translateX: "-50%"}}
-                        transition={{duration: 0.3, ease: "easeOut"}}
-                        className="absolute left-1/2 top-12 bg-white text-black"
-                    >
-                        <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent"/>
-                        <div
-                            className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-white"/>
-                        <FlyoutContent/>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </div>
-    );
-};
-
-const NavigationContent = () => {
-
-    const navigate = useNavigate();
-    const logout = useLogoutMutation();
-    const handleLogout = async () => {
-        await logout.mutateAsync(null);
-        navigate('/');
-        window.location.reload();
-    }
-
-    return (
-        <div className="w-64 bg-white rounded-lg shadow-md">
-            <ul className="list-none p-4 text-xl">
-                <li className="mb-3">
-                    <NavLink to="/settings"
-                             className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md">Settings</NavLink>
-                </li>
-                <li className="mb-3">
-                    <NavLink to="/support"
-                             className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md">Support</NavLink>
-                </li>
-                <li className="mb-3">
-                    <NavLink to="/"
-                             className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md">Home</NavLink>
-                </li>
-                <li className="mb-3">
-                    <span
-                        onClick={handleLogout}
-                        className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md cursor-pointer">Logout</span>
-                </li>
-            </ul>
-        </div>
-
-    );
-};

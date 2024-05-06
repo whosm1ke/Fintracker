@@ -19,16 +19,17 @@ import useDeleteCategory from "../../hooks/categories/useDeleteCategory.ts";
 import {HiX} from "react-icons/hi";
 import usePopulateCategories from "../../hooks/categories/usePopulateCategories.ts";
 import {useLocation} from "react-router-dom";
+import useUserStore from "../../stores/userStore.ts";
 
 export default function WalletCategoriesSettingsPage() {
 
     // MdBrightness1 - for colour
     // <MdHub /> - for category
+    const currentUserId = useUserStore(x => x.getUserId())
     const loc = useLocation();
     const urlQueryParams = new URLSearchParams(loc.search);
     const isOwner = urlQueryParams.get('isOwner') === 'true';
-    const ownerId = urlQueryParams.get('ownerId');
-
+    const ownerId = urlQueryParams.get('ownerId') || currentUserId;
     const {
         register,
         handleSubmit,
