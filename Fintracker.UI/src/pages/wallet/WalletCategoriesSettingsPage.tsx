@@ -203,13 +203,13 @@ export default function WalletCategoriesSettingsPage() {
 
 
     return (
-        <div className={'mx-auto px-10 sm:px-12 md:px-24 lg:px-36 py-7 flex flex-col gap-y-10'}>
+        <div className={'mx-auto px-10 py-7 flex flex-col gap-y-10'}>
             {isOwner &&
                 <>
                     <h1 className={'text-lg font-semibold'}>Create your new category</h1>
                     <section>
                         <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
-                            <div className={'grid grid-cols-1 sm:grid-cols-2 gap-3'}>
+                            <div className={'grid grid-cols-1 md:grid-cols-2 gap-3'}>
                                 <div className="mb-4">
                                     <label className="block text-gray-700 text-sm font-bold mb-2"
                                     >Icon</label>
@@ -288,10 +288,10 @@ export default function WalletCategoriesSettingsPage() {
                     </section>
                 </>
             }
-            <section className={`flex flex-col sm:flex-row items-center sm:justify-between sm:items-stretch gap-y-5`}>
-                {isOwner && <h2 className={'font-semibold mt-10'}>'Manage your categories'</h2>}
+            <section className={`flex flex-col items-center sm:justify-between sm:items-stretch gap-5`}>
+                {isOwner && <h2 className={'font-semibold mt-10'}>Manage your categories</h2>}
                 <div className={'mt-5'}>
-                    <fieldset className={'flex flex-col gap-y-3'}>
+                    <fieldset className={'flex flex-col gap-3'}>
                         <legend className={'font-semibold mb-5'}>Income categories</legend>
                         {incomeCategories.map(c =>
                             <div className={'flex justify-between items-center'} key={c.id || "Hi-hi-ha-ha"}>
@@ -303,7 +303,7 @@ export default function WalletCategoriesSettingsPage() {
                     </fieldset>
                 </div>
                 <div className={'mt-5'}>
-                    <fieldset className={'flex flex-col gap-y-3'}>
+                    <fieldset className={'flex flex-col gap-3'}>
                         <legend className={'font-semibold mb-5'}>Expense categories</legend>
                         {expenseCategories.map(c =>
                             <div className={'flex justify-between items-center'} key={c.id || "id1"}>

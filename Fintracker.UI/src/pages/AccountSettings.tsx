@@ -14,6 +14,7 @@ import {dateToString} from "../helpers/globalHelper.ts";
 import {Currency} from "../entities/Currency.ts";
 import useUpdateUserUsername from "../hooks/auth/useUpdateUserUsername.ts";
 import useUpdateUserEmail from "../hooks/auth/useUpdateUserEmail.ts";
+import useUpdateUserPassword from "../hooks/auth/useUpdateUserPassword.ts";
 
 export default function AccountSettings() {
 
@@ -53,8 +54,8 @@ export default function AccountSettings() {
             setValue("userName", userResponse.response.userName)
         }
     }, [userResponse])
-    
-    
+
+
     useEffect(() => {
         const isEmailMatchingRegex = (email: string) => {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,11 +69,10 @@ export default function AccountSettings() {
     const userUpdateMutation = useUpdateUser();
     const userUpdateUsernameMutation = useUpdateUserUsername();
     const userUpdateEmailMutation = useUpdateUserEmail();
+    const userUpdatePasswordMutation = useUpdateUserPassword();
     if (!userResponse || !userResponse.response) return <Spinner/>
     const user = userResponse.response;
 
-
-   
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -160,8 +160,14 @@ export default function AccountSettings() {
             })
             setIsEmailChanged(false);
         }
-
     }
+    
+    const handleChangePassword = async () => {
+        await userUpdatePasswordMutation.mutateAsync({
+            urlCallback: 'password-reset'
+        })
+    }
+    
     const isDataSameAsPrevious = user.globalCurrency.id === userToUpdate.globalCurrency?.id &&
         dateToString(new Date(user.userDetails.dateOfBirth!)) === userToUpdate.dateOfBirth &&
         user.userDetails?.sex === userToUpdate.sex &&
@@ -195,8 +201,7 @@ export default function AccountSettings() {
                             </div>
                         </div>
                     </div>
-                    <div className={'grid grid-cols-1 sm:grid-cols-2 gap-4'}>
-
+                    <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
                         <div className="mb-4">
                             <label className="block text-gray-400 text-sm mb-2" htmlFor="sex">
                                 Sex
@@ -231,7 +236,7 @@ export default function AccountSettings() {
                     </div>
                     <div className={'flex flex-col gap-y-4'}>
                         <h2 className={'font-semibold'}>Language settings</h2>
-                        <div className={'grid grid-cols-1 sm:grid-cols-2 gap-4'}>
+                        <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
                             <div className="mb-4"
                             >
                                 <label className="block text-gray-400 text-sm mb-2" htmlFor="email">
@@ -282,10 +287,7 @@ export default function AccountSettings() {
                         value={userToUpdate.userName}
                     />
                     {errors.userName && <p className={'text-red-400 italic'}>{errors.userName.message}</p>}
-                    <button type={'submit'}
-                            className={isUsernameChanged || isEmailChanged ? 'bg-green-400 rounded-sm px-4 py-2 text-white' :
-                                'bg-gray-400 rounded-sm px-4 py-2 text-gray-700 pointer-events-none'}>Change
-                    </button>
+
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-400 text-sm mb-2" htmlFor="email">
@@ -303,6 +305,15 @@ export default function AccountSettings() {
                         <p className={'bg-yellow-200 px-4 py-2 rounded'}>We will sent you an email to confirm
                             changing</p>}
                 </div>
+                <button type={'submit'}
+                        className={isUsernameChanged || isEmailChanged ? 'bg-green-400 rounded-sm px-4 py-2 text-white' :
+                            'bg-gray-400 rounded-sm px-4 py-2 text-gray-700 pointer-events-none'}>Change
+                </button>
+                <button
+                    type={'button'}
+                    onClick={handleChangePassword}
+                    className={'bg-green-400 rounded-sm px-4 py-2 text-white'}>Change password
+                </button>
             </form>
         </div>
     )

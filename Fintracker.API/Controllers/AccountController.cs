@@ -121,6 +121,7 @@ public class AccountController : BaseController
         await _mediator.Send(new SentResetPasswordCommand
         {
             Email = HttpContext.User.FindFirst(ClaimTypeConstants.Email)?.Value ?? "no",
+            UserId = GetCurrentUserId(),
             UrlCallback = reset.UrlCallback
         });
 

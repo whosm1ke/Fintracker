@@ -10,7 +10,12 @@ import {MonoWalletToken} from "../hooks/wallet/useCreateMonoWallet.ts";
 import {ConvertCurrency} from "../entities/Currency.ts";
 import {MonobankConfiguration, MonobankUserInfo} from "../entities/MonobankUserInfo.ts";
 import AcceptInvite from "../models/AcceptInvite.ts";
-import ClientWrapper, {BaseCommandResponse, CreateCommandResponse, DeleteCommandResponse, UpdateCommandResponse } from "../serverResponses/responses.ts";
+import ClientWrapper, {
+    BaseCommandResponse,
+    CreateCommandResponse,
+    DeleteCommandResponse,
+    UpdateCommandResponse
+} from "../serverResponses/responses.ts";
 import ResetPasswordModel from "../models/ResetPasswordModel.ts";
 import ResetEmailModel from "../models/ResetEmailModel.ts";
 
@@ -135,7 +140,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         }
     }
 
-    async resetEmail(model: ResetEmailModel): Promise<BaseCommandResponse> {
+    async resetEmail(model: ResetEmailModel): Promise<ClientWrapper<any>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
@@ -143,21 +148,20 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
                 cancelToken: this.cancelToken.token
             });
 
-            return data.data;
+            return {response: data.data, hasError: false};
         } catch (error) {
             throw error;
         }
     }
 
-    async resetPassword(model: ResetPasswordModel): Promise<BaseCommandResponse> {
+    async resetPassword(model: ResetPasswordModel): Promise<ClientWrapper<any>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
             const data = await axiosInstance.post<BaseCommandResponse>(this.endpoint, model, {
                 cancelToken: this.cancelToken.token
             });
-
-            return data.data;
+            return {response: data.data, hasError: false};
         } catch (error) {
             throw error;
         }
@@ -183,7 +187,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         try {
             const data = await axiosInstance.putForm<UpdateCommandResponse<TResponse>>(this.endpoint, updatedEntity, {
                 cancelToken: this.cancelToken.token,
-                headers: {'Content-Type' : 'multipart/form-data'}
+                headers: {'Content-Type': 'multipart/form-data'}
             });
 
             return {response: data.data, hasError: false};

@@ -158,6 +158,13 @@ public class AccountService : IAccountService
 
 
         var restPasswordResult = await _userManager.ResetPasswordAsync(user!, model.Token, model.Password);
+        
+        if(!restPasswordResult.Succeeded)
+            throw new BadRequestException(restPasswordResult.Errors.Select(x => new ExceptionDetails
+            {
+                ErrorMessage = x.Description,
+                PropertyName = "password"
+            }).ToList());
 
         return restPasswordResult.Succeeded;
     }
@@ -173,9 +180,16 @@ public class AccountService : IAccountService
                 PropertyName = nameof(model.UserId)
             }, nameof(User));
 
-        var restPasswordResult = await _userManager.ChangeEmailAsync(user!, model.NewEmail, model.Token);
+        var resetEmailResult = await _userManager.ChangeEmailAsync(user!, model.NewEmail, model.Token);
+        
+        if(!resetEmailResult.Succeeded)
+            throw new BadRequestException(resetEmailResult.Errors.Select(x => new ExceptionDetails
+            {
+                ErrorMessage = x.Description,
+                PropertyName = "email"
+            }).ToList());
 
-        return restPasswordResult.Succeeded;
+        return resetEmailResult.Succeeded;
     }
 
     public async Task<string> GenerateResetPasswordToken(User user)

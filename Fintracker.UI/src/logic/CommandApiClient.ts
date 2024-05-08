@@ -27,8 +27,8 @@ export interface AuthApiClient {
     login: (loginModel: LoginSchema) => Promise<ClientWrapper<LoginResponse>>;
     logout: () => Promise<null>;
     acceptInvite: (model: AcceptInvite) => Promise<BaseCommandResponse>;
-    resetEmail: (model: ResetEmailModel) => Promise<BaseCommandResponse>;
-    resetPassword: (model: ResetPasswordModel) => Promise<BaseCommandResponse>;
+    resetEmail: (model: ResetEmailModel) => Promise<ClientWrapper<any>>;
+    resetPassword: (model: ResetPasswordModel) => Promise<ClientWrapper<any>>;
 }
 
 export interface MonobankClient {

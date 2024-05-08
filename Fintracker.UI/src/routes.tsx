@@ -20,6 +20,7 @@ import InviteAccept from "./components/auth/InviteAccept.tsx";
 import GlobalSettings from "./pages/Layout/GlobalSettings.tsx";
 import AccountSettings from "./pages/AccountSettings.tsx";
 import ResetEmail from "./components/auth/ResetEmail.tsx";
+import ResetPassword from "./components/auth/ResetPassword.tsx";
 
 const router = createBrowserRouter([
     {
@@ -152,7 +153,14 @@ const router = createBrowserRouter([
         id: 'email-reset',
         path: 'email-reset',
         element: <ResetEmail/>
+    },
+    {
+        id: 'password-reset',
+        path: 'password-reset',
+        element: <ResetPassword/>
     }
+
+    
 ])
 
 

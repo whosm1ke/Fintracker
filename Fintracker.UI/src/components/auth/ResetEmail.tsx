@@ -14,16 +14,18 @@ export default function ResetEmail() {
     const [canBeClosed, setCanBeClosed] = useState(false)
 
     const handleInviteAccept = async () => {
-        const mutationResponse = await emailResetMutation.mutateAsync({
+        await emailResetMutation.mutateAsync({
             token: token!,
             newEmail: newEmail!,
             userId: userId!
+        }, {
+            onError: () => {
+                setIsError(true);
+            },
+            onSuccess: () => {
+                setCanBeClosed(true)
+            }
         });
-        if (!mutationResponse.success) {
-            setIsError(true);
-        } else {
-            setCanBeClosed(true)
-        }
     }
     return (
         <section
@@ -35,7 +37,7 @@ export default function ResetEmail() {
                     <button type="button"
                             className="submit-register-button"
                             onClick={handleInviteAccept}>
-                        Accept Invitation
+                        Confirm
                     </button>
                 </div>
             </div>}

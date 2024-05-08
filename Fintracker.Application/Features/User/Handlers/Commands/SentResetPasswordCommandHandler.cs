@@ -25,14 +25,14 @@ public class SentResetPasswordCommandHandler : IRequestHandler<SentResetPassword
 
     public async Task<Unit> Handle(SentResetPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.FindByEmailAsync(request.Email);
+        var user = await _userRepository.GetAsNoTrackingAsync(request.UserId);
 
         if (user is null)
-            throw new BadRequestException(new ExceptionDetails
+            throw new NotFoundException(new ExceptionDetails
             {
-                PropertyName = nameof(request.Email),
-                ErrorMessage = "Invalid email. Check spelling."
-            });
+                PropertyName = nameof(request.UserId),
+                ErrorMessage = $"User with id was not founded [{request.UserId}]"
+            }, nameof(Domain.Entities.User));
 
         var token = await _accountService.GenerateResetPasswordToken(user);
 
@@ -41,7 +41,7 @@ public class SentResetPasswordCommandHandler : IRequestHandler<SentResetPassword
             Email = request.Email,
             Subject = "Reset Password Confirmation",
             HtmlPath = "resetPassword.html"
-        }, new { Ref = $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}" });
+        }, new { Ref = $"{_appSettings.UiUrl}/{request.UrlCallback}?token={token}&userId={request.UserId}" });
 
         return Unit.Value;
     }
