@@ -29,7 +29,7 @@ const useUpdateUser = () => {
                 const clientWarpper: ClientWrapper<User> = {
                     hasError: false,
                     response: {
-                        userName: _oldQueryData.response?.userName || "",
+                        // userName: _oldQueryData.response?.userName || "",
                         globalCurrency: globalCurrency,
                         userDetails: userDetails
                     } as User

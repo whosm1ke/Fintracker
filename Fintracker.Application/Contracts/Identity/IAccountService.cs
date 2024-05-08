@@ -8,6 +8,8 @@ public interface IAccountService
     Task<RegisterResponse> Register(RegisterRequest register);
     Task<LoginResponse> Login(LoginRequest login);
 
+    Task<string> UpdateUserUsername(string newUsername, Guid userId);
+
     Task<bool> ResetPassword(ResetPasswordModel model);
     Task<bool> ResetEmail(ResetEmailModel model);
 

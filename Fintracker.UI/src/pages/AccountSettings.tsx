@@ -12,12 +12,15 @@ import {bDayRegisterOptionsForUserDetails} from "../entities/UserDetails.ts";
 import useUpdateUser from "../hooks/auth/useUpdateUser.ts";
 import {dateToString} from "../helpers/globalHelper.ts";
 import {Currency} from "../entities/Currency.ts";
+import useUpdateUserUsername from "../hooks/auth/useUpdateUserUsername.ts";
 
 export default function AccountSettings() {
 
     const userId = useUserStore(x => x.getUserId());
     const {data: userResponse} = useGetUser(userId!);
     const [userToUpdate, setUserToUpdate] = useState({
+        email: "",
+        userName: "",
         avatar: "",
         sex: "",
         dateOfBirth: dateToString(new Date(userResponse?.response?.userDetails?.dateOfBirth!)) || dateToString(new Date()),
@@ -32,23 +35,37 @@ export default function AccountSettings() {
         handleSubmit,
         formState: {errors},
         setError,
+        setValue,
         clearErrors,
     } = useForm<User>();
 
     useEffect(() => {
-        if (userResponse && userResponse.response) {
+        if (userResponse?.response) {
             handleSexChange(userResponse.response.userDetails?.sex || "Other")
             handleBDayChange(dateToString(new Date(userResponse?.response?.userDetails?.dateOfBirth!)) || dateToString(new Date()))
             handleGlobalCurrencyChange(userResponse.response.globalCurrency)
             handleLanguageChange(userResponse.response.userDetails?.language || Language.English)
-            setUserToUpdate(p => ({...p, avatar: getImageFromURL(userResponse?.response?.userDetails?.avatar)}))
+            handleUserNameChange(userResponse.response.userName || "");
+            handleEmailChange(userResponse.response.email || "");
+            setUserToUpdate(p => ({...p, avatar: getImageFromURL(userResponse.response?.userDetails?.avatar)}));
+            setValue("email", userResponse.response.email)
+            setValue("userName", userResponse.response.userName)
         }
     }, [userResponse])
 
-    const userUpdateMutation = useUpdateUser();
 
+
+    const userUpdateMutation = useUpdateUser();
+    const userUpdateUsernameMutation = useUpdateUserUsername();
     if (!userResponse || !userResponse.response) return <Spinner/>
     const user = userResponse.response;
+
+
+    const isEmailMatchingRegex = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+
+    }
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -61,6 +78,14 @@ export default function AccountSettings() {
     }
     const handleSexChange = (sex: string) => {
         setUserToUpdate(p => ({...p, sex: sex}))
+    }
+
+    const handleUserNameChange = (userName: string) => {
+        setUserToUpdate(p => ({...p, userName: userName}))
+    }
+
+    const handleEmailChange = (email: string) => {
+        setUserToUpdate(p => ({...p, email: email}))
     }
 
     const getImageFromURL = (url: string | undefined) => {
@@ -105,12 +130,33 @@ export default function AccountSettings() {
         }
 
     }
+
+    const onAuthChangeSubmit: SubmitHandler<User> = async (model) => {
+        console.log("model: ", model);
+        if (model.userName !== user.userName) {
+            const changeRes = await userUpdateUsernameMutation.mutateAsync(({
+                ...user,
+                userName: model.userName
+            }));
+
+            if (changeRes.hasError) {
+                setError("userName", {message: "This username is already used"})
+            } else {
+                clearErrors();
+
+            }
+        }
+
+    }
     const isDataSameAsPrevious = user.globalCurrency.id === userToUpdate.globalCurrency?.id &&
         dateToString(new Date(user.userDetails.dateOfBirth!)) === userToUpdate.dateOfBirth &&
         user.userDetails?.sex === userToUpdate.sex &&
         user.userDetails?.language === userToUpdate.language &&
         getImageFromURL(user.userDetails?.avatar) === userToUpdate.avatar;
 
+    const isUsernameChanged = user.userName !== userToUpdate.userName;
+    const isEmailChanged = user.email !== userToUpdate.email && isEmailMatchingRegex(userToUpdate.email!);
+    
     return (
         <div className={'px-16 py-6 flex flex-col gap-10'}>
             <header className={'font-semibold text-lg'}>
@@ -209,33 +255,39 @@ export default function AccountSettings() {
                     </div>
                 </div>
             </form>
-            
+            <form onSubmit={handleSubmit(onAuthChangeSubmit)} className={'grid grid-cols-1 sm:grid-cols-2 gap-4'}>
+                <div className="mb-4">
+                    <label className="block text-gray-400 text-sm mb-2" htmlFor="username">
+                        Username
+                    </label>
+                    <input
+                        {...register("userName", {required: "Username is required"})}
+                        className="mb-4 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="username"
+                        type="text"
+                        onChange={(e) => handleUserNameChange(e.target.value)}
+                        value={userToUpdate.userName}
+                    />
+                    {errors.userName && <p className={'text-red-400 italic'}>{errors.userName.message}</p>}
+                    <button type={'submit'}
+                            className={isUsernameChanged || isEmailChanged ? 'bg-green-400 rounded-sm px-4 py-2 text-white' :
+                                'bg-gray-400 rounded-sm px-4 py-2 text-gray-700 pointer-events-none'}>Change
+                    </button>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-400 text-sm mb-2" htmlFor="email">
+                        Email
+                    </label>
+                    <input
+                        {...register("email", {required: "Email is required"})}
+                        className="mb-4 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="email"
+                        type="email"
+                        value={userToUpdate.email}
+                        onChange={(e) => handleEmailChange(e.target.value)}
+                    />
+                </div>
+            </form>
         </div>
     )
 }
-
-
-// <div className="mb-4">
-//     <label className="block text-gray-400 text-sm mb-2" htmlFor="username">
-//         Username
-//     </label>
-//     <input
-//         {...register("userName", {required: "Username is required"})}
-//         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-//         id="username"
-//         type="text"
-//         onChange={() =>  console.log("getValues(\"userName\"): ", getValues("userName"))}
-//         defaultValue={user.userName}
-//     />
-// </div>
-// <div className="mb-4">
-//     <label className="block text-gray-400 text-sm mb-2" htmlFor="email">
-//         Email
-//     </label>
-//     <input
-//         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-//         id="email"
-//         type="email"
-//         defaultValue={user.email}
-//     />
-// </div>

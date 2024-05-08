@@ -84,6 +84,7 @@ public class UserController : BaseController
 
         return Ok(response);
     }
+    
 
     [AllowAnonymous]
     [HttpGet("avatar/{filename}")]

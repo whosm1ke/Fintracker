@@ -17,7 +17,7 @@ public class AccountService : IAccountService
     private readonly SignInManager<User> _signInManager;
     private readonly ITokenService _tokenService;
     private readonly AppSettings _appSettings;
-    
+
 
     public AccountService(UserManager<User> userManager, ITokenService tokenService, SignInManager<User> signInManager,
         IOptions<AppSettings> appSettings)
@@ -41,7 +41,7 @@ public class AccountService : IAccountService
                 Email = register.Email,
                 UserDetails = new UserDetails
                 {
-                    Avatar =  $"{_appSettings.BaseUrl}/api/user/avatar/logo.png",
+                    Avatar = $"{_appSettings.BaseUrl}/api/user/avatar/logo.png",
                     Sex = "Other",
                     DateOfBirth = DateTime.Now,
                     Language = Language.English
@@ -74,6 +74,7 @@ public class AccountService : IAccountService
                 PropertyName = ExtractPropertyNameFromCode(x, typeof(RegisterRequest).GetProperties())
             }).ToList());
         }
+
 
         throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
             { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
@@ -121,6 +122,27 @@ public class AccountService : IAccountService
 
         throw new BadRequestException(validationResult.Errors.Select(x => new ExceptionDetails
             { ErrorMessage = x.ErrorMessage, PropertyName = x.PropertyName }).ToList());
+    }
+
+    public async Task<string> UpdateUserUsername(string newUsername, Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user is null)
+            throw new NotFoundException(new ExceptionDetails
+            {
+                ErrorMessage = "Can not find user with id " + userId,
+                PropertyName = nameof(userId)
+            }, nameof(User));
+        var changeResult = await _userManager.SetUserNameAsync(user, newUsername);
+
+        if (!changeResult.Succeeded)
+            throw new RegisterAccountException(changeResult.Errors.Select(x => new ExceptionDetails
+            {
+                ErrorMessage = x.Description,
+                PropertyName = "userName"
+            }).ToList());
+
+        return newUsername;
     }
 
     public async Task<bool> ResetPassword(ResetPasswordModel model)

@@ -2,6 +2,7 @@
 using Fintracker.Application.BusinessRuleConstraints;
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.DTO.Invite;
+using Fintracker.Application.DTO.User;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Identity;
@@ -141,5 +142,21 @@ public class AccountController : BaseController
         if (!res)
             return BadRequest("Something gone wrong. Check your email");
         return Ok();
+    }
+    
+    [HttpPut("username")]
+    [ProducesResponseType(typeof(BaseCommandResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<BaseCommandResponse>> PutNewUsername([FromBody] UpdateUserUsername dto)
+    {
+        
+        var response = await _mediator.Send(new UpdateUserUsernameCommand()
+        {
+            UserId = GetCurrentUserId(),
+            NewUsername = dto.UserName
+        });
+
+        return Ok(response);
     }
 }
