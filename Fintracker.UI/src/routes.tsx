@@ -19,6 +19,7 @@ import WalletSettingsLayoutPage from "./pages/Layout/WalletSettingsLayoutPage.ts
 import InviteAccept from "./components/auth/InviteAccept.tsx";
 import GlobalSettings from "./pages/Layout/GlobalSettings.tsx";
 import AccountSettings from "./pages/AccountSettings.tsx";
+import ResetEmail from "./components/auth/ResetEmail.tsx";
 
 const router = createBrowserRouter([
     {
@@ -146,6 +147,11 @@ const router = createBrowserRouter([
         id: 'confirm-invite',
         path: 'confirm-invite',
         element: <InviteAccept/>
+    },
+    {
+        id: 'email-reset',
+        path: 'email-reset',
+        element: <ResetEmail/>
     }
 ])
 

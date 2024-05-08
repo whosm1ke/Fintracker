@@ -11,6 +11,8 @@ import {ConvertCurrency} from "../entities/Currency.ts";
 import {MonobankConfiguration, MonobankUserInfo} from "../entities/MonobankUserInfo.ts";
 import AcceptInvite from "../models/AcceptInvite.ts";
 import ClientWrapper, {BaseCommandResponse, CreateCommandResponse, DeleteCommandResponse, UpdateCommandResponse } from "../serverResponses/responses.ts";
+import ResetPasswordModel from "../models/ResetPasswordModel.ts";
+import ResetEmailModel from "../models/ResetEmailModel.ts";
 
 
 export default class ApiClient<TResponse, TModel = undefined> implements CommandApiClient<TModel, TResponse>,
@@ -120,6 +122,34 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
 
 
     async acceptInvite(model: AcceptInvite): Promise<BaseCommandResponse> {
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+        try {
+            const data = await axiosInstance.post<BaseCommandResponse>(this.endpoint, model, {
+                cancelToken: this.cancelToken.token
+            });
+
+            return data.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async resetEmail(model: ResetEmailModel): Promise<BaseCommandResponse> {
+        this.cancelCurrentRequest();
+        this.cancelToken = axios.CancelToken.source();
+        try {
+            const data = await axiosInstance.post<BaseCommandResponse>(this.endpoint, model, {
+                cancelToken: this.cancelToken.token
+            });
+
+            return data.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async resetPassword(model: ResetPasswordModel): Promise<BaseCommandResponse> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {

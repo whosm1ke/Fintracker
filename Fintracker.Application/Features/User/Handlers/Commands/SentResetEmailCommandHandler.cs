@@ -25,12 +25,12 @@ public class SentResetEmailCommandHandler : IRequestHandler<SentResetEmailComman
 
     public async Task<Unit> Handle(SentResetEmailCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.FindByEmailAsync(request.Email);
+        var user = await _userRepository.GetAsNoTrackingAsync(request.UserId);
 
         if (user is null)
             throw new BadRequestException(new ExceptionDetails
             {
-                PropertyName = nameof(request.Email),
+                PropertyName = nameof(request.UserId),
                 ErrorMessage = "Invalid email. Check spelling."
             });
 
@@ -41,7 +41,7 @@ public class SentResetEmailCommandHandler : IRequestHandler<SentResetEmailComman
             Email = request.NewEmail,
             Subject = "Reset Email Confirmation",
             HtmlPath = "resetEmail.html"
-        }, new { Ref = $"{_appSettings.BaseUrl}/{request.UrlCallback}?token={token}" });
+        }, new { Ref = $"{_appSettings.UiUrl}/{request.UrlCallback}?token={token}&userId={request.UserId}&newEmail={request.NewEmail}" });
 
         return Unit.Value;
     }

@@ -15,6 +15,7 @@ public interface IUserRepository
     // Task DeleteUserFromMemberWallet(Guid userId, Guid walletId);
     Task<User?> GetAsync(Guid id);
     Task<User?> GetAsNoTrackingAsync(string email);
+    Task<User?> GetAsNoTrackingAsync(Guid userId);
     Task<User?> FindByEmailAsync(string email);
     Task<IReadOnlyList<User?>> GetAllAsync();
 }

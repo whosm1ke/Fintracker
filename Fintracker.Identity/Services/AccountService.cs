@@ -147,14 +147,15 @@ public class AccountService : IAccountService
 
     public async Task<bool> ResetPassword(ResetPasswordModel model)
     {
-        var user = await _userManager.FindByEmailAsync(model.Email);
+        var user = await _userManager.FindByIdAsync(model.UserId.ToString());
 
         if (user is null)
-            throw new BadRequestException(new ExceptionDetails
+            throw new NotFoundException(new ExceptionDetails
             {
-                ErrorMessage = "Invalid email. Check spelling",
-                PropertyName = nameof(model.Email)
-            });
+                ErrorMessage = $"User with id was not founded [{model.UserId}]",
+                PropertyName = nameof(model.UserId)
+            }, nameof(User));
+
 
         var restPasswordResult = await _userManager.ResetPasswordAsync(user!, model.Token, model.Password);
 
@@ -163,14 +164,14 @@ public class AccountService : IAccountService
 
     public async Task<bool> ResetEmail(ResetEmailModel model)
     {
-        var user = await _userManager.FindByEmailAsync(model.Email);
+        var user = await _userManager.FindByIdAsync(model.UserId.ToString());
 
         if (user is null)
-            throw new BadRequestException(new ExceptionDetails
+            throw new NotFoundException(new ExceptionDetails
             {
-                ErrorMessage = "Invalid email. Check spelling",
-                PropertyName = nameof(model.Email)
-            });
+                ErrorMessage = $"User with id was not founded [{model.UserId}]",
+                PropertyName = nameof(model.UserId)
+            }, nameof(User));
 
         var restPasswordResult = await _userManager.ChangeEmailAsync(user!, model.NewEmail, model.Token);
 
@@ -180,15 +181,15 @@ public class AccountService : IAccountService
     public async Task<string> GenerateResetPasswordToken(User user)
     {
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-        return token;
+        var encodedToken = System.Net.WebUtility.UrlEncode(token);
+        return encodedToken;
     }
 
     public async Task<string> GenerateResetEmailToken(User user, string newEmail)
     {
         var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
-
-        return token;
+        var encodedToken = System.Net.WebUtility.UrlEncode(token);
+        return encodedToken;
     }
 
     public async Task Logout()

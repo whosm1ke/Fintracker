@@ -53,7 +53,6 @@ public class AccountController : BaseController
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest login)
     {
-        
         var response = await _accountService.Login(login);
 
         return Ok(response);
@@ -101,7 +100,22 @@ public class AccountController : BaseController
     }
 
 
-    [HttpGet("reset-password")]
+    [HttpPost("reset-password/confirm")]
+    public async Task<ActionResult<BaseCommandResponse>> ResetPassword([FromBody] ResetPasswordModel model)
+    {
+        var response = new BaseCommandResponse();
+        var res = await _accountService.ResetPassword(model);
+        if (!res)
+            return BadRequest("Something gone wrong. Check your email or password again");
+        response.Id = model.UserId;
+        response.Success = true;
+        response.Message = "Changed successfully";
+        return Ok(response);
+    }
+
+
+    [HttpPost("reset-password")]
+    [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> ResetPasswordRequest([FromBody] ResetRequestBase reset)
     {
         await _mediator.Send(new SentResetPasswordCommand
@@ -113,12 +127,26 @@ public class AccountController : BaseController
         return Ok();
     }
 
-    [HttpGet("reset-email")]
+    [HttpPost("reset-email/confirm")]
+    public async Task<ActionResult<BaseCommandResponse>> ResetEmail([FromBody] ResetEmailModel model)
+    {
+        var response = new BaseCommandResponse();
+        var res = await _accountService.ResetEmail(model);
+        if (!res)
+            return BadRequest("Something gone wrong. Check your email");
+        response.Id = model.UserId;
+        response.Success = true;
+        response.Message = model.NewEmail;
+        return Ok(response);
+    }
+
+    [HttpPost("reset-email")]
+    [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> ResetEmailRequest([FromBody] ResetEmailRequest reset)
     {
         await _mediator.Send(new SentResetEmailCommand
         {
-            Email = HttpContext.User.FindFirst(ClaimTypeConstants.Email)?.Value ?? "no",
+            UserId = GetCurrentUserId(),
             UrlCallback = reset.UrlCallback,
             NewEmail = reset.NewEmail
         });
@@ -126,31 +154,12 @@ public class AccountController : BaseController
         return Ok();
     }
 
-    [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
-    {
-        var res = await _accountService.ResetPassword(model);
-        if (!res)
-            return BadRequest("Something gone wrong. Check your email or password again");
-        return Ok();
-    }
-
-    [HttpPost("reset-email")]
-    public async Task<IActionResult> ResetEmail([FromBody] ResetEmailModel model)
-    {
-        var res = await _accountService.ResetEmail(model);
-        if (!res)
-            return BadRequest("Something gone wrong. Check your email");
-        return Ok();
-    }
-    
     [HttpPut("username")]
     [ProducesResponseType(typeof(BaseCommandResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BaseCommandResponse>> PutNewUsername([FromBody] UpdateUserUsername dto)
     {
-        
         var response = await _mediator.Send(new UpdateUserUsernameCommand()
         {
             UserId = GetCurrentUserId(),

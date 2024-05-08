@@ -2,3 +2,4 @@
     walletId: string;
     userId: string;
 }
+

@@ -13,6 +13,7 @@ import useUpdateUser from "../hooks/auth/useUpdateUser.ts";
 import {dateToString} from "../helpers/globalHelper.ts";
 import {Currency} from "../entities/Currency.ts";
 import useUpdateUserUsername from "../hooks/auth/useUpdateUserUsername.ts";
+import useUpdateUserEmail from "../hooks/auth/useUpdateUserEmail.ts";
 
 export default function AccountSettings() {
 
@@ -52,20 +53,26 @@ export default function AccountSettings() {
             setValue("userName", userResponse.response.userName)
         }
     }, [userResponse])
+    
+    
+    useEffect(() => {
+        const isEmailMatchingRegex = (email: string) => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
 
+        }
+        setIsEmailChanged(userResponse?.response?.email !== userToUpdate.email && isEmailMatchingRegex(userToUpdate.email!))
+    }, [userToUpdate.email])
 
-
+    const [isEmailChanged, setIsEmailChanged] = useState(false);
     const userUpdateMutation = useUpdateUser();
     const userUpdateUsernameMutation = useUpdateUserUsername();
+    const userUpdateEmailMutation = useUpdateUserEmail();
     if (!userResponse || !userResponse.response) return <Spinner/>
     const user = userResponse.response;
 
 
-    const isEmailMatchingRegex = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-
-    }
+   
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -146,6 +153,13 @@ export default function AccountSettings() {
 
             }
         }
+        if (model.email !== user.email) {
+            await userUpdateEmailMutation.mutateAsync({
+                newEmail: model.email,
+                urlCallback: 'email-reset'
+            })
+            setIsEmailChanged(false);
+        }
 
     }
     const isDataSameAsPrevious = user.globalCurrency.id === userToUpdate.globalCurrency?.id &&
@@ -155,8 +169,7 @@ export default function AccountSettings() {
         getImageFromURL(user.userDetails?.avatar) === userToUpdate.avatar;
 
     const isUsernameChanged = user.userName !== userToUpdate.userName;
-    const isEmailChanged = user.email !== userToUpdate.email && isEmailMatchingRegex(userToUpdate.email!);
-    
+
     return (
         <div className={'px-16 py-6 flex flex-col gap-10'}>
             <header className={'font-semibold text-lg'}>
@@ -286,6 +299,9 @@ export default function AccountSettings() {
                         value={userToUpdate.email}
                         onChange={(e) => handleEmailChange(e.target.value)}
                     />
+                    {isEmailChanged &&
+                        <p className={'bg-yellow-200 px-4 py-2 rounded'}>We will sent you an email to confirm
+                            changing</p>}
                 </div>
             </form>
         </div>

@@ -11,6 +11,8 @@ import ClientWrapper, {
     DeleteCommandResponse,
     UpdateCommandResponse
 } from "../serverResponses/responses.ts";
+import ResetEmailModel from "../models/ResetEmailModel.ts";
+import ResetPasswordModel from "../models/ResetPasswordModel.ts";
 
 export interface CommandApiClient<TModel, TResponse> {
     create: (newEntity: TModel) => Promise<ClientWrapper<CreateCommandResponse<TResponse>>>;
@@ -25,6 +27,8 @@ export interface AuthApiClient {
     login: (loginModel: LoginSchema) => Promise<ClientWrapper<LoginResponse>>;
     logout: () => Promise<null>;
     acceptInvite: (model: AcceptInvite) => Promise<BaseCommandResponse>;
+    resetEmail: (model: ResetEmailModel) => Promise<BaseCommandResponse>;
+    resetPassword: (model: ResetPasswordModel) => Promise<BaseCommandResponse>;
 }
 
 export interface MonobankClient {

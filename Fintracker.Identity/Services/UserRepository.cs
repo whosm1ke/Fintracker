@@ -94,6 +94,14 @@ public class UserRepository : IUserRepository
             .Where(x => x.Email == email)
             .FirstOrDefaultAsync();
     }
+    
+    public async Task<User?> GetAsNoTrackingAsync(Guid userId)
+    {
+        return await _userManager.Users
+            .AsNoTracking()
+            .Where(x => x.Id == userId)
+            .FirstOrDefaultAsync();
+    }
 
     public async Task<User?> FindByEmailAsync(string email)
     {
