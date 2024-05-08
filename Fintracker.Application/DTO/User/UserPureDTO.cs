@@ -1,4 +1,5 @@
 ﻿using Fintracker.Application.DTO.Common;
+using Fintracker.Application.DTO.Currency;
 
 namespace Fintracker.Application.DTO.User;
 
@@ -12,5 +13,5 @@ public class UserPureDTO : IBaseDto
 
     public UserDetailsDTO? UserDetails { get; set; } = default!;
     
-    public string GlobalCurrency { get; set; }
+    public CurrencyDTO GlobalCurrency { get; set; }
 }

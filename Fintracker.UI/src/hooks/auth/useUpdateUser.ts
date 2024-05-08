@@ -15,17 +15,14 @@ const useUpdateUser = () => {
             
             const id = newUserFormData.get('Id');
             
-            const globalCurrency = newUserFormData.get('GlobalCurrency');
+            const globalCurrency = JSON.parse(newUserFormData.get('Currency') as string);
             const userDetails : UserDetails = {
                 sex: newUserFormData.get('UserDetails.Sex') as string,
                 language: +(newUserFormData.get('UserDetails.Language') as string),
                 dateOfBirth: newUserFormData.get('UserDetails.DateOfBirth') as string,
             }
-            console.log("id: ", id)
-            console.log("globalCurrency: ", globalCurrency)
-            console.log("userDetails: ", userDetails)
+            
             await queryClient.cancelQueries({queryKey: ['user', id]});
-            // console.log("newUser: ", newUser)
             const prevData = queryClient.getQueryData<User>(['user', id]);
 
             queryClient.setQueryData(['user', id], (_oldQueryData: ClientWrapper<User>) => {

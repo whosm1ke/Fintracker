@@ -5,7 +5,7 @@ export interface UserDetails {
     sex?: string,
     dateOfBirth?: string,
     avatar?: string,
-    language?: Language
+    language: Language
 }
 
 

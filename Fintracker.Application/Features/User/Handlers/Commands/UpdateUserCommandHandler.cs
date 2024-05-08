@@ -35,6 +35,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
 
         var oldUser = _mapper.Map<UserBaseDTO>(user);
         var oldAvatar = oldUser.UserDetails?.Avatar;
+        
         if (request.User.Avatar is not null)
         {
             var newAvatar = Path.Combine(request.WWWRoot, "images", request.User.Avatar?.FileName!);
@@ -42,6 +43,10 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
             {
                 File.Delete(oldAvatar);
             }
+        }
+        else
+        {
+            request.User.UserDetails.Avatar = oldAvatar;
         }
 
         _mapper.Map(request.User, user);

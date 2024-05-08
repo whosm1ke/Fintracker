@@ -70,7 +70,9 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetAsync(Guid id)
     {
-        return await _userManager.Users.Include(u => u.UserDetails)
+        return await _userManager.Users
+            .Include(u => u.GlobalCurrency)
+            .Include(u => u.UserDetails)
             .Include(u => u.MemberWallets)
             .Include(u => u.OwnedWallets)
             .Include(u => u.OwnedBudgets)

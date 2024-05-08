@@ -11,6 +11,6 @@ public class UpdateUserDTO : IBaseDto
 
     public IFormFile? Avatar { get; set; }
     
-    public string GlobalCurrency { get; set; }
+    public Guid CurrencyId { get; set; }
 
 }

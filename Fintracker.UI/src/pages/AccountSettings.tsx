@@ -1,9 +1,7 @@
 ﻿import useUserStore from "../stores/userStore.ts";
 import {useGetUser} from "../hooks/auth/useUser.ts";
 import Spinner from "../components/other/Spinner.tsx";
-// @ts-ignore
-import logo from '../assets/logo.png'
-import {ChangeEvent, useLayoutEffect, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import currencies from "../data/currencies.ts";
 import SingleSelectDropDownMenu from "../components/other/SingleSelectDropDownMenu.tsx";
 import CurrencyItem from "../components/currencies/CurrencyItem.tsx";
@@ -13,21 +11,22 @@ import {User} from "../entities/User.ts";
 import {bDayRegisterOptionsForUserDetails} from "../entities/UserDetails.ts";
 import useUpdateUser from "../hooks/auth/useUpdateUser.ts";
 import {dateToString} from "../helpers/globalHelper.ts";
+import {Currency} from "../entities/Currency.ts";
 
 export default function AccountSettings() {
 
     const userId = useUserStore(x => x.getUserId());
     const {data: userResponse} = useGetUser(userId!);
-    const userGlobalCurrency = currencies.find(c => c.symbol === userResponse?.response?.globalCurrency);
     const [userToUpdate, setUserToUpdate] = useState({
-        sex: userResponse?.response?.userDetails?.sex || 'Other',
-        birthDay: userResponse?.response?.userDetails?.dateOfBirth,
-        globalCurrency: userGlobalCurrency,
-        lang: userResponse?.response?.userDetails?.language || Language.English,
-        avatar: userResponse?.response?.userDetails?.avatar,
+        avatar: "",
+        sex: "",
+        dateOfBirth: dateToString(new Date(userResponse?.response?.userDetails?.dateOfBirth!)) || dateToString(new Date()),
+        language: Language.English,
+        globalCurrency: userResponse?.response?.globalCurrency,
     })
     const [fileList, setFileList] = useState<FileList | null>(null);
     const [avatarURL, setAvatarURL] = useState("");
+    const [isAvatarChanged, setIsAvatarChanged] = useState(false);
     const {
         register,
         handleSubmit,
@@ -35,21 +34,17 @@ export default function AccountSettings() {
         setError,
         clearErrors,
     } = useForm<User>();
-    
 
-
-    useLayoutEffect(() => {
-        if (userResponse) {
-            const userGlobalCurrency = currencies.find(c => c.symbol === userResponse.response?.globalCurrency);
-            setUserToUpdate({
-                sex: userResponse.response?.userDetails?.sex || 'Other',
-                birthDay: userResponse.response?.userDetails?.dateOfBirth,
-                globalCurrency: userGlobalCurrency,
-                lang: userResponse.response?.userDetails?.language || Language.English,
-                avatar: userResponse.response?.userDetails?.avatar,
-            })
+    useEffect(() => {
+        if (userResponse && userResponse.response) {
+            handleSexChange(userResponse.response.userDetails?.sex || "Other")
+            handleBDayChange(dateToString(new Date(userResponse?.response?.userDetails?.dateOfBirth!)) || dateToString(new Date()))
+            handleGlobalCurrencyChange(userResponse.response.globalCurrency)
+            handleLanguageChange(userResponse.response.userDetails?.language || Language.English)
+            setUserToUpdate(p => ({...p, avatar: getImageFromURL(userResponse?.response?.userDetails?.avatar)}))
         }
     }, [userResponse])
+
     const userUpdateMutation = useUpdateUser();
 
     if (!userResponse || !userResponse.response) return <Spinner/>
@@ -58,14 +53,35 @@ export default function AccountSettings() {
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
+            setIsAvatarChanged(userToUpdate.avatar !== file.name)
             const objectURL = URL.createObjectURL(file);
             setAvatarURL(objectURL);
             setFileList(event.target.files);
         }
-
-
     }
-    const onSubmit: SubmitHandler<User> = async (model: User) => {
+    const handleSexChange = (sex: string) => {
+        setUserToUpdate(p => ({...p, sex: sex}))
+    }
+
+    const getImageFromURL = (url: string | undefined) => {
+        if (!url) return "logo.png";
+
+        const parts = url.split('/');
+        return parts[parts.length - 1];
+    }
+
+    const handleBDayChange = (bDay: string) => {
+        setUserToUpdate(p => ({...p, dateOfBirth: bDay}))
+    }
+
+    const handleGlobalCurrencyChange = (currency: Currency) => {
+        setUserToUpdate(p => ({...p, globalCurrency: currency}))
+    }
+
+    const handleLanguageChange = (lang: Language) => {
+        setUserToUpdate(p => ({...p, language: lang}))
+    }
+    const onSubmit: SubmitHandler<User> = async (_model: User) => {
 
         if (!userToUpdate.globalCurrency) {
             setError("globalCurrency", {message: "Currency is not selected"});
@@ -73,23 +89,27 @@ export default function AccountSettings() {
         } else {
             clearErrors("globalCurrency");
         }
-        model.globalCurrency = userToUpdate.globalCurrency.symbol
         const formData = new FormData();
-        formData.append('Avatar', fileList ? fileList[0] : "");
+        formData.append('Avatar', fileList ? fileList[0] : user.userDetails.avatar!);
         formData.append('Id', user.id);
-        formData.append('GlobalCurrency', model.globalCurrency);
-        formData.append('UserDetails.Sex', model.userDetails?.sex || "Other");
-        formData.append('UserDetails.DateOfBirth', model.userDetails?.dateOfBirth!);
-        formData.append('UserDetails.Language', model.userDetails?.language?.toString() || Language.English.toString());
-        console.log("model: ", model)
+        formData.append('CurrencyId', userToUpdate.globalCurrency.id);
+        formData.append('Currency', JSON.stringify(userToUpdate.globalCurrency));
+        formData.append('UserDetails.Sex', userToUpdate.sex || "Other");
+        formData.append('UserDetails.DateOfBirth', userToUpdate.dateOfBirth!);
+        formData.append('UserDetails.Language', userToUpdate.language?.toString() || Language.English.toString());
         const updateResult = await userUpdateMutation.mutateAsync(formData);
 
         if (!updateResult.hasError) {
             clearErrors();
+
         }
 
     }
-    
+    const isDataSameAsPrevious = user.globalCurrency.id === userToUpdate.globalCurrency?.id &&
+        dateToString(new Date(user.userDetails.dateOfBirth!)) === userToUpdate.dateOfBirth &&
+        user.userDetails?.sex === userToUpdate.sex &&
+        user.userDetails?.language === userToUpdate.language &&
+        getImageFromURL(user.userDetails?.avatar) === userToUpdate.avatar;
 
     return (
         <div className={'px-16 py-6 flex flex-col gap-10'}>
@@ -101,7 +121,7 @@ export default function AccountSettings() {
                     <div className={'flex flex-col gap-y-2'}>
                         <p className={'text-sm text-gray-500'}>Profile avatar</p>
                         <div className="flex flex-col sm:flex-row gap-x-5 gap-y-3 items-start sm:items-center">
-                            <img src={avatarURL || user.userDetails?.avatar || logo} alt="avatar"
+                            <img src={avatarURL || user.userDetails?.avatar} alt="avatar"
                                  className="w-20 h-20 rounded-full"/>
                             <div
                                 className="bg-green-500 text-white cursor-pointer px-3 py-2 rounded transition-colors duration-300 hover:bg-green-400">
@@ -123,11 +143,11 @@ export default function AccountSettings() {
                                 Sex
                             </label>
                             <select
-                                value={user.userDetails?.sex || userToUpdate.sex}
+                                value={userToUpdate.sex}
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="sex"
                                 {...register("userDetails.sex")}
-                                onChange={e => setUserToUpdate(p => ({...p, sex: e.target.value}))}
+                                onChange={e => handleSexChange(e.target.value)}
                             >
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -143,11 +163,8 @@ export default function AccountSettings() {
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="bday"
                                 type="date"
-                                onChange={e => setUserToUpdate(p => ({
-                                    ...p,
-                                    birthDay: dateToString(e.target.valueAsDate!)
-                                }))}
-                                defaultValue={user.userDetails?.dateOfBirth || dateToString(new Date())}
+                                value={userToUpdate.dateOfBirth}
+                                onChange={e => handleBDayChange(e.target.value)}
                             />
                             {errors.userDetails?.dateOfBirth &&
                                 <p className={'text-red-400 italic'}>{errors.userDetails.dateOfBirth.message}</p>}
@@ -163,10 +180,7 @@ export default function AccountSettings() {
                                 </label>
                                 <SingleSelectDropDownMenu items={currencies} ItemComponent={CurrencyItem}
                                                           heading={"Currency"}
-                                                          onItemSelected={(c) => setUserToUpdate(p => ({
-                                                              ...p,
-                                                              globalCurrency: c
-                                                          }))}
+                                                          onItemSelected={handleGlobalCurrencyChange}
                                                           defaultSelectedItem={userToUpdate.globalCurrency}/>
                             </div>
                             <div className="mb-4">
@@ -175,8 +189,8 @@ export default function AccountSettings() {
                                 </label>
                                 <select
                                     {...register("userDetails.language", {required: "Language is required"})}
-                                    value={user.userDetails?.language || userToUpdate.lang}
-                                    onChange={e => setUserToUpdate(p => ({...p, lang: +e.target.value}))}
+                                    value={userToUpdate.language}
+                                    onChange={e => handleLanguageChange(+e.target.value)}
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="lang">
                                     <option value={Language.Ukrainian}>Ukrainian</option>
@@ -186,11 +200,16 @@ export default function AccountSettings() {
                                 {errors.userDetails?.language &&
                                     <p className={'text-red-400 italic'}>{errors.userDetails?.message}</p>}
                             </div>
+                            <button
+                                className={!isDataSameAsPrevious || isAvatarChanged ? 'bg-green-400 rounded-sm px-4 py-2 text-white' :
+                                    'bg-gray-400 rounded-sm px-4 py-2 text-gray-700 pointer-events-none'}>Update
+                                settings
+                            </button>
                         </div>
                     </div>
-                    <button className={'bg-green-400 rounded-sm px-4 py-2 text-white'}>Update settings</button>
                 </div>
             </form>
+            
         </div>
     )
 }

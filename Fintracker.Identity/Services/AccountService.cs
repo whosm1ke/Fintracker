@@ -1,10 +1,13 @@
 ﻿using System.Reflection;
+using Fintracker.Application;
 using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Models.Identity;
 using Fintracker.Domain.Entities;
+using Fintracker.Domain.Enums;
 using Fintracker.Identity.Validators;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace Fintracker.Identity.Services;
 
@@ -13,12 +16,16 @@ public class AccountService : IAccountService
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly ITokenService _tokenService;
+    private readonly AppSettings _appSettings;
+    
 
-    public AccountService(UserManager<User> userManager, ITokenService tokenService, SignInManager<User> signInManager)
+    public AccountService(UserManager<User> userManager, ITokenService tokenService, SignInManager<User> signInManager,
+        IOptions<AppSettings> appSettings)
     {
         _userManager = userManager;
         _tokenService = tokenService;
         _signInManager = signInManager;
+        _appSettings = appSettings.Value;
     }
 
     public async Task<RegisterResponse> Register(RegisterRequest register)
@@ -31,7 +38,14 @@ public class AccountService : IAccountService
             var appUser = new User
             {
                 UserName = register.UserName,
-                Email = register.Email
+                Email = register.Email,
+                UserDetails = new UserDetails
+                {
+                    Avatar =  $"{_appSettings.BaseUrl}/api/user/avatar/logo.png",
+                    Sex = "Other",
+                    DateOfBirth = DateTime.Now,
+                    Language = Language.English
+                }
             };
 
             var createdUser = await _userManager.CreateAsync(appUser, register.Password);
@@ -88,7 +102,7 @@ public class AccountService : IAccountService
                         PropertyName = x.PropertyName,
                         ErrorMessage = x.ErrorMessage
                     }).ToList());
-            
+
             var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
 
             if (!checkPasswordResult.Succeeded)
