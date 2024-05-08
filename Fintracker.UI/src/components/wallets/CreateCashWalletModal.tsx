@@ -21,8 +21,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
     const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Wallet>();
     const walletMutation = useCreateWallet();
     const [isOpen, setIsOpen] = useState(false);
-    const defaultCurrency = currencies.filter(c => c.symbol === user?.response?.globalCurrency)[0];
-    const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(defaultCurrency)
+    const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(user?.response?.globalCurrency)
     useStopScrolling(isOpen)
 
     function handleOpenModal() {

@@ -6,12 +6,11 @@ import {UseFormSetError} from "react-hook-form";
 
 const apiClient = new ApiClient<LoginSchema>('account/login');
 const useLogin = (setError : UseFormSetError<LoginSchema>) => {
-    const [setEmail, setId, setToken] = useUserStore(x => ([x.setUserEmail, x.setUserId, x.setUserToken]));
+    const [ setId, setToken] = useUserStore(x => ([ x.setUserId, x.setUserToken]));
     return useMutation({
         mutationFn: (model: LoginSchema) => apiClient.login(model),
         onSuccess: (data) => {
             setId(data.response!.userId);
-            setEmail(data.response!.userEmail);
             setToken(data.response!.token);
         },
         onError: () => {

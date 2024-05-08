@@ -9,8 +9,6 @@ interface AppUserStore {
     getUserToken: () => string | null;
     setUserId: (id: string) => void;
     getUserId: () => string | null;
-    setUserEmail: (email: string) => void;
-    getUserEmail: () => string | null;
     isSignedIn: () => boolean;
 }
 
@@ -35,14 +33,6 @@ const useUserStore = createWithEqualityFn<AppUserStore>((set, get) => ({
     getUserId: () => {
         const { user } = get();
         return user.id || sessionStorage.getItem('userId');
-    },
-    setUserEmail: (email: string) => {
-        sessionStorage.setItem('userEmail', email);
-        set(store => ({user: {...store.user, email: email}}));
-    },
-    getUserEmail: () => {
-        const { user } = get();
-        return user.email || sessionStorage.getItem('userEmail');
     },
 }), shallow);
 

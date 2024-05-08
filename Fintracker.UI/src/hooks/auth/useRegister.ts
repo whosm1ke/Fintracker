@@ -6,13 +6,12 @@ import useUserStore from "../../stores/userStore.ts";
 const apiClient = new ApiClient<RegisterSchema>('account/register');
 
 const useRegister = () => {
-    const [setEmail, setId] = useUserStore(x => ([x.setUserEmail, x.setUserId]));
+    const [setId] = useUserStore(x => ([x.setUserId]));
     return useMutation({
         mutationFn: (model: RegisterSchema) => apiClient.register(model),
-        onSuccess: (model, variables) => {
+        onSuccess: (model) => {
             if (!model.hasError) {
                 setId(model.response!.userId);
-                setEmail(variables.email);
             }
         }
     });

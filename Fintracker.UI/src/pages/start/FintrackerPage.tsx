@@ -49,7 +49,7 @@ export default function FintrackerPage() {
                 {wallets.length !== 0 &&
                     <div className={'flex flex-col gap-y-5'}>
                         <WalletsOtherFilters wallets={wallets}/>
-                        <WalletOverviewList globalCurrency={user.response.globalCurrency}/>
+                        <WalletOverviewList globalCurrency={user.response.globalCurrency.symbol}/>
                     </div>}
             </section>
         </div>
