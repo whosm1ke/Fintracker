@@ -39,6 +39,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
     const {data: wallets} = useWallets(userId)
     const {data: categories} = useExpenseCategories(budget.ownerId);
     const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined)
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
@@ -109,7 +110,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
         else
             model.walletId = selectedWallet!.id
 
-        
+        setIsLoading(true)
         model.id = budget.id;
         model.ownerId = userId;
         model.currencyId = selectedCurrency!.id;
@@ -122,6 +123,10 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
                 reset();
                 clearErrors();
                 handleOpenModal();
+                setIsLoading(false)
+            },
+            onError: () => {
+                setIsLoading(false)
             }
         });
     };
@@ -239,7 +244,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
                         </div>
                         <div className="flex items-center justify-between">
                             <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white text-[1rem] sm:text-lg font-semibold sm:font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                className={isLoading ? "inactive-create-cash-wallet-button" : "create-cash-wallet-button"}
                                 type="submit"
                             >
                                 Update budget

@@ -60,6 +60,7 @@ export default function CreateBudgetModalBase ({
     const {register, handleSubmit, clearErrors, reset, setError, formState: {errors}} = useForm<Budget>();
     const budgetMutation = useCreateBudget();
     const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     useStopScrolling(isOpen)
 
@@ -99,7 +100,7 @@ export default function CreateBudgetModalBase ({
                 model.walletId = selectedWallet!.id
             }
         }
-
+        setIsLoading(true)
         model.ownerId = userId;
         model.currencyId = selectedCurrency!.id;
         model.currency = selectedCurrency!;
@@ -110,6 +111,10 @@ export default function CreateBudgetModalBase ({
                 reset();
                 clearErrors();
                 handleOpenModal();
+                setIsLoading(false)
+            },
+            onError: () => {
+                setIsLoading(false)
             }
         });
     };
@@ -243,7 +248,7 @@ export default function CreateBudgetModalBase ({
                         </div>
                         <div className="flex items-center justify-between">
                             <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white text-[1rem] sm:text-lg font-semibold sm:font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                className={isLoading ? "inactive-create-cash-wallet-button" : "create-cash-wallet-button"}
                                 type="submit"
                             >
                                 Add budget

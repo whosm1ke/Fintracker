@@ -1,10 +1,11 @@
 ﻿using Fintracker.Application.Contracts.Identity;
 using Fintracker.Application.Contracts.Persistence;
-using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;
+using Fintracker.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Options;
 
 namespace Fintracker.Application.Features.User.Handlers.Commands;
 
@@ -13,12 +14,14 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMediator _mediator;
+    private readonly AppSettings _appSettings;
 
-    public AddUserToWalletCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IMediator mediator)
+    public AddUserToWalletCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IMediator mediator, IOptions<AppSettings> appSettings)
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
         _mediator = mediator;
+        _appSettings = appSettings.Value;
     }
 
     public async Task<BaseCommandResponse> Handle(AddUserToWalletCommand request, CancellationToken cancellationToken)
@@ -27,14 +30,17 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
 
         var wallet = await _unitOfWork.WalletRepository.GetWalletById(request.WalletId);
         var user = await _userRepository.GetAsync(request.UserId);
-
-        wallet!.Users.Add(user!);
+        user!.UserDetails = new UserDetails
+        {
+            Avatar = $"{_appSettings.BaseUrl}/api/user/avatar/logo.png"
+        };
+        wallet!.Users.Add(user);
         
         foreach (var budget in wallet.Budgets)
         {
             if (budget.IsPublic)
             {
-                user!.MemberBudgets.Add(budget);
+                user.MemberBudgets.Add(budget);
             }
         }
         await _unitOfWork.SaveAsync();
@@ -52,53 +58,5 @@ public class AddUserToWalletCommandHandler : IRequestHandler<AddUserToWalletComm
 
 
         return response;
-    }
-}
-
-public class RemoveUserFromWalletHandler : IRequestHandler<RemoveUserFromWallet, Unit>
-{
-    private readonly IUserRepository _userRepository;
-    private readonly ITokenService _tokenService;
-
-    public RemoveUserFromWalletHandler(IUserRepository userRepository, ITokenService tokenService)
-    {
-        _userRepository = userRepository;
-        _tokenService = tokenService;
-    }
-
-    public async Task<Unit> Handle(RemoveUserFromWallet request, CancellationToken cancellationToken)
-    {
-        var validatedTokenResult = await _tokenService.ValidateToken(request.Token);
-
-        if (!validatedTokenResult)
-        {
-            throw new BadRequestException(new ExceptionDetails
-            {
-                ErrorMessage = "Provided token is not valid",
-                PropertyName = nameof(request.Token)
-            });
-        }
-
-        var userId = _tokenService.GetUidClaimValue(request.Token);
-
-        if (!userId.HasValue)
-            throw new BadRequestException(new ExceptionDetails
-            {
-                ErrorMessage = "Invalid token format",
-                PropertyName = nameof(request.Token)
-            });
-
-        var user = await _userRepository.GetAsync(userId.Value);
-
-        if (user is null)
-            throw new LoginException(new ExceptionDetails
-            {
-                ErrorMessage = "Invalid credentials",
-                PropertyName = nameof(Domain.Entities.User)
-            });
-
-        await _userRepository.DeleteAsync(user);
-
-        return Unit.Value;
     }
 }

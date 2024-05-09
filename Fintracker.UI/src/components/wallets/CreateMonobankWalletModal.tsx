@@ -8,6 +8,7 @@ import useCreateMonoWallet, {MonoWalletToken} from "../../hooks/wallet/useCreate
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
 import BankAccountItem from "../other/BankAccountItem.tsx";
 import currencies from "../../data/currencies.ts";
+import {dateToString} from "../../helpers/globalHelper.ts";
 
 const CreateMonobankWalletModal = () => {
 
@@ -49,20 +50,25 @@ const MonobankModalStep1 = ({handleOpenModal, handleNextStep, handleMonouserInfo
     const {handleSubmit, register, setError, reset, clearErrors, formState: {errors}} = useForm<MonoWalletToken>({
         mode: 'onSubmit'
     });
+    const [isLoading, setIsLoading] = useState(false);
 
     const xTokenMutation = useMonoUserInfo();
     const onSubmit: SubmitHandler<MonoWalletToken> = async (model: MonoWalletToken) => {
+        setIsLoading(true);
         const mutationResponse = await xTokenMutation.mutateAsync(model);
-
         if (mutationResponse.hasError) {
             setError("xToken", {message: "Invalid token"})
+            setIsLoading(false);
         } else {
             if (mutationResponse.response) {
                 handleMonouserInfo(mutationResponse.response);
                 handleNextStep();
+                setIsLoading(false);
             }
         }
     };
+    
+    console.log("isLoading: ", isLoading)
 
     return (
         <div className={`absolute inset-0  flex justify-center items-center visible bg-black/20 z-50`}>
@@ -88,7 +94,7 @@ const MonobankModalStep1 = ({handleOpenModal, handleNextStep, handleMonouserInfo
                         {errors.xToken && <p className={'text-red-400 italic'}>{errors.xToken.message}</p>}
                     </div>
                     <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className={isLoading ? "inactive-create-cash-wallet-button" : "create-cash-wallet-button"}
                         type="submit"
                     >
                         Send token
@@ -111,7 +117,7 @@ const MonobankModalStep2 = ({userInfo, handleOpenModal}: MonobankModalStep2Props
 
     const monobankMutation = useCreateMonoWallet();
     const [selectedAcc, setSelectedAcc] = useState<Account>(userInfo.accounts[0])
-
+    const [isLoading, setIsLoading] = useState(false);
     const handleSelectedAccount = (acc: Account) => setSelectedAcc(acc);
     const onSubmit: SubmitHandler<ExtendedMonobankConfiguration> = async (model: ExtendedMonobankConfiguration) => {
         const fromUnix = new Date(model.from).getTime() / 1000;
@@ -123,13 +129,17 @@ const MonobankModalStep2 = ({userInfo, handleOpenModal}: MonobankModalStep2Props
             from: fromUnix,
             to: toUnix,
         };
-
+        setIsLoading(true)
         const monobankResponse = await monobankMutation.mutateAsync(unixModel);
 
         if (monobankResponse.hasError) {
-            setError("root", {message: 'Something went wrong'})
+            console.log("monobankResponse: ", monobankResponse)
+            // @ts-ignore
+            setError("root", {message: monobankResponse.error?.details[0].errorMessage})
+            setIsLoading(false);
         } else {
             handleOpenModal()
+            setIsLoading(false);
         }
     };
 
@@ -178,12 +188,12 @@ const MonobankModalStep2 = ({userInfo, handleOpenModal}: MonobankModalStep2Props
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="endDate"
                             type="date"
-                            defaultValue={new Date().toLocaleDateString()} // Set default value to today's date
+                            defaultValue={dateToString(new Date())} // Set default value to today's date
                             {...register("to")}
                         />
                     </div>
                     <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className={isLoading ? "inactive-create-cash-wallet-button" : "create-cash-wallet-button"}
                         type="submit"
                     >
                         Connect wallet

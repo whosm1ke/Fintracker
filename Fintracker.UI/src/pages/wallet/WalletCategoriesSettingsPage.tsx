@@ -140,10 +140,9 @@ export default function WalletCategoriesSettingsPage() {
         model.type = +getValues('type');
         model.name = getValues('name');
 
-
         let result;
         if (isEditing) {
-            model.id = categoryToCreate.id;
+            model.id = categoryToEdit!.id;
             result = await categoryUpdateMutation.mutateAsync(model);
         } else {
             result = await categoryCreateMutation.mutateAsync(model);
@@ -293,10 +292,12 @@ export default function WalletCategoriesSettingsPage() {
                     <fieldset className={'flex flex-col gap-3'}>
                         <legend className={'font-semibold mb-5'}>Income categories</legend>
                         {incomeCategories.map(c =>
-                            <div className={'flex justify-between items-center'} key={c.id || "Hi-hi-ha-ha"}>
-                                <CategoryBlock category={c}/>
-                                <CategoryCRUDButtons category={c} onTrashClick={onTrashClick}
-                                                     onGearClick={onGearClick} isOwner={isOwner}/>
+                            <div className={'flex justify-between items-center '} key={c.id || "Hihi-haha"}>
+                                <div className={'w-full rounded px-4 flex justify-between items-center hover:bg-gray-200 transition-all duration-150'}>
+                                    <CategoryBlock category={c}/>
+                                    <CategoryCRUDButtons category={c} onTrashClick={onTrashClick}
+                                                         onGearClick={onGearClick} isOwner={isOwner}/>
+                                </div>
                             </div>
                         )}
                     </fieldset>
@@ -305,10 +306,12 @@ export default function WalletCategoriesSettingsPage() {
                     <fieldset className={'flex flex-col gap-3'}>
                         <legend className={'font-semibold mb-5'}>Expense categories</legend>
                         {expenseCategories.map(c =>
-                            <div className={'flex justify-between items-center'} key={c.id || "id1"}>
-                                <CategoryBlock category={c}/>
-                                <CategoryCRUDButtons category={c} onTrashClick={onTrashClick}
-                                                     onGearClick={onGearClick} isOwner={isOwner}/>
+                            <div className={'flex justify-between items-center '} key={c.id || "id1"}>
+                                <div className={'w-full rounded px-4 flex justify-between items-center hover:bg-gray-200 transition-all duration-150'}>
+                                    <CategoryBlock category={c}/>
+                                    <CategoryCRUDButtons category={c} onTrashClick={onTrashClick}
+                                                         onGearClick={onGearClick} isOwner={isOwner}/>
+                                </div>
                             </div>
                         )}
                     </fieldset>

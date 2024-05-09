@@ -23,6 +23,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(user?.response?.globalCurrency)
     useStopScrolling(isOpen)
+    const [isLoading, setIsLoading] = useState(false);
 
     function handleOpenModal() {
         setIsOpen(p => !p);
@@ -33,7 +34,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
     }
 
     const onSubmit: SubmitHandler<Wallet> = async (model: Wallet) => {
-
+        
         if (!selectedCurrency) {
             setError("currencyId", {message: "Currency not selected"})
             return;
@@ -43,11 +44,16 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
         }
         model.currency = selectedCurrency;
         model.ownerId = userId;
+        setIsLoading(true);
         await walletMutation.mutateAsync(model, {
             onSuccess: () => {
                 reset();
                 clearErrors("root");
+                setIsLoading(false);
                 handleOpenModal();
+            },
+            onError: () => {
+                setIsLoading(false);
             }
         });
     };
@@ -102,7 +108,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
 
                         <div className="flex items-center justify-between">
                             <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                className={isLoading ? "inactive-create-cash-wallet-button" : "create-cash-wallet-button"}
                                 type="submit"
                             >
                                 Create Wallet

@@ -37,11 +37,11 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, U
                 PropertyName = nameof(request.Wallet.Id)
             }, nameof(Domain.Entities.Wallet));
 
-        if (wallet.IsBanking && wallet.Balance.CompareTo(request.Wallet.StartBalance) != 0)
+        if (wallet.IsBanking && wallet.StartBalance.CompareTo(request.Wallet.StartBalance) != 0)
             throw new BadRequestException(new ExceptionDetails
             {
                 ErrorMessage = "Can not change balance in banking wallet",
-                PropertyName = nameof(wallet.Balance)
+                PropertyName = nameof(wallet.StartBalance)
             });
 
         await UpdateWalletBalance(wallet, request.Wallet);

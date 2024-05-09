@@ -32,6 +32,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(walletCurrency);
     const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined)
     useStopScrolling(isOpen)
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
@@ -69,7 +70,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
             clearErrors("categoryId")
         }
         
-
+        
         if (!selectedCurrency) {
             setError("currencyId", {message: "Currency is required"});
             return;
@@ -77,7 +78,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
             clearErrors("currencyId")
             model.currency = selectedCurrency;
         }
-
+        setIsLoading(true);
         model.userId = userId;
         model.currencyId = selectedCurrency!.id;
         model.categoryId = selectedCategory!.id;
@@ -87,6 +88,10 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
                 reset();
                 clearErrors();
                 handleOpenModal();
+                setIsLoading(false);
+            },
+            onError: () => {
+                setIsLoading(false)
             }
         });
     };
@@ -181,7 +186,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
                         </div>
                         <div className="flex items-center justify-between">
                             <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                className={isLoading ? "inactive-create-cash-wallet-button" : "create-cash-wallet-button"}
                                 type="submit"
                             >
                                 Add Transaction

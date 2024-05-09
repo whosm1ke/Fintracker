@@ -17,7 +17,8 @@ export type UpdateWalletDTO = {
     users: User[];
     owner: User;
     ownerId: string;
-    transactions: Transaction[]
+    transactions: Transaction[];
+    isBanking? : boolean
 }
 
 type Context = {
@@ -39,6 +40,7 @@ const useUpdateWallet = () => {
                 newWallet.currency = oldQueryData.response!.currency
                 newWallet.users = oldQueryData.response!.users
                 newWallet.owner = oldQueryData.response!.owner
+                newWallet.isBanking = oldQueryData.response?.isBanking
                 const clientWarpper: ClientWrapper<Wallet> = {
                     hasError: false,
                     // @ts-ignore
@@ -56,7 +58,7 @@ const useUpdateWallet = () => {
             await queryClient.invalidateQueries({queryKey: ['wallets']})
             await queryClient.invalidateQueries({queryKey: ['wallet', variables.id]})
             await queryClient.invalidateQueries({queryKey: ['budgets']})
-            _context?.prevWallet?.budgets.map(async (b: Budget) => await queryClient.invalidateQueries({queryKey: ['budget', b.id]}))
+            _context?.prevWallet?.budgets?.map(async (b: Budget) => await queryClient.invalidateQueries({queryKey: ['budget', b.id]}))
         }
     })
 }

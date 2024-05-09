@@ -4,6 +4,7 @@ using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Mail;
+using Fintracker.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Options;
 
@@ -29,6 +30,10 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
 
     public async Task<Unit> Handle(InviteUserCommand request, CancellationToken cancellationToken)
     {
+        
+        
+        
+        
         var inviteEmailModel = new InviteEmailModel
         {
             WhoInvited = request.WhoInvited ?? "User",
@@ -44,15 +49,13 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
                 _tempPass);
             inviteEmailModel.Ref =
                 $"{_appSettings.UiUrl}/{request.UrlCallback}?userId={user.Id}&walletId={request.WalletId}";
-
         }
         else
         {
             var existingUser = await _userRepository.GetAsNoTrackingAsync(request.UserEmail);
-            
+
             inviteEmailModel.Ref =
                 $"{_appSettings.UiUrl}/{request.UrlCallback}?userId={existingUser!.Id}&walletId={request.WalletId}";
-
         }
 
         var isEmailSent = await _emailSender.SendEmail(new EmailModel

@@ -59,7 +59,7 @@ public class BankController : BaseController
             Payload = new()
             {
                 OwnerId = userId,
-                Transactions = transactions.ToList(),
+                Transactions = transactions.Count > 0 ? transactions.ToList() : new List<MonoTransactionDTO>(),
                 Email = email,
                 AccountId = monoCfg.AccountId
             }

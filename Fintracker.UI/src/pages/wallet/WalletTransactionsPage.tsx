@@ -12,14 +12,17 @@ import NoTransactionsPerWallet from "../../components/transactions/NoTransaction
 
 export default function WalletTransactionsPage() {
     const {walletId} = useParams();
+    console.log("walletId: ", walletId)
     const userId = useUserStore(x => x.getUserId());
     const {data: transactions} = useTransactions(walletId!)
     const {data: walletResponse} = useWallet(walletId!);
     
     
-    if (!transactions || !walletResponse || !walletResponse.response) return null;
+    if (transactions === undefined || !walletResponse || !walletResponse.response) return null;
     const wallet = walletResponse.response;
     if (wallet.ownerId != userId && !wallet.users.find(u => u.id === userId)) return <Navigate to={'../../dashboard'}/>
+    
+    console.log("transactions hook: ", transactions)
     return (
         <div className={'container flex flex-col gap-y-5 mx-auto p-4'}>
             <div className={'flex flex-col sm:flex-row justify-between items-center gap-5'}>
@@ -31,8 +34,10 @@ export default function WalletTransactionsPage() {
             <TransactionsOtherFilters transactions={transactions}/>
             <TransactionOverviewList walletCurrency={wallet.currency.symbol} balance={wallet.balance} transactions={transactions}/>
             <div className={'mt-4'}>
+                
                 {wallet.transactions.length > 0 ?
                     <TransactionList transactions={transactions} walletSymbol={wallet.currency.symbol}/> : <NoTransactionsPerWallet/>}
+                
             </div>
         </div>
     )

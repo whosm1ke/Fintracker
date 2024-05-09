@@ -53,6 +53,7 @@ export default function WalletGeneralSettingsPage() {
     if (!walletResponse || !walletResponse.response) return null;
     const wallet = walletResponse.response;
 
+
     const handleNewCurrencySelected = (curr: Currency) => {
         setSelectedCurrency(curr);
     }
@@ -92,8 +93,8 @@ export default function WalletGeneralSettingsPage() {
             setIsEmailAlreadyAdded(true)
             return;
         }
-        
-        if(email === wallet.owner.email){
+
+        if (email === wallet.owner.email) {
             setIsEmailAlreadyAdded(true)
             return;
         }
@@ -104,21 +105,18 @@ export default function WalletGeneralSettingsPage() {
 
     const handleInviteUser = async () => {
         if (!emailInputRef.current) return;
-
-        if (sessionStorage.getItem('inviteEmail') === emailInputRef.current.value) {
-            setIsEmailAlreadyAdded(true);
-            return;
-        }
+        
 
         await inviteUser.mutateAsync({
             walletId: wallet.id,
             email: emailInputRef.current.value,
             urlCallback: "confirm-invite"
         })
-
-        sessionStorage.setItem('inviteEmail', emailInputRef.current.value);
+        
         emailInputRef.current.value = "";
         setIsEmailValid(false);
+        
+        
     }
 
     const onSumbit: SubmitHandler<UpdateWalletDTO> = async (model: UpdateWalletDTO) => {
@@ -134,6 +132,10 @@ export default function WalletGeneralSettingsPage() {
 
         model.userIds = userIdsToDelete;
         model.id = wallet.id;
+        if (wallet.isBanking) {
+            model.isBanking = wallet.isBanking;
+            model.startBalance = wallet.startBalance;
+        }
         await walletUpdateMutation.mutateAsync(model)
     }
 
@@ -168,33 +170,35 @@ export default function WalletGeneralSettingsPage() {
                                 />
                                 {errors.name && <p className={'text-red-400 italic'}>{errors.name.message}</p>}
                             </div>
-                            <div className={'flex flex-col'}>
-                                <label htmlFor="startBalance">Start balance</label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="startBalance"
-                                    type="number"
-                                    step={0.01}
-                                    value={selectedStartBalance || wallet.startBalance}
-                                    {...register("startBalance", balanceRegisterOptionsForWallet)}
-                                    onChange={e => handleWalletStartBalanceChange(e.target.valueAsNumber)}
-                                />
-                                {errors.startBalance &&
-                                    <p className={'text-red-400 italic'}>{errors.startBalance.message}</p>}
-                            </div>
-                            <div className={'flex flex-col'}>
-                                <label>Wallet currency</label>
-                                <div
-                                    {...register("currencyId")}>
-                                    <SingleSelectDropDownMenu items={currencies} ItemComponent={CurrencyItem}
-                                                              heading={"Currency"}
-                                                              onItemSelected={handleNewCurrencySelected}
-                                                              defaultSelectedItem={selectedCurrency}/>
+                            {!wallet.isBanking && <>
+                                <div className={'flex flex-col'}>
+                                    <label htmlFor="startBalance">Start balance</label>
+                                    <input
+                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        id="startBalance"
+                                        type="number"
+                                        step={0.01}
+                                        value={selectedStartBalance || wallet.startBalance}
+                                        {...register("startBalance", balanceRegisterOptionsForWallet)}
+                                        onChange={e => handleWalletStartBalanceChange(e.target.valueAsNumber)}
+                                    />
+                                    {errors.startBalance &&
+                                        <p className={'text-red-400 italic'}>{errors.startBalance.message}</p>}
                                 </div>
-                                {errors.currencyId &&
-                                    <p className={'text-red-400 italic'}>{errors.currencyId.message}</p>}
-                            </div>
-                            {(wallet.users.length !== 0 && currenctUserId === wallet.ownerId) &&
+                                <div className={'flex flex-col'}>
+                                    <label>Wallet currency</label>
+                                    <div
+                                        {...register("currencyId")}>
+                                        <SingleSelectDropDownMenu items={currencies} ItemComponent={CurrencyItem}
+                                                                  heading={"Currency"}
+                                                                  onItemSelected={handleNewCurrencySelected}
+                                                                  defaultSelectedItem={selectedCurrency}/>
+                                    </div>
+                                    {errors.currencyId &&
+                                        <p className={'text-red-400 italic'}>{errors.currencyId.message}</p>}
+                                </div>
+                            </>}
+                            {(wallet.users.length !== 0 && currenctUserId === wallet.ownerId) && !wallet.isBanking &&
                                 <div className={'basis-1/2 flex flex-col'}>
                                     <label>Wallet members</label>
                                     <div

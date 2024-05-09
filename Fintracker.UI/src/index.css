@@ -15,8 +15,16 @@
     @apply relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
 }
 
-.inactive-submit-register-button{
+.inactive-submit-register-button {
     @apply  relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-gray-600 bg-gray-300 pointer-events-none
+}
+
+.create-cash-wallet-button {
+    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow
+}
+
+.inactive-create-cash-wallet-button{
+    @apply bg-gray-300 text-gray-600 font-bold py-2 px-4 rounded pointer-events-none
 }
 
 .horizontal-slider {

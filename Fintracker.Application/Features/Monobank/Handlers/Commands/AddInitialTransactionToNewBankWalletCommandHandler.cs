@@ -33,8 +33,10 @@ public class AddInitialTransactionToNewBankWalletCommandHandler : IRequestHandle
         var response = new CreateCommandResponse<WalletPureDTO>();
         var transactions = _mapper.Map<ICollection<Domain.Entities.Transaction>>(request.Payload.Transactions);
         var defaultCurrency = await _unitOfWork.CurrencyRepository.GetAsync("UAH");
-        var expenseCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankExpenseCategoryId(request.Payload.OwnerId);
-        var incomeCategoryId = await _unitOfWork.CategoryRepository.GetDefaultBankIncomeCategoryId(request.Payload.OwnerId);
+        var expenseCategoryId =
+            await _unitOfWork.CategoryRepository.GetDefaultBankExpenseCategoryId(request.Payload.OwnerId);
+        var incomeCategoryId =
+            await _unitOfWork.CategoryRepository.GetDefaultBankIncomeCategoryId(request.Payload.OwnerId);
         var xToken = await _monobankService.GetMonobankTokenAsync(request.Payload.Email);
         var accountBalance = await _monobankService.GetAccountBalance(xToken!, request.Payload.AccountId);
 
@@ -65,7 +67,8 @@ public class AddInitialTransactionToNewBankWalletCommandHandler : IRequestHandle
 
         await _unitOfWork.WalletRepository.AddAsync(bankWallet);
         await _unitOfWork.SaveAsync();
-        _cache.Set("mono_from_value", request.Payload.Transactions.Max(x => x.Time) + 1);
+        if (request.Payload.Transactions.Count > 0)
+            _cache.Set("mono_from_value", request.Payload.Transactions.Max(x => x.Time) + 1);
 
         var createdBankWallet = _mapper.Map<WalletPureDTO>(bankWallet);
 

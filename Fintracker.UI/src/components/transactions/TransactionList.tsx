@@ -17,8 +17,9 @@ interface TransactionListProps {
     walletSymbol: string;
 }
 export default function TransactionList({transactions, walletSymbol}: TransactionListProps) {
-    
-    
+
+
+    console.log("transactions: ", transactions)
     
     const filters = useTransactionQueryStore(x => x.filters);
     const filteredTransactions = filterTransactions(transactions, filters);

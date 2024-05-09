@@ -145,6 +145,13 @@ public class MonobankService : IMonobankService
                     ErrorMessage = "Too many requests",
                     PropertyName = "Error"
                 });
+            
+            if (responseMessage.StatusCode == HttpStatusCode.BadRequest)
+                throw new BadRequestException(new ExceptionDetails
+                {
+                    ErrorMessage = "Please select a period between one month",
+                    PropertyName = "Error"
+                });
 
             IReadOnlyList<MonoTransactionDTO> transactions =
                 (await responseMessage.Content.ReadFromJsonAsync<IReadOnlyList<MonoTransactionDTO>>())!;

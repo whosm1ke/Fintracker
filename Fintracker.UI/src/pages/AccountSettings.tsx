@@ -168,13 +168,13 @@ export default function AccountSettings() {
     }
     
     const isDataSameAsPrevious = user.globalCurrency.id === userToUpdate.globalCurrency?.id &&
-        dateToString(new Date(user.userDetails.dateOfBirth!)) === userToUpdate.dateOfBirth &&
+        dateToString(new Date(user.userDetails?.dateOfBirth || new Date())) === userToUpdate.dateOfBirth &&
         user.userDetails?.sex === userToUpdate.sex &&
         user.userDetails?.language === userToUpdate.language &&
         getImageFromURL(user.userDetails?.avatar) === userToUpdate.avatar;
 
     const isUsernameChanged = user.userName !== userToUpdate.userName;
-
+console.log("user.userDetails?.avatar: ", user.userDetails?.avatar)
     return (
         <div className={'px-16 py-6 flex flex-col gap-10'}>
             <header className={'font-semibold text-lg'}>
