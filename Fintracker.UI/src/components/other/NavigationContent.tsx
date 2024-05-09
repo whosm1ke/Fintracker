@@ -19,10 +19,6 @@ export default function NavigationContent() {
                              className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md">Settings</NavLink>
                 </li>
                 <li className="mb-3">
-                    <NavLink to="/support"
-                             className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md">Support</NavLink>
-                </li>
-                <li className="mb-3">
                     <NavLink to="/"
                              className="text-gray-600 hover:text-green-500 block px-4 py-2 rounded-md">Home</NavLink>
                 </li>

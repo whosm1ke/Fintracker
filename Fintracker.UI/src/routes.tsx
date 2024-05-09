@@ -10,7 +10,6 @@ import BudgetsPage from "./pages/budget/BudgetsPage.tsx";
 import BudgetDetailsPage from "./pages/budget/BudgetDetailsPage.tsx";
 import WalletLayout from "./pages/Layout/WalletLayout.tsx";
 import WalletTransactionsPage from "./pages/wallet/WalletTransactionsPage.tsx";
-import WalletOverviewPage from "./pages/wallet/WalletOverviewPage.tsx";
 import WalletGeneralSettingsPage from "./pages/wallet/WalletGeneralSettingsPage.tsx";
 import WalletCategoriesSettingsPage from "./pages/wallet/WalletCategoriesSettingsPage.tsx";
 import RegisterForm from "./components/auth/RegisterForm.tsx";
@@ -82,11 +81,6 @@ const router = createBrowserRouter([
                 id: 'walletTransactions',
                 path: ":walletId/trans",
                 element: <WalletTransactionsPage/>
-            },
-            {
-                id: 'walletOverview',
-                path: ":walletId/overview",
-                element: <WalletOverviewPage/>
             },
             {
                 id: 'walletBudgets',
