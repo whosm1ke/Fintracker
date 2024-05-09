@@ -1,6 +1,5 @@
 ﻿import useUserStore from "../stores/userStore.ts";
 import {useGetUser} from "../hooks/auth/useUser.ts";
-import Spinner from "../components/other/Spinner.tsx";
 import {ChangeEvent, useEffect, useState} from "react";
 import currencies from "../data/currencies.ts";
 import SingleSelectDropDownMenu from "../components/other/SingleSelectDropDownMenu.tsx";
@@ -70,7 +69,7 @@ export default function AccountSettings() {
     const userUpdateUsernameMutation = useUpdateUserUsername();
     const userUpdateEmailMutation = useUpdateUserEmail();
     const userUpdatePasswordMutation = useUpdateUserPassword();
-    if (!userResponse || !userResponse.response) return <Spinner/>
+    if (!userResponse || !userResponse.response) return null;
     const user = userResponse.response;
 
 

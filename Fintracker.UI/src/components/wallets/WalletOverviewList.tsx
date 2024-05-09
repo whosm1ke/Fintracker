@@ -7,7 +7,6 @@ import {
     getUniqueCurrencySymbolsFromWallets,
 } from "../../helpers/globalHelper.ts";
 import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAll.tsx";
-import Spinner from "../other/Spinner.tsx";
 
 
 interface WalletOverviewListProps {
@@ -25,7 +24,7 @@ export default function WalletOverviewList({globalCurrency}: WalletOverviewListP
         amount: [1]
     })
 
-    if (isLoading) return <Spinner/>
+    if (isLoading) return null;
     const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
     const totalBalance = calculateWalletsBalance(walletFilters.selectedWallets, currencyRates);
     const filteredTransactions = filterTransactionsFrowWallets(walletFilters.selectedWallets, {

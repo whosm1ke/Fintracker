@@ -4,7 +4,6 @@ import useUserStore from "../../stores/userStore.ts";
 import {BudgetCard} from "../../components/budgets/BudgetCard.tsx";
 import CreateBudgetModalWalletPersonal from "../../components/budgets/CreateBudgetModalWalletPersonal.tsx";
 import BudgetOverview from "../../components/budgets/BudgetOverview.tsx";
-import Spinner from "../../components/other/Spinner.tsx";
 import CreateBudgetModalGlobal from "../../components/budgets/CreateBudgetModalGlobal.tsx";
 import useExpenseCategories from "../../hooks/categories/useExpenseCategories.ts";
 
@@ -15,8 +14,7 @@ export default function BudgetsPage() {
     const {data: categories} = useExpenseCategories(userId!);
 
 
-    if (budgets === undefined || categories === undefined )
-        return <Spinner/>;
+    if (budgets === undefined || categories === undefined ) return null;
 
     return (
         <div className={'container mx-auto p-4 overflow-hidden'}>

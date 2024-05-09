@@ -7,7 +7,6 @@ import {CategoryType} from "../../entities/CategoryType.ts";
 import {useState} from "react";
 import {AnimatePresence, motion, Variants} from "framer-motion";
 import useCategories from "../../hooks/categories/useCategories.ts";
-import Spinner from "../other/Spinner.tsx";
 import TransactionEditingBlock from "./TransactionEditingBlock.tsx";
 
 interface TransactionItemProps {
@@ -30,7 +29,7 @@ export function TransactionItem({transaction, conversionRate, parentCurrencySymb
     const [isEditing, setIsEditing] = useState(false);
     const gridTemplateCols = showDate ? ' md:grid-cols-5 ' : ' md:grid-cols-4 ';
 
-    if (!categories) return <Spinner/>
+    if (!categories) return null;
     
     const handleIsEditing = () => setIsEditing(p => !p);
     return (

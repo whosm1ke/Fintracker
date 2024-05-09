@@ -1,7 +1,6 @@
 ﻿import {NavLink, Outlet, useLocation, useParams} from "react-router-dom";
 import useUserStore from "../../stores/userStore.ts";
 import useWallet from "../../hooks/wallet/useWallet.ts";
-import Spinner from "../../components/other/Spinner.tsx";
 
 export default function WalletSettingsLayoutPage() {
     const loc = useLocation();
@@ -10,7 +9,7 @@ export default function WalletSettingsLayoutPage() {
     const userId = useUserStore(x => x.getUserId());
     const {data: wallet} = useWallet(walletId!)
     
-    if(!wallet || !wallet.response) return <Spinner/>
+    if(!wallet || !wallet.response) return null;
     
     return (
         <div className={'container mx-auto p-4'}>

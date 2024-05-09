@@ -1,6 +1,5 @@
 ﻿import {Navigate, useNavigate, useParams} from "react-router-dom";
 import useBudget from "../../hooks/budgets/useBudget.ts";
-import Spinner from "../../components/other/Spinner.tsx";
 import {
     calculateDailyBudget,
     dateToString,
@@ -14,6 +13,7 @@ import {Transaction} from "../../entities/Transaction.ts";
 import {TransactionItem} from "../../components/transactions/TransactionItem.tsx";
 import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAll.tsx";
 import useUserStore from "../../stores/userStore.ts";
+import NoTransactionsPerWallet from "../../components/transactions/NoTransactionsPerWallet.tsx";
 
 export default function BudgetDetailsPage() {
     const {budgetId} = useParams()
@@ -21,9 +21,8 @@ export default function BudgetDetailsPage() {
     const {data: budgetResponse, isLoading} = useBudget(budgetId!);
     const currenctUserId = useUserStore(x => x.getUserId());
 
-    
 
-    if (!budgetResponse || !budgetResponse.response || isLoading) return <Spinner/>
+    if (!budgetResponse || !budgetResponse.response || isLoading) return null;
     const budget = budgetResponse.response;
     if (budget.ownerId != currenctUserId && !budget.members.find(u => u.id === currenctUserId)) return <Navigate
         to={'../../dashboard'}/>
@@ -78,10 +77,11 @@ export default function BudgetDetailsPage() {
                     </div>
                 </div>
             </div>
-            {budget.transactions.length !== 0 && <BudgetTransactionItemList transactions={budget.transactions}
-                                                                            budgetCurrencySymbol={budget.currency.symbol}
-                                                                            budgetId={budgetId!}
-                                                                            budgetOwnerId={budget.ownerId}/>}
+            {budget.transactions.length > 0 ? <BudgetTransactionItemList transactions={budget.transactions}
+                                                                         budgetCurrencySymbol={budget.currency.symbol}
+                                                                         budgetId={budgetId!}
+                                                                         budgetOwnerId={budget.ownerId}/> :
+                <NoTransactionsPerWallet/>}
         </div>
     )
 }
@@ -107,7 +107,7 @@ export function BudgetTransactionItemList({
         amount: [1]
     })
     const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
-    if (!convertedCurrencies) return <Spinner/>
+    if (!convertedCurrencies) return null;
 
 
     return (

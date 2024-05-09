@@ -3,7 +3,6 @@ import {useState} from "react";
 import {Wallet} from "../../entities/Wallet.ts";
 import {Currency} from "../../entities/Currency.ts";
 import {Category} from "../../entities/Category.ts";
-import Spinner from "../other/Spinner.tsx";
 import CreateBudgetModalBase from "./CreateBudgetModalBase.tsx";
 
 interface CreateBudgetModalGlobalProps {
@@ -18,7 +17,7 @@ export default function CreateBudgetModalGlobal ({userId, categories}: CreateBud
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
 
-    if (wallets === undefined || categories === undefined) return <Spinner/>
+    if (wallets === undefined) return null;
     const filteredWallets = wallets.filter(w => w.ownerId === userId)
     const handleSelectedWallet = (wallet: Wallet) => setSelectedWallet(wallet);
 

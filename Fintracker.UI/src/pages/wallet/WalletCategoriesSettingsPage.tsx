@@ -10,7 +10,6 @@ import useCreateCategory from "../../hooks/categories/useCreateCategory.ts";
 import {handleServerErrorResponse} from "../../helpers/handleError.ts";
 import useUpdateCategory from "../../hooks/categories/useUpdateCategory.ts";
 import useCategories from "../../hooks/categories/useCategories.ts";
-import Spinner from "../../components/other/Spinner.tsx";
 import * as Icons from "react-icons/md";
 import {IconType} from "react-icons";
 import {BsFillGearFill} from "react-icons/bs";
@@ -88,7 +87,7 @@ export default function WalletCategoriesSettingsPage() {
         }
     }, [categoryToEdit]);
 
-    if (!categories) return <Spinner/>
+    if (!categories) return null;
 
     const expenseCategories = categories.filter(c => c.type === CategoryType.EXPENSE);
     const incomeCategories = categories.filter(c => c.type === CategoryType.INCOME);

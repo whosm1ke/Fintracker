@@ -1,6 +1,5 @@
 ﻿import useWallets from "../../hooks/wallet/useWallets";
 import useUserStore from "../../stores/userStore";
-import Spinner from "../../components/other/Spinner.tsx";
 import CreateCashWalletModal from "../../components/wallets/CreateCashWalletModal.tsx";
 import WalletCard from "../../components/wallets/WalletCard.tsx";
 import CreateMonobankWalletModal from "../../components/wallets/CreateMonobankWalletModal.tsx";
@@ -10,6 +9,7 @@ import WalletsDateFilter from "../../components/wallets/WalletsDateFilter.tsx";
 import WalletOverviewList from "../../components/wallets/WalletOverviewList.tsx";
 import {useGetUser} from "../../hooks/auth/useUser.ts";
 import WalletsOtherFilters from "../../components/wallets/WalletsOtherFilters.tsx";
+import NoTransactionsPerWallets from "../../components/wallets/NoTransactionsPerWallets.tsx";
 
 
 export default function FintrackerPage() {
@@ -20,7 +20,7 @@ export default function FintrackerPage() {
     const shouldBounce = location.state !== null
 
 
-    if (!wallets || !user || !user.response) return <Spinner/>
+    if (!wallets || !user || !user.response) return null;
 
     return (
         <div className={'container mx-auto p-4'}>
@@ -46,11 +46,11 @@ export default function FintrackerPage() {
                     <h2 className={'text-2xl font-[500]'}>Overview</h2>
                     <WalletsDateFilter/>
                 </div>
-                {wallets.length !== 0 &&
-                    <div className={'flex flex-col gap-y-5'}>
-                        <WalletsOtherFilters wallets={wallets}/>
-                        <WalletOverviewList globalCurrency={user.response.globalCurrency.symbol}/>
-                    </div>}
+                <div className={'flex flex-col gap-y-5'}>
+                    <WalletsOtherFilters wallets={wallets}/>
+                    <WalletOverviewList globalCurrency={user.response.globalCurrency.symbol}/>
+                </div>
+                {wallets.flatMap(w => w.transactions).length === 0 && <NoTransactionsPerWallets/>}
             </section>
         </div>
     )

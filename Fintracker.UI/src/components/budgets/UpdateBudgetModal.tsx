@@ -13,7 +13,6 @@ import {Wallet} from "../../entities/Wallet.ts";
 import {Currency} from "../../entities/Currency.ts";
 import {Category} from "../../entities/Category.ts";
 import useStopScrolling from "../../hooks/other/useStopScrolling.ts";
-import Spinner from "../other/Spinner.tsx";
 import {ActionButton} from "../other/ActionButton.tsx";
 import {HiX} from "react-icons/hi";
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
@@ -54,7 +53,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
     }, [isOpen]);
 
 
-    if (!wallets || !categories) return <Spinner/>
+    if (!wallets || !categories) return null;
     const start = dateToString(new Date(budget.startDate));
     const end = dateToString(new Date(budget.endDate));
 

@@ -8,7 +8,6 @@ import {Currency} from "../../entities/Currency";
 import currencies from "../../data/currencies";
 import {Category} from "../../entities/Category";
 import useStopScrolling from "../../hooks/other/useStopScrolling";
-import Spinner from "../other/Spinner.tsx";
 import {ActionButton} from "../other/ActionButton.tsx";
 import {HiX} from "react-icons/hi";
 import useCreateTransaction from "../../hooks/transactions/useCreateTransaction.ts";
@@ -41,7 +40,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
     }, [isOpen]);
 
 
-    if (!categories) return <Spinner/>
+    if (!categories) return null;
     
 
     const handleSelectedCurrency = (currency: Currency | undefined) => {

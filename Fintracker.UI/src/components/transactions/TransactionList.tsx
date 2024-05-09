@@ -1,7 +1,6 @@
 ﻿import {useId} from "react";
 import {Transaction} from "../../entities/Transaction";
 import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAll";
-import Spinner from "../other/Spinner.tsx";
 import {TransactionItem} from "./TransactionItem.tsx";
 import useTransactionQueryStore from "../../stores/transactionQueryStore.ts";
 import {
@@ -30,7 +29,7 @@ export default function TransactionList({transactions, walletSymbol}: Transactio
     const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
 
     
-    if (!currencyRates) return <Spinner/>
+    if (!currencyRates) return null;
 
     return (
         <div className={'flex flex-col gap-y-2'}>
@@ -64,7 +63,7 @@ export function TransactionBlock({
     const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
     const id = useId()
 
-    if (!currencyRates) return <Spinner/>
+    if (!currencyRates) return null;
 
 
     return (

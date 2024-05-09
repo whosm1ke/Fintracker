@@ -7,6 +7,7 @@ import Title from "./Title.tsx";
 import {loginSchema, LoginSchema} from "../../models/LoginSchema.ts";
 import {useLocation, useNavigate} from "react-router-dom";
 import useLogin from "../../hooks/auth/useLogin.ts";
+import {useState} from "react";
 
 
 export default function LoginForm() {
@@ -18,12 +19,19 @@ export default function LoginForm() {
     });
     const navigate = useNavigate();
     const loginMutation = useLogin(setError);
+    const [isLoading, setIsLoading] = useState(false);
     const onSubmit: SubmitHandler<LoginSchema> = (model: LoginSchema) => {
+        setIsLoading(true)
         loginMutation.mutate(model, {
             onSuccess: () => {
+                setIsLoading(false);
                 navigate('/dashboard', {replace: true});
+            },
+            onError: () => {
+                setIsLoading(false)
             }
         });
+        
     };
     return (
 
@@ -44,7 +52,7 @@ export default function LoginForm() {
                     {errors && <p className="text-red-500 text-md italic">{errors.root?.message}</p>}
                     <div>
                         <button type="submit"
-                                className="submit-register-button">
+                                className={isLoading ? "inactive-submit-register-button" : "submit-register-button"}>
                             Login
                         </button>
                     </div>

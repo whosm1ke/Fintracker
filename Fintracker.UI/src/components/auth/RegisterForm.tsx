@@ -8,6 +8,7 @@ import SubTitle from "./SubTitle.tsx";
 import {registerSchema, RegisterSchema} from "../../models/RegisterSchema.ts";
 import {useNavigate} from "react-router-dom";
 import {handleServerErrorResponse} from "../../helpers/handleError.ts";
+import {useState} from "react";
 
 
 export default function RegisterForm() {
@@ -20,15 +21,19 @@ export default function RegisterForm() {
 
     const registerMutation = useRegister();
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
     const onSubmit: SubmitHandler<RegisterSchema> = async (model: RegisterSchema) => {
+        setIsLoading(true)
         const serverResponse = await registerMutation.mutateAsync(model);
-
-        if (serverResponse.hasError)
+        if (serverResponse.hasError) {
+            setIsLoading(false);
             handleServerErrorResponse(serverResponse.error, setError);
-        else
+        } else {
+            setIsLoading(false);
             navigate('/', {replace: true});
+        }
     };
-
+console.log("isLoading: ", isLoading)
     return (
         <section
             className="flex flex-col min-h-screen bg-gray-50 p-4">
@@ -50,7 +55,7 @@ export default function RegisterForm() {
                     </div>
                     <div>
                         <button type="submit"
-                                className="submit-register-button">
+                                className={isLoading ? "inactive-submit-register-button" : "submit-register-button"}>
                             Register
                         </button>
                     </div>

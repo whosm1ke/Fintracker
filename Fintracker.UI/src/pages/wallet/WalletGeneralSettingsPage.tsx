@@ -1,6 +1,5 @@
 ﻿import {useParams} from "react-router-dom";
 import useWallet from "../../hooks/wallet/useWallet.ts";
-import Spinner from "../../components/other/Spinner.tsx";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {balanceRegisterOptionsForWallet, nameRegisterOptionsForWallet} from "../../entities/Wallet.ts";
 import {useEffect, useRef, useState} from "react";
@@ -51,7 +50,7 @@ export default function WalletGeneralSettingsPage() {
         }
     }, [walletResponse]);
 
-    if (!walletResponse || !walletResponse.response) return <Spinner/>
+    if (!walletResponse || !walletResponse.response) return null;
     const wallet = walletResponse.response;
 
     const handleNewCurrencySelected = (curr: Currency) => {

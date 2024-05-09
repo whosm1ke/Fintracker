@@ -1,5 +1,4 @@
-﻿import Spinner from "../other/Spinner.tsx";
-import { useState} from "react";
+﻿import { useState} from "react";
 import {Currency} from "../../entities/Currency.ts";
 import {Category} from "../../entities/Category.ts";
 import {Wallet} from "../../entities/Wallet.ts";
@@ -20,7 +19,7 @@ const CreateBudgetModalWalletPersonal = ({userId, walletId, categories}: CreateB
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
 
 
-    if (wallet?.response === undefined) return <Spinner/>
+    if (wallet?.response === undefined) return null;
 
 
     function handleSelectedCurrency(currency: Currency | undefined) {

@@ -2,12 +2,12 @@
 import useWallet from "../../hooks/wallet/useWallet.ts";
 import useUserStore from "../../stores/userStore.ts";
 import useTransactions from "../../hooks/transactions/useTransactions.ts";
-import Spinner from "../../components/other/Spinner.tsx";
 import CreateTransactionModal from "../../components/transactions/CreateTransactionModal.tsx";
 import TransactionList from "../../components/transactions/TransactionList.tsx";
 import TransactionDateFilter from "../../components/transactions/TransactionDateFilter.tsx";
 import TransactionsOtherFilters from "../../components/transactions/TransactionsOtherFilters.tsx";
 import TransactionOverviewList from "../../components/transactions/TransactionOverviewList.tsx";
+import NoTransactionsPerWallet from "../../components/transactions/NoTransactionsPerWallet.tsx";
 
 
 export default function WalletTransactionsPage() {
@@ -17,7 +17,7 @@ export default function WalletTransactionsPage() {
     const {data: walletResponse} = useWallet(walletId!);
     
     
-    if (!transactions || !walletResponse || !walletResponse.response) return <Spinner/>
+    if (!transactions || !walletResponse || !walletResponse.response) return null;
     const wallet = walletResponse.response;
     if (wallet.ownerId != userId && !wallet.users.find(u => u.id === userId)) return <Navigate to={'../../dashboard'}/>
     return (
@@ -31,8 +31,8 @@ export default function WalletTransactionsPage() {
             <TransactionsOtherFilters transactions={transactions}/>
             <TransactionOverviewList walletCurrency={wallet.currency.symbol} balance={wallet.balance} transactions={transactions}/>
             <div className={'mt-4'}>
-                {wallet.transactions.length !== 0 &&
-                    <TransactionList transactions={transactions} walletSymbol={wallet.currency.symbol}/>}
+                {wallet.transactions.length > 0 ?
+                    <TransactionList transactions={transactions} walletSymbol={wallet.currency.symbol}/> : <NoTransactionsPerWallet/>}
             </div>
         </div>
     )
