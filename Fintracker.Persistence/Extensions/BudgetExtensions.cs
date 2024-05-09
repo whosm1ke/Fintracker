@@ -25,9 +25,9 @@ public static class BudgetExtensions
 
         // Apply the sorting to the query
         var query = budgets
+            .Where(x => x.OwnerId == userId || x.Members.Any(mem => mem.Id == userId))
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-            .Take(queryParams.PageSize)
-            .Where(x => x.OwnerId == userId || x.Members.Any(mem => mem.Id == userId));
+            .Take(queryParams.PageSize);
 
         if (queryParams.IsPublic.HasValue)
         {
@@ -60,9 +60,9 @@ public static class BudgetExtensions
 
         // Apply the sorting to the query
         var query = budgets
+            .Where(x => (x.WalletId == walletId && x.OwnerId == userId) || x.Members.Any(mem => mem.Id == userId))
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-            .Take(queryParams.PageSize)
-            .Where(x => (x.WalletId == walletId && x.OwnerId == userId) || x.Members.Any(mem => mem.Id == userId));
+            .Take(queryParams.PageSize);
 
         if (queryParams.IsPublic.HasValue)
         {

@@ -25,9 +25,9 @@ public static class WalletExtensions
 
         // Apply the sorting to the query
         var baseQuery = wallets
+            .Where(x => x.OwnerId == userId || x.Users.Any(u => u.Id == userId))
             .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-            .Take(queryParams.PageSize)
-            .Where(x => x.OwnerId == userId || x.Users.Any(u => u.Id == userId));
+            .Take(queryParams.PageSize);
 
         var orderedQuery = queryParams.IsDescending
             ? baseQuery.OrderByDescending(lambda)

@@ -25,10 +25,10 @@ public static class TransactionExtensions
         // Apply the sorting to the query
         // Common query parts
         var baseQuery = transactions
-            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-            .Take(queryParams.PageSize)
             .Where(x => x.UserId == userId && x.Date.Date >= queryParams.StartDate.Date &&
-                        x.Date.Date <= queryParams.EndDate.Date);
+                        x.Date.Date <= queryParams.EndDate.Date)
+            .Take(queryParams.PageSize)
+            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize);
 
 // Apply ordering
         var orderedQuery = queryParams.IsDescending
@@ -55,10 +55,10 @@ public static class TransactionExtensions
 
         // Apply the sorting to the query
         var baseQuery = transactions
-            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-            .Take(queryParams.PageSize)
             .Where(x => x.WalletId == walletId && x.Date.Date >= queryParams.StartDate.Date &&
-                        x.Date.Date <= queryParams.EndDate.Date);
+                        x.Date.Date <= queryParams.EndDate.Date)
+            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+            .Take(queryParams.PageSize);
 
 // Apply ordering
         var orderedQuery = queryParams.IsDescending
@@ -85,10 +85,10 @@ public static class TransactionExtensions
 
         // Apply the sorting to the query
         var baseQuery = transactions
-            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-            .Take(queryParams.PageSize)
             .Where(x => x.CategoryId == categoryId && x.UserId == userId && x.Date.Date >= queryParams.StartDate.Date &&
-                        x.Date.Date <= queryParams.EndDate.Date);
+                        x.Date.Date <= queryParams.EndDate.Date)
+            .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+            .Take(queryParams.PageSize);
 
 // Apply ordering
         var orderedQuery = queryParams.IsDescending

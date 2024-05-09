@@ -25,14 +25,14 @@ public static class CategoryExtensions
         // Apply the sorting to the query
         var query = queryParams.IsDescending
             ? categories
+                .Where(c => c.UserId == userId)
                 .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
                 .Take(queryParams.PageSize)
-                .Where(c => c.UserId == userId)
                 .OrderByDescending(lambda)
             : categories
+                .Where(c => c.UserId == userId)
                 .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
                 .Take(queryParams.PageSize)
-                .Where(c => c.UserId == userId)
                 .OrderBy(lambda);
 
         return await query.ToListAsync();
