@@ -19,7 +19,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-Fintracker.UI/public
 Fintracker.UI/node_modules
 dist
 dist-ssr
