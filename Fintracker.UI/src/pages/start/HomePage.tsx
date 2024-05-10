@@ -2,6 +2,10 @@
 import {AnimatePresence, motion} from "framer-motion";
 import {useEffect, useState} from "react";
 import {FiChevronDown} from "react-icons/fi";
+// @ts-ignore
+import logo from "../../assets/logo.png"
+// @ts-ignore
+import wallet from "../../assets/wallet.svg"
 
 export default function HomePage() {
 
@@ -10,10 +14,10 @@ export default function HomePage() {
             <div className={'container w-3/4 mx-auto'}>
                 <TextImage title={textFiller[0].title}
                            content={textFiller[0].content}
-                           imagePath={textFiller[0].imagePath}/>
+                           imagePath={logo}/>
                 <TextImage title={textFiller[1].title}
                            content={textFiller[1].content}
-                           imagePath={textFiller[1].imagePath} imageFirst={window.innerWidth > 500}/>
+                           imagePath={wallet} imageFirst={window.innerWidth > 500}/>
                 <CardContainer/>
             </div>
 

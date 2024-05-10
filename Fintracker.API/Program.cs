@@ -51,7 +51,7 @@ builder.Services.AddCors(x =>
 {
     x.AddPolicy("UI", cors =>
     {
-        cors.WithOrigins("https://3acc-82-193-127-129.ngrok-free.app")
+        cors.WithOrigins("https://fintrackerua.netlify.app")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
