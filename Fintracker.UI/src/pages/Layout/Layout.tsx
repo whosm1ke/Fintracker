@@ -2,7 +2,7 @@
 import {motion} from "framer-motion";
 import {useEffect, useState} from "react";
 // @ts-ignore
-import logo from "../../../src/assets/logo.png"
+import logo from "../../../public/logo.png"
 import useUserStore from "../../stores/userStore.ts";
 import NavigationLink from "../../components/other/NavigationLink.tsx";
 import MobileNavigationLink from "../../components/other/MobileNavigationLink.tsx";

@@ -2,7 +2,7 @@
 import useUserStore from "../../stores/userStore.ts";
 import {useGetUser} from "../../hooks/auth/useUser.ts";
 // @ts-ignore
-import logo from "../../assets/logo.png";
+import logo from "../../../public/logo.png";
 import {useState} from "react";
 import {motion} from "framer-motion";
 import FlyoutLink from "../../components/other/FlyoutLink.tsx";

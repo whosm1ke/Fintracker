@@ -3,9 +3,9 @@ import {AnimatePresence, motion} from "framer-motion";
 import {useEffect, useState} from "react";
 import {FiChevronDown} from "react-icons/fi";
 // @ts-ignore
-import logo from "../../assets/logo.png"
+import logo from "../../../public/logo.png"
 // @ts-ignore
-import wallet from "../../assets/wallet.svg"
+import wallet from "../../../public/wallet.svg"
 
 export default function HomePage() {
 

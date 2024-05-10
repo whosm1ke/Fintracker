@@ -1,6 +1,6 @@
 ﻿import {NavLink, Outlet} from "react-router-dom";
 // @ts-ignore
-import logo from "../../assets/logo.png";
+import logo from "../../../public/logo.png";
 import {motion} from "framer-motion";
 import {useState} from "react";
 import {FiChevronDown} from "react-icons/fi";
@@ -55,7 +55,7 @@ const DashboardNavBar = () => {
     const [userId] = useUserStore(x => [x.getUserId()]);
     const {data} = useGetUser(userId || 'no-user');
     const userName = data?.response?.userName || 'New user';
-    const avatar = data?.response?.userDetails?.avatar || logo
+    const avatar = data?.response?.userDetails?.avatar;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenuOpen = () => setIsMenuOpen(p => !p)
@@ -95,7 +95,7 @@ const DashboardNavBar = () => {
             >
                 <FlyoutLink FlyoutContent={NavigationContent} open={isMenuOpen}>
                     <div className={'flex items-center space-x-2 text-neutral-900'}>
-                        <img src={avatar || logo} alt="Logo" className={'w-12 h-12 rounded-full'}/>
+                        <img src={avatar} alt="Logo" className={'w-12 h-12 rounded-full'}/>
                         <p className={'text-2xl font-bold hidden md:inline'}>{userName}</p>
                         <motion.span
                             animate={isMenuOpen ? {rotate: 180} : {rotate: 0}}

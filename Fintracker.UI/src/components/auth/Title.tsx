@@ -1,5 +1,5 @@
 ﻿// @ts-ignore
-import logo from "../../assets/logo.png"
+import logo from "../../../public/logo.png"
 const Title = () => {
     return (
         <div className={"flex items-center justify-center mt-4 sm:mt-0 order-2 sm:order-1"}>

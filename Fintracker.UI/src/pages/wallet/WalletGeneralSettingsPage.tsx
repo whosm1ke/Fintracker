@@ -13,7 +13,7 @@ import MultiSelectDropDownMenu from "../../components/other/MultiSelectDropDownM
 import UserItem from "../../components/auth/UserItem.tsx";
 import useInviteUser from "../../hooks/auth/useInviteUser.ts";
 // @ts-ignore
-import logo from "../../assets/logo.png";
+import logo from "../../../public/logo.png";
 import useUserStore from "../../stores/userStore.ts";
 
 
