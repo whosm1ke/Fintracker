@@ -41,7 +41,9 @@ public class AccountRequestTests
         };
         var actualLoginResponse = await mockAccount.Login(loginRequest);
 
-        actualLoginResponse.Should().Be(actualLoginResponse);
+        actualLoginResponse.UserId.Should().Be(expectedLoginResponse.UserId);
+        actualLoginResponse.UserEmail.Should().Be(expectedLoginResponse.UserEmail);
+        actualLoginResponse.Token.Should().Be(expectedLoginResponse.Token);
 
     }
 }

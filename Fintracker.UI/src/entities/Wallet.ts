@@ -22,6 +22,6 @@ export const nameRegisterOptionsForWallet: RegisterOptions = {
 
 export const balanceRegisterOptionsForWallet: RegisterOptions = {
     valueAsNumber: true,
-    max: {value: 100_000_000_000, message: "Maximum balance for wallet is 100 billions"},
+    max: {value: 100_000_000_000, message: "Maximum start balance for wallet is 100 billions"},
     required: 'Balance is required'
 }

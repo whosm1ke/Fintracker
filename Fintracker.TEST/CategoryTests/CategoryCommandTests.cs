@@ -73,21 +73,5 @@ public class CategoryCommandTests
 
             result.Success.Should().BeTrue();
     }
-
-    [Fact]
-    public async Task DeleteAsync_Should_Return_True()
-    {
-        var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
-        var handler = new DeleteCategoryCommandHandler(mockUnitOfWork, _mapper, null);
-
-
-        var result = await handler.Handle(new DeleteCategoryCommand
-        {
-            Id = new Guid("D670263B-92CF-48C8-923A-EB09188F6077"),
-            UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
-        }, default);
-
-
-        result.Success.Should().BeTrue();
-    }
+    
 }

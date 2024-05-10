@@ -92,7 +92,7 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
                                 type="number"
                                 {...register("startBalance", balanceRegisterOptionsForWallet)}
                             />
-                            {errors.balance && <p className={'text-red-400 italic'}>{errors.balance.message}</p>}
+                            {errors.startBalance && <p className={'text-red-400 italic'}>{errors.startBalance.message}</p>}
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2"
