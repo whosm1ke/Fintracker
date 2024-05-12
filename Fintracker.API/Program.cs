@@ -63,6 +63,11 @@ builder.Services.AddCors(x =>
     });
 });
 
+builder.Services.AddHttpsRedirection(x =>
+{
+    x.HttpsPort = 7295;
+});
+
 builder.Services.ConfigureApplicationServices(builder.Configuration, builder.Environment.WebRootPath);
 builder.Services.ConfigurePresistenceServices(builder.Configuration);
 builder.Services.ConfigureIdentityServices(builder.Configuration);
@@ -87,5 +92,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapGet("/", async context => await context.Response.WriteAsync("LOLOLO"));
 
 app.Run();
