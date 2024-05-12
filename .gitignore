@@ -9,7 +9,8 @@ Fintracker.API/appsettings.json
 /Fintracker.Persistence/Migrations
 InitialData
 /Fintracker.API/wwwroot/images
-
+test.pfx
+/out
 # Logs
 logs
 *.log
