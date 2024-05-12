@@ -93,6 +93,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.MapGet("/", async context => await context.Response.WriteAsync("LOLOLO"));
+app.MapGet("/lol", async context => await context.Response.WriteAsync("LOLOLO"));
 
 app.Run();
