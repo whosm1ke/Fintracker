@@ -12,7 +12,6 @@ import {useLayoutEffect, useState} from "react";
 import {Wallet} from "../../entities/Wallet.ts";
 import {Currency} from "../../entities/Currency.ts";
 import {Category} from "../../entities/Category.ts";
-import useStopScrolling from "../../hooks/other/useStopScrolling.ts";
 import {ActionButton} from "../other/ActionButton.tsx";
 import {HiX} from "react-icons/hi";
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
@@ -43,7 +42,6 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
     const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined)
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
-    useStopScrolling(isOpen);
 
     useLayoutEffect(() => {
         if (isOpen) {
@@ -135,7 +133,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
         <>
             <ActionButton text={"Update budget"} onModalOpen={handleOpenModal}/>
             {isOpen && <div
-                className={'absolute inset-0 flex justify-center items-start px-4 lg:px-0 visible bg-black/20 z-50'}>
+                className={'fixed inset-0 flex justify-center items-center px-4 visible bg-black/20 z-50'}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto mt-4">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Update budget
                         <HiX size={'2rem'} color={'red'} onClick={() => {

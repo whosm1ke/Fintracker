@@ -74,6 +74,7 @@ const Header = () => {
                 className={'relative z-50'}
                 onHoverEnd={toggleMenuOpen}
                 onHoverStart={toggleMenuOpen}
+                onTouchStart={toggleMenuOpen}
             >
                 <FlyoutLink FlyoutContent={NavigationContent} open={isMenuOpen}>
                     <div className={'flex items-center space-x-2 text-neutral-900'}>

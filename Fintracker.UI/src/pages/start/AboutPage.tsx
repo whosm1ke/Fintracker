@@ -77,7 +77,7 @@ interface CardProps {
 
 const Card = ({title, content, fromLeft = false, duration = 0.8}: CardProps) => {
     const item: Variants = {
-        hidden: {x: fromLeft ? '-100vw' : '100vw', scale: 1.05, rotateZ: fromLeft ? -15 : 15},
+        hidden: {x: fromLeft ? '-200vw' : '200vw', scale: 1.05, rotateZ: fromLeft ? -15 : 15},
         show: {
             scale: 1,
             rotateZ: 0,

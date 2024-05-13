@@ -70,8 +70,8 @@ const MonobankModalStep1 = ({handleOpenModal, handleNextStep, handleMonouserInfo
     
 
     return (
-        <div className={`absolute inset-0  flex justify-center items-center visible bg-black/20 z-50`}>
-            <div className="bg-white p-4 rounded-md shadow-lg max-w-md w-1/2 mx-auto mt-4">
+        <div className={`fixed inset-0 w-full flex justify-center items-center visible bg-black/20 z-50`}>
+            <div className="bg-white p-4 rounded-md shadow-lg w-3/4 sm:w-1/2 mx-auto mt-4">
                 <h2 className="text-2xl font-bold mb-4 flex justify-between">Add monobank
                     <HiX size={'2rem'} color={'red'} onClick={() => {
                         reset();
@@ -142,8 +142,8 @@ const MonobankModalStep2 = ({userInfo, handleOpenModal}: MonobankModalStep2Props
     };
 
     return (
-        <div className={`absolute inset-0  flex justify-center items-center visible bg-black/20 z-50`}>
-            <div className="bg-white p-4 rounded-md shadow-lg max-w-md w-1/2 mx-auto mt-4">
+        <div className={`fixed inset-0  flex justify-center items-center visible bg-black/20 z-50`}>
+            <div className="bg-white p-4 rounded-md shadow-lg w-3/4 sm:w-1/2 mx-auto mt-4">
                 <h2 className="text-2xl font-bold mb-4 flex justify-between">{userInfo.name}
                     <HiX size={'2rem'} color={'red'} onClick={() => {
                         reset();

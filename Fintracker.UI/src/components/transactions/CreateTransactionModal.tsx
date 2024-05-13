@@ -7,7 +7,6 @@ import {useEffect, useState} from "react";
 import {Currency} from "../../entities/Currency";
 import currencies from "../../data/currencies";
 import {Category} from "../../entities/Category";
-import useStopScrolling from "../../hooks/other/useStopScrolling";
 import {ActionButton} from "../other/ActionButton.tsx";
 import {HiX} from "react-icons/hi";
 import useCreateTransaction from "../../hooks/transactions/useCreateTransaction.ts";
@@ -31,7 +30,6 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(walletCurrency);
     const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined)
-    useStopScrolling(isOpen)
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -99,15 +97,15 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
     return (
         <div>
             <ActionButton text={"Add new transaction"} onModalOpen={handleOpenModal}/>
-            {isOpen && <div className={'absolute inset-0 flex justify-center items-start p-4 sm:p-2 z-[200] visible bg-black/20'}>
-                <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto">
+            {isOpen && <div className={'fixed inset-0 flex justify-center items-center p-4 sm:p-2 z-[200] visible bg-black/20'}>
+                <div className="bg-white p-4 rounded-md shadow-lg w-3/4 sm:w-2/6 mx-auto">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add transaction
                         <HiX size={'2rem'} color={'red'} onClick={() => {
                             handleOpenModal()
                         }}/>
                     </h2>
                     <form onSubmit={handleSubmit(onSubmit)} className={''}>
-                        <div className={'grid grid-cols-1 md:grid-cols-2 gap-x-10'}>
+                        <div className={'grid grid-cols-1 sm:grid-cols-2 gap-x-10'}>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Note">
                                     Note
@@ -159,7 +157,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
 
                                 {errors.date && <p className={'text-red-400 italic'}>{errors.date.message}</p>}
                             </div>
-                            <div className="mb-4 col-start-1 col-span-2">
+                            <div className="mb-4 sm:col-start-1 sm:col-span-2">
                                 <label className="block text-gray-700 text-sm font-bold mb-2"
                                        htmlFor="CurrencyId">Currency</label>
                                 <div {...register("currencyId")}>
@@ -171,7 +169,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
                                         <p className={'text-red-400 italic'}>{errors.currencyId.message}</p>}
                                 </div>
                             </div>
-                            <div className="mb-4 col-start-1 col-span-2">
+                            <div className="mb-4 sm:col-start-1 sm:col-span-2">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 col-start-1 col-span-2"
                                        htmlFor="CurrencyId">Category</label>
                                 <div {...register("categoryId")}>

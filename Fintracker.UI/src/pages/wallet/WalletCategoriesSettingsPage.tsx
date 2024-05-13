@@ -204,7 +204,7 @@ export default function WalletCategoriesSettingsPage() {
         <div className={'mx-auto px-10 py-7 flex flex-col gap-y-10'}>
             {isOwner &&
                 <>
-                    <h1 className={'text-lg font-semibold'}>Create your new category</h1>
+                    <h1 className={'text-lg font-semibold'}>{isEditing ? "Update your category" : "Create your new category"}</h1>
                     <section>
                         <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
                             <div className={'grid grid-cols-1 md:grid-cols-2 gap-3'}>
@@ -265,7 +265,7 @@ export default function WalletCategoriesSettingsPage() {
 
                                     {errors.type && <p className={'text-red-400 italic'}>{errors.type.message}</p>}
                                 </div>}
-                                <div className={'flex gap-x-2 col-span-2'}>
+                                <div className={'flex gap-x-2 sm:col-span-2'}>
                                     <div
                                         className={'w-full bg-green-400 text-white font-semibold text-center rounded-lg mt-5'}>
                                         <button ref={submitButtonRef} type={'submit'} className={'w-full  p-2 '}>Create

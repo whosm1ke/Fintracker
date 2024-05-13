@@ -9,7 +9,6 @@ import currencies from "../../data/currencies.ts";
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
 import CurrencyItem from "../currencies/CurrencyItem.tsx";
 import {useGetUser} from "../../hooks/auth/useUser.ts";
-import useStopScrolling from "../../hooks/other/useStopScrolling.ts";
 
 interface CashWalletModalProps {
     userId: string,
@@ -22,7 +21,6 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
     const walletMutation = useCreateWallet();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(user?.response?.globalCurrency)
-    useStopScrolling(isOpen)
     const [isLoading, setIsLoading] = useState(false);
 
     function handleOpenModal() {
@@ -62,8 +60,8 @@ const CreateCashWalletModal = ({userId}: CashWalletModalProps) => {
     return (
         <>
             <ActionButton text={"Add new wallet"} onModalOpen={handleOpenModal}/>
-            {isOpen && <div className={'absolute inset-0 flex -top-1/2 sm:top-0 justify-center items-center visible bg-black/20 z-50'}>
-                <div className="bg-white p-4 rounded-md shadow-lg w-1/2 2xl:w-1/4 mx-auto">
+            {isOpen && <div className={'fixed inset-0 flex  justify-center items-center visible bg-black/20 z-50'}>
+                <div className="bg-white p-4 rounded-md shadow-lg w-3/4 sm:w-64 mx-auto">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add Wallet
                         <HiX size={'2rem'} color={'red'} onClick={handleOpenModal}/>
                     </h2>

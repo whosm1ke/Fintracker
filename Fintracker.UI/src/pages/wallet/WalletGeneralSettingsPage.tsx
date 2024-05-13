@@ -264,7 +264,7 @@ export default function WalletGeneralSettingsPage() {
                         </div>
                     </div>
                     {wallet.users.map(u =>
-                        <div className={'w-1/2 flex items-center'}>
+                        <div className={'w-1/2 flex items-center'} key={wallet.id}>
                             <img src={u.userDetails?.avatar || logo} alt="Avatar"
                                  className="w-12 h-12 rounded-lg"/>
                             <div className={'flex flex-col'}>
