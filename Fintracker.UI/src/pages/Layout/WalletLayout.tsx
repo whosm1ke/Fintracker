@@ -28,7 +28,7 @@ export default function WalletLayout() {
 const Footer = () => {
     const {walletId} = useParams();
     return (
-        <div className="border-t-2 border-t-gray-300 p-6 mt-6 w-full fixed bottom-0 bg-white">
+        <div className="border-t-2 border-t-gray-300 p-6 mt-6 w-full fixed bottom-0 bg-white z-[110]">
             <div className={'flex justify-around items-center gap-x-2 w-full text-sm'}>
                 <div>
                     <NavLink to={`./${walletId}/trans`}
