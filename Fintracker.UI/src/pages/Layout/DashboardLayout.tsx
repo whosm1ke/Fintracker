@@ -28,7 +28,7 @@ export default function DashboardLayout() {
 
 const Footer = () => {
     return (
-        <div className="block md:hidden border-t-2 bg-white border-t-gray-300 p-6 fixed bottom-0 w-full">
+        <div className="block md:hidden border-t-2 bg-white border-t-gray-300 p-6 fixed bottom-0 w-full z-[110]">
             <div className={'flex justify-around items-center gap-x-4'}>
                 <div>
                     <NavLink to={'/dashboard'}

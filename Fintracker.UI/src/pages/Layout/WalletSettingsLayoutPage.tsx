@@ -27,7 +27,7 @@ export default function WalletSettingsLayoutPage() {
                                 >General Settings</NavLink>
                             </li>
                             <li className={'w-full text-center text-md sm:text-lg flex'}>
-                                <NavLink to={`categories?isOwner=${wallet.response.ownerId === userId ? true : false}&ownerId=${wallet.response.ownerId}`}
+                                <NavLink to={`categories?isOwner=${(wallet.response.ownerId === userId)}&ownerId=${wallet.response.ownerId}`}
                                          className={({isActive}) => {
                                              return isActive ? "w-full h-full bg-white rounded-tl rounded-bl shadow p-4 " +
                                                  "text-green-400 font-bold" : "w-full p-4"
