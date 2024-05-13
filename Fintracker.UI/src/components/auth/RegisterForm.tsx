@@ -33,7 +33,6 @@ export default function RegisterForm() {
             navigate('/', {replace: true});
         }
     };
-console.log("isLoading: ", isLoading)
     return (
         <section
             className="flex flex-col min-h-screen bg-gray-50 p-4">

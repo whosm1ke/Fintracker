@@ -68,7 +68,6 @@ const MonobankModalStep1 = ({handleOpenModal, handleNextStep, handleMonouserInfo
         }
     };
     
-    console.log("isLoading: ", isLoading)
 
     return (
         <div className={`absolute inset-0  flex justify-center items-center visible bg-black/20 z-50`}>
@@ -133,7 +132,6 @@ const MonobankModalStep2 = ({userInfo, handleOpenModal}: MonobankModalStep2Props
         const monobankResponse = await monobankMutation.mutateAsync(unixModel);
 
         if (monobankResponse.hasError) {
-            console.log("monobankResponse: ", monobankResponse)
             // @ts-ignore
             setError("root", {message: monobankResponse.error?.details[0].errorMessage})
             setIsLoading(false);

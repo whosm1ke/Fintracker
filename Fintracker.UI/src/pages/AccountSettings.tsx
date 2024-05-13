@@ -138,7 +138,6 @@ export default function AccountSettings() {
     }
 
     const onAuthChangeSubmit: SubmitHandler<User> = async (model) => {
-        console.log("model: ", model);
         if (model.userName !== user.userName) {
             const changeRes = await userUpdateUsernameMutation.mutateAsync(({
                 ...user,
@@ -174,7 +173,6 @@ export default function AccountSettings() {
         getImageFromURL(user.userDetails?.avatar) === userToUpdate.avatar;
 
     const isUsernameChanged = user.userName !== userToUpdate.userName;
-console.log("user.userDetails?.avatar: ", user.userDetails?.avatar)
     return (
         <div className={'px-16 py-6 flex flex-col gap-10'}>
             <header className={'font-semibold text-lg'}>
