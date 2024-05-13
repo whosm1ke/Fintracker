@@ -32,10 +32,4 @@
       <_ContentIncludedByDefault Remove="Views\Name\Index.cshtml" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
 </Project>
