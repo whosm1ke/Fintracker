@@ -122,8 +122,7 @@ export default function CreateBudgetModalBase ({
         <>
             <ActionButton text={"Add new budget"} onModalOpen={handleOpenModal}
                           isActive={isActionButtonActive}/>
-            {isOpen && <div
-                className={'fixed inset-0 flex justify-center items-center px-4 visible bg-black/20 z-50'}>
+            {isOpen && <div className={'fixed inset-0 flex justify-center items-center p-4 sm:p-2 z-[200] visible bg-black/20'}>
                 <div className="bg-white p-4 rounded-md shadow-lg max-w-full mx-auto mt-4">
                     <h2 className="text-2xl font-bold mb-4 flex justify-between">Add budget
                         <HiX size={'2rem'} color={'red'} onClick={() => {

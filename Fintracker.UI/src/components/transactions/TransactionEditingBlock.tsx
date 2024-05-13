@@ -25,12 +25,20 @@ interface TransactionEditingBlockProps {
     budgetId?: string
 }
 
-const TransactionEditingBlock = ({transaction, categories, handleIsEditing, budgetId}: TransactionEditingBlockProps) => {
+const TransactionEditingBlock = ({
+                                     transaction,
+                                     categories,
+                                     handleIsEditing,
+                                     budgetId
+                                 }: TransactionEditingBlockProps) => {
     const updateTransactionMutation = useUpdateTransaction(budgetId);
     const deleteTransactionMutation = useDeleteTransaction(transaction.id, budgetId);
     const {handleSubmit, register, reset, clearErrors, setError, formState: {errors}} = useForm<Transaction>();
     const [selectedCategory, setSelectedCategory] = useState<Category>(transaction.category);
     const [selectedCurrency, setSelectedCurrency] = useState<Currency>(transaction.currency);
+
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     const handleSelectedCategory = (cat: Category) => setSelectedCategory(cat);
     const handleSelectedCurrency = (currency: Currency) => setSelectedCurrency(currency);
@@ -60,21 +68,28 @@ const TransactionEditingBlock = ({transaction, categories, handleIsEditing, budg
         model.user = transaction.user;
         model.walletId = transaction.walletId;
 
-
+        setIsEditing(true);
         const res = await updateTransactionMutation.mutateAsync(model);
 
         if (!res.hasError) {
+            setIsEditing(false);
             reset();
             clearErrors();
             handleIsEditing();
+        } else {
+            setIsEditing(false);
         }
     }
 
     async function onDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault();
+        setIsDeleting(true);
         await deleteTransactionMutation.mutateAsync({
             id: transaction.id,
             walletId: transaction.walletId,
+        }, {
+            onSuccess: () => setIsDeleting(false),
+            onError: () => setIsDeleting(false)
         })
     }
 
@@ -166,16 +181,17 @@ const TransactionEditingBlock = ({transaction, categories, handleIsEditing, budg
                                                       onItemSelected={handleSelectedCurrency}/>
                         </div>
                     </div>
-                    <div className={`flex justify-center items-end ${isBankTrans === undefined || isBankTrans ? "col-span-2" : ""}`}>
+                    <div
+                        className={`flex justify-center items-end ${isBankTrans === undefined || isBankTrans ? "col-span-2" : ""}`}>
                         <button type={'submit'}
-                                className={'py-2 bg-green-400 h-full rounded w-full text-stone-50 font-semibold'}>Save
+                                className={`py-2 ${isEditing ? "bg-green-200 pointer-events-none" :  "bg-green-400"} h-full rounded w-full text-stone-50 font-semibold`}>Save
                             transaction
                         </button>
                     </div>
                     {isBankTrans === undefined || !isBankTrans && <div className={'flex justify-center items-end'}>
                         <button type={'button'}
                                 onClick={async (e) => await onDelete(e)}
-                                className={'py-2 bg-red-500 rounded w-full h-full text-stone-50 font-semibold'}>Delete
+                                className={`py-2 ${isDeleting ? "bg-red-300 pointer-events-none" : "bg-red-500"} rounded w-full h-full text-stone-50 font-semibold`}>Delete
                             transaction
                         </button>
                     </div>}
