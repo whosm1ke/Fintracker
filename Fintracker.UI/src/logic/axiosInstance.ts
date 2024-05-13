@@ -1,7 +1,7 @@
 ﻿import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: 'https://localhost:7295/api/',
+    baseURL: 'https://fintracker-iog3f7teha-nw.a.run.app/api/',
 });
 axiosInstance.interceptors.request.use(cfg => {
     const token = sessionStorage.getItem('userToken')
