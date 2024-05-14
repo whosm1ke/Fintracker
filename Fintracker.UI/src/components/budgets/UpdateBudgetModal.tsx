@@ -39,7 +39,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
     const {data: categories} = useExpenseCategories(budget.ownerId);
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined)
+    const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(budget.wallet)
     const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined)
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
 
@@ -115,7 +115,7 @@ const UpdateBudgetModal = ({userId, budget}: UpdateBudgetModalProps) => {
         model.currency = selectedCurrency!;
         model.categories = selectedCategories
         model.members = budget.members
-        model.wallet = selectedWallet || wallets.find(w => w.id === walletId)!;
+        model.wallet = selectedWallet!;
         await budgetMutation.mutateAsync(model, {
             onSuccess: () => {
                 reset();

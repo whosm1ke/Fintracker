@@ -62,7 +62,7 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
     private async Task UpdateBudgetAccessibility(Domain.Entities.Budget budget, UpdateBudgetDTO newBudget)
     {
         if (newBudget.IsPublic == budget.IsPublic) return;
-        
+
         var wallet = await _unitOfWork.WalletRepository.GetWalletById(budget.WalletId);
         if (newBudget.IsPublic && !budget.IsPublic)
         {
@@ -85,6 +85,21 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         }
     }
 
+    private async Task UpdateBudgetTransactionsIfWalletChanged(Domain.Entities.Budget oldBudget, Guid newWalletId)
+    {
+        if (oldBudget.WalletId != newWalletId)
+        {
+            var transactions = await _unitOfWork.TransactionRepository.GetByWalletIdAsync(newWalletId);
+
+            oldBudget.Transactions = new HashSet<Domain.Entities.Transaction>();
+
+            foreach (var transaction in transactions)
+            {
+                oldBudget.Transactions.Add(transaction);
+            }
+        }
+    }
+
     private async Task UpdateBudget(Domain.Entities.Budget oldBudget, UpdateBudgetDTO newBudget)
     {
         var oldCategories = oldBudget.Categories;
@@ -93,13 +108,16 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
         {
             oldCategory.BudgetCount -= 1;
         }
-        
+
+        Guid newWalletId = newBudget.WalletId;
+
         oldBudget.Name = newBudget.Name;
         oldBudget.StartBalance = newBudget.StartBalance;
         oldBudget.Transactions = new HashSet<Domain.Entities.Transaction>();
         oldBudget.Categories = new HashSet<Domain.Entities.Category>();
         oldBudget.StartDate = newBudget.StartDate;
         oldBudget.EndDate = newBudget.EndDate;
+        oldBudget.WalletId = newBudget.WalletId;
 
 
         var newStartDate = newBudget.StartDate;
@@ -114,8 +132,10 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
             oldBudget.Categories.Add(category);
         }
 
+
+
         var transactionsPerBudget = await
-            _unitOfWork.TransactionRepository.GetByWalletIdInRangeAsync(newBudget.WalletId, newStartDate, newEndDate);
+            _unitOfWork.TransactionRepository.GetByWalletIdInRangeAsync(newWalletId, newStartDate, newEndDate);
 
         var filteredTransactions = transactionsPerBudget.Where(x => newBudget.CategoryIds.Contains(x.CategoryId))
             .ToList();
@@ -126,17 +146,11 @@ public class UpdateBudgetCommandHandler : IRequestHandler<UpdateBudgetCommand, U
 
 
         decimal totalSpent = 0;
-        if (oldBudget.CurrencyId != newBudget.CurrencyId)
-        {
-            List<ConvertCurrencyDTO?> convertedResult =
-                await _currencyConverter.Convert(transactionCurrencySymbols, newCurrency!.Symbol, transactionAmounts);
-            convertedResult.ForEach(x => totalSpent += x.Value);
-            oldBudget.Currency = newCurrency;
-        }
-        else
-        {
-            filteredTransactions.ForEach(t => totalSpent += t.Amount);
-        }
+        List<ConvertCurrencyDTO?> convertedResult =
+            await _currencyConverter.Convert(transactionCurrencySymbols, newCurrency!.Symbol, transactionAmounts);
+        
+        convertedResult.ForEach(x => totalSpent += x.Value);
+        oldBudget.Currency = newCurrency;
 
         filteredTransactions.ForEach(x => oldBudget.Transactions.Add(x));
         oldBudget.TotalSpent = totalSpent;
