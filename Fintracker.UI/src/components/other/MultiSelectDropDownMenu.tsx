@@ -64,12 +64,12 @@ const MultiSelectDropDownMenu = <T extends { id: string }>({
                         </div>
                         {items.map(item => (
                             <div key={item.id}
-                                 className="flex items-center gap-x-2 px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 hover:text-gray-900"
+                                 className="w-full flex items-center gap-x-2 px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 hover:text-gray-900"
                                  role="menuitem" onClick={() => onItemSelected(item)}>
 
                                 <input type="checkbox" className="min-h-5 min-w-5 text-indigo-600"
                                        checked={selectedItems.some(selectedItem => selectedItem.id === item.id)} readOnly/>
-                                <div className="cursor-pointer hover:bg-gray-100">
+                                <div className="w-full cursor-pointer hover:bg-gray-100">
                                     <ItemComponent item={item}/>
                                 </div>
                             </div>

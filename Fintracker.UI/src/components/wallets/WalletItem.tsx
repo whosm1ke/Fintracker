@@ -7,9 +7,9 @@ interface WalletItemProps {
 export default function WalletItem({item} : WalletItemProps){
 
     return (
-        <div className={'flex justify-between items-center'}>
-            <p>{item.name}</p>
-            <p>({item.balance})</p>
+        <div className={'flex w-full justify-between items-center'}>
+            <p className={'font-semibold'}>{item.name}</p>
+            <p className={'ml-3'}>{item.balance} {item.currency.symbol}</p>
         </div>
     )
 }
