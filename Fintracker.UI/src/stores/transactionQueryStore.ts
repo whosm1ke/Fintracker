@@ -37,7 +37,7 @@ interface TransactionQueryStore {
     setPageSize: (num: number) => void;
     setSortBy: (sortBy: string) => void;
     setIsDescending: (isDescending: boolean) => void;
-    setTransactionsPerDate: (num: number) => void;
+    setTransactionsPerDate: (num: number | undefined) => void;
     setStartDate: (date: string) => void;
     setEndDate: (date: string) => void;
 
@@ -71,7 +71,7 @@ const useTransactionQueryStore = createWithEqualityFn<TransactionQueryStore>((se
         },
         setPageNumber: (num: number) => set(store => ({query: {...store.query, pageNumber: num}})),
         setPageSize: (num: number) => set(store => ({query: {...store.query, page_size: num}})),
-        setTransactionsPerDate: (num: number) => set(store => ({query: {...store.query, transactionsPerDate: num}})),
+        setTransactionsPerDate: (num: number | undefined) => set(store => ({query: {...store.query, transactionsPerDate: num}})),
         setIsDescending: (isDescending: boolean) => set(store => ({
             query: {
                 ...store.query,

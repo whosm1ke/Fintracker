@@ -11,23 +11,56 @@ import {
     getMinMaxRange,
     getUniqueCategories, getUniqueUsers
 } from "../../helpers/globalHelper.ts";
+import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
+import TransactionItemSelector, { TransactionSelectorMap } from "./TransactionItemSelector.tsx";
 
 interface TransactionsOtherFiltersProps {
     transactions: Transaction[];
 }
 
+const transactionMap: TransactionSelectorMap[] = [
+    {
+        id: "1",
+        value: undefined
+    },
+    {
+        id: "2",
+        value: 5
+    },
+    {
+        id: "3",
+        value: 10
+    },
+    {
+        id: "4",
+        value: 15
+    },
+    {
+        id: "5",
+        value: 20
+    },
+    {
+        id: "6",
+        value: 25
+    },
+    {
+        id: "7",
+        value: 30
+    }
+]
+
 export default function TransactionsOtherFilters({transactions}: TransactionsOtherFiltersProps) {
-    const [filterCategories, filterUsers, filterMinMax, filterNote, setFilterCategories, setFilterUsers, setFilterMinMax, setFilterNote
+    const [filterCategories, filterUsers, filterMinMax, filterNote, setFilterCategories, setFilterUsers, setFilterMinMax, setFilterNote, setTransactionsPerDate
     ] = useTransactionQueryStore(x =>
         [x.filters.categories,
-            x.filters.users, x.filters.minMaxRange, x.filters.note, x.setCategories, x.setUsers, x.setMinMaxRange, x.setNote]);
+            x.filters.users, x.filters.minMaxRange, x.filters.note, x.setCategories, x.setUsers, x.setMinMaxRange, x.setNote, x.setTransactionsPerDate]);
 
 
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(true);
     const initialCategories = useRef<Category[]>([]);
     const initialUsers = useRef<User[]>([]);
     const initialMinMax = useRef<MinMaxRange>({min: 1, max: 1000});
-
+    const [transactionsPerDate, setTransactionsPerDateInternal] = useState<TransactionSelectorMap>(transactionMap[0])
     useEffect(() => {
         if (transactions) {
             const uniqueCategories = getUniqueCategories(transactions);
@@ -36,7 +69,7 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
             initialCategories.current = uniqueCategories;
             initialUsers.current = uniqueUsers;
             initialMinMax.current = minMaxRange;
-            
+
             setFilterCategories(uniqueCategories);
             setFilterUsers(uniqueUsers)
             setFilterMinMax(minMaxRange);
@@ -65,6 +98,11 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
             setFilterCategories(uniqueCategories);
         }
     }
+
+    const handleToggleTransactionsPerPeriod = (transPerPeriod: TransactionSelectorMap) => {
+        setTransactionsPerDate(transPerPeriod.value)
+        setTransactionsPerDateInternal(transPerPeriod);
+    }
     const handleToggleUser = (user: User) => {
 
         if (filterUsers.includes(user)) {
@@ -87,12 +125,14 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
         setFilterUsers(initialUsers.current);
         setFilterMinMax(initialMinMax.current);
         setFilterNote("");
+        setTransactionsPerDate(0);
+        setTransactionsPerDateInternal(transactionMap[0])
     };
 
     const toggleFilterMenu = () => setIsFilterMenuOpen(p => !p);
 
-    if(transactions.length === 0) return null;
-    
+    if (transactions.length === 0) return null;
+
     return (
         <div
             className={'bg-slate-200 rounded-xl shadow-lg'}>
@@ -125,6 +165,7 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
                                              onAllItemsSelected={handleSelectAllUsers}
                                              selectedItems={filterUsers}/>
                 </div>
+
                 <div className={'w-full flex flex-col gap-y-2'}>
                     <p className={'font-semibold'}>By Note</p>
                     <input type="text"
@@ -133,6 +174,12 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
                            onClick={e => e.stopPropagation()}
                            onChange={e => handleNoteFilterChanged(e.target.value)}
                     />
+                </div>
+                <div className={'w-full flex flex-col gap-y-2'}>
+                    <p className={'font-semibold'}>Transactions per period</p>
+                    <SingleSelectDropDownMenu items={transactionMap} onItemSelected={handleToggleTransactionsPerPeriod}
+                    ItemComponent={TransactionItemSelector} defaultSelectedItem={transactionsPerDate}
+                    heading={"Transactions per period"} HeadingComponent={TransactionItemSelector}/>
                 </div>
                 <div className={'w-full flex flex-col gap-y-2'}>
                     <p className={'font-semibold'}>By Amount</p>
@@ -164,3 +211,4 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
         </div>
     )
 }
+
