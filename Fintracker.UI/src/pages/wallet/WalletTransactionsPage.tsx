@@ -20,7 +20,7 @@ export default function WalletTransactionsPage() {
     if (transactions === undefined || !walletResponse || !walletResponse.response) return null;
     const wallet = walletResponse.response;
     if (wallet.ownerId != userId && !wallet.users.find(u => u.id === userId)) return <Navigate to={'../../dashboard'}/>
-    
+    console.log("WalletTransactionsPage rendered")
     return (
         <div className={'container flex flex-col gap-y-5 mx-auto p-4'}>
             <div className={'flex flex-col sm:flex-row justify-between items-center gap-5'}>

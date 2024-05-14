@@ -65,7 +65,7 @@ const useTransactionQueryStore = createWithEqualityFn<TransactionQueryStore>((se
             pageSize: 50,
             sortBy: '',
             isDescending: false,
-            transactionsPerDate: 10,
+            transactionsPerDate: undefined,
             startDate: dateToString(startDate),
             endDate: dateToString(endDate)
         },
