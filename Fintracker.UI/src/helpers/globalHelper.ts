@@ -200,7 +200,7 @@ export const calculateDailyBudget = (budget: Budget) => {
     const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    const dailyBudget = budget.startBalance / diffDays;
+    const dailyBudget = budget.balance / diffDays;
 
     return dailyBudget;
 }
