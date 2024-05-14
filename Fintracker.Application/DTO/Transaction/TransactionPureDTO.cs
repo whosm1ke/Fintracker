@@ -13,7 +13,9 @@ public class TransactionPureDTO : IBaseDto
     public Guid UserId { get; set; }
     
     public decimal Amount { get; set; }
-
+    
+    public decimal AmountInWalletCurrency { get; set; }
+    
     public string Username { get; set; }
     
     public string? Note { get; set; }

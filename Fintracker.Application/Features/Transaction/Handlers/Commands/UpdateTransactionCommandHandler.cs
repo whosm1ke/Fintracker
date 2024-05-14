@@ -56,7 +56,7 @@ public class
             transaction.Category.TransactionCount -= 1;
         }
 
-        await UpdateWalletBalance(transaction.Wallet, request.Transaction.Amount, transaction.Amount,
+        await UpdateWalletBalance(transaction, transaction.Wallet, request.Transaction.Amount, transaction.Amount,
             transaction.Currency.Symbol, newCurrency!.Symbol, transaction.Category.Type, newCategory!.Type);
 
         var oldObject = _mapper.Map<TransactionBaseDTO>(transaction);
@@ -79,7 +79,8 @@ public class
     }
 
 
-    private async Task UpdateWalletBalance(Domain.Entities.Wallet wallet, decimal newAmount, decimal oldAmount,
+    private async Task UpdateWalletBalance(Domain.Entities.Transaction trans, Domain.Entities.Wallet wallet,
+        decimal newAmount, decimal oldAmount,
         string oldCurrencySymbol, string newCurrencySymbol, CategoryType oldTransType, CategoryType newTransType)
     {
         ConvertCurrencyDTO? convertedCurrencyNewAmount = null;
@@ -120,6 +121,8 @@ public class
             wallet.Balance -= convertedCurrencyNewAmount?.Value ?? newAmount;
             wallet.TotalSpent += convertedCurrencyNewAmount?.Value ?? newAmount;
         }
+
+        trans.AmountInWalletCurrency = convertedCurrencyNewAmount?.Value ?? newAmount;
     }
 
     private async Task UpdateBudgets(Domain.Entities.Transaction transaction)
@@ -151,7 +154,6 @@ public class
 
             budget.TotalSpent = totalSpent;
             budget.Balance = budget.StartBalance - totalSpent;
-
         }
     }
 }

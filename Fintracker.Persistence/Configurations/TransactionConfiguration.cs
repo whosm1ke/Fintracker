@@ -43,6 +43,11 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
             .HasPrecision(12, 2)
             .IsRequired();
         
+        builder.Property(x => x.AmountInWalletCurrency)
+            .HasColumnType("decimal")
+            .HasPrecision(12, 2)
+            .IsRequired();
+        
         builder.Property(x => x.Note)
             .HasMaxLength(TransactionConstraints.MaximumNoteLength);
 

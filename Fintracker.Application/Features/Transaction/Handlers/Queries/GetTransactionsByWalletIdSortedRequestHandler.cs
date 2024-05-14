@@ -23,7 +23,8 @@ public class GetTransactionsByWalletIdSortedRequestHandler : IRequestHandler<Get
             nameof(Domain.Entities.Transaction.Label).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Note).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Id).ToLowerInvariant(),
-            nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant()
+            nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant(),
+            nameof(Domain.Entities.Transaction.AmountInWalletCurrency).ToLowerInvariant()
         };
     }
 

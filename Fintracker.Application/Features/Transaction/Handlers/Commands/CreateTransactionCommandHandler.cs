@@ -38,7 +38,8 @@ public class
         var transCategory = await _unitOfWork.CategoryRepository.GetAsync(request.Transaction.CategoryId);
         ++transCategory!.TransactionCount;
 
-        await UpdateWallet(transaction.WalletId, transaction.Amount, transCurrency!.Symbol, transCategory.Type);
+        await UpdateWallet(transaction, transaction.WalletId, transaction.Amount, transCurrency!.Symbol,
+            transCategory.Type);
         await DecreaseBalanceInBudgets(transaction.CategoryId, transaction.Amount, transaction.UserId,
             transaction.WalletId, transCurrency.Symbol, transaction, request.Transaction.Date);
 
@@ -76,14 +77,17 @@ public class
         }
     }
 
-    private async Task UpdateWallet(Guid walletId, decimal amount, string transactionCurrencySymbol,
+    private async Task UpdateWallet(Domain.Entities.Transaction transaction, Guid walletId, decimal amount,
+        string transactionCurrencySymbol,
         CategoryType transType)
     {
         var wallet = await _unitOfWork.WalletRepository.GetWalletById(walletId);
         ConvertCurrencyDTO? convertedCurrency = null;
         if (wallet!.Currency.Symbol != transactionCurrencySymbol)
+        {
             convertedCurrency =
                 await _currencyConverter.Convert(transactionCurrencySymbol, wallet.Currency.Symbol, amount);
+        }
 
         if (transType == CategoryType.EXPENSE)
         {
@@ -94,5 +98,8 @@ public class
         {
             wallet.Balance += convertedCurrency?.Value ?? amount;
         }
+        
+        transaction.AmountInWalletCurrency = convertedCurrency?.Value ?? amount;
+
     }
 }
