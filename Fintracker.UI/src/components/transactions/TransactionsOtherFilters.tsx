@@ -12,13 +12,13 @@ import {
     getUniqueCategories, getUniqueUsers
 } from "../../helpers/globalHelper.ts";
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
-import TransactionItemSelector, { TransactionSelectorMap } from "./TransactionItemSelector.tsx";
+import TransactionsPerDateItem, { TransactionSelectorMap } from "./TransactionsPerDateItem.tsx";
 
 interface TransactionsOtherFiltersProps {
     transactions: Transaction[];
 }
 
-const transactionMap: TransactionSelectorMap[] = [
+const transactionsPerPeriodMap: TransactionSelectorMap[] = [
     {
         id: "1",
         value: undefined
@@ -60,7 +60,7 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
     const initialCategories = useRef<Category[]>([]);
     const initialUsers = useRef<User[]>([]);
     const initialMinMax = useRef<MinMaxRange>({min: 1, max: 1000});
-    const [transactionsPerDate, setTransactionsPerDateInternal] = useState<TransactionSelectorMap>(transactionMap[0])
+    const [transactionsPerDate, setTransactionsPerDateInternal] = useState<TransactionSelectorMap>(transactionsPerPeriodMap[0])
     useEffect(() => {
         if (transactions) {
             const uniqueCategories = getUniqueCategories(transactions);
@@ -126,7 +126,7 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
         setFilterMinMax(initialMinMax.current);
         setFilterNote("");
         setTransactionsPerDate(0);
-        setTransactionsPerDateInternal(transactionMap[0])
+        setTransactionsPerDateInternal(transactionsPerPeriodMap[0])
     };
 
     const toggleFilterMenu = () => setIsFilterMenuOpen(p => !p);
@@ -177,9 +177,9 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
                 </div>
                 <div className={'w-full flex flex-col gap-y-2'}>
                     <p className={'font-semibold'}>Transactions per period</p>
-                    <SingleSelectDropDownMenu items={transactionMap} onItemSelected={handleToggleTransactionsPerPeriod}
-                    ItemComponent={TransactionItemSelector} defaultSelectedItem={transactionsPerDate}
-                    heading={"Transactions per period"} HeadingComponent={TransactionItemSelector}/>
+                    <SingleSelectDropDownMenu items={transactionsPerPeriodMap} onItemSelected={handleToggleTransactionsPerPeriod}
+                                              ItemComponent={TransactionsPerDateItem} defaultSelectedItem={transactionsPerDate}
+                                              heading={"Transactions per period"} HeadingComponent={TransactionsPerDateItem}/>
                 </div>
                 <div className={'w-full flex flex-col gap-y-2'}>
                     <p className={'font-semibold'}>By Amount</p>
