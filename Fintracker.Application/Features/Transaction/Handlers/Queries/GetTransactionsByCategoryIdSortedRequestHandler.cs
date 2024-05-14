@@ -24,7 +24,7 @@ public class GetTransactionsByCategoryIdSortedRequestHandler : IRequestHandler<G
             nameof(Domain.Entities.Transaction.Label).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Note).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Id).ToLowerInvariant(),
-            nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant()
+            nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant(),
         };
     }
 
@@ -42,6 +42,15 @@ public class GetTransactionsByCategoryIdSortedRequestHandler : IRequestHandler<G
             await _unitOfWork.TransactionRepository.GetByCategoryIdSortedAsync(request.CategoryId, request.UserId, request.Params);
 
 
-        return _mapper.Map<List<TransactionBaseDTO>>(transactions);
+        var groupedTransactions = transactions
+            .GroupBy(t => t.Date.Date)
+            .Select(g => g.OrderByDescending(t => t.Date)
+                .Take(request.Params.TransactionsPerDate ?? int.MaxValue))
+            .SelectMany(g => g)
+            .ToList();
+
+        var transactionDTOs = _mapper.Map<List<TransactionBaseDTO>>(groupedTransactions);
+
+        return transactionDTOs;
     }
 }

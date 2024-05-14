@@ -10,7 +10,7 @@ public class QueryParams
 
 public class TransactionQueryParams : QueryParams
 {
-    public int TransactionsPerDate { get; set; } = 10;
+    public int? TransactionsPerDate { get; set; }
 
     public DateTime StartDate { get; set; } = DateTime.Now.AddDays(-7);
 

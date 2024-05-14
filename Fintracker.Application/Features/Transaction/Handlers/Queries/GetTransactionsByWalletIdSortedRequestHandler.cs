@@ -21,11 +21,9 @@ public class GetTransactionsByWalletIdSortedRequestHandler : IRequestHandler<Get
         _allowedSortColumns = new()
         {
             nameof(Domain.Entities.Transaction.Label).ToLowerInvariant(),
-            nameof(Domain.Entities.Transaction.CreatedAt).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Note).ToLowerInvariant(),
             nameof(Domain.Entities.Transaction.Id).ToLowerInvariant(),
-            nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant(),
-            nameof(Domain.Entities.Transaction.Date).ToLowerInvariant()
+            nameof(Domain.Entities.Transaction.Amount).ToLowerInvariant()
         };
     }
 
@@ -45,11 +43,10 @@ public class GetTransactionsByWalletIdSortedRequestHandler : IRequestHandler<Get
         var groupedTransactions = transactions
             .GroupBy(t => t.Date.Date)
             .Select(g => g.OrderByDescending(t => t.Date)
-                                                    .Take(request.Params.TransactionsPerDate))
+                                                    .Take(request.Params.TransactionsPerDate ?? int.MaxValue))
             .SelectMany(g => g)
             .ToList();
 
-// Map to 
         var transactionDTOs = _mapper.Map<List<TransactionBaseDTO>>(groupedTransactions);
 
         return transactionDTOs;
