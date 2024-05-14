@@ -22,7 +22,7 @@ export default function TransactionOverviewList({walletCurrency, balance, transa
 
 
 
-    const expAndInc = useMemo(() => calcExpenseAndIncome(filteredTransactions, null), [filteredTransactions]);
+    const expAndInc = useMemo(() => calcExpenseAndIncome(filteredTransactions), [filteredTransactions]);
 
     return (
         <OverviewListBase balanceTitle={"Wallet balance"} changeForPeriodTitle={"Change for period"}
