@@ -1,7 +1,6 @@
 ﻿import axios from "axios";
 
 const axiosInstance = axios.create({
-    // baseURL: 'https://fintrackerua.azurewebsites.net/api/',
 // @ts-ignore
     baseURL: import.meta.env.VITE_APP_API_ENDPOINT
 });
@@ -17,7 +16,8 @@ axiosInstance.interceptors.request.use(cfg => {
 export const axiosInstanceCurrencyConverter = axios.create({
     baseURL: 'https://api.currencybeacon.com/v1/',
     params: {
-        api_key: 'b8IMjBLpaZDJFBnu40jAOc6EWjin0IQg'
+        // @ts-ignore
+        api_key: import.meta.env.VITE_APP_CURRENCY_API_KEY
     }
 })
 
