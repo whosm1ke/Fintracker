@@ -39,6 +39,8 @@ public class Transaction : IEntity<Guid>
     public Currency Currency { get; set; } = default!;
 
     public decimal Amount { get; set; }
+    
+    public decimal AmountInWalletCurrency { get; set; }
 
     public string? Note { get; set; }
     

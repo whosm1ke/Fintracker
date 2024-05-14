@@ -40,13 +40,13 @@ export const calculateWalletsBalance = (wallets: Wallet[], convertionRate: Uniqu
     return result;
 }
 
-export const calculateTotalExpense = (transactions: Transaction[], convertionRate: UniqueCurrencyRates | null) => {
+export const calculateTotalExpense = (transactions: Transaction[]) => {
     let total = 0;
     transactions.forEach(t => {
         if (t.category.type === CategoryType.EXPENSE)
-            total -= t.amount * (convertionRate ? convertionRate[t.currency.symbol] || 1 : 1)
+            total -= t.amountInWalletCurrency;
         else
-            total += t.amount * (convertionRate ? convertionRate[t.currency.symbol] || 1 : 1)
+            total += t.amountInWalletCurrency;
     });
     return total;
 }
@@ -76,16 +76,16 @@ export type ExpenseAndIncome = {
     income: number;
 }
 
-export function calcExpenseAndIncome(transactions: Transaction[], currencyRates: UniqueCurrencyRates | null): ExpenseAndIncome {
+export function calcExpenseAndIncome(transactions: Transaction[]): ExpenseAndIncome {
     let expense = 0;
     let income = 0;
 
 
     transactions.forEach(t => {
         if (t.category.type === CategoryType.EXPENSE)
-            expense -= t.amount * (currencyRates ? currencyRates[t.currency.symbol] : 1);
+            expense -= t.amountInWalletCurrency;
         if (t.category.type === CategoryType.INCOME)
-            income += t.amount * (currencyRates ? currencyRates[t.currency.symbol] : 1);
+            income += t.amountInWalletCurrency
     });
 
 

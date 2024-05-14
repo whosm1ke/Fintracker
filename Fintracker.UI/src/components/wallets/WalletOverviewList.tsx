@@ -35,7 +35,7 @@ export default function WalletOverviewList({globalCurrency}: WalletOverviewListP
     }, walletFilters.startDate, walletFilters.endDate)
 
 
-    const expsenseAndIncome = calcExpenseAndIncome(filteredTransactions, currencyRates);
+    const expsenseAndIncome = calcExpenseAndIncome(filteredTransactions);
     return (
         <OverviewListBase
             balanceTitle={"Total balance"} changeForPeriodTitle={"Change for period"}

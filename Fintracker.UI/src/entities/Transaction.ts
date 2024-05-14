@@ -11,6 +11,7 @@ export interface Transaction extends BaseEntity {
     currencyId?: string;
     categoryId?: string;
     amount: number;
+    amountInWalletCurrency: number;
     note?: string;
     label?: string;
     date: Date;

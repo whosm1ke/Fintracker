@@ -1,13 +1,10 @@
 ﻿import {useId} from "react";
 import {Transaction} from "../../entities/Transaction";
-import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAll";
 import {TransactionItem} from "./TransactionItem.tsx";
 import useTransactionQueryStore from "../../stores/transactionQueryStore.ts";
 import {
     calculateTotalExpense,
     filterTransactions,
-    getCurrencyRates,
-    getUniqueCurrencySymbols,
     groupTransactionsByDate
 } from "../../helpers/globalHelper.ts";
 
@@ -17,19 +14,12 @@ interface TransactionListProps {
     walletSymbol: string;
 }
 export default function TransactionList({transactions, walletSymbol}: TransactionListProps) {
-
-
     
     const filters = useTransactionQueryStore(x => x.filters);
     const filteredTransactions = filterTransactions(transactions, filters);
     const groupedTransactions = groupTransactionsByDate(filteredTransactions);
-    const allTransactions = groupedTransactions.flatMap(group => group.transactions);
-    const uniqueSymbols = getUniqueCurrencySymbols(allTransactions);
-    const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
-    const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
 
     
-    if (!currencyRates) return null;
 
     return (
         <div className={'flex flex-col gap-y-2'}>
@@ -37,7 +27,7 @@ export default function TransactionList({transactions, walletSymbol}: Transactio
                 <div className={''} key={i}>
                     <TransactionBlock transactions={group.transactions} date={group.date}
                                       walletSymbol={walletSymbol}
-                                      totalSpent={calculateTotalExpense(group.transactions, currencyRates)}/>
+                                      totalSpent={calculateTotalExpense(group.transactions)}/>
                 </div>
             )}
         </div>
@@ -58,13 +48,7 @@ export function TransactionBlock({
                                      date,
                                      totalSpent,
                                  }: TransactionBlockProps) {
-    const uniqueSymbols = getUniqueCurrencySymbols(transactions);
-    const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletSymbol, amount: [1]})
-    const currencyRates = getCurrencyRates(convertedCurrencies, uniqueSymbols);
-    const id = useId()
-
-    if (!currencyRates) return null;
-
+    const id = useId();
 
     return (
         <div className={'flex flex-col border-b-2 border-b-blue-300'}>
@@ -74,7 +58,7 @@ export function TransactionBlock({
                 {
                     transactions.map(tran =>
                         <TransactionItem key={tran.id + id} transaction={tran} parentCurrencySymbol={walletSymbol}
-                                         conversionRate={currencyRates[tran.currency.symbol] || 1} walletOwnerId={tran.wallet.ownerId}/>
+                                          walletOwnerId={tran.wallet.ownerId}/>
                     )
                 }
             </div>

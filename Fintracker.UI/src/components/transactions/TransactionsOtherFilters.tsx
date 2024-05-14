@@ -13,6 +13,7 @@ import {
 } from "../../helpers/globalHelper.ts";
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
 import TransactionsPerDateItem, {TransactionSelectorMap} from "./TransactionsPerDateItem.tsx";
+import TransactionSortByItem, { TransactionSortByParam } from "./TransactionSortByItem.tsx";
 
 interface TransactionsOtherFiltersProps {
     transactions: Transaction[];
@@ -53,13 +54,25 @@ const transactionSortByMap: TransactionSortByParam[] = [
     {
         id: "1",
         value: "amount",
-        text: "Amount",
+        text: "Transaction amount",
         isDescending: false
     },
     {
         id: "2",
         value: "amount",
-        text: "Amount descending",
+        text: "Transaction amount descending",
+        isDescending: true
+    },
+    {
+        id: "1.1",
+        value: "amountinwalletcurrency",
+        text: "Amount in wallet currency",
+        isDescending: false
+    },
+    {
+        id: "2.2",
+        value: "amountinwalletcurrency",
+        text: "Amount in wallet currency descending",
         isDescending: true
     },
     {
@@ -271,21 +284,4 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
     )
 }
 
-interface TransactionSortByItemProps {
-    item: TransactionSortByParam
-}
 
-export interface TransactionSortByParam {
-    id: string;
-    value: string;
-    text: string;
-    isDescending: boolean;
-}
-
-export function TransactionSortByItem({item}: TransactionSortByItemProps) {
-    return (
-        <div className={'flex justify-between items-center'}>
-            <p>{item.text}</p>
-        </div>
-    )
-}

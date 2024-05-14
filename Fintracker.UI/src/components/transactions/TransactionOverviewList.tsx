@@ -3,10 +3,8 @@ import OverviewListBase from "../other/OverviewListBase.tsx";
 import {
     calcExpenseAndIncome,
     filterTransactions,
-    getCurrencyRates, getUniqueCurrencySymbols,
 } from "../../helpers/globalHelper.ts";
 import useTransactionQueryStore from "../../stores/transactionQueryStore.ts";
-import {useCurrencyConvertAll} from "../../hooks/currencies/useCurrenctConvertAll.tsx";
 import {useMemo} from "react";
 
 export interface OverviewListProps {
@@ -21,13 +19,10 @@ export default function TransactionOverviewList({walletCurrency, balance, transa
 
     const filteredTransactions = useMemo(() => filterTransactions(transactions, filters), [transactions, filters]);
 
-    const uniqueSymbols = useMemo(() => getUniqueCurrencySymbols(filteredTransactions), [filteredTransactions]);
 
-    const {data: convertedCurrencies} = useCurrencyConvertAll({from: uniqueSymbols, to: walletCurrency, amount: [1]})
 
-    const currencyRates = useMemo(() => getCurrencyRates(convertedCurrencies, uniqueSymbols), [convertedCurrencies, uniqueSymbols]);
 
-    const expAndInc = useMemo(() => calcExpenseAndIncome(filteredTransactions, currencyRates), [filteredTransactions, currencyRates]);
+    const expAndInc = useMemo(() => calcExpenseAndIncome(filteredTransactions, null), [filteredTransactions]);
 
     return (
         <OverviewListBase balanceTitle={"Wallet balance"} changeForPeriodTitle={"Change for period"}
