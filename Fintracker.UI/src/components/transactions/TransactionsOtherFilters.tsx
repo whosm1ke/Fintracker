@@ -12,7 +12,7 @@ import {
     getUniqueCategories, getUniqueUsers
 } from "../../helpers/globalHelper.ts";
 import SingleSelectDropDownMenu from "../other/SingleSelectDropDownMenu.tsx";
-import TransactionsPerDateItem, { TransactionSelectorMap } from "./TransactionsPerDateItem.tsx";
+import TransactionsPerDateItem, {TransactionSelectorMap} from "./TransactionsPerDateItem.tsx";
 
 interface TransactionsOtherFiltersProps {
     transactions: Transaction[];
@@ -49,11 +49,52 @@ const transactionsPerPeriodMap: TransactionSelectorMap[] = [
     }
 ]
 
+const transactionSortByMap: TransactionSortByParam[] = [
+    {
+        id: "1",
+        value: "amount",
+        text: "Amount",
+        isDescending: false
+    },
+    {
+        id: "2",
+        value: "amount",
+        text: "Amount descending",
+        isDescending: true
+    },
+    {
+        id: "3",
+        value: "label",
+        text: "Label",
+        isDescending: false
+    },
+    {
+        id: "4",
+        value: "label",
+        text: "Label descending",
+        isDescending: true
+    },
+    {
+        id: "5",
+        value: "note",
+        text: "Note",
+        isDescending: false
+    },
+    {
+        id: "6",
+        value: "note",
+        text: "Note descending",
+        isDescending: true
+    }
+]
+
 export default function TransactionsOtherFilters({transactions}: TransactionsOtherFiltersProps) {
-    const [filterCategories, filterUsers, filterMinMax, filterNote, setFilterCategories, setFilterUsers, setFilterMinMax, setFilterNote, setTransactionsPerDate
+    const [filterCategories, filterUsers, filterMinMax, filterNote, setFilterCategories, setFilterUsers, setFilterMinMax,
+        setFilterNote, setTransactionsPerDate, setSortBy, setIsDescending
     ] = useTransactionQueryStore(x =>
         [x.filters.categories,
-            x.filters.users, x.filters.minMaxRange, x.filters.note, x.setCategories, x.setUsers, x.setMinMaxRange, x.setNote, x.setTransactionsPerDate]);
+            x.filters.users, x.filters.minMaxRange, x.filters.note, x.setCategories, x.setUsers, x.setMinMaxRange, 
+            x.setNote, x.setTransactionsPerDate, x.setSortBy, x.setIsDescending]);
 
 
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(true);
@@ -61,6 +102,7 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
     const initialUsers = useRef<User[]>([]);
     const initialMinMax = useRef<MinMaxRange>({min: 1, max: 1000});
     const [transactionsPerDate, setTransactionsPerDateInternal] = useState<TransactionSelectorMap>(transactionsPerPeriodMap[0])
+    const [transactionsSortBy, setTransactionsSortBy] = useState<TransactionSortByParam>(transactionSortByMap[0])
     useEffect(() => {
         if (transactions) {
             const uniqueCategories = getUniqueCategories(transactions);
@@ -102,6 +144,12 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
     const handleToggleTransactionsPerPeriod = (transPerPeriod: TransactionSelectorMap) => {
         setTransactionsPerDate(transPerPeriod.value)
         setTransactionsPerDateInternal(transPerPeriod);
+    }
+
+    const handleToggleTransactionSortBy = (sortBy: TransactionSortByParam) => {
+        setSortBy(sortBy.value);
+        setIsDescending(sortBy.isDescending);
+        setTransactionsSortBy(sortBy);
     }
     const handleToggleUser = (user: User) => {
 
@@ -177,9 +225,20 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
                 </div>
                 <div className={'w-full flex flex-col gap-y-2'}>
                     <p className={'font-semibold'}>Transactions per period</p>
-                    <SingleSelectDropDownMenu items={transactionsPerPeriodMap} onItemSelected={handleToggleTransactionsPerPeriod}
-                                              ItemComponent={TransactionsPerDateItem} defaultSelectedItem={transactionsPerDate}
-                                              heading={"Transactions per period"} HeadingComponent={TransactionsPerDateItem}/>
+                    <SingleSelectDropDownMenu items={transactionsPerPeriodMap}
+                                              onItemSelected={handleToggleTransactionsPerPeriod}
+                                              ItemComponent={TransactionsPerDateItem}
+                                              defaultSelectedItem={transactionsPerDate}
+                                              heading={"Transactions per period"}
+                                              HeadingComponent={TransactionsPerDateItem}/>
+                </div>
+                <div className={'w-full flex flex-col gap-y-2'}>
+                    <p className={'font-semibold'}>Sort by</p>
+                    <SingleSelectDropDownMenu items={transactionSortByMap}
+                                              onItemSelected={handleToggleTransactionSortBy}
+                                              ItemComponent={TransactionSortByItem}
+                                              defaultSelectedItem={transactionsSortBy}
+                                              heading={"Sort by"} HeadingComponent={TransactionSortByItem}/>
                 </div>
                 <div className={'w-full flex flex-col gap-y-2'}>
                     <p className={'font-semibold'}>By Amount</p>
@@ -212,3 +271,21 @@ export default function TransactionsOtherFilters({transactions}: TransactionsOth
     )
 }
 
+interface TransactionSortByItemProps {
+    item: TransactionSortByParam
+}
+
+export interface TransactionSortByParam {
+    id: string;
+    value: string;
+    text: string;
+    isDescending: boolean;
+}
+
+export function TransactionSortByItem({item}: TransactionSortByItemProps) {
+    return (
+        <div className={'flex justify-between items-center'}>
+            <p>{item.text}</p>
+        </div>
+    )
+}

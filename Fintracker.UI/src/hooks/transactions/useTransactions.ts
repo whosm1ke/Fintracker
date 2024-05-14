@@ -10,8 +10,8 @@ const useTransactions = (walletId: string) => {
         queryKey: ['transactions', walletId, {...query}],
         queryFn: async () => await apiClient.getAll({
             params:{
-                sortBy: query.sortBy || "id",
-                isDescending: query.isDescending || true,
+                sortBy: query.sortBy || "amount",
+                isDescending: query.isDescending,
                 pageSize: query.pageSize || 50,
                 pageNumber: query.pageNumber || 1,
                 transactionsPerDate: query.transactionsPerDate,
