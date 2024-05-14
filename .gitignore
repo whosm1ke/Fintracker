@@ -24,6 +24,8 @@ Fintracker.UI/node_modules
 dist
 dist-ssr
 *.local
+Fintracker.UI/.env.development
+Fintracker.UI/.env.production
 
 # Editor directories and files
 .vscode/*
