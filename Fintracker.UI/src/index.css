@@ -32,7 +32,7 @@
 }
 
 .example-thumb {
-    @apply w-4 h-4 rounded-full bg-gray-400 text-center cursor-grab top-1
+    @apply w-4 h-4 rounded-full bg-gray-400 text-center cursor-grab top-1 z-0 !important
 }
 
 .example-track {
