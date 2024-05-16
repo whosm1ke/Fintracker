@@ -3,7 +3,6 @@ import {useBudgets} from "../../hooks/budgets/useBudgets";
 import useUserStore from "../../stores/userStore.ts";
 import {BudgetCard} from "../../components/budgets/BudgetCard.tsx";
 import CreateBudgetModalWalletPersonal from "../../components/budgets/CreateBudgetModalWalletPersonal.tsx";
-import BudgetOverview from "../../components/budgets/BudgetOverview.tsx";
 import CreateBudgetModalGlobal from "../../components/budgets/CreateBudgetModalGlobal.tsx";
 import useExpenseCategories from "../../hooks/categories/useExpenseCategories.ts";
 
@@ -37,7 +36,6 @@ export default function BudgetsPage() {
                     })}
                 </div>
             </section>
-            <BudgetOverview/>
         </div>
     )
 }
