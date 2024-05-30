@@ -1,7 +1,4 @@
 ﻿using AutoMapper;
-using Fintracker.Application.DTO.Budget;
-using Fintracker.Application.DTO.User;
-using Fintracker.Application.DTO.Wallet;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Handlers.Queries;
 using Fintracker.Application.Features.User.Requests.Queries;

@@ -2,7 +2,6 @@
 using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Contracts.Persistence;
 using Fintracker.Application.DTO.Category;
-using Fintracker.Application.DTO.Currency;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Category.Requests.Commands;
 using Fintracker.Application.Responses.Commands_Responses;

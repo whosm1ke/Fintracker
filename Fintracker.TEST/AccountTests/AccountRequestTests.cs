@@ -7,7 +7,7 @@ namespace Fintracker.TEST.AccountTests;
 public class AccountRequestTests
 {
     [Fact]
-    public async Task Register_Test()
+    public async Task Test_Register_With_Valid_Params_Should_Not_Throw_Exception()
     {
         var mockAccount = MockAccountService.GetAccountService().Object;
         var registerRequest = new RegisterRequest
@@ -24,8 +24,9 @@ public class AccountRequestTests
 
     }
     
+    
     [Fact]
-    public async Task Login_Test()
+    public async Task Test_Login_With_Valid_Credentials_Should_not_throw_Exception()
     {
         var mockAccount = MockAccountService.GetAccountService().Object;
         var loginRequest = new LoginRequest

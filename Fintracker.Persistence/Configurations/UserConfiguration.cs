@@ -1,10 +1,8 @@
-﻿using Fintracker.Application;
-using Fintracker.Application.BusinessRuleConstants;
+﻿using Fintracker.Application.BusinessRuleConstants;
 using Fintracker.Domain.Entities;
 using Fintracker.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.Options;
 
 namespace Fintracker.Persistence.Configurations;
 

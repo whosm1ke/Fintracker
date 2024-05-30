@@ -4,7 +4,6 @@ using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.User.Requests.Commands;
 using Fintracker.Application.Models.Mail;
-using Fintracker.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Options;
 

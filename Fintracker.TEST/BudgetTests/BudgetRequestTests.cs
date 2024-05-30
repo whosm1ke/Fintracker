@@ -1,12 +1,10 @@
 ﻿using AutoFixture;
 using AutoMapper;
 using Fintracker.Application.Contracts.Persistence;
-using Fintracker.Application.DTO.Budget;
 using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Budget.Handlers.Queries;
 using Fintracker.Application.Features.Budget.Requests.Queries;
 using Fintracker.Application.MapProfiles;
-using Fintracker.Domain.Entities;
 using Fintracker.TEST.Repositories;
 using FluentAssertions;
 using Xunit.Abstractions;

@@ -8,7 +8,6 @@ using Fintracker.Application.Exceptions;
 using Fintracker.Application.Features.Transaction.Handlers.Commands;
 using Fintracker.Application.Features.Transaction.Requests.Commands;
 using Fintracker.Application.MapProfiles;
-using Fintracker.Domain.Entities;
 using Fintracker.TEST.Repositories;
 using FluentAssertions;
 using FluentValidation.TestHelper;
