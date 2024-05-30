@@ -38,7 +38,7 @@ public class MockCategoryRepository
                 Name = "Category 3",
                 Image = "Image 1",
                 IconColour = "yellow",
-                UserId = new Guid("EDE38841-5183-4BDD-A148-D1923F170B1A")
+                UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7")
             },
             new()
             {
