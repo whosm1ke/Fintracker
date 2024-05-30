@@ -7,7 +7,7 @@ using MediatR;
 namespace Fintracker.Application.Features.Wallet.Handlers.Queries;
 
 public class
-    GetWalletsByUserIdRequestHandler : IRequestHandler<GetWalletsByOwnerIdRequest, IReadOnlyList<WalletBaseDTO>>
+    GetWalletsByUserIdRequestHandler : IRequestHandler<GetWalletsByUserIdRequest, IReadOnlyList<WalletBaseDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
@@ -18,10 +18,10 @@ public class
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IReadOnlyList<WalletBaseDTO>> Handle(GetWalletsByOwnerIdRequest request,
+    public async Task<IReadOnlyList<WalletBaseDTO>> Handle(GetWalletsByUserIdRequest request,
         CancellationToken cancellationToken)
     {
-        var wallets = await _unitOfWork.WalletRepository.GetByUserIdAsync(request.OwnerId);
+        var wallets = await _unitOfWork.WalletRepository.GetByUserIdAsync(request.UserId);
 
         
         

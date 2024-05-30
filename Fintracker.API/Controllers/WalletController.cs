@@ -47,9 +47,9 @@ public class WalletController : BaseController
             Params = query!
         };
 
-        var simpleRequest = new GetWalletsByOwnerIdRequest
+        var simpleRequest = new GetWalletsByUserIdRequest
         {
-            OwnerId = ownerId
+            UserId = ownerId
         };
 
         IReadOnlyList<WalletBaseDTO> response;

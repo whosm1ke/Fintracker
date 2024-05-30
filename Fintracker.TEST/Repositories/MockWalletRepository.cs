@@ -31,56 +31,7 @@ public class MockWalletRepository
                 Id = new Guid("83E1C69F-8B85-46D4-8AB7-2DBE7D66038C"),
                 Balance = 3000,
                 Name = "Wallet 3",
-            },
-            new()
-            {
-                Id = new Guid("95E0ECF9-0647-450B-9495-B2A709D166B5"),
-                Balance = 500,
-                Name = "With Owner",
-            },
-            new()
-            {
-                Id = new Guid("83D7946B-3CCD-401E-8EF4-62BCA04FD528"),
-                Balance = 2000,
-                Name = "With Members",
-            },
-            new()
-            {
-                Id = new Guid("8ED1883D-1833-47CB-8E12-27AC26F5E6A7"),
-                Name = "With Transactions",
-                Transactions = new List<Transaction>
-                {
-                    new()
-                    {
-                        Id = new Guid("0F47F18E-5DE9-429B-9EF9-4CF74F338EE3"),
-                        Note = "transaction 1"
-                    },
-                    new()
-                    {
-                        Id = new Guid("DABB1876-F428-4C8C-B04A-52F94582DFCF"),
-                        Note = "transaction 2"
-                    }
-                }
-            },
-            new()
-            {
-                Id = new Guid("32A22A34-F772-4F65-B806-51B2E8528D6E"),
-                Name = "With Budgets",
-                Budgets = new List<Budget>
-                {
-                    new()
-                    {
-                        Id = new Guid("438A3485-E4F0-4C79-971C-DC07FB92BAD8"),
-                        Name = "Budget 1",
-                        Categories = null!
-                    },
-                    new()
-                    {
-                        Id = new Guid("B036C34F-FD3F-484C-9CA2-7E603E5E076A"),
-                        Name = "Budget 2",
-                        Categories = null!
-                    }
-                }
+                BankAccountId = "12345"
             }
         };
 
@@ -112,10 +63,10 @@ public class MockWalletRepository
             .Returns((Guid id) => { return Task.FromResult(wallets.Find(x => x.Id == id)); });
 
         mock.Setup(x => x.GetAllAsync())
-            .Returns(() => Task.FromResult<IReadOnlyList<Wallet>>(wallets));
+            .Returns(() => Task.FromResult<IReadOnlyList<Wallet>>(wallets)!);
 
         mock.Setup(x => x.GetAllAsyncNoTracking())
-            .Returns(() => Task.FromResult<IReadOnlyList<Wallet>>(wallets));
+            .Returns(() => Task.FromResult<IReadOnlyList<Wallet>>(wallets)!);
 
         mock.Setup(x => x.Delete(It.IsAny<Wallet>()))
             .Callback((Wallet b) =>
@@ -134,7 +85,17 @@ public class MockWalletRepository
 
         mock.Setup(x => x.GetWalletById(It.IsAny<Guid>()))
             .Returns((Guid id) => Task.FromResult(wallets.Find(x => x.Id == id)));
+
+
+        mock.Setup(x => x.GetByUserIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Guid id) => wallets.Where(x => x.OwnerId == id || x.Users.Any(x => x.Id == id)).ToList());
         
+        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(),It.IsAny<QueryParams>()))
+            .Returns((Guid userId, QueryParams query) => Task.FromResult((IReadOnlyList<Wallet>)wallets
+                .Where(x => x.OwnerId == userId || x.Users.Any(x => x.Id == userId))
+                .AsQueryable()
+                .OrderBy(query.SortBy)
+                .ToList()));
 
         return mock;
     }
