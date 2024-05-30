@@ -108,7 +108,7 @@ public class WalletCommandTests
             .With(x => x.UserIds,
                 new List<Guid>()
                 {
-                    new Guid("6090BFC8-4D8D-4AF5-9D37-060581F051A7"),
+                    new Guid("2F566F81-4723-4D28-AB7C-A3004F98735C"),
                 })
             .Create();
 

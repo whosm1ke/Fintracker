@@ -29,7 +29,7 @@ public class MockBudgetRepository
                 Categories = new List<Category>(),
                 OwnerId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
                 CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"),
-                WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0")
+                WalletId = new Guid("83E1C69F-8B85-46D4-8AB7-2DBE7D66038C")
             },
             new Budget()
             {
@@ -123,6 +123,13 @@ public class MockBudgetRepository
         mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<BudgetQueryParams>()))
             .Returns((Guid id, Guid userId, BudgetQueryParams query) => Task.FromResult((IReadOnlyList<Budget>)budgets
                 .Where(x => x.WalletId == id)
+                .AsQueryable()
+                .OrderBy(query.SortBy)
+                .ToList()));
+        
+        mock.Setup(x => x.GetByUserIdSortedAsync(It.IsAny<Guid>(), It.IsAny<BudgetQueryParams>()))
+            .Returns((Guid userId, BudgetQueryParams query) => Task.FromResult((IReadOnlyList<Budget>)budgets
+                .Where(x => x.OwnerId == userId || x.Members.Any(m => m.Id == userId))
                 .AsQueryable()
                 .OrderBy(query.SortBy)
                 .ToList()));
