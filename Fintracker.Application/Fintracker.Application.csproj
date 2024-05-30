@@ -42,9 +42,4 @@
       <Compile Remove="Features\User\Handlers\Queries\IsUserExistsByEmailRequestHandler.cs" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Features\Currency\Handlers\Commands\" />
-      <Folder Include="Features\Currency\Requests\Commands\" />
-    </ItemGroup>
-
 </Project>

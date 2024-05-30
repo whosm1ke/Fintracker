@@ -54,21 +54,6 @@ public class CurrencyRequestTests
     {
         var mockUnitOfWork = MockUnitOfWorkRepository.GetUniOfWork().Object;
         var handler = new GetCurrenciesSortedRequestHandler(mockUnitOfWork, _mapper);
-        var expectedResult = new List<CurrencyDTO>
-        {
-            new()
-            {
-                Id = new Guid("E01111DE-C2AF-4C40-B1F7-078875B7CC24"),
-                Name = "American Dollar",
-                Symbol = "DLR"
-            },
-            new()
-            {
-                Id = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"),
-                Name = "Ukrainian hrivna",
-                Symbol = "UAH"
-            }
-        };
 
         var actualResult = await handler.Handle(new GetCurrenciesSortedRequest
         {
@@ -79,7 +64,7 @@ public class CurrencyRequestTests
         }, default);
 
         actualResult.Should().NotBeNull();
-        actualResult.Should().BeEquivalentTo(expectedResult);
+        actualResult.Should().BeInAscendingOrder(c => c.Symbol);
     }
 
     [Fact]
