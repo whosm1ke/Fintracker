@@ -31,7 +31,11 @@ public class MockWalletRepository
                 Id = new Guid("83E1C69F-8B85-46D4-8AB7-2DBE7D66038C"),
                 Balance = 3000,
                 Name = "Wallet 3",
-                BankAccountId = "12345"
+                BankAccountId = "12345",
+                Currency = new Currency()
+                {
+                    Symbol = "DLR"
+                },
             }
         };
 

@@ -31,90 +31,30 @@ public class MockBudgetRepository
                 CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61"),
                 WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0")
             },
-            new()
+            new Budget()
             {
+                Id = new Guid("9C7EC483-ED14-4390-BBBA-A0753E55307F"),
+                StartBalance = 1000,
                 Balance = 1000,
-                CreatedAt = new DateTime(2024, 12, 12),
-                ModifiedAt = new DateTime(2024, 12, 12),
-                CreatedBy = "ME1000",
-                ModifiedBy = "ME1000",
-                Currency = new Currency(),
-                EndDate = new DateTime(2024, 11, 12),
-                StartDate = new DateTime(2024, 11, 14),
-                Name = "B",
-                Id = new Guid("5F5F42ED-345C-4B13-AA35-76005A9607FF"),
-                Wallet = new Wallet(),
-                Owner = new User(),
-                Categories = new List<Category>(),
-                WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
                 OwnerId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
-                CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
-            },
-            new()
-            {
-                Balance = 3000,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now,
-                CreatedBy = "ME",
-                ModifiedBy = "ME",
-                Currency = new Currency(),
-                EndDate = new DateTime(2024, 10, 12),
-                StartDate = new DateTime(2024, 10, 14),
-                Name = "Budget3",
-                Id = new Guid("8FE42E15-4484-4DF7-BC1A-6C4047DD5C2C"),
-                Wallet = new Wallet(),
-                Owner = new User(),
                 Categories = new List<Category>()
-            },
-            new()
-            {
-                Balance = 3000,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now,
-                CreatedBy = "ME",
-                ModifiedBy = "ME",
-                Currency = new Currency(),
-                EndDate = new DateTime(2024, 10, 12),
-                StartDate = new DateTime(2024, 10, 14),
-                Name = "Budget3",
-                Id = new Guid("3DA8AFC6-1671-4E6C-A4AC-6A048C388764"),
-                Wallet = new()
                 {
-                    Id = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
-                    Balance = 1000,
-                    Name = "Wallet 1",
+                    new Category()
+                    {
+                        Id = new Guid("F0872017-AE98-427E-B976-B46AC2004D15"),
+                        Name = "TEST CATEGORY"
+                    }
                 },
-                Owner = new User
+                Currency = new()
                 {
-                    Id = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7")
+                    Id = new Guid("E01111DE-C2AF-4C40-B1F7-078875B7CC24"),
+                    Name = "American Dollar",
+                    Symbol = "DLR"
                 },
-                Categories = new List<Category>(),
-                WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
-                OwnerId = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
-                CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
-            },
-            new()
-            {
-                Balance = 3000,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now,
-                CreatedBy = "ME",
-                ModifiedBy = "ME",
-                Currency = new Currency(),
-                EndDate = new DateTime(2024, 10, 12),
-                StartDate = new DateTime(2024, 10, 14),
-                Name = "Budget with user",
-                Id = new Guid("9055E428-38C3-4616-A389-0102B766FD98"),
-                Wallet = new(),
-                Owner = new User
-                {
-                    Id = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
-                    Email = "user@mail.com"
-                },
-                Categories = new List<Category>(),
-                WalletId = new Guid("BA5D310A-4CE3-41EA-AC27-C212AB5652A0"),
-                OwnerId = new Guid("83F849FB-110A-44A4-8138-1404FF6556C7"),
-                CurrencyId = new Guid("E014D577-D121-4399-B3BE-36D6E80C9F61")
+                IsPublic = true,
+                WalletId = new Guid("83E1C69F-8B85-46D4-8AB7-2DBE7D66038C"),
+                StartDate = new DateTime(2024, 1, 12),
+                EndDate = new DateTime(2024, 12, 12)
             }
         };
 
@@ -174,9 +114,11 @@ public class MockBudgetRepository
                 Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.OwnerId == id).ToList()));
 
 
-        mock.Setup(x => x.GetByWalletIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>()))
+        mock.Setup(x => x.GetByWalletIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool?>()))
             .Returns((Guid id, Guid userId, bool isPublic) =>
-                Task.FromResult((IReadOnlyList<Budget>)budgets.Where(x => x.WalletId == id).ToList()));
+                Task.FromResult((IReadOnlyList<Budget>)budgets
+                    .Where(x => x.WalletId == id && (x.OwnerId == userId || x.Members.Any(m => m.Id == userId)))
+                    .ToList()));
 
         mock.Setup(x => x.GetByWalletIdSortedAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<BudgetQueryParams>()))
             .Returns((Guid id, Guid userId, BudgetQueryParams query) => Task.FromResult((IReadOnlyList<Budget>)budgets
@@ -190,8 +132,8 @@ public class MockBudgetRepository
             {
                 IReadOnlyList<Budget> budgetsToReturn =
                     budgets.Where(b =>
-                        b.Categories.Any(c => c.Id == catId) && b.OwnerId == userId ||
-                        b.Members.Any(m => m.Id == userId)).ToList();
+                        b.Categories != null && b.Categories.Any(c => c.Id == catId) && b.OwnerId == userId ||
+                        b.Members != null && b.Members.Any(m => m.Id == userId)).ToList();
 
                 return Task.FromResult(budgetsToReturn);
             });

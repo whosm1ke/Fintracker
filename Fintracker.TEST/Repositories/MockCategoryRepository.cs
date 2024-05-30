@@ -58,6 +58,10 @@ public class MockCategoryRepository
         mock.Setup(x => x.GetAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .Returns((Guid userId, Guid id) => { return Task.FromResult(categories.Find(x => x.UserId == userId && x.Id == id)); });
 
+        mock.Setup(x => x.GetAsync(It.IsAny<Guid>()))
+            .Returns((Guid id) => { return Task.FromResult(categories.Find(x => x.Id == id)); });
+
+        
         mock.Setup(x => x.GetAsyncNoTracking(It.IsAny<Guid>()))
             .Returns((Guid id) => { return Task.FromResult(categories.Find(x => x.Id == id)); });
 

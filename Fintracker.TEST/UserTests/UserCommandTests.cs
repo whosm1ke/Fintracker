@@ -135,7 +135,7 @@ public class UserCommandTests
         result.Success.Should().BeTrue();
 
         int usersCount = (await _mockUserRepo.GetAllAsync()).Count;
-        usersCount.Should().Be(2);
+        usersCount.Should().Be(3);
     }
 
     [Fact]
@@ -318,7 +318,7 @@ public class UserCommandTests
 
         var command = new SentResetEmailCommand()
         {
-            UserId = new Guid("6090BFC8-4D8D-4AF5-9D37-060581F051A7"),
+            UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
             NewEmail = "newEmail@gmail.com",
             UrlCallback = "callback"
         };
@@ -344,7 +344,7 @@ public class UserCommandTests
 
         var command = new SentResetPasswordCommand()
         {
-            UserId = new Guid("6090BFC8-4D8D-4AF5-9D37-060581F051A7"),
+            UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
             Email = "user2@gmail.com",
             UrlCallback = "callback"
         };
@@ -397,7 +397,7 @@ public class UserCommandTests
 
         var command = new SentResetPasswordCommand()
         {
-            UserId = new Guid("6090BFC8-4D8D-4AF5-9D37-060581F051A7"),
+            UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
             Email = "newEmail@gmail.com",
             UrlCallback = "callback"
         };
@@ -434,11 +434,14 @@ public class UserCommandTests
             await _updateUserValidator.TestValidateAsync(command);
         validationResult.ShouldNotHaveAnyValidationErrors();
 
+        var handler = new UpdateUserCommandHandler(_mapper, _mockUserRepo);
+
+        await handler.Handle(command, default);
         var expectedUser =
             await _mockUserRepo.GetAsync(new Guid("2F566F81-4723-4D28-AB7C-A3004F98735C"));
 
-        expectedUser.CurrencyId.Should().Be(userToUpdate.CurrencyId);
         expectedUser.UserDetails.Sex.Should().Be(userToUpdate.UserDetails.Sex);
+        expectedUser.CurrencyId.Should().Be(userToUpdate.CurrencyId);
     }
 
     [Fact]
@@ -517,7 +520,7 @@ public class UserCommandTests
     {
         var command = new UpdateUserUsernameCommand()
         {
-            UserId = new Guid("6090BFC8-4D8D-4AF5-9D37-060581F051A7"),
+            UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
             NewUsername = "username1"
         };
 
