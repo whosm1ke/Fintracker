@@ -28,21 +28,30 @@ public class SentResetEmailCommandHandler : IRequestHandler<SentResetEmailComman
         var user = await _userRepository.GetAsNoTrackingAsync(request.UserId);
 
         if (user is null)
-            throw new BadRequestException(new ExceptionDetails
+            throw new NotFoundException(new ExceptionDetails
             {
                 PropertyName = nameof(request.UserId),
                 ErrorMessage = "Invalid email. Check spelling."
-            });
+            }, nameof(Domain.Entities.User));
 
         var token = await _accountService.GenerateResetEmailToken(user, request.NewEmail);
 
-        await _emailSender.SendEmail(new()
+        var isEmailSent = await _emailSender.SendEmail(new()
         {
             Email = request.NewEmail,
             Subject = "Reset Email Confirmation",
             HtmlPath = "resetEmail.html"
         }, new { Ref = $"{_appSettings.UiUrl}/{request.UrlCallback}?token={token}&userId={request.UserId}&newEmail={request.NewEmail}" });
 
+        if (!isEmailSent)
+        {
+            throw new BadRequestException(new ExceptionDetails
+            {
+                PropertyName = "Email",
+                ErrorMessage = $"Was not sent to {request.NewEmail}. Check spelling"
+            });
+        }
+        
         return Unit.Value;
     }
 }

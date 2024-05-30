@@ -79,7 +79,6 @@ public class AccountController : BaseController
             WalletId = invite.WalletId,
             WhoInvited = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
             UrlCallback = invite.UrlCallback,
-            PathToCategories = Path.Combine(_environment.WebRootPath, "data", "categories.json")
         };
         await _mediator.Send(inviteCommand);
 

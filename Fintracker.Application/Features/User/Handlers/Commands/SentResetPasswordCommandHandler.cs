@@ -36,13 +36,21 @@ public class SentResetPasswordCommandHandler : IRequestHandler<SentResetPassword
 
         var token = await _accountService.GenerateResetPasswordToken(user);
 
-        await _emailSender.SendEmail(new()
+        var isEmailSent = await _emailSender.SendEmail(new()
         {
             Email = request.Email,
             Subject = "Reset Password Confirmation",
             HtmlPath = "resetPassword.html"
         }, new { Ref = $"{_appSettings.UiUrl}/{request.UrlCallback}?token={token}&userId={request.UserId}" });
-
+        
+        if (!isEmailSent)
+        {
+            throw new BadRequestException(new ExceptionDetails
+            {
+                PropertyName = "Email",
+                ErrorMessage = $"Was not sent to {request.Email}. Check spelling"
+            });
+        }
         return Unit.Value;
     }
 }

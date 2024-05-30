@@ -14,26 +14,19 @@ public class InviteUserCommandHandler : IRequestHandler<InviteUserCommand, Unit>
 {
     private readonly IEmailSender _emailSender;
     private readonly IUserRepository _userRepository;
-    private readonly ITokenService _tokenService;
     private readonly AppSettings _appSettings;
     private readonly string _tempPass;
 
-    public InviteUserCommandHandler(IEmailSender emailSender, IUserRepository userRepository,
-        ITokenService tokenService, IOptions<AppSettings> options)
+    public InviteUserCommandHandler(IEmailSender emailSender, IUserRepository userRepository, IOptions<AppSettings> options)
     {
         _emailSender = emailSender;
         _userRepository = userRepository;
-        _tokenService = tokenService;
         _appSettings = options.Value;
         _tempPass = GenerateTempPassword();
     }
 
     public async Task<Unit> Handle(InviteUserCommand request, CancellationToken cancellationToken)
     {
-        
-        
-        
-        
         var inviteEmailModel = new InviteEmailModel
         {
             WhoInvited = request.WhoInvited ?? "User",

@@ -10,5 +10,4 @@ public class InviteUserCommand : IRequest<Unit>, INotGetRequest
     public string? WhoInvited { get; set; }
 
     public string UrlCallback { get; set; } = default!;
-    public string? PathToCategories { get; set; } = default!;
 }
