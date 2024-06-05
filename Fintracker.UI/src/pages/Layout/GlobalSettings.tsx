@@ -1,4 +1,4 @@
-﻿import {NavLink, Outlet} from "react-router-dom";
+﻿import {Navigate, NavLink, Outlet} from "react-router-dom";
 import useUserStore from "../../stores/userStore.ts";
 import {useGetUser} from "../../hooks/auth/useUser.ts";
 // @ts-ignore
@@ -11,7 +11,9 @@ import {FiChevronDown} from "react-icons/fi";
 
 export default function GlobalSettings() {
 
-
+    const userToken = useUserStore(x => x.getUserToken());
+    if(!userToken)
+        return <Navigate to={'/'}/>
 
     return (
         <div className={'bg-stone-100 min-h-screen'}>

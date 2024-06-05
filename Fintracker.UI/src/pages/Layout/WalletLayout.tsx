@@ -1,4 +1,4 @@
-﻿import {NavLink, Outlet, useParams} from "react-router-dom";
+﻿import {Navigate, NavLink, Outlet, useParams} from "react-router-dom";
 import useUserStore from "../../stores/userStore.ts";
 import {useGetUser} from "../../hooks/auth/useUser.ts";
 // @ts-ignore
@@ -10,6 +10,11 @@ import FlyoutLink from "../../components/other/FlyoutLink.tsx";
 import NavigationContent from "../../components/other/NavigationContent.tsx";
 
 export default function WalletLayout() {
+
+    const userToken = useUserStore(x => x.getUserToken());
+    if(!userToken)
+        return <Navigate to={'/'}/>
+    
     return (
         <div className={'flex flex-col min-h-screen overflow-hidden bg-stone-100'}>
             <header>

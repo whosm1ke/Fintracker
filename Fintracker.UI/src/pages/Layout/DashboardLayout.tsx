@@ -1,4 +1,4 @@
-﻿import {NavLink, Outlet} from "react-router-dom";
+﻿import {Navigate, NavLink, Outlet} from "react-router-dom";
 // @ts-ignore
 import logo from "../../../public/logo.png";
 import {motion} from "framer-motion";
@@ -10,7 +10,11 @@ import FlyoutLink from "../../components/other/FlyoutLink.tsx";
 import NavigationContent from "../../components/other/NavigationContent.tsx";
 
 export default function DashboardLayout() {
-
+    
+    const userToken = useUserStore(x => x.getUserToken());
+    if(!userToken)
+        return <Navigate to={'/'}/>
+    
     return (
         <div className={'relative flex flex-col min-h-screen overflow-hidden bg-stone-100'}>
             <header>

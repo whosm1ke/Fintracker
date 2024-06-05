@@ -1,8 +1,13 @@
-﻿import {NavLink, Outlet, useLocation, useParams} from "react-router-dom";
+﻿import {Navigate, NavLink, Outlet, useLocation, useParams} from "react-router-dom";
 import useUserStore from "../../stores/userStore.ts";
 import useWallet from "../../hooks/wallet/useWallet.ts";
 
 export default function WalletSettingsLayoutPage() {
+
+    const userToken = useUserStore(x => x.getUserToken());
+    if(!userToken)
+        return <Navigate to={'/'}/>
+    
     const loc = useLocation();
     const {walletId} = useParams();
     const isGeneralSettings = !loc.pathname.includes('categories');
