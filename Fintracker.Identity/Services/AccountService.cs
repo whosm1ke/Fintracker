@@ -45,7 +45,8 @@ public class AccountService : IAccountService
                     Sex = "Other",
                     DateOfBirth = DateTime.Now,
                     Language = Language.English
-                }
+                },
+                CurrencyId = new Guid("c6746fe4-eb4c-1746-0c5e-88d8748deebc")
             };
 
             var createdUser = await _userManager.CreateAsync(appUser, register.Password);

@@ -4,7 +4,7 @@ const axiosInstance = axios.create({
 // @ts-ignore
     baseURL: import.meta.env.VITE_APP_API_ENDPOINT
 });
-
+debugger
 axiosInstance.interceptors.request.use(cfg => {
     const token = sessionStorage.getItem('userToken')
     cfg.headers.Authorization = `Bearer ${token || ''}`;

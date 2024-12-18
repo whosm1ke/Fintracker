@@ -30,7 +30,7 @@ public static class ConfigureIdentity
                 ValidateAudience = true,
                 ValidAudience = cfg["JWT:Audience"],
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(cfg["JWT:SigningKey"]!))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(cfg["JWT:Key"]!))
             };
             
     

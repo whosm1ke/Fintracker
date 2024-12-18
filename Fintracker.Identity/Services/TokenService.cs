@@ -19,7 +19,7 @@ public class TokenService : ITokenService
     {
         _cfg = cfg;
         _userManager = userManager;
-        _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_cfg["JWT:SigningKey"]!));
+        _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_cfg["JWT:Key"]!));
     }
 
     public async Task<string> CreateToken(User user)
@@ -44,7 +44,7 @@ public class TokenService : ITokenService
             .Union(userClaims)
             .Union(roleClaims);
 
-        var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+        var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

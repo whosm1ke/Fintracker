@@ -57,7 +57,7 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.ToTable("Transactions", t =>
         {
             t.HasCheckConstraint("Ck_Transactions_Amount",
-                $"\"Amount\" >= {TransactionConstraints.MinimalTransactionAmount} and \"Amount\" <" +
+                $"\"Amount\" >= {TransactionConstraints.MinimalTransactionAmount.ToString()} and \"Amount\" <" +
                 $"= {TransactionConstraints.MaximumTransactionAmount}");
         });
     }

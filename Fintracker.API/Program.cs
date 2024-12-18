@@ -8,10 +8,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.Configure<RouteHandlerOptions>(options =>
-{
-    options.ThrowOnBadRequest = true;
-});
+builder.Services.Configure<RouteHandlerOptions>(options => { options.ThrowOnBadRequest = true; });
 
 using var log = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -41,7 +38,6 @@ builder.Services.AddSwaggerGen(option =>
                 {
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer",
-                    
                 }
             },
             []
@@ -53,27 +49,18 @@ builder.Services.AddCors(x =>
 {
     x.AddPolicy("UI", cors =>
     {
-           cors.WithOrigins("*")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
-        
-        cors.WithOrigins("https://fintrackerua.netlify.app")
+        cors.WithOrigins("https://localhost:1337")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
-        
-        cors.WithOrigins("https://localhost:1337")
+        cors.WithOrigins("*")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     });
 });
 
-builder.Services.AddHttpsRedirection(x =>
-{
-    x.HttpsPort = 7295;
-});
+builder.Services.AddHttpsRedirection(x => { x.HttpsPort = 7295; });
 
 builder.Services.ConfigureApplicationServices(builder.Configuration, builder.Environment.WebRootPath);
 builder.Services.ConfigurePresistenceServices(builder.Configuration);
