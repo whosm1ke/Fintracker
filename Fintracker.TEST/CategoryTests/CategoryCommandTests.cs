@@ -157,7 +157,7 @@ public class CategoryCommandTests
         var command = new DeleteCategoryCommand
         {
             Id = new Guid("D8B7FB81-F6D9-49F0-A1C8-3B43B7D39F7C"),
-            ShouldReplace = false,
+            CategoryToReplaceId = null,
             UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7")
         };
 
@@ -182,7 +182,7 @@ public class CategoryCommandTests
 
         var command = new DeleteCategoryCommand
         {
-            ShouldReplace = false,
+            CategoryToReplaceId = null,
             Id = new Guid("AC757A03-19D0-4884-91AC-1C8E62A85C3E"),
             UserId = new Guid("9F8E612F-42EA-4D1D-B2D8-A63BA5D657FD")
         };

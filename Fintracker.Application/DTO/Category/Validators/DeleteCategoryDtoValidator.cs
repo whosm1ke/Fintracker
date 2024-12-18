@@ -17,11 +17,11 @@ public class DeleteCategoryDtoValidator : AbstractValidator<DeleteCategoryComman
             .WithMessage(x => $"{nameof(Domain.Entities.User)} with id does not exist [{x.UserId}]");
 
         RuleFor(x => x.CategoryToReplaceId)
-            .ApplyCommonRules(x => x.ShouldReplace)
+            .ApplyCommonRules(x => x.CategoryToReplaceId.HasValue)
             .OverridePropertyName(nameof(DeleteCategoryCommand.CategoryToReplaceId))
             .MustAsync(async (dto, catToReplace, _) =>
-                await unitOfWork.CategoryRepository.ExistsAsync(catToReplace) && catToReplace != dto.Id)
+                await unitOfWork.CategoryRepository.ExistsAsync(catToReplace.Value) && catToReplace != dto.Id)
             .WithMessage(x => $"{nameof(Domain.Entities.Category)} with id does not exist [{x.CategoryToReplaceId}]")
-            .When(x => x.ShouldReplace);
+            .When(x => x.CategoryToReplaceId.HasValue);
     }
 }

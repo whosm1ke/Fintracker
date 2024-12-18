@@ -45,16 +45,17 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
             });
         }
 
-        Domain.Entities.Category categoryToReplace = (request.ShouldReplace
-            ? await _unitOfWork.CategoryRepository.GetAsync(request.CategoryToReplaceId)
+        bool shouldReplace = request.CategoryToReplaceId.HasValue;
+        Domain.Entities.Category categoryToReplace = (shouldReplace
+            ? await _unitOfWork.CategoryRepository.GetAsync(request.CategoryToReplaceId.Value)
             : category)!;
 
         var transactionToUpdate =
             await _unitOfWork.TransactionRepository.GetByCategoryIdAsync(category.Id, category.UserId);
 
-        UpdateTransactionns(transactionToUpdate, categoryToReplace, request.ShouldReplace);
-        await UpdateWallets(transactionToUpdate, category, request.ShouldReplace, categoryToReplace.Type);
-        await UpdateBudgets(transactionToUpdate, category, categoryToReplace, request.ShouldReplace);
+        UpdateTransactionns(transactionToUpdate, categoryToReplace, shouldReplace);
+        await UpdateWallets(transactionToUpdate, category, shouldReplace, categoryToReplace.Type);
+        await UpdateBudgets(transactionToUpdate, category, categoryToReplace, shouldReplace);
 
         var deletedObj = _mapper.Map<CategoryDTO>(category);
         _unitOfWork.CategoryRepository.Delete(category);

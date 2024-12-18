@@ -87,7 +87,7 @@ public class UserController : BaseController
     
 
     [AllowAnonymous]
-    [HttpGet("avatar/{filename}")]
+    [HttpGet("avatar/{fileName}")]
     public IActionResult GetAvatar(string fileName, [FromServices] IWebHostEnvironment env)
     {
         var imageDirectory = Path.Combine(env.WebRootPath, "images");

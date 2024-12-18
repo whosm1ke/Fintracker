@@ -10,7 +10,5 @@ public class DeleteCategoryCommand : IRequest<DeleteCommandResponse<CategoryDTO>
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
 
-    public Guid CategoryToReplaceId { get; set; }
-
-    public bool ShouldReplace { get; set; }
+    public Guid? CategoryToReplaceId { get; set; }
 }

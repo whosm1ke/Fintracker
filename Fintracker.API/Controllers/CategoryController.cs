@@ -17,6 +17,7 @@ public class CategoryController : BaseController
 {
     private readonly IMediator _mediator;
     private readonly IWebHostEnvironment _environment;
+
     public CategoryController(IMediator mediator, IWebHostEnvironment environment)
     {
         _mediator = mediator;
@@ -49,7 +50,7 @@ public class CategoryController : BaseController
 
         return Ok(response);
     }
-    
+
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(CategoryDTO), StatusCodes.Status200OK)]
@@ -79,7 +80,7 @@ public class CategoryController : BaseController
 
         return Ok(response);
     }
-    
+
     [HttpPost]
     [ProducesResponseType(typeof(CreateCommandResponse<CategoryDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
@@ -94,14 +95,14 @@ public class CategoryController : BaseController
 
         return Ok(response);
     }
-    
+
     [HttpPost("populate")]
     [ProducesResponseType(typeof(CreateCommandResponse<CategoryDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Pupulate()
     {
-        var response =   await _mediator.Send(new PopulateUserWithCategoriesCommand()
+        var response = await _mediator.Send(new PopulateUserWithCategoriesCommand()
         {
             UserId = GetCurrentUserId(),
             PathToFile = Path.Combine(_environment.WebRootPath, "data", "categories.json")
@@ -126,19 +127,20 @@ public class CategoryController : BaseController
         return Ok(response);
     }
 
-//TODO Add logic for deleting categories. Wallets, budgets and transactions should be changed
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(DeleteCommandResponse<CategoryDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<DeleteCommandResponse<CategoryDTO>>> Delete(Guid id, [FromBody] DeleteCategoryDTO options)
+    public async Task<ActionResult<DeleteCommandResponse<CategoryDTO>>> Delete(
+        Guid id,
+        Guid? categoryToReplaceId
+    )
     {
         var response = await _mediator.Send(new DeleteCategoryCommand
         {
             Id = id,
             UserId = GetCurrentUserId(),
-            CategoryToReplaceId = options.CategoryToReplaceId,
-            ShouldReplace = options.ShouldReplace
+            CategoryToReplaceId = categoryToReplaceId,
         });
 
         return Ok(response);

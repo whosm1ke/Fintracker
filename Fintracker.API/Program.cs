@@ -3,6 +3,7 @@ using Fintracker.Application;
 using Fintracker.Identity;
 using Fintracker.Infrastructure;
 using Fintracker.Persistence;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -39,11 +40,12 @@ builder.Services.AddSwaggerGen(option =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    Id = "Bearer",
+                    
                 }
             },
-            new string[] { }
-        }
+            []
+        },
     });
 });
 
