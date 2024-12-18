@@ -67,7 +67,7 @@ public class UserController : BaseController
         {
             var avatar = user.Avatar;
             var fileName = Path.GetFileName(avatar.FileName);
-            var filePath = Path.Combine(env.WebRootPath, "images", fileName);
+            var filePath = Path.Combine(env.WebRootPath, "img", fileName);
             using (var stream = System.IO.File.Create(filePath))
             {
                 await avatar.CopyToAsync(stream);
@@ -90,7 +90,7 @@ public class UserController : BaseController
     [HttpGet("avatar/{fileName}")]
     public IActionResult GetAvatar(string fileName, [FromServices] IWebHostEnvironment env)
     {
-        var imageDirectory = Path.Combine(env.WebRootPath, "images");
+        var imageDirectory = Path.Combine(env.WebRootPath, "img");
         var imagePath = Path.Combine(imageDirectory, fileName);
 
         if (!System.IO.File.Exists(imagePath))

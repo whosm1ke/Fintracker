@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 using System.Net.Http.Json;
 using Fintracker.Application.Contracts.Infrastructure;
 using Fintracker.Application.DTO.Currency;
@@ -35,7 +36,7 @@ public class CurrencyConvertService : ICurrencyConverter
             {
                 Method = HttpMethod.Get,
                 RequestUri = new Uri(client.BaseAddress!,
-                    $"v1/convert?api_key={_cfg["CurrencyBeacon:API_KEY"]}&from={from}&to={to}&amount={amount}")
+                    $"v1/convert?api_key={_cfg["CurrencyBeacon:API_KEY"]}&from={from}&to={to}&amount={amount.ToString(CultureInfo.InvariantCulture)}")
             };
 
             HttpResponseMessage responseMessage = await client.SendAsync(requestMessage);

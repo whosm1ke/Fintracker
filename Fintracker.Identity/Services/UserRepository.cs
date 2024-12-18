@@ -83,6 +83,7 @@ public class UserRepository : IUserRepository
             .ThenInclude(b => b.Categories)
             .Include(u => u.MemberBudgets)
             .ThenInclude(b => b.Currency)
+            .AsSplitQuery()
             .Where(u => u.Id == id)
             .FirstOrDefaultAsync();
     }
