@@ -13,7 +13,7 @@ public static class ConfigureInfrastructure
     public static IServiceCollection ConfigureInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
-        services.AddTransient<IEmailSender,EmailSender>();
+        services.AddTransient<IEmailSender,GoogleSmtpServerSender>();
         services.AddHttpClient("MonobankClient",x =>
         {
             x.BaseAddress = new Uri("https://api.monobank.ua");

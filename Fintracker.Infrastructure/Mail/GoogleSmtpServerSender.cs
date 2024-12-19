@@ -10,13 +10,13 @@ using Microsoft.Extensions.Options;
 
 namespace Fintracker.Infrastructure.Mail;
 
-public class EmailSender : IEmailSender
+public class GoogleSmtpServerSender : IEmailSender
 {
     private readonly EmailSettings _emailSettings;
     private readonly IHtmlPageHelper _htmlPageHelper;
     private readonly SmtpSender _sender;
 
-    public EmailSender(IOptions<EmailSettings> emailOptions, IHtmlPageHelper htmlPageHelper)
+    public GoogleSmtpServerSender(IOptions<EmailSettings> emailOptions, IHtmlPageHelper htmlPageHelper)
     {
         _htmlPageHelper = htmlPageHelper;
         _emailSettings = emailOptions.Value;
