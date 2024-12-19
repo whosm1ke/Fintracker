@@ -31,7 +31,6 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
 
 
     private cancelToken: CancelTokenSource | undefined;
-    private basePath: string = '';
 
     private cancelCurrentRequest() {
         if (this.cancelToken) {
@@ -42,7 +41,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
     async convert(from: string, to: string, amount: number): Promise<ConvertCurrency | null> {
 
         try {
-            const data = await axiosInstanceCurrencyConverter.get<ConvertCurrency>(this.basePath + this.basePath + this.endpoint, {
+            const data = await axiosInstanceCurrencyConverter.get<ConvertCurrency>(this.endpoint, {
                 params: {
                     from: from,
                     to: to,
@@ -78,7 +77,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.post<RegisterResponse>(this.basePath + this.endpoint, registerModel, {
+            const data = await axiosInstance.post<RegisterResponse>(this.endpoint, registerModel, {
                 cancelToken: this.cancelToken.token
             });
 
@@ -92,7 +91,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.post<LoginResponse>(this.basePath + this.endpoint, loginModel, {
+            const data = await axiosInstance.post<LoginResponse>(this.endpoint, loginModel, {
                 cancelToken: this.cancelToken.token
             });
 
@@ -105,7 +104,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
     async logout(): Promise<null> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
-        await axiosInstance.post(this.basePath + this.endpoint, {
+        await axiosInstance.post(this.endpoint, {
             cancelToken: this.cancelToken.token
         });
         return null;
@@ -116,7 +115,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.post<CreateCommandResponse<TResponse>>(this.basePath + this.endpoint, newEntity, {
+            const data = await axiosInstance.post<CreateCommandResponse<TResponse>>(this.endpoint, newEntity, {
                 cancelToken: this.cancelToken.token
             });
 
@@ -131,7 +130,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.post<BaseCommandResponse>(this.basePath + this.endpoint, model, {
+            const data = await axiosInstance.post<BaseCommandResponse>(this.endpoint, model, {
                 cancelToken: this.cancelToken.token
             });
 
@@ -145,7 +144,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.post<BaseCommandResponse>(this.basePath + this.endpoint, model, {
+            const data = await axiosInstance.post<BaseCommandResponse>(this.endpoint, model, {
                 cancelToken: this.cancelToken.token
             });
 
@@ -159,7 +158,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.post<BaseCommandResponse>(this.basePath + this.endpoint, model, {
+            const data = await axiosInstance.post<BaseCommandResponse>(this.endpoint, model, {
                 cancelToken: this.cancelToken.token
             });
             return {response: data.data, hasError: false};
@@ -172,7 +171,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.put<UpdateCommandResponse<TResponse>>(this.basePath + this.endpoint, updatedEntity, {
+            const data = await axiosInstance.put<UpdateCommandResponse<TResponse>>(this.endpoint, updatedEntity, {
                 cancelToken: this.cancelToken.token
             });
 
@@ -186,7 +185,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.putForm<UpdateCommandResponse<TResponse>>(this.basePath + this.endpoint, updatedEntity, {
+            const data = await axiosInstance.putForm<UpdateCommandResponse<TResponse>>(this.endpoint, updatedEntity, {
                 cancelToken: this.cancelToken.token,
                 headers: {'Content-Type': 'multipart/form-data'}
             });
@@ -201,7 +200,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.delete<DeleteCommandResponse<TResponse>>(this.basePath + this.endpoint + `/${id}`, {
+            const data = await axiosInstance.delete<DeleteCommandResponse<TResponse>>(this.endpoint + `/${id}`, {
                 cancelToken: this.cancelToken.token,
                 data: model
             });
@@ -212,11 +211,18 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         }
     }
 
-    async delete(id: string): Promise<ClientWrapper<DeleteCommandResponse<TResponse>>> {
+    async delete(id: string, otherParams?: Record<string, any>): Promise<ClientWrapper<DeleteCommandResponse<TResponse>>> {
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
+        const url = new URL(this.endpoint + `/${id}`,axiosInstance.defaults.baseURL);
+        if (otherParams) {
+            Object.entries(otherParams).forEach(([key, value]) => {
+                url.searchParams.append(key, value);
+            });
+        }
+
         try {
-            const data = await axiosInstance.delete<DeleteCommandResponse<TResponse>>(this.basePath + this.endpoint + `/${id}`, {
+            const data = await axiosInstance.delete<DeleteCommandResponse<TResponse>>(url.toString(), {
                 cancelToken: this.cancelToken.token,
             });
 
@@ -230,7 +236,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.get<TResponse>(this.basePath + this.endpoint + `/${id}`, {
+            const data = await axiosInstance.get<TResponse>(this.endpoint + `/${id}`, {
                 cancelToken: this.cancelToken.token
             });
             return {response: data.data, hasError: false};
@@ -245,7 +251,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.get<TResponse>(this.basePath + this.endpoint + `/${key}`, {
+            const data = await axiosInstance.get<TResponse>(this.endpoint + `/${key}`, {
                 cancelToken: this.cancelToken.token
             });
 
@@ -260,7 +266,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelToken = axios.CancelToken.source();
         if (config)
             config.cancelToken = this.cancelToken.token;
-        return await axiosInstance.get<TResponse>(this.basePath + this.endpoint, config || {
+        return await axiosInstance.get<TResponse>(this.endpoint, config || {
             cancelToken: this.cancelToken.token
         })
             .then(res => res.data);
@@ -271,7 +277,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         cfg.cancelToken = this.cancelToken.token
-        return await axiosInstance.get<TResponse>(this.basePath + this.endpoint, cfg)
+        return await axiosInstance.get<TResponse>(this.endpoint, cfg)
             .then(res => res.data);
     }
 
@@ -279,7 +285,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.get<MonobankUserInfo>(this.basePath + this.endpoint, {
+            const data = await axiosInstance.get<MonobankUserInfo>(this.endpoint, {
                 headers: {
                     xToken: xToken.xToken
                 },
@@ -296,7 +302,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            const data = await axiosInstance.post<CreateCommandResponse<Wallet>>(this.basePath + this.endpoint, config, {
+            const data = await axiosInstance.post<CreateCommandResponse<Wallet>>(this.endpoint, config, {
                 cancelToken: this.cancelToken.token
             });
 
@@ -310,7 +316,7 @@ export default class ApiClient<TResponse, TModel = undefined> implements Command
         this.cancelCurrentRequest();
         this.cancelToken = axios.CancelToken.source();
         try {
-            await axiosInstance.post(this.basePath + this.endpoint, accId, {
+            await axiosInstance.post(this.endpoint, accId, {
                 cancelToken: this.cancelToken.token
             });
 

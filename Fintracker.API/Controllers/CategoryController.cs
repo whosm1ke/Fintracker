@@ -133,7 +133,7 @@ public class CategoryController : BaseController
     [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteCommandResponse<CategoryDTO>>> Delete(
         Guid id,
-        Guid? categoryToReplaceId
+        [FromQuery] Guid? categoryToReplaceId
     )
     {
         var response = await _mediator.Send(new DeleteCategoryCommand

@@ -4,7 +4,6 @@ import {Category} from "../../entities/Category.ts";
 import useUserStore from "../../stores/userStore.ts";
 
 type CategoryToDelete = {
-    shouldReplace: boolean;
     categoryToReplaceId?: string,
     id: string
 }
@@ -14,7 +13,7 @@ const useDeleteCategory = () => {
     const userId = useUserStore(x => x.getUserId());
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (model: CategoryToDelete) => await apiClient.deleteWithModel(model.id, model),
+        mutationFn: async (model: CategoryToDelete) => await apiClient.delete(model.id, {categoryToReplaceId: model.categoryToReplaceId}),
         onMutate: async (model: CategoryToDelete) => {
             await queryClient.cancelQueries({queryKey: ['categories', 'user', userId]});
 

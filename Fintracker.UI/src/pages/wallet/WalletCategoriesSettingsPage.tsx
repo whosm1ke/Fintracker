@@ -293,7 +293,8 @@ export default function WalletCategoriesSettingsPage() {
                         <legend className={'font-semibold mb-5'}>Income categories</legend>
                         {incomeCategories.map(c =>
                             <div className={'flex justify-between items-center '} key={c.id || "Hihi-haha"}>
-                                <div className={'w-full rounded px-4 flex justify-between items-center hover:bg-gray-200 transition-all duration-150'}>
+                                <div
+                                    className={'w-full rounded px-4 flex justify-between items-center hover:bg-gray-200 transition-all duration-150'}>
                                     <CategoryBlock category={c}/>
                                     <CategoryCRUDButtons category={c} onTrashClick={onTrashClick}
                                                          onGearClick={onGearClick} isOwner={isOwner}/>
@@ -307,7 +308,8 @@ export default function WalletCategoriesSettingsPage() {
                         <legend className={'font-semibold mb-5'}>Expense categories</legend>
                         {expenseCategories.map(c =>
                             <div className={'flex justify-between items-center '} key={c.id || "id1"}>
-                                <div className={'w-full rounded px-4 flex justify-between items-center hover:bg-gray-200 transition-all duration-150'}>
+                                <div
+                                    className={'w-full rounded px-4 flex justify-between items-center hover:bg-gray-200 transition-all duration-150'}>
                                     <CategoryBlock category={c}/>
                                     <CategoryCRUDButtons category={c} onTrashClick={onTrashClick}
                                                          onGearClick={onGearClick} isOwner={isOwner}/>
@@ -357,11 +359,9 @@ export function DeleteCategoryModal({
     const categoryDeleteMutation = useDeleteCategory();
     const toggleForceDelete = () => setIsForseDelete(p => !p);
     const handleDelete = async () => {
-
         const deleteResult = await categoryDeleteMutation.mutateAsync({
             categoryToReplaceId: categoryToReplace?.id,
             id: categoryToDeleteId,
-            shouldReplace: isForceDelete
         })
         if (!deleteResult.hasError) {
             toggleForceDelete()
@@ -369,7 +369,6 @@ export function DeleteCategoryModal({
             setCategoryToReplace(undefined)
         }
     }
-
     return (
         <div
             className={'fixed inset-0 flex justify-center items-center px-4 lg:px-0 visible bg-black/20 z-50'}>
@@ -391,7 +390,9 @@ export function DeleteCategoryModal({
                         <p>
                             Would you like to replace?
                         </p>
-                        <div className="flex gap-4">
+                        <div className="flex gap-4"
+                             onClick={() => setIsForseDelete(p => !p)}
+                        >
                             <div className="relative">
                                 <input
                                     className="h-6 w-6 border-blue-500 rounded-full cursor-pointer checked:border-transparent 

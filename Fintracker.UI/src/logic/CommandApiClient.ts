@@ -18,7 +18,7 @@ export interface CommandApiClient<TModel, TResponse> {
     create: (newEntity: TModel) => Promise<ClientWrapper<CreateCommandResponse<TResponse>>>;
     update: (updatedEntity: TModel) => Promise<ClientWrapper<UpdateCommandResponse<TResponse>>>;
     updateForm: (updatedEntity: FormData) => Promise<ClientWrapper<UpdateCommandResponse<TResponse>>>;
-    delete: (id: string) => Promise<ClientWrapper<DeleteCommandResponse<TResponse>>>;
+    delete: (id: string,otherParams?: Record<string, any>) => Promise<ClientWrapper<DeleteCommandResponse<TResponse>>>;
     deleteWithModel: (id: string, model: TModel) => Promise<ClientWrapper<DeleteCommandResponse<TResponse>>>;
 }
 

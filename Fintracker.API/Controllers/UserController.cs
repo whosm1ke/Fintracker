@@ -95,7 +95,7 @@ public class UserController : BaseController
 
         if (!System.IO.File.Exists(imagePath))
         {
-            return NotFound();
+            imagePath = Path.Combine(imageDirectory, "logo.png");
         }
 
         var imageBytes = System.IO.File.ReadAllBytes(imagePath);
