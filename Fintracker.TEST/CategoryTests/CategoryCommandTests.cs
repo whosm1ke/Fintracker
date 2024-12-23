@@ -199,7 +199,7 @@ public class CategoryCommandTests
         var command = new PopulateUserWithCategoriesCommand()
         {
             UserId = new Guid("93F849FB-110A-44A4-8138-1404FF6556C7"),
-            PathToFile = "C:\\Users\\cherm\\OneDrive\\Рабочий стол\\Fintracker_Project\\Fintracker\\Fintracker.API\\wwwroot\\data\\categories.json"
+            PathToFile = "C:\\Users\\cherm\\RiderProjects\\Fintracker\\Fintracker.API\\wwwroot\\data\\categories.json"
         };
 
 

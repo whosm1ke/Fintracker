@@ -94,6 +94,7 @@ export const CreateTransactionModal = ({userId, walletId, walletCurrency, wallet
         });
     };
 
+    // @ts-ignore
     return (
         <div>
             <ActionButton text={"Add new transaction"} onModalOpen={handleOpenModal}/>
