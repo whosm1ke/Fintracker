@@ -23,7 +23,7 @@ public class UpdateWalletDtoValidator : AbstractValidator<UpdateWalletCommand>
         RuleFor(x => x.Wallet.UserIds)
             .MustAsync(async (userIds, _) =>
             {
-                var isExisting = !userIds.Any();
+                bool isExisting = false;
                 foreach (var userId in userIds)
                 {
                     isExisting = await userRepository.ExistsAsync(userId);
@@ -31,6 +31,7 @@ public class UpdateWalletDtoValidator : AbstractValidator<UpdateWalletCommand>
 
                 return isExisting;
             })
-            .WithMessage("One of provided users does not exists");
+            .WithMessage("One of provided users does not exists")
+            .When(x => x.Wallet.UserIds.Any());
     }
 }
